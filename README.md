@@ -60,7 +60,7 @@ For example, it's common that you might want for each board rev:
 * PCB 3D model in STEP format
 
 You want to do this in a one-touch way, and make sure everything you need to
-do so it securely saved in version control, not on the back of an old
+do so is securely saved in version control, not on the back of an old
 datasheet.
 
 KiBot lets you do this. The following picture depicts the data flow:
@@ -100,9 +100,9 @@ This section is used to specify tasks that will be executed before generating an
 
 #### Supported preflight options:
 
-- check_zone_fills: [boolean=false] Zones are filled before doing any operation involving PCB layers.
-- erc_warnings: [boolean=false] Option for `run_erc`. ERC warnings are considered errors.
-- filters: [list(dict)] A list of entries to filter out ERC/DRC messages.
+- `check_zone_fills`: [boolean=false] Zones are filled before doing any operation involving PCB layers.
+- `erc_warnings`: [boolean=false] Option for `run_erc`. ERC warnings are considered errors.
+- `filters`: [list(dict)] A list of entries to filter out ERC/DRC messages.
   * Valid keys:
     - `error`: [string=''] Error id we want to exclude. A name for KiCad 6 or a number for KiCad 5, but always a string.
     - *error_number*: Alias for number.
@@ -111,12 +111,12 @@ This section is used to specify tasks that will be executed before generating an
     - `number`: [number=0] Error number we want to exclude. KiCad 5 only.
     - `regex`: [string='None'] Regular expression to match the text for the error we want to exclude.
     - *regexp*: Alias for regex.
-- ignore_unconnected: [boolean=false] Option for `run_drc`. Ignores the unconnected nets. Useful if you didn't finish the routing.
-- run_drc: [boolean=false] Runs the DRC (Distance Rules Check). To ensure we have a valid PCB.
+- `ignore_unconnected`: [boolean=false] Option for `run_drc`. Ignores the unconnected nets. Useful if you didn't finish the routing.
+- `run_drc`: [boolean=false] Runs the DRC (Distance Rules Check). To ensure we have a valid PCB.
         The report file name is controlled by the global output pattern (%i=drc %x=txt).
-- run_erc: [boolean=false] Runs the ERC (Electrical Rules Check). To ensure the schematic is electrically correct.
+- `run_erc`: [boolean=false] Runs the ERC (Electrical Rules Check). To ensure the schematic is electrically correct.
         The report file name is controlled by the global output pattern (%i=erc %x=txt).
-- update_xml: [boolean=false] Update the XML version of the BoM (Bill of Materials).
+- `update_xml`: [boolean=false] Update the XML version of the BoM (Bill of Materials).
         To ensure our generated BoM is up to date.
         Note that this isn't needed when using the internal BoM generator (`bom`).
 
@@ -179,7 +179,7 @@ If you need to match text from two different lines in the error message try usin
 
 If you have two or more different options for a text to match try using `(OPTION1|OPTION2)`.
 
-A complete Python regular expressions explanation is out the scope of this manual. For a complete reference consult the [Python manual](https://docs.python.org/3/library/re.html).
+A complete Python regular expressions explanation is out of the scope of this manual. For a complete reference consult the [Python manual](https://docs.python.org/3/library/re.html).
 
 KiCad 6 uses strings to differentiate errors, use them for the `error` field. To keep compatibility you can use the `number` or `error_number` options for KiCad 5.
 
@@ -251,7 +251,7 @@ global:
 
 ### Filters and variants
 
-The filters and variants are mechanism used to modify the circuit components.
+The filters and variants are mechanisms used to modify the circuit components.
 Both concepts are closely related. In fact variants can use filters.
 
 The current implementation of the filters allow to exclude components from some of the processing stages. The most common use is to exclude them from some output.
@@ -277,7 +277,7 @@ Currently the only type available is `generic`.
 
 #### Supported filters:
 
-- field_rename: Field_Rename
+- field_rename: Field_Rename  
         This filter implements a field renamer.
         The internal `_kicost_rename` filter emulates the KiCost behavior.
   * Valid keys:
@@ -287,7 +287,7 @@ Currently the only type available is `generic`.
       * Valid keys:
         - `field`: [string=''] Name of the field to rename.
         - `name`: [string=''] New name.
-- generic: Generic filter
+- generic: Generic filter  
         This filter is based on regular expressions.
         It also provides some shortcuts for common situations.
         Note that matches aren't case sensitive and spaces at the beggining and the end are removed.
@@ -339,7 +339,7 @@ Currently the only type available is `generic`.
               Use `dnf_list` for ['dnf', 'dnl', 'dnp', 'do not fit', 'do not load', 'do not place', 'no stuff', 'nofit', 'noload', 'noplace', 'nostuff', 'not fitted', 'not loaded', 'not placed'].
               Use `dnc_list` for ['dnc', 'do not change', 'fixed', 'no change'].
     - `name`: [string=''] Used to identify this particular filter definition.
-- rot_footprint: Rot_Footprint
+- rot_footprint: Rot_Footprint  
         This filter can rotate footprints, used for the positions file generation.
         Some manufacturers use a different rotation than KiCad.
         The internal `_rot_footprint` filter implements the simplest case.
@@ -355,7 +355,7 @@ Currently the only type available is `generic`.
                    Components matching the regular expression will be rotated the indicated angle.
     - `skip_bottom`: [boolean=false] Do not rotate components on the bottom.
     - `skip_top`: [boolean=false] Do not rotate components on the top.
-- subparts: Subparts
+- subparts: Subparts  
         This filter implements the KiCost subparts mechanism.
   * Valid keys:
     - `check_multiplier`: [list(string)] List of fields to include for multiplier computation.
@@ -374,7 +374,7 @@ Currently the only type available is `generic`.
     - `split_fields_expand`: [boolean=false] When `true` the fields in `split_fields` are added to the internal names.
     - `use_ref_sep_for_first`: [boolean=true] Force the reference separator use even for the first component in the list (KiCost behavior).
     - `value_alt_field`: [string='value_subparts'] Field containing replacements for the `Value` field. So we get real values for splitted parts.
-- var_rename: Var_Rename
+- var_rename: Var_Rename  
         This filter implements the VARIANT:FIELD=VALUE renamer to get FIELD=VALUE when VARIANT is in use.
   * Valid keys:
     - `comment`: [string=''] A comment for documentation purposes.
@@ -382,7 +382,7 @@ Currently the only type available is `generic`.
     - `name`: [string=''] Used to identify this particular filter definition.
     - `separator`: [string=':'] Separator used between the variant and the field name.
     - `variant_to_value`: [boolean=false] Rename fields matching the variant to the value of the component.
-- var_rename_kicost: Var_Rename_KiCost
+- var_rename_kicost: Var_Rename_KiCost  
         This filter implements the kicost.VARIANT:FIELD=VALUE renamer to get FIELD=VALUE when VARIANT is in use.
         It applies the KiCost concept of variants (a regex to match the VARIANT).
         The internal `_var_rename_kicost` filter emulates the KiCost behavior.
@@ -455,11 +455,14 @@ You can define your own lists as the `int_bom_fil_1.kibot.yaml` shows.
 
 ### The *outputs* section
 
-In this section you put all the things that you want to generate.  This section contains one or more **outputs**. Each output contain the following data:
+In this section you put all the things that you want to generate.
+This section contains one or more **outputs**.
+Each output contains the following data:
 
 - `name` a name so you can easily identify it.
 - `comment` a short description of this output.
-- `type` selects which type of output will be generated. Examples are *gerbers*, *drill files* and *pick & place files*
+- `type` selects which type of output will be generated.
+  Examples are *gerbers*, *drill files* and *pick & place files*
 - `dir` is the directory where this output will be stored.
 - `options` contains one or more options to configure this output.
 - `layers` a list of layers used for this output. Not all outputs needs this subsection.
@@ -601,7 +604,7 @@ You can also mix the styles:
 ```
 
 If you need to use the same list of layers for various outputs you can use YAML anchors.
-The first time you define the list of layers just assign an ancho, here is an example:
+The first time you define the list of layers just assign an anchor, here is an example:
 
 ```yaml
     layers: &copper_and_cmts
@@ -633,12 +636,11 @@ Next time you need this list just use an alias, like this:
 * BoM (Bill of Materials)
   * Type: `bom`
   * Description: Used to generate the BoM in CSV, HTML, TSV, TXT, XML or XLSX format using the internal BoM.
-                 Is compatible with KiBoM, but doesn't need to update the XML netlist because the components
-                 are loaded from the schematic.
-                 Important differences with KiBoM output:
-                 - All options are in the main `options` section, not in `conf` subsection.
-                 - The `Component` column is named `Row` and works just like any other column.
-                 This output is what you get from the 'Tools/Generate Bill of Materials' menu in eeschema.
+    Is compatible with KiBoM, but doesn't need to update the XML netlist because the components are loaded from the schematic.
+    Important differences with KiBoM output:
+    - All options are in the main `options` section, not in `conf` subsection.
+    - The `Component` column is named `Row` and works just like any other column.
+    This output is what you get from the 'Tools/Generate Bill of Materials' menu in eeschema.
   * Valid keys:
     - `comment`: [string=''] A comment for documentation purposes.
     - `dir`: [string='.'] Output directory for the generated files.
@@ -660,15 +662,15 @@ Next time you need this list just use an alias, like this:
             - `level`: [number=0] Used to group columns. The XLSX output uses it to collapse columns.
             - `name`: [string=''] Name to display in the header. The field is used when empty.
         - `component_aliases`: [list(list(string))] A series of values which are considered to be equivalent for the part name.
-                               Each entry is a list of equivalen names. Example: ['c', 'c_small', 'cap' ]
-                               will ensure the equivalent capacitor symbols can be grouped together.
-                               If empty the following aliases are used:
-                               - ['r', 'r_small', 'res', 'resistor']
-                               - ['l', 'l_small', 'inductor']
-                               - ['c', 'c_small', 'cap', 'capacitor']
-                               - ['sw', 'switch']
-                               - ['zener', 'zenersmall']
-                               - ['d', 'diode', 'd_small'].
+          Each entry is a list of equivalen names.
+          Example: ['c', 'c_small', 'cap' ] will ensure the equivalent capacitor symbols can be grouped together.
+          If empty the following aliases are used:
+          - ['r', 'r_small', 'res', 'resistor']
+          - ['l', 'l_small', 'inductor']
+          - ['c', 'c_small', 'cap', 'capacitor']
+          - ['sw', 'switch']
+          - ['zener', 'zenersmall']
+          - ['d', 'diode', 'd_small'].
         - `cost_extra_columns`: [list(dict)|list(string)] List of columns to add to the global section of the cost.
                                 Can be just the name of the field.
           * Valid keys:
@@ -1047,37 +1049,37 @@ Next time you need this list just use an alias, like this:
                 - `join`: [list(string)|string=''] List of fields to join to this column.
                 - `name`: [string=''] Name to display in the header. The field is used when empty.
             - `component_aliases`: [list(list(string))] A series of values which are considered to be equivalent for the part name.
-                                   Each entry is a list of equivalen names. Example: ['c', 'c_small', 'cap' ]
-                                   will ensure the equivalent capacitor symbols can be grouped together.
-                                   If empty the following aliases are used:
-                                   - ['r', 'r_small', 'res', 'resistor']
-                                   - ['l', 'l_small', 'inductor']
-                                   - ['c', 'c_small', 'cap', 'capacitor']
-                                   - ['sw', 'switch']
-                                   - ['zener', 'zenersmall']
-                                   - ['d', 'diode', 'd_small'].
+              Each entry is a list of equivalen names.
+              Example: ['c', 'c_small', 'cap' ] will ensure the equivalent capacitor symbols can be grouped together.
+              If empty the following aliases are used:
+              - ['r', 'r_small', 'res', 'resistor']
+              - ['l', 'l_small', 'inductor']
+              - ['c', 'c_small', 'cap', 'capacitor']
+              - ['sw', 'switch']
+              - ['zener', 'zenersmall']
+              - ['d', 'diode', 'd_small'].
             - `datasheet_as_link`: [string=''] Column with links to the datasheet (HTML only).
             - `digikey_link`: [string|list(string)=''] Column/s containing Digi-Key part numbers, will be linked to web page (HTML only).
             - `exclude_any`: [list(dict)] A series of regular expressions used to exclude parts.
-                             If a component matches ANY of these, it will be excluded.
-                             Column names are case-insensitive.
-                             If empty the following list is used:
-                             - column: References
-                               regex: '^TP[0-9]*'
-                             - column: References
-                               regex: '^FID'
-                             - column: Part
-                               regex: 'mount.*hole'
-                             - column: Part
-                               regex: 'solder.*bridge'
-                             - column: Part
-                               regex: 'test.*point'
-                             - column: Footprint
-                               regex 'test.*point'
-                             - column: Footprint
-                               regex: 'mount.*hole'
-                             - column: Footprint
-                               regex: 'fiducial'.
+              If a component matches ANY of these, it will be excluded.
+              Column names are case-insensitive.
+              If empty the following list is used:
+              - column: References  
+                regex: '^TP[0-9]*'
+              - column: References  
+                regex: '^FID'
+              - column: Part  
+                regex: 'mount.*hole'
+              - column: Part  
+                regex: 'solder.*bridge'
+              - column: Part  
+                regex: 'test.*point'
+              - column: Footprint  
+                regex 'test.*point'
+              - column: Footprint  
+                regex: 'mount.*hole'
+              - column: Footprint  
+                regex: 'fiducial'.
               * Valid keys:
                 - `column`: [string=''] Name of the column to apply the regular expression.
                 - *field*: Alias for column.
@@ -1482,7 +1484,7 @@ Next time you need this list just use an alias, like this:
 
 #### Consolidating BoMs
 
-Some times your project is composed by various boards, other you are producing various products at the same time.
+Some times your project is composed by various boards, other times you are producing various products at the same time.
 In both cases you would want to consolidate the components acquisition in one operation.
 Of course you can create individual BoMs for each project in CSV format and then consolidate them using a spreadsheet editor.
 But KiBot offers another option: you create a BoM for your main project and then aggregate the components from the other projects.
@@ -1531,7 +1533,8 @@ And get `test_merge/BoM/merge_1-bom.csv`:
 | Number of PCBs:    | 1                                 |
 | Total Components:  | 5                                 |
 
-This CSV says you have five components groped in three different types. They are one 1 nF capacitor, one 10 nF capacitor and three 1 k resistors.
+This CSV says you have five components grouped into three different types.
+They are one 1 nF capacitor, one 10 nF capacitor and three 1 k resistors.
 Now lets generate BoMs for the *merge_2* example:
 
 ```shell
@@ -1561,7 +1564,8 @@ We'll get `test_merge/BoM/merge_2-bom.csv`:
 | Number of PCBs:    | 1                                 |
 | Total Components:  | 6                                 |
 
-In this project we have six components from four different types. They are similar to *merge_1* but now we also have a 10 k resistor.
+In this project we have six components from four different types.
+They are similar to *merge_1* but now we also have a 10 k resistor.
 We don't need to generate this BoM to consolidate our projects, but is good to know what we have.
 And now lets generate BoMs for the *merge_3* example:
 
@@ -1590,7 +1594,8 @@ We'll get `test_merge/BoM/merge_3-bom.csv`:
 | Number of PCBs:    | 1                                 |
 | Total Components:  | 5                                 |
 
-This time we also have five components, but from two different types. They are one 1 k resistor and four 10 k resistors.
+This time we also have five components, but from two different types.
+They are one 1 k resistor and four 10 k resistors.
 Now suppose we want to create 10 boards for *merge_1*, 20 for *merge_2* and 30 for *merge_3*.
 We could use the following configuration:
 
@@ -1670,7 +1675,8 @@ The `test_merge_consolidate/BoM/merge_1-bom.csv` file will be generated containi
 | Number of PCBs:    | 30                                |
 | Total Components:  | 150                               |
 
-You can see that now we have much more stats. They say we have four different types, thirteen for board sets, a total of 60 boards and 250 components.
+You can see that now we have much more stats.
+They say we have four different types, thirteen for board sets, a total of 60 boards and 250 components.
 Then we have individual stats for each project.
 The capacitors are easy to interpret, we have 30 1 nF capacitors *merge_1* project has one and *merge_2* another.
 As we have 10 *merge_1* and 20 *merge_2* boards this is clear.
@@ -1829,26 +1835,25 @@ And if you want to use the same options selected in the plot dialog use:
 kibot -b PCB_FILE -p --example
 ```
 
-If the current directory contains only one PCB file and only one configuration file (named *.kibot.yaml)
-you can just call `kibot`. No arguments needed. The tool will figure out which files to use.
+If the current directory contains only one PCB file and only one configuration file (named *.kibot.yaml) you can just call `kibot`.
+No arguments needed.
+The tool will figure out which files to use.
 
-If more than one file is found in the current directory `kibot` will use the first found and issue a
-warning. If you need to use other file just tell it explicitly:
+If more than one file is found in the current directory `kibot` will use the first found and issue a warning.
+If you need to use another file just tell it explicitly:
 
 ```shell
 kibot -b PCB_FILE.kicad_pcb -c CONFIG.kibot.yaml
 ```
 
-A simple target can be added to your `makefile`, so you can just run
-`make pcb_files` or integrate into your current build process.
+A simple target can be added to your `makefile`, so you can just run `make pcb_files` or integrate into your current build process.
 
 ```Makefile
 pcb_files:
     kibot -b $(PCB) -c $(KIBOT_CFG)
 ```
 
-If you need to supress messages use `--quiet` or `-q` and if you need to get more informatio about
-what's going on use `--verbose` or `-v`.
+If you need to supress messages use `--quiet` or `-q` and if you need to get more information about what's going on use `--verbose` or `-v`.
 
 If you want to generate only some of the outputs use:
 
@@ -1875,8 +1880,8 @@ If you want to skip all the `preflight` tasks use:
 kibot --skip-pre all
 ```
 
-All outputs are generated using the current directory as base. If you want to use another
-directory as base use:
+All outputs are generated using the current directory as base.
+If you want to use another directory as base use:
 
 ```shell
 kibot --out-dir OTHER_PLACE
