@@ -85,9 +85,11 @@ def convert(pcb, brd):
               .format(count=len(net_items)))
     for net_item in net_items:
         code = net_item.GetNet() if GS.ki5() else net_item.GetNetCode()
+        # if net name contains slashes (due to hierarchical sheets), use part after final slash
+        name = net_item.GetNetname().rsplit('/', 1)[-1]
         brd.write("{code} {name}\n"
                   .format(code=code,
-                          name=net_item.GetNetname().replace(" ", u"\u00A0")))
+                          name=name.replace(" ", u"\u00A0")))
     brd.write("\n")
 
     # Parts
