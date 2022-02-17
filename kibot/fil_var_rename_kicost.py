@@ -9,10 +9,12 @@ Implements the kicost.VARIANT:FIELD=VALUE renamer to get FIELD=VALUE when VARIAN
 It applies the KiCost concept of variants (a regex to match the VARIANT)
 Can be configured, by default is what KiCost does.
 """
+from __future__ import annotations
 import re
 from .gs import GS
 from .macros import macros, document, filter_class  # noqa: F401
 from . import log
+from .fil_base import BaseFilter
 
 logger = log.get_logger()
 

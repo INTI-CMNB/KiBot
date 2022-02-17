@@ -48,6 +48,7 @@ Options:
   -x, --example                    Create a template configuration file.
 
 """
+from __future__ import annotations
 __author__ = 'Salvador E. Tropea, John Beard'
 __copyright__ = 'Copyright 2018-2021, Salvador E. Tropea/INTI/John Beard'
 __credits__ = ['Salvador E. Tropea', 'John Beard']
@@ -56,7 +57,6 @@ __email__ = 'stropea@inti.gob.ar'
 __url__ = 'https://github.com/INTI-CMNB/KiBot/'
 __status__ = 'stable'
 __version__ = '0.11.0'
-
 
 import os
 import sys

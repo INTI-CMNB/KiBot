@@ -34,7 +34,7 @@ class Optionable(object):
     _color_re = re.compile(r"#[A-Fa-f0-9]{6}$")
 
     def __init__(self):
-        self._unkown_is_error = False
+        self._unknown_is_error = False
         self._error_context = ''
         self._tree = {}
         self._configured = False
@@ -116,7 +116,7 @@ class Optionable(object):
         for k, v in self._tree.items():
             # Map known attributes and avoid mapping private ones
             if (k[0] == '_') or (k not in attrs):
-                if self._unkown_is_error:
+                if self._unknown_is_error:
                     raise KiPlotConfigurationError("Unknown {}option `{}`".format(self._error_context, k))
                 logger.warning(W_UNKOPS + "Unknown {}option `{}`".format(self._error_context, k))
                 continue
@@ -325,7 +325,7 @@ class Optionable(object):
         return Optionable.expand_filename_both(self, name)
 
     @staticmethod
-    def force_list(val):
+    def force_listl(val: str|list[str]|None) -> list[str]:
         """ Used for values that accept a string or a list of strings.
             The string can be a comma separated list """
         if isinstance(val, type):
@@ -338,13 +338,15 @@ class Optionable(object):
             else:
                 # Empty string
                 val = []
+        elif val is None:
+            val = []
         return val
 
     @classmethod
     def get_default(cls):
         return cls._default
 
-    def validate_color(self, name):
+    def validate_color(self, name: str):
         color = getattr(self, name)
         if not self._color_re.match(color):
             raise KiPlotConfigurationError('Invalid color for `{}` use `#rrggbb` with hex digits'.format(name))

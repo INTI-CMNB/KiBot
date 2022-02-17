@@ -4,7 +4,7 @@
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
 from .gs import GS
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .macros import macros, document, output_class  # noqa: F401
 
 

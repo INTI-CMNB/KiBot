@@ -6,10 +6,12 @@
 """
 Implements the KiBoM variants mechanism.
 """
+from __future__ import annotations
 from .optionable import Optionable
 from .gs import GS
 from .misc import IFILT_MECHANICAL
 from .fil_base import BaseFilter
+from .var_base import BaseVariant
 from .macros import macros, document, variant_class  # noqa: F401
 from . import log
 
@@ -24,16 +26,16 @@ class KiBoM(BaseVariant):  # noqa: F821
         +VARIANT includes the component only if we are using this variant. """
     def __init__(self):
         super().__init__()
-        self._def_exclude_filter = None
-        self._def_dnf_filter = None
-        self._def_dnc_filter = None
+        self._def_exclude_filter: str|None = None
+        self._def_dnf_filter: str|None = None
+        self._def_dnc_filter: str|None = None
         with document:
             self.config_field = 'Config'
             """ Name of the field used to classify components """
-            self.variant = Optionable
+            self.variant = Optionable  ## type: list[string]
             """ [string|list(string)=''] Board variant(s) """
 
-    def get_variant_field(self):
+    def get_variant_field(self) -> str:
         ''' Returns the name of the field used to determine if the component belongs to the variant '''
         return self.config_field
 

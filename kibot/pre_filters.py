@@ -11,6 +11,7 @@ from .error import KiPlotConfigurationError
 from .optionable import Optionable
 from .kiplot import get_output_dir
 from .macros import macros, document, pre_class  # noqa: F401
+from .pre_base import BasePreFlight
 from .log import get_logger
 
 logger = get_logger(__name__)
@@ -20,7 +21,7 @@ class FilterOptions(Optionable):
     """ Valid options for a filter entry """
     def __init__(self):
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.filter = ''
             """ Name for the filter, for documentation purposes """
@@ -85,6 +86,7 @@ class Filters(BasePreFlight):  # noqa: F821
         f.config(self)
         super().__init__(name, f.filters)
 
+    @staticmethod
     def get_example():
         """ Returns a YAML value for the example config """
         return "\n    - filter: 'Filter description'\n      error: '10'\n      regex: 'Regular expression to match'"

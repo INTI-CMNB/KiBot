@@ -25,7 +25,7 @@ try:
 except ModuleNotFoundError:
     XLSX_SUPPORT = False
 
-    class Workbook():
+    class Workbook():  # type:ignore[no-redef]
         pass
 # KiCost support
 try:

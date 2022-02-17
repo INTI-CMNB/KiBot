@@ -3,12 +3,13 @@
 # Copyright (c) 2020-2022 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
+from __future__ import annotations
 import os
 try:
     import pcbnew
 except ImportError:
     # This is caught by __main__, ignore the error here
-    class pcbnew(object):
+    class pcbnew(object):  # type:ignore[no-redef]
         pass
 from datetime import datetime, date
 from sys import exit
@@ -24,17 +25,17 @@ class GS(object):
     Is a static class, just a placeholder for some global variables.
     """
     # PCB name and useful parts
-    pcb_file = None      # /.../dir/pcb.kicad_pcb
-    pcb_no_ext = None    # /.../dir/pcb
-    pcb_dir = None       # /.../dir
-    pcb_basename = None  # pcb
+    pcb_file = None      # /.../dir/pcb.kicad_pcb  ## type: str
+    pcb_no_ext = None    # /.../dir/pcb  ## type: str
+    pcb_dir = None       # /.../dir  ## type: str
+    pcb_basename = None  # pcb  ## type: str
     # SCH name and useful parts
-    sch_file = None      # /.../dir/file.sch
-    sch_no_ext = None    # /.../dir/file
-    sch_dir = None       # /.../dir
-    sch_basename = None  # file
+    sch_file = None      # /.../dir/file.sch  ## type: str
+    sch_no_ext = None    # /.../dir/file  ## type: str
+    sch_dir = None       # /.../dir  ## type: str
+    sch_basename = None  # file  ## type: str
     # Main output dir
-    out_dir = None
+    out_dir = None       ## type: str
     out_dir_in_cmd_line = False
     filter_file = None
     board = None
@@ -43,36 +44,36 @@ class GS(object):
     debug_level = 0
     kibot_version = None
     n = datetime.now()
-    kicad_version = ''
-    kicad_conf_path = None
-    kicad_share_path = None
-    kicad_dir = 'kicad'
-    kicad_plugins_dirs = []
-    pro_ext = '.pro'
-    work_layer = 'Rescue'
+    kicad_version = ''        ## type: str
+    kicad_conf_path = None    ## type: str
+    kicad_share_path = None   ## type: str
+    kicad_dir = 'kicad'       ## type: str
+    kicad_plugins_dirs = []   ## type: list[str]
+    pro_ext = '.pro'          ## type: str
+    work_layer = 'Rescue'     ## type: str
     # KiCad version: major*1e6+minor*1e3+patch
     kicad_version_n = 0
     kicad_version_major = 0
     kicad_version_minor = 0
     kicad_version_patch = 0
     # Data from the SCH because it doesn't have a Python API
-    sch_title = None
-    sch_date = None
-    sch_rev = None
-    sch_comp = None
+    sch_title = None          ## type: str
+    sch_date = None           ## type: str
+    sch_rev = None            ## type: str
+    sch_comp = None           ## type: str
     sch_com = [None]*9
     # Data from the board title block
-    pcb_title = None
-    pcb_date = None
-    pcb_rev = None
-    pcb_comp = None
+    pcb_title = None          ## type: str
+    pcb_date = None           ## type: str
+    pcb_rev = None            ## type: str
+    pcb_comp = None           ## type: str
     pcb_com = [None]*9
     # Current variant/s
     variant = None
     # All the outputs
     outputs = None
     # Name for the output we are generating
-    current_output = None
+    current_output = None    ## type: str
     # Global defaults
     #  This is used as default value for classes supporting "output" option
     def_global_output = '%f-%i%I%v.%x'
@@ -87,19 +88,19 @@ class GS(object):
     solved_global_variant = None
     global_kiauto_wait_start = None
     global_kiauto_time_out_scale = None
-    global_opts_class = None
+    global_opts_class = None  ## type: globals
     global_3D_model_field = '_3D_model'
-    global_date_time_format = None
-    global_date_format = None
-    global_time_format = None
+    global_date_time_format = None  ## type: str
+    global_date_format = None  ## type: str
+    global_time_format = None  ## type: str
     global_time_reformat = None
     global_pcb_material = None
-    global_solder_mask_color = None
-    global_solder_mask_color_top = None
-    global_solder_mask_color_bottom = None
-    global_silk_screen_color = None
-    global_silk_screen_color_top = None
-    global_silk_screen_color_bottom = None
+    global_solder_mask_color = None  ## type: str
+    global_solder_mask_color_top = None  ## type: str
+    global_solder_mask_color_bottom = None  ## type: str
+    global_silk_screen_color = None  ## type: str
+    global_silk_screen_color_top = None  ## type: str
+    global_silk_screen_color_bottom = None  ## type: str
     global_pcb_finish = None
     global_copper_thickness = None
     global_edge_connector = None
@@ -266,10 +267,10 @@ class GS(object):
 
     @staticmethod
     def load_board():
-        """ Will be repplaced by kiplot.py """
+        """ Will be replaced by kiplot.py """
         assert False
 
     @staticmethod
     def load_sch():
-        """ Will be repplaced by kiplot.py """
+        """ Will be replaced by kiplot.py """
         assert False

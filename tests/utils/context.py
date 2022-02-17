@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import sys
 import shutil
@@ -30,8 +31,9 @@ if ng_ver:
     # Path to the Python module
     sys.path.insert(0, '/usr/lib/kicad-nightly/lib/python3/dist-packages')
 import pcbnew
-m = re.search(r'(\d+)\.(\d+)\.(\d+)', pcbnew.GetBuildVersion())
 logging.debug(pcbnew.GetBuildVersion())
+m=re.search(r'(\d+)\.(\d+)\.(\d+)', pcbnew.GetBuildVersion())
+assert m is not None
 kicad_major = int(m.group(1))
 kicad_minor = int(m.group(2))
 kicad_patch = int(m.group(3))
@@ -632,7 +634,7 @@ class TestContext(object):
         worksheet = self.get_out_path(os.path.join('desc', 'xl', 'worksheets', 'sheet'+str(sheet)+'.xml'))
         if not os.path.isfile(worksheet):
             return None, None, None
-        rows = []
+        rows: list[list[str|int]] = []
         root = ET.parse(worksheet).getroot()
         ns = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
         rnum = 1

@@ -82,7 +82,7 @@ class Globals(FiltersOptions):
                 KiCad 6: you should set this in the Board Setup -> Board Finish -> Plated board edge """
             self.copper_finish = None
             """ {pcb_finish} """
-            self.copper_thickness = 35
+            self.copper_thickness:str = "35"
             """ Copper thickness in micrometers (1 Oz is 35 micrometers).
                 KiCad 6: you should set this in the Board Setup -> Physical Stackup """
             self.impedance_controlled = False
@@ -90,7 +90,7 @@ class Globals(FiltersOptions):
                 KiCad 6: you should set this in the Board Setup -> Physical Stackup """
         self.set_doc('filters', " [list(dict)] KiBot warnings to be ignored ")
         self._filter_what = 'KiBot warnings'
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         self._error_context = 'global '
 
     def set_global(self, opt):
@@ -141,9 +141,9 @@ class Globals(FiltersOptions):
         with open(GS.pcb_file, 'rt') as fh:
             try:
                 pcb = load(fh)
-            except SExpData as e:
+            except SExpData as exception:
                 # Don't make it an error, will be detected and reported latter
-                logger.debug("- Failed to load the PCB "+str(e))
+                logger.debug("- Failed to load the PCB "+str(exception))
         if pcb is None:
             return
         iter = sexp_iter(pcb, 'kicad_pcb/setup/stackup')
@@ -159,10 +159,10 @@ class Globals(FiltersOptions):
         for e in sp[1:]:
             if isinstance(e, list) and isinstance(e[0], Symbol):
                 name = e[0].value()
-                value = None
+                value = ""  # Default to empty string, for concatenations
                 if len(e) > 1:
                     if isinstance(e[1], Symbol):
-                        value = e[1].value()
+                        value = str(e[1].value())
                     else:
                         value = str(e[1])
                 if name == 'copper_finish':

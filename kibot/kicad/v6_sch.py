@@ -1686,8 +1686,8 @@ class SchematicV6(Schematic):
             error = None
             try:
                 sch = load(fh)[0]
-            except SExpData as e:
-                error = str(e)
+            except SExpData as exception:
+                error = str(exception)
             if error:
                 raise SchError(error)
         if not isinstance(sch, list) or sch[0].value() != 'kicad_sch':

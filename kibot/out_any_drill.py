@@ -22,7 +22,7 @@ class DrillMap(Optionable):
             self.type = 'pdf'
             """ [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map """
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
 
 
 class DrillReport(Optionable):
@@ -32,7 +32,7 @@ class DrillReport(Optionable):
             self.filename = ''
             """ Name of the drill report. Not generated unless a name is specified.
                 (%i='drill_report' %x='txt') """
-        self._unkown_is_error = True
+        self._unknown_is_error = True
 
 
 class AnyDrill(BaseOptions):

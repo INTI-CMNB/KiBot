@@ -102,7 +102,7 @@ class Layer(Optionable):
             """ Suffix used in file names related to this layer. Derived from the name if not specified """
             self.description = ''
             """ A description for the layer, for documentation purposes """
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         self._protel_extension = None
 
     def config(self, parent):

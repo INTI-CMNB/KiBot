@@ -18,15 +18,15 @@ logger = log.get_logger()
 
 
 class Render3DOptions(Base3DOptions):
-    _colors = {'background1': 'bg_color_1',
+    _colors: dict[str, str] = {'background1': 'bg_color_1',
                'background2': 'bg_color_2',
                'copper': 'copper_color',
                'board': 'board_color',
                'silk': 'silk_color',
                'solder_mask': 'sm_color',
                'solder_paste': 'sp_color'}
-    _views = {'top': 'z', 'bottom': 'Z', 'front': 'y', 'rear': 'Y', 'right': 'x', 'left': 'X'}
-    _rviews = {v: k for k, v in _views.items()}
+    _views: dict[str, str] = {'top': 'z', 'bottom': 'Z', 'front': 'y', 'rear': 'Y', 'right': 'x', 'left': 'X'}
+    _rviews: dict[str,str] = {v: k for k, v in _views.items()}
 
     def __init__(self):
         with document:

@@ -83,7 +83,7 @@ class QRCodeOptions(Optionable):
             """ [silk,copper] Layer for the footprint """
             self.pcb_negative = False
             """ Generate a negative image for the PCB """
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         self._update_mode = False
 
     def config(self, parent):

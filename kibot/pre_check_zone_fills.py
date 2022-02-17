@@ -5,6 +5,7 @@
 # Project: KiBot (formerly KiPlot)
 from .error import (KiPlotConfigurationError)
 from .macros import macros, pre_class  # noqa: F401
+from .pre_base import BasePreFlight
 
 
 @pre_class

@@ -3,10 +3,11 @@
 # Copyright (c) 2021 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
+from __future__ import annotations
 import os
 import re
 import requests
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .fil_base import DummyFilter
 from .error import KiPlotConfigurationError
 from .misc import W_UNKFLD, W_ALRDOWN, W_FAILDL

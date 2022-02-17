@@ -7,6 +7,7 @@
 Internal BoM (Bill of Materials) output for KiBot.
 This is somehow compatible with KiBoM.
 """
+from __future__ import annotations
 import os
 import re
 from .gs import GS
@@ -19,6 +20,7 @@ from .bom.columnlist import ColumnList, BoMError
 from .bom.bom import do_bom
 from .var_kibom import KiBoM
 from .fil_base import BaseFilter, apply_exclude_filter, apply_fitted_filter, apply_fixed_filter, reset_filters
+from .out_base import BaseOutput
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 # To debug the `with document` we can use:
@@ -46,7 +48,7 @@ class BoMJoinField(Optionable):
             self.text_before = ''
             self.text_after = ''
             return
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.field = ''
             """ Name of the field """
@@ -66,7 +68,7 @@ class BoMJoinField(Optionable):
         self._nl = re.compile(r'([^\\]|^)\\n')
         self._tab = re.compile(r'([^\\]|^)\\t')
 
-    def unescape(self, text):
+    def unescape(self, text: str) -> str:
         text = self._nl.sub(r'\1\n', text)
         text = self._tab.sub(r'\1\t', text)
         return text
@@ -106,7 +108,7 @@ class BoMColumns(Optionable):
     """ Information for the BoM columns """
     def __init__(self):
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.field = ''
             """ Name of the field to use for this column """

@@ -10,7 +10,7 @@ from shutil import rmtree
 from .gs import (GS)
 from .kiplot import check_eeschema_do, exec_with_retry, add_extra_options
 from .misc import (CMD_EESCHEMA_DO, SVG_SCH_PRINT)
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 

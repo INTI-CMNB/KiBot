@@ -11,7 +11,7 @@ from .error import (KiPlotConfigurationError)
 from .gs import (GS)
 from .kiplot import check_script, exec_with_retry, add_extra_options
 from .misc import (CMD_PCBNEW_PRINT_LAYERS, URL_PCBNEW_PRINT_LAYERS, PDF_PCB_PRINT)
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .macros import macros, document, output_class  # noqa: F401
 from .layer import Layer
 from . import log

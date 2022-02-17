@@ -9,7 +9,7 @@ import pcbnew
 
 from .gs import GS
 from .misc import UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES
-from .out_base import BaseOptions
+from .out_base import BaseOptions, BaseOutput
 from .error import KiPlotConfigurationError
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
@@ -267,7 +267,7 @@ class ReportOptions(BaseOptions):
 
     def meassure_pcb(self, board):
         edge_layer = board.GetLayerID('Edge.Cuts')
-        x1 = y1 = x2 = y2 = None
+        x1 = y1 = x2 = y2 = None  ## type: float
         draw_type = 'DRAWSEGMENT' if GS.ki5() else 'PCB_SHAPE'
         for d in board.GetDrawings():
             if d.GetClass() == draw_type and d.GetLayer() == edge_layer:

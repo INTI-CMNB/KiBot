@@ -6,10 +6,12 @@
 """
 Implements the IBoM variants mechanism.
 """
+from __future__ import annotations
 from .optionable import Optionable
 from .gs import GS
 from .misc import IFILT_MECHANICAL
 from .fil_base import BaseFilter
+from .var_base import BaseVariant
 from .macros import macros, document, variant_class  # noqa: F401
 from . import log
 

@@ -3,6 +3,7 @@
 # Copyright (c) 2021 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
+from __future__ import annotations
 import os
 from os.path import isfile, abspath, join, dirname
 from subprocess import check_output, STDOUT, CalledProcessError
@@ -14,7 +15,7 @@ from .error import KiPlotConfigurationError
 from .optionable import Optionable
 from .gs import GS
 from .kiplot import check_script
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .macros import macros, document, output_class  # noqa: F401
 from .fil_base import FieldRename
 from . import log
@@ -151,6 +152,7 @@ class KiCostOptions(VariantOptions):
                 logger.warning(W_MIXVARIANT+'Avoid using KiCost variants and internal variants on the same output')
             # Write a custom netlist to a temporal dir
             net_dir = mkdtemp(prefix='tmp-kibot-kicost-')
+            assert net_dir is not None
             netlist = os.path.join(net_dir, GS.sch_basename+'.xml')
             with open(netlist, 'wb') as f:
                 GS.sch.save_netlist(f, self._comps, no_field=var_fields)

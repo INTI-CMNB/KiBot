@@ -5,6 +5,7 @@
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot/pull/10
+from __future__ import annotations
 import os
 from re import compile
 from datetime import datetime
@@ -12,7 +13,7 @@ from collections import OrderedDict
 from .gs import GS
 from .misc import UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES
 from .optionable import Optionable
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .error import KiPlotConfigurationError
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
@@ -21,7 +22,7 @@ logger = log.get_logger()
 ref_re = compile(r'([^\d]+)([\?\d]+)')
 
 
-def _ref_key(ref_str):
+def _ref_key(ref_str: str):
     """ Splits a reference intro prefix and suffix.
         Helps to sort references in a natural way. """
     m = ref_re.match(ref_str)
@@ -35,7 +36,7 @@ class PosColumns(Optionable):
     """ Which columns we want and its names """
     def __init__(self):
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.id = ''
             """ [Ref,Val,Package,PosX,PosY,Rot,Side] Internal name """
@@ -135,6 +136,7 @@ class PositionOptions(VariantOptions):
                     file = topf
                 else:
                     file = botf
+            assert file is not None
             for idx, col in enumerate(m):
                 if idx > 0:
                     file.write("   ")
@@ -174,6 +176,7 @@ class PositionOptions(VariantOptions):
                     file = topf
                 else:
                     file = botf
+            assert file is not None
             file.write(",".join('{}'.format(e) for e in m))
             file.write("\n")
 

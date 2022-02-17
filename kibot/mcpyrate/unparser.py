@@ -85,7 +85,7 @@ class Unparser:
         """
         # HACK: avoid circular import
         global quotes
-        from . import quotes
+        from . import quotes  # type:ignore[misc]
 
         self.debug = debug
         self.color = color

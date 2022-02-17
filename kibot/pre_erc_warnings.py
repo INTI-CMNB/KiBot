@@ -5,6 +5,7 @@
 # Project: KiBot (formerly KiPlot)
 from .macros import macros, pre_class  # noqa: F401
 from .error import (KiPlotConfigurationError)
+from .pre_base import BasePreFlight
 
 
 @pre_class
@@ -16,6 +17,7 @@ class ERC_Warnings(BasePreFlight):  # noqa: F821
             raise KiPlotConfigurationError('must be boolean')
         self._enabled = value
 
+    @staticmethod
     def get_example():
         """ Returns a YAML value for the example config """
         return 'false'

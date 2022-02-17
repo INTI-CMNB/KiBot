@@ -30,11 +30,11 @@ class Base3DOptions(VariantOptions):
             self.kicad_3d_url = 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
             """ Base URL for the KiCad 3D models """
         # Temporal dir used to store the downloaded files
-        self._tmp_dir = None
+        self._tmp_dir = None  ## type: str
         super().__init__()
         self._expand_id = '3D'
 
-    def download_model(self, url, fname):
+    def download_model(self, url: str, fname: str) -> str|None:
         """ Download the 3D model from the provided URL """
         logger.debug('Downloading `{}`'.format(url))
         r = requests.get(url, allow_redirects=True)

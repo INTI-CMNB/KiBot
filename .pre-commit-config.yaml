@@ -80,3 +80,5 @@ repos:
           - typed-ast==1.5.2
           - types-PyYAML==6.0.4
           - types-requests==2.27.10
+          - colorama
+          - qrcodegen

@@ -6,9 +6,11 @@
 """
 Implements the VARIANT:FIELD=VALUE renamer to get FIELD=VALUE when VARIANT is in use.
 """
+from __future__ import annotations
 from .gs import GS
 from .macros import macros, document, filter_class  # noqa: F401
 from . import log
+from .fil_base import BaseFilter
 
 logger = log.get_logger()
 

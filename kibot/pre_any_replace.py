@@ -21,7 +21,7 @@ class TagReplaceBase(Optionable):
     """ Tags to be replaced """
     def __init__(self):
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.tag = ''
             """ Name of the tag to replace. Use `version` for a tag named `@version@` """

@@ -13,6 +13,7 @@ from .optionable import Optionable
 from .error import KiPlotConfigurationError
 from .macros import macros, document, filter_class  # noqa: F401
 from . import log
+from .fil_base import BaseFilter
 
 logger = log.get_logger()
 

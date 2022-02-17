@@ -249,8 +249,8 @@ class AnyLayer(BaseOutput):
         if isinstance(self.layers, type):
             raise KiPlotConfigurationError("Missing `layers` list")
 
-    def get_targets(self, out_dir):
+    def get_targets(self, out_dir: str):
         return self.options.get_targets(out_dir, self.layers)
 
-    def run(self, output_dir):
+    def run(self, output_dir: str):
         self.options.run(output_dir, self.layers)

@@ -11,6 +11,7 @@ from .gs import (GS)
 from .optionable import Optionable
 from .kiplot import check_script, exec_with_retry, load_board, add_extra_options
 from .misc import (CMD_PCBNEW_RUN_DRC, URL_PCBNEW_RUN_DRC, DRC_ERROR)
+from .pre_base import BasePreFlight
 from .log import (get_logger)
 
 logger = get_logger(__name__)

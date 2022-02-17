@@ -12,7 +12,7 @@ from .macros import macros, document  # noqa: F401
 class BaseVariant(RegVariant):
     def __init__(self):
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.name = ''
             """ Used to identify this particular variant definition """

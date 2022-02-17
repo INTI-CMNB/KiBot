@@ -14,6 +14,7 @@ Notes about coverage:
 I'm excluding all the Darwin and Windows code from coverage.
 I'm not even sure the values are correct.
 """
+from __future__ import annotations
 import os
 import re
 import sys
@@ -31,7 +32,7 @@ if sys.version_info.major >= 3:
     import configparser as ConfigParser
 else:  # pragma: no cover (Py2)
     # For future Python 2 support
-    import ConfigParser
+    import ConfigParser  # type:ignore[no-redef]
 
 logger = log.get_logger()
 SYM_LIB_TABLE = 'sym-lib-table'
@@ -101,27 +102,30 @@ class LibAlias(object):
 class KiConf(object):
     """ Class to load and hold all KiCad configuration """
     loaded = False
-    config_dir = None
-    dirname = None
-    sym_lib_dir = None
-    template_dir = None
+    config_dir = None    ## type: str
+    dirname = None       ## type: str
+    sym_lib_dir = None   ## type: str
+    template_dir = None  ## type: str
     kicad_env = {}
     lib_aliases = {}
 
     def __init__(self):
         assert False, "KiConf is fully static, no instances allowed"
 
-    def init(fname):
+    @staticmethod
+    def init(fname: str):
         """ fname is the base project name, any extension is allowed.
             So it can be the main schematic, the PCB or the project. """
         if KiConf.loaded:
             return
-        KiConf.dirname = os.path.dirname(fname)
+        d = os.path.dirname(fname)
+        KiConf.dirname = d if d is not None else ""
         KiConf.kicad_env['KIPRJMOD'] = KiConf.dirname
         KiConf.load_kicad_common()
         KiConf.load_all_lib_aliases()
         KiConf.loaded = True
 
+    @staticmethod
     def find_kicad_common():
         """ Looks for kicad_common config file.
             Returns its name or None. """
@@ -135,7 +139,8 @@ class KiConf(object):
         logger.warning(W_NOCONFIG + 'Unable to find KiCad configuration file ({})'.format(cfg))
         return None
 
-    def guess_kicad_data_dir(data_dir, env_var):
+    @staticmethod
+    def guess_kicad_data_dir(data_dir: str, env_var: str):
         """ Tries to figure out where libraries are.
             Only used if we failed to find the kicad_common file. """
         dir = os.environ.get(env_var)
@@ -178,6 +183,7 @@ class KiConf(object):
                 return dir
         return None
 
+    @staticmethod
     def guess_symbol_dir():
         if GS.ki5():
             order = ['library', 'symbols']
@@ -188,6 +194,7 @@ class KiConf(object):
             guess = KiConf.guess_kicad_data_dir(order[1], 'KICAD_SYMBOL_DIR')
         return guess
 
+    @staticmethod
     def guess_footprint_dir():
         if GS.ki5():
             order = ['modules', 'footprints']
@@ -198,9 +205,11 @@ class KiConf(object):
             guess = KiConf.guess_kicad_data_dir(order[1], 'KICAD_FOOTPRINT_DIR')
         return guess
 
+    @staticmethod
     def guess_template_dir():
         return KiConf.guess_kicad_data_dir('template', 'KICAD_TEMPLATE_DIR')
 
+    @staticmethod
     def guess_3d_dir():
         modules3d = os.path.join('modules', 'packages3d')
         if GS.ki5():
@@ -212,7 +221,8 @@ class KiConf(object):
             guess = KiConf.guess_kicad_data_dir(order[1], 'KISYS3DMOD')
         return guess
 
-    def load_ki5_env(cfg):
+    @staticmethod
+    def load_ki5_env(cfg: str):
         """ Environment vars from KiCad 5 configuration """
         # Load the "environment variables"
         with open(cfg, 'rt') as f:
@@ -232,7 +242,8 @@ class KiConf(object):
                     logger.debug('- KiCad var: {}="{}"'.format(k, v))
                 KiConf.kicad_env[k] = v
 
-    def load_ki6_env(cfg):
+    @staticmethod
+    def load_ki6_env(cfg: str):
         """ Environment vars from KiCad 6 configuration """
         with open(cfg, 'rt') as f:
             data = json.load(f)
@@ -244,6 +255,7 @@ class KiConf(object):
         else:
             logger.warning(W_NOKIENV + 'KiCad config without environment.vars section')
 
+    @staticmethod
     def load_kicad_common():
         # Try to figure out KiCad configuration file
         cfg = KiConf.find_kicad_common()
@@ -324,7 +336,8 @@ class KiConf(object):
                 logger.debug('Exporting KICAD6_FOOTPRINT_DIR="{}"'.format(aux))
                 os.environ['KICAD6_FOOTPRINT_DIR'] = aux
 
-    def load_lib_aliases(fname):
+    @staticmethod
+    def load_lib_aliases(fname: str):
         if not os.path.isfile(fname):
             return False
         logger.debug('Loading symbols lib table `{}`'.format(fname))
@@ -347,6 +360,7 @@ class KiConf(object):
                 cline += 1
         return True
 
+    @staticmethod
     def load_all_lib_aliases():
         # Load the default symbol libs table.
         # This is the list of libraries enabled by the user.
@@ -375,5 +389,6 @@ class KiConf(object):
         # Load the project's table
         KiConf.load_lib_aliases(os.path.join(KiConf.dirname, SYM_LIB_TABLE))
 
-    def expand_env(name):
+    @staticmethod
+    def expand_env(name: str):
         return os.path.abspath(expand_env(un_quote(name), KiConf.kicad_env))

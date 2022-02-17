@@ -48,5 +48,5 @@ class SVG(AnyLayer):
     def __init__(self):
         super().__init__()
         with document:
-            self.options = SVGOptions
+            self.options: dict = SVGOptions
             """ [dict] Options for the `svg` output """

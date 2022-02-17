@@ -78,7 +78,7 @@ class LiftSourcecode(QuasiquoteMarker):
     def __init__(self, body, filename):
         super().__init__(body)
         self.filename = filename
-        self._fields += ["filename"]
+        self._fields += ("filename",)
 
 
 class ASTLiteral(QuasiquoteMarker):  # similar to `macropy`'s `Literal`, but supports block mode, too.
@@ -86,7 +86,7 @@ class ASTLiteral(QuasiquoteMarker):  # similar to `macropy`'s `Literal`, but sup
     def __init__(self, body, syntax):
         super().__init__(body)
         self.syntax = syntax
-        self._fields += ["syntax"]
+        self._fields += ("syntax",)
 
 
 class ASTList(QuasiquoteMarker):
@@ -111,7 +111,7 @@ class Capture(QuasiquoteMarker):  # like `macropy`'s `Captured`
     def __init__(self, body, name):
         super().__init__(body)
         self.name = name
-        self._fields += ["name"]
+        self._fields += ("name",)
 
 # --------------------------------------------------------------------------------
 # Run-time parts of the operators.

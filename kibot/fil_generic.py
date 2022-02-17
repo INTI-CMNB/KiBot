@@ -6,6 +6,7 @@
 """
 Implements the KiBoM and IBoM filters.
 """
+from __future__ import annotations
 from re import compile, IGNORECASE
 from .optionable import Optionable
 from .bom.columnlist import ColumnList
@@ -13,6 +14,7 @@ from .gs import GS
 from .misc import DNF, DNC
 from .macros import macros, document, filter_class  # noqa: F401
 from .out_base import BoMRegex
+from .fil_base import BaseFilter
 from . import log
 
 logger = log.get_logger()
@@ -47,7 +49,7 @@ class Generic(BaseFilter):  # noqa: F821
             """ [list(dict)] A series of regular expressions used to exclude parts.
                 If a component matches ANY of these, it will be excluded.
                 Column names are case-insensitive  """
-            self.keys = DNFList
+            self.keys: tuple[str|list[str],str|list[str]] = DNFList
             """ [string|list(string)=dnf_list] [dnc_list,dnf_list] List of keys to match.
                 The `dnf_list` and `dnc_list` internal lists can be specified as strings """
             self.exclude_value = False
@@ -63,7 +65,7 @@ class Generic(BaseFilter):  # noqa: F821
             """ Exclude components if a field is named as any of the keys """
             self.exclude_empty_val = False
             """ Exclude components with empty 'Value' """
-            self.exclude_refs = Optionable
+            self.exclude_refs: list[str]|None = Optionable
             """ [list(string)] List of references to be excluded.
                 Use R* for all references with R prefix """
             self.exclude_all_hash_ref = False

@@ -3,6 +3,7 @@
 # Copyright (c) 2020-2021 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
+from __future__ import annotations
 import os
 from copy import deepcopy
 from .gs import GS
@@ -53,7 +54,7 @@ class BaseOutput(RegOutput):
             self.dir = GS.global_dir
         self._sch_related = False
         self._both_related = False
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         self._done = False
 
     @staticmethod
@@ -75,7 +76,7 @@ class BaseOutput(RegOutput):
             return []
         return self.options.get_targets(out_dir)
 
-    def get_dependencies(self):
+    def get_dependencies(self) -> list[str]:
         """ Returns a list of files needed to create this output """
         if self._sch_related:
             if GS.sch:
@@ -129,7 +130,7 @@ class BoMRegex(Optionable):
     """ Implements the pair column/regex """
     def __init__(self):
         super().__init__()
-        self._unkown_is_error = True
+        self._unknown_is_error = True
         with document:
             self.column = ''
             """ Name of the column to apply the regular expression """

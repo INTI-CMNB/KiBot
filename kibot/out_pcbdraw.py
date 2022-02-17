@@ -13,7 +13,7 @@ from .misc import (PCBDRAW, PCBDRAW_ERR, URL_PCBDRAW, W_AMBLIST, W_UNRETOOL, W_U
 from .kiplot import check_script
 from .gs import (GS)
 from .optionable import Optionable
-from .out_base import VariantOptions
+from .out_base import VariantOptions, BaseOutput
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 
@@ -137,7 +137,7 @@ class PcbDrawOptions(VariantOptions):
             self.mirror = False
             """ Mirror the board """
             self.highlight = Optionable
-            """ [list(string)=[]] List of components to highlight """
+            self.highlight = Optionable
             self.show_components = Optionable
             """ [list(string)|string=none] [none,all] List of components to draw, can be also a string for none or all.
                 The default is none """
@@ -258,17 +258,17 @@ class PcbDrawOptions(VariantOptions):
         super().run(name)
         check_script(PCBDRAW, URL_PCBDRAW, '0.6.0')
         # Base command with overwrite
-        cmd = [PCBDRAW]
+        cmd: list[str] = [PCBDRAW]
         # Add user options
         tmp_style = None
         if self.style:
             if isinstance(self.style, str):
-                cmd.extend(['-s', self.style])
+                cmd.extend(('-s', self.style))
             else:
                 tmp_style = self._create_style()
-                cmd.extend(['-s', tmp_style])
+                cmd.extend(('-s', tmp_style))
         if self.libs:
-            cmd.extend(['-l', self.libs])
+            cmd.extend(('-l', self.libs))
         if self.placeholder:
             cmd.append('--placeholder')
         if self.no_drillholes:
@@ -278,13 +278,13 @@ class PcbDrawOptions(VariantOptions):
         if self.mirror:
             cmd.append('--mirror')
         if self.highlight:
-            cmd.extend(['-a', self.highlight])
+            cmd.extend(('-a', self.highlight))
         if self.show_components is not None:
             to_add = ','.join(self.get_fitted_refs())
             if self.show_components and to_add:
                 self.show_components += ','
             self.show_components += to_add
-            cmd.extend(['-f', self.show_components])
+            cmd.extend(('-f', self.show_components))
         if self.vcuts:
             cmd.append('-v')
         if self.warnings == 'visible':
@@ -292,10 +292,10 @@ class PcbDrawOptions(VariantOptions):
         elif self.warnings == 'none':
             cmd.append('--silent')
         if self.dpi:
-            cmd.extend(['--dpi', str(self.dpi)])
+            cmd.extend(('--dpi', str(self.dpi)))
         if self.remap:
             tmp_remap = self._create_remap()
-            cmd.extend(['-m', tmp_remap])
+            cmd.extend(('-m', tmp_remap))
         else:
             tmp_remap = None
         # The board & output
