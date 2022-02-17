@@ -1,18 +1,7 @@
 ---
-files:
-  (?x)^(
-  .*/Makefile|
-  .*\.sh|
-  .*\.py|
-  .*\.yaml|
-  .*\.md
-  )$
-exclude:
-  (?x)^(
-  .*error.*\.yaml|
-  experiments/.*|
-  submodules/.*
-  )$
+files: (?x)^( .*/Makefile| .*\.sh| .*\.py| .*\.yaml| .*\.md )$
+exclude: (?x)^( |.*error.*\.yaml |experiments/.* |submodules/.* |kibot/mc.* |importer.py
+  |tests/utils/lzstring.py |tests/.config.* )$
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
@@ -40,16 +29,17 @@ repos:
     hooks:
       - id: yamllint
         args: [-c, .yamllint]
-# I see no point in making the code more incompatible with older Python
-#  - repo: https://github.com/asottile/pyupgrade
-#    rev: v2.31.0
-#    hooks:
-#      - id: pyupgrade
-# Too intrusive
-#  - repo: https://github.com/psf/black
-#    rev: 22.1.0
-#    hooks:
-#      - id: black
+  # I see no point in making the code more incompatible with older Python
+  #  - repo: https://github.com/asottile/pyupgrade
+  #    rev: v2.31.0
+  #    hooks:
+  #      - id: pyupgrade
+  # Too intrusive
+  - repo: https://github.com/psf/black
+    rev: 22.1.0
+    hooks:
+      - id: black
+        stages: [manual]
   - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
     rev: v1.0.5
     hooks:
@@ -58,22 +48,35 @@ repos:
     rev: v0.3.1
     hooks:
       - id: autoflake8
-# Flake8 is run outside and here the config doesn't work
-#  - repo: https://github.com/PyCQA/flake8
-#    rev: 3.9.2
-#    hooks:
-#      - id: flake8
-# Sorting imports is dangerous.
-#  - repo: https://github.com/PyCQA/isort
-#    rev: 5.10.1
-#    hooks:
-#      - id: isort
+  # Flake8 is run outside and here the config doesn't work
+  - repo: https://github.com/PyCQA/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-bugbear==22.1.11
+          - flake8-comprehensions==3.8.0
+          - flake8_2020==1.6.1
+          - flake8-docstrings
+          - mccabe==0.6.1
+          - pycodestyle==2.8.0
+          - pyflakes==2.4.0
+  # Sorting imports is dangerous.
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        stages: [manual]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.1.0
     hooks:
       - id: codespell
-#  - repo: https://github.com/pre-commit/mirrors-mypy
-#    rev: v0.931
-#    hooks:
-#      - id: mypy
-  # TODO:  mdformat --wrap 75 README.md --number
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.931
+    hooks:
+      - id: mypy
+        stages: [manual]
+        additional_dependencies:
+          - typed-ast==1.5.2
+          - types-PyYAML==6.0.4
+          - types-requests==2.27.10
