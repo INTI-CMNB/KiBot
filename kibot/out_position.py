@@ -100,7 +100,7 @@ class PositionOptions(VariantOptions):
             self.columns = new_columns
         self._expand_ext = 'pos' if self.format == 'ASCII' else 'csv'
 
-    def _do_position_plot_ascii(self, output_dir, columns, modulesStr, maxSizes):
+    def _do_position_plot_ascii(self, output_dir, columns, top_modulesStr, bot_modulesStr, maxSizes):
         topf = None
         botf = None
         bothf = None
@@ -139,13 +139,20 @@ class PositionOptions(VariantOptions):
         # Account for the "# " at the start of the comment column
         maxSizes[0] = maxSizes[0] + 2
 
-        for m in modulesStr:
+        for m in top_modulesStr:
             file = bothf
             if file is None:
-                if m[-1] == "top":
-                    file = topf
-                else:
-                    file = botf
+                file = topf
+            for idx, col in enumerate(m):
+                if idx > 0:
+                    file.write("   ")
+                file.write("{0: <{width}}".format(col, width=maxSizes[idx]))
+            file.write("\n")
+
+        for m in bot_modulesStr:
+            file = bothf
+            if file is None:
+                file = botf
             for idx, col in enumerate(m):
                 if idx > 0:
                     file.write("   ")
@@ -162,7 +169,7 @@ class PositionOptions(VariantOptions):
         if bothf is not None:
             bothf.close()
 
-    def _do_position_plot_csv(self, output_dir, columns, modulesStr):
+    def _do_position_plot_csv(self, output_dir, columns, top_modulesStr, bot_modulesStr):
         topf = None
         botf = None
         bothf = None
@@ -181,13 +188,17 @@ class PositionOptions(VariantOptions):
             f.write(",".join(columns))
             f.write("\n")
 
-        for m in modulesStr:
+        for m in top_modulesStr:
             file = bothf
             if file is None:
-                if m[-1] == "top":
-                    file = topf
-                else:
-                    file = botf
+                file = topf
+            file.write(",".join('{}'.format(e) for e in m))
+            file.write("\n")
+
+        for m in bot_modulesStr:
+            file = bothf
+            if file is None:
+                file = botf
             file.write(",".join('{}'.format(e) for e in m))
             file.write("\n")
 
@@ -234,7 +245,8 @@ class PositionOptions(VariantOptions):
         conv = GS.unit_name_to_scale_factor(self.units)
         # Format all strings
         comps_hash = self.get_refs_hash()
-        modules = []
+        top_modules = []
+        bot_modules = []
         is_pure_smd, is_not_virtual = self.get_attr_tests()
         quote_char = '"' if self.format == 'CSV' else ''
         x_origin = 0.0
@@ -291,19 +303,24 @@ class PositionOptions(VariantOptions):
                         row.append("{:.4f}".format(rotation))
                     elif k == 'Side':
                         row.append("bottom" if is_bottom else "top")
-                modules.append(row)
+                if is_bottom:
+                    bot_modules.append(row)
+                else:
+                    top_modules.append(row)
         # Find max width for all columns
         maxlengths = []
         for col, name in enumerate(columns):
             max_l = len(name)
-            for row in modules:
+            for row in bot_modules:
+                max_l = max(max_l, len(row[col]))
+            for row in top_modules:
                 max_l = max(max_l, len(row[col]))
             maxlengths.append(max_l)
         # Note: the parser already checked the format is ASCII or CSV
         if self.format == 'ASCII':
-            self._do_position_plot_ascii(output_dir, columns, modules, maxlengths)
+            self._do_position_plot_ascii(output_dir, columns, top_modules, bot_modules, maxlengths)
         else:  # if self.format == 'CSV':
-            self._do_position_plot_csv(output_dir, columns, modules)
+            self._do_position_plot_csv(output_dir, columns, top_modules, bot_modules)
 
 
 @output_class
