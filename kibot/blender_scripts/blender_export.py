@@ -354,7 +354,7 @@ def main():
     bpy.ops.pcb2blender.import_pcb3d(filepath=PCB3D_file, pcb_material=args.pcb_material,
                                      import_components=args.no_components,
                                      add_solder_joints=args.solder_joints,
-                                     center_pcb=args.dont_center,
+                                     center_boards=args.dont_center,
                                      merge_materials=args.dont_merge_materials,
                                      enhance_materials=args.dont_enhance_materials,
                                      cut_boards=args.dont_cut_boards,
