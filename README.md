@@ -507,7 +507,7 @@ This section is used to specify tasks that will be executed before generating an
                            Don't change it unless you really know about KiCad's file formats.
         - `text`: [string=''] Text to insert instead of the tag.
 - `set_text_variables`: [dict|list(dict)] Defines KiCad 6 variables.
-        They are expanded using ${VARIABLE}, and stored in the project file.
+        They are expanded using `${VARIABLE}`, and stored in the project file.
         This preflight replaces `pcb_replace` and `sch_replace` when using KiCad 6.
         The KiCad project file is modified.
   * Valid keys:
@@ -800,7 +800,7 @@ global:
     - `environment`: [dict] Used to define environment variables used by KiCad.
                      The values defined here are exported as environment variables and has
                      more precedence than KiCad paths defined in the GUI.
-                     You can make reference to any OS environment variable using ${VARIABLE}.
+                     You can make reference to any OS environment variable using `${VARIABLE}`.
                      The KIPRJMOD is also available for expansion.
       * Valid keys:
         - `define_old`: [boolean=false] Also define legacy versions of the variables.
@@ -909,7 +909,7 @@ global:
     - `units`: [string=''] [millimeters,inches,mils] Default units. Affects `position`, `bom` and `panelize` outputs.
                Also KiCad 6 dimensions.
     - `use_dir_for_preflights`: [boolean=true] Use the global `dir` as subdir for the preflights.
-    - `use_os_env_for_expand`: [boolean=true] In addition to KiCad text variables also use the OS environment variables when expanding ${VARIABLE}.
+    - `use_os_env_for_expand`: [boolean=true] In addition to KiCad text variables also use the OS environment variables when expanding `${VARIABLE}`.
     - `variant`: [string=''] Default variant to apply to all outputs.
 
 
@@ -941,7 +941,7 @@ filters:
 #### Supported filters:
 
 - expand_text_vars: Expand_Text_Vars
-        This filter expands KiCad 6 text variables (${VARIABLE}).
+        This filter expands KiCad 6 text variables (`${VARIABLE}`).
   * Valid keys:
     - `comment`: [string=''] A comment for documentation purposes.
     - `include_kicad_env`: [boolean=true] Also expand KiCad environment variables.
@@ -2296,7 +2296,7 @@ Notes:
                         A short-cut to use for simple cases where a variant is an overkill.
         - `link_repeated`: [boolean=true] Instead of download things we already downloaded use symlinks.
         - `output`: [string='${VALUE}.pdf'] Name used for the downloaded datasheet.
-                    ${FIELD} will be replaced by the FIELD content.
+                    `${FIELD}` will be replaced by the FIELD content.
         - `pre_transform`: [string|list(string)='_none'] Name of the filter to transform fields before applying other filters.
                            A short-cut to use for simple cases where a variant is an overkill.
         - `repeated`: [boolean=false] Download URLs that we already downloaded.
@@ -2347,8 +2347,8 @@ Notes:
         - **`scaling`**: [number=1] Scale factor (0 means autoscaling).
         - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
           * Valid keys:
-            - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                         Use ${filename(LAYER)} for the file corresponding to LAYER.
+            - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                         Use `${filename(LAYER)}` for the file corresponding to LAYER.
             - `output`: [string='Custom_report.txt'] File name for the custom report.
         - `dnf_filter`: [string|list(string)='_none'] Name of the filter to mark components as not fitted.
                         A short-cut to use for simple cases where a variant is an overkill.
@@ -2615,8 +2615,8 @@ Notes:
         - **`use_protel_extensions`**: [boolean=false] Use legacy Protel file extensions.
         - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
           * Valid keys:
-            - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                         Use ${filename(LAYER)} for the file corresponding to LAYER.
+            - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                         Use `${filename(LAYER)}` for the file corresponding to LAYER.
             - `output`: [string='Custom_report.txt'] File name for the custom report.
         - `disable_aperture_macros`: [boolean=false] Disable aperture macros (workaround for buggy CAM software) (KiCad 6).
         - `dnf_filter`: [string|list(string)='_none'] Name of the filter to mark components as not fitted.
@@ -2686,8 +2686,8 @@ Notes:
                                       The `pcb_print` output can do a better job for PDF, SVG, PS, EPS and PNG outputs.
         - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
           * Valid keys:
-            - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                         Use ${filename(LAYER)} for the file corresponding to LAYER.
+            - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                         Use `${filename(LAYER)}` for the file corresponding to LAYER.
             - `output`: [string='Custom_report.txt'] File name for the custom report.
         - `dnf_filter`: [string|list(string)='_none'] Name of the filter to mark components as not fitted.
                         A short-cut to use for simple cases where a variant is an overkill.
@@ -3439,7 +3439,7 @@ Notes:
                 - `dimensions`: [boolean=false] Draw dimensions with the panel size.
             - `source`: [dict] Used to adjust details of which part of the PCB is panelized.
               * Valid keys:
-                - **`type`**: [string='auto'] [auto,rectangle,annotation] How we select the area of the PCB tu used for the panelization.
+                - **`type`**: [string='auto'] [auto,rectangle,annotation] How we select the area of the PCB used for the panelization.
                               *auto* uses all the area reported by KiCad, *rectangle* a specified rectangle and
                               *annotation* selects a contour marked by a kikit:Board footprint.
                 - `brx`: [number|string] Bottom right X coordinate of the rectangle used. Used for *rectangle*.
@@ -3944,8 +3944,8 @@ Notes:
         - **`scaling`**: [number=1] Scale factor (0 means autoscaling).
         - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
           * Valid keys:
-            - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                         Use ${filename(LAYER)} for the file corresponding to LAYER.
+            - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                         Use `${filename(LAYER)}` for the file corresponding to LAYER.
             - `output`: [string='Custom_report.txt'] File name for the custom report.
         - `dnf_filter`: [string|list(string)='_none'] Name of the filter to mark components as not fitted.
                         A short-cut to use for simple cases where a variant is an overkill.
@@ -3985,8 +3985,8 @@ Notes:
                   The categories are currently used for `navigate_results`.
     - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
       * Valid keys:
-        - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                     Use ${filename(LAYER)} for the file corresponding to LAYER.
+        - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                     Use `${filename(LAYER)}` for the file corresponding to LAYER.
         - `output`: [string='Custom_report.txt'] File name for the custom report.
     - `disable_run_by_default`: [string|boolean] Use it to disable the `run_by_default` status of other output.
                                 Useful when this output extends another and you don't want to generate the original.
@@ -4296,8 +4296,8 @@ Notes:
         - `a4_output`: [boolean=true] Force A4 paper size.
         - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
           * Valid keys:
-            - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                         Use ${filename(LAYER)} for the file corresponding to LAYER.
+            - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                         Use `${filename(LAYER)}` for the file corresponding to LAYER.
             - `output`: [string='Custom_report.txt'] File name for the custom report.
         - `dnf_filter`: [string|list(string)='_none'] Name of the filter to mark components as not fitted.
                         A short-cut to use for simple cases where a variant is an overkill.
@@ -4812,8 +4812,8 @@ Notes:
         - **`scaling`**: [number=1] Scale factor (0 means autoscaling).
         - `custom_reports`: [list(dict)] A list of customized reports for the manufacturer.
           * Valid keys:
-            - `content`: [string=''] Content for the report. Use ${basename} for the project name without extension.
-                         Use ${filename(LAYER)} for the file corresponding to LAYER.
+            - `content`: [string=''] Content for the report. Use `${basename}` for the project name without extension.
+                         Use `${filename(LAYER)}` for the file corresponding to LAYER.
             - `output`: [string='Custom_report.txt'] File name for the custom report.
         - `dnf_filter`: [string|list(string)='_none'] Name of the filter to mark components as not fitted.
                         A short-cut to use for simple cases where a variant is an overkill.
