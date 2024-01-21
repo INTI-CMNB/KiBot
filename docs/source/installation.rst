@@ -144,8 +144,18 @@ Notes about virtualenv
 ~~~~~~~~~~~~~~~~~~~~~~
 
 If you try to use a Python virtual environment you’ll need to find a way
-to make the KiCad module (``pcbnew``) available on it. I don’t know how
-to make it.
+to make the KiCad module (``pcbnew``) available on it. From the `linked
+GitHub issue
+<https://github.com/yaqwsx/PcbDraw/issues/119#issuecomment-1274029481>`_
+, to make the ``pcbnew`` available on the virtual env, you will need to
+run the following command:
+
+.. code:: shell
+
+  python -m venv --system-site-packages venv
+
+Then python started in the venv will look at the packages in the system
+location, which is where KiCad puts its python code.
 
 In addition: note that the virtual env will change the system share data
 paths. They will no longer point to things like ``/usr/share/`` but to a

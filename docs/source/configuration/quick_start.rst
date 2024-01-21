@@ -4,7 +4,7 @@
 Quick start
 ~~~~~~~~~~~
 
-If you want to *learn by examples*, or you just want to take a look a
+If you want to *learn by examples*, or you just want to take a look at
 what KiBot can do, you can use the ``--quick-start`` command line
 option.
 
