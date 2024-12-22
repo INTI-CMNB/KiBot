@@ -19,7 +19,8 @@ from . import log
 
 logger = log.get_logger()
 
-VALID_OUTPUT_TYPES = {'report'}
+VALID_OUTPUT_TYPES = {'report', 'bom', 'info'}
+
 
 class IncTextOutputOptions(Optionable):
     """Options for Include Text output"""
