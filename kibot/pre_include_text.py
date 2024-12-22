@@ -6,7 +6,6 @@
 # Project: KiBot (formerly KiPlot)
 # Contributed by Nguyen Vincent (@nguyen-v)
 import os
-import re
 import pcbnew
 from .error import KiPlotConfigurationError
 from .gs import GS
