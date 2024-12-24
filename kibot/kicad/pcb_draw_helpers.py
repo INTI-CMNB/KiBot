@@ -98,7 +98,7 @@ def remove_overbars(txt):
 
 
 def draw_poly(g, points, layer, filled=False, line_w=10000):
-    assert not points or len(points) < 3, "A polygon requires at least 3 points"
+    assert points or len(points) < 3, "A polygon requires at least 3 points"
     sps = pcbnew.SHAPE_POLY_SET()
     chain = pcbnew.SHAPE_LINE_CHAIN()
     for (x, y) in points:
