@@ -58,6 +58,9 @@ class Excellon(BaseOutput):  # noqa: F821
             self.options = ExcellonOptions
             """ *[dict={}] Options for the `excellon` output """
 
+    def get_csv_separator(self):
+        return ','
+
     @staticmethod
     def get_conf_examples(name, layers):
         gb = {}
