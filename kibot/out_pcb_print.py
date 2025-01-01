@@ -1635,6 +1635,7 @@ class PCB_PrintOptions(VariantOptions):
                     self.rename_pages(output_dir)
         # Restore KiBot image groups away
         self.restore_kibot_image_groups()
+        GS.save_pcb()
         # Remove the temporal files
         if not self.keep_temporal_files:
             rmtree(temp_dir_base)
