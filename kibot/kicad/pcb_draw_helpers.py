@@ -204,7 +204,6 @@ def draw_drill_map(g, layer, layer_pair_idx, merge_PTH_NPTH=True, group_slots_an
         if isinstance(item, pcbnew.PCB_SHAPE):
             dummy_shape = item.Duplicate()
             dummy_shape.SetLayer(layer)
-            dummy_shape.SetParentGroup(g)
             g.AddItem(dummy_shape)
             GS.board.Add(dummy_shape)
 
@@ -216,7 +215,6 @@ def draw_drill_map(g, layer, layer_pair_idx, merge_PTH_NPTH=True, group_slots_an
             if isinstance(item, pcbnew.PCB_SHAPE):
                 dummy_shape = item.Duplicate()
                 dummy_shape.SetLayer(layer)
-                dummy_shape.SetParentGroup(g)
                 g.AddItem(dummy_shape)
                 GS.board.Add(dummy_shape)
 
