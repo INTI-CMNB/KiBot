@@ -67,7 +67,7 @@ def get_num_layer_pairs(merge_PTH_NPTH=True):
         hole_sets.append((pcbnew.F_Cu, pcbnew.B_Cu))
 
         hole_list_layer_pair, _ = build_holes_list(
-            hole_sets[-1], merge_PTH_NPTH, doing_npth=True, group_slots_and_round_holes=True
+            hole_sets[-1], merge_PTH_NPTH, generate_NPTH_list=True, group_slots_and_round_holes=True
         )
         if len(hole_list_layer_pair) == 0:
             hole_sets.pop()
@@ -109,7 +109,7 @@ def get_layer_pair_name(index, use_layer_names=False, merge_PTH_NPTH=True, group
         hole_sets.append((pcbnew.F_Cu, pcbnew.B_Cu))
 
         hole_list_layer_pair, _ = build_holes_list(
-            hole_sets[-1], merge_PTH_NPTH, doing_npth=True, group_slots_and_round_holes=True
+            hole_sets[-1], merge_PTH_NPTH, generate_NPTH_list=True, group_slots_and_round_holes=True
         )
         if len(hole_list_layer_pair) == 0:
             hole_sets.pop()

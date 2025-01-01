@@ -332,7 +332,12 @@ class PagesOptions(Optionable):
             else:
                 self._is_drill = True
                 self._drill_map_layer = GS.board.GetLayerID(self.repeat_for_layer)
-                self._repeat_layers = get_num_layer_pairs()*[LayerOptions.create_layer(self.repeat_for_layer)]
+                if isinstance(parent.drill, bool):
+                    self._drill_pth_and_npth_single_file = True
+                else:
+                    self._drill_pth_and_npth_single_file = parent.drill.pth_and_npth_single_file
+                self._repeat_layers = (get_num_layer_pairs(self._drill_pth_and_npth_single_file) *
+                                       [LayerOptions.create_layer(self.repeat_for_layer)])
             if not self.repeat_layers:
                 # Here we check the user specified something (or left the default)
                 # We don't check this "something" is usable (self._repeat_layers) because this prevents using default values
