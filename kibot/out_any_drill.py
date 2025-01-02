@@ -58,6 +58,10 @@ class AnyDrill(VariantOptions):
             """ [string] Force this replacement for %i when generating PTH and unified files """
             self.npth_id = None
             """ [string] Force this replacement for %i when generating NPTH files """
+            self.other_id = None
+            """ [string] Force this replacement for <suffix> when generating other layer pair files
+                %i='<layer_pair><suffix>'. Note that <layer_pair> is the default name from KiCad.
+                By default, suffix = '_drill' """
         super().__init__()
         # Mappings to KiCad values
         self._map_map = {
@@ -92,12 +96,16 @@ class AnyDrill(VariantOptions):
     def solve_id(self, d):
         if not d:
             # Unified
-            return self.pth_id if self.pth_id is not None else 'drill'
+            return self.pth_id if self.pth_id not in [None, 'None'] else 'drill'
         if d[0] == 'N':
             # NPTH
-            return self.npth_id if self.npth_id is not None else d+'_drill'
-        # PTH
-        return self.pth_id if self.pth_id is not None else d+'_drill'
+            return self.npth_id if self.npth_id not in [None, 'None'] else d+'_drill'
+        elif d[0] == 'P':
+            # PTH
+            return self.pth_id if self.pth_id not in [None, 'None'] else d+'_drill'
+
+        # Other layer pairs (here we only control the text after the default kicad ID)
+        return d + self.other_id if self.other_id not in [None, 'None'] else d+'_drill'
 
     @staticmethod
     def _get_layer_name(id):
