@@ -20,6 +20,8 @@ outputs:
       map:
         output: ''
         type: 'pdf'
+      table:
+        unify_pth_and_npth: 'no'
 
   - name: gerber_drills
     comment: "Gerber drill files"

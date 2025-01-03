@@ -279,6 +279,9 @@ class TestContext(object):
     def get_pth_pdf_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-PTH-drl_map.pdf')
 
+    def get_pth_csv_drl_filename(self):
+        return os.path.join(self.sub_dir, self.board_name+'-(L1 - L4)_drill_table.csv')
+
     def get_f1_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-front-in1.drl')
 
@@ -287,6 +290,9 @@ class TestContext(object):
 
     def get_f1_pdf_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-front-in1-drl_map.pdf')
+
+    def get_f1_csv_drl_filename(self):
+        return os.path.join(self.sub_dir, self.board_name+'-(L1 - L2)_drill_table.csv')
 
     def get_12_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-in1-in2.drl')
@@ -297,6 +303,9 @@ class TestContext(object):
     def get_12_pdf_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-in1-in2-drl_map.pdf')
 
+    def get_12_csv_drl_filename(self):
+        return os.path.join(self.sub_dir, self.board_name+'-(L2 - L3)_drill_table.csv')
+
     def get_npth_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-NPTH.drl')
 
@@ -305,6 +314,9 @@ class TestContext(object):
 
     def get_npth_pdf_drl_filename(self):
         return os.path.join(self.sub_dir, self.board_name+'-NPTH-drl_map.pdf')
+
+    def get_npth_csv_drl_filename(self):
+        return os.path.join(self.sub_dir, self.board_name+'-(L1 - L4)_NPTH_drill_table.csv')
 
     def expect_out_file(self, filename, sub=False):
         if isinstance(filename, str):

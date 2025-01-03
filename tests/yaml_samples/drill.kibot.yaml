@@ -22,5 +22,7 @@ outputs:
     type: gerb_drill
     dir: Drill
     options:
+      table:
+        unify_pth_and_npth: 'auto'
       use_aux_axis_as_origin: false
       map: 'pdf'

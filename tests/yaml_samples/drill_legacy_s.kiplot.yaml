@@ -19,12 +19,14 @@ outputs:
       map:
         output: ''
         type: 'pdf'
-
+  
   - name: gerber_drills
     comment: "Gerber drill files"
     type: gerb_drill
     dir: Drill
     options:
+      table:
+        unify_pth_and_npth: 'yes'
       output: ''
       use_aux_axis_as_origin: false
       map:

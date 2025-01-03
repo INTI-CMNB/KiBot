@@ -5,8 +5,10 @@
 # Project: KiBot (formerly KiPlot)
 import os
 import re
+import csv
 from pcbnew import (PLOT_FORMAT_HPGL, PLOT_FORMAT_POST, PLOT_FORMAT_GERBER, PLOT_FORMAT_DXF, PLOT_FORMAT_SVG,
-                    PLOT_FORMAT_PDF, wxPoint)
+                    PLOT_FORMAT_PDF, wxPoint, B_Cu)
+from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .gs import GS
@@ -15,7 +17,28 @@ from .misc import W_NODRILL
 from .macros import macros, document  # noqa: F401
 from . import log
 
+if not GS.ki5:
+    from .kicad.drill_info import HOLE_TYPE_DICT
+
 logger = log.get_logger()
+
+if GS.ki5:
+    VALID_COLUMNS = [
+        "Count",
+        "Hole Size",
+        "Plated",
+        "Hole Shape",
+        "Drill Layer Pair",
+    ]
+else:
+    VALID_COLUMNS = [
+        "Count",
+        "Hole Size",
+        "Plated",
+        "Hole Shape",
+        "Drill Layer Pair",
+        "Hole Type",
+    ]
 
 
 class DrillMap(Optionable):
@@ -39,6 +62,34 @@ class DrillReport(Optionable):
         self._unknown_is_error = True
 
 
+class DrillOptions(Optionable):
+    def __init__(self):
+        super().__init__()
+        with document:
+            self.unify_pth_and_npth = 'auto'
+            """ [yes,no,auto]. Choose whether to unify plated and non-plated
+                holes in the same table. If 'auto' is chosen, the setting is copied
+                from the `excellon` output's `pth_and_npth_single_file`"""
+            self.group_slots_and_round_holes = True
+            """ By default KiCad groups slots and rounded holes if they can be cut from the same tool (same diameter) """
+        self._unknown_is_error = True
+
+
+class DrillTable(DrillOptions):
+    def __init__(self):
+        super().__init__()
+        with document:
+            self.output = GS.def_global_output
+            """ *Name of the drill table. Not generated unless a name is specified.
+                (%i='drill_table' %x='csv') """
+            self.units = 'millimeters_mils'
+            """ *[millimeters,mils,millimeters_mils,mils_millimeters] Units used for the hole sizes """
+            self.columns = []
+            """ *[list(dict)|list(string)=?] List of columns to display.
+                Each entry can be a dictionary with `field`, `name` or just a string (field name).
+                Default fields are: ["Count", "Hole Size", "Plated", "Hole Shape", "Drill Layer Pair", "Hole Type"] """
+
+
 class AnyDrill(VariantOptions):
     def __init__(self):
         # Options
@@ -54,6 +105,8 @@ class AnyDrill(VariantOptions):
             """ *name for the drill file, KiCad defaults if empty (%i='PTH_drill') """
             self.report = DrillReport
             """ [dict|string=''] Name of the drill report. Not generated unless a name is specified """
+            self.table = DrillTable
+            """ [dict|string=''] Name of the drill table. Not generated unless a name is specified """
             self.pth_id = None
             """ [string] Force this replacement for %i when generating PTH and unified files """
             self.npth_id = None
@@ -86,6 +139,26 @@ class AnyDrill(VariantOptions):
         self._map = self._map_map[map]
         # Solve the report for both cases
         self._report = self.report.filename if isinstance(self.report, DrillReport) else self.report
+        # Solve the table for both cases
+        if isinstance(self.table, str):
+            self._table_output = self.table
+            if hasattr(self, 'pth_and_npth_single_file'):
+                self._table_unify_pth_and_npth = self.pth_and_npth_single_file
+            else:
+                self._table_unify_pth_and_npth = False
+            self._table_group_slots_and_round_holes = True
+            self._table_units = 'millimeters_mils'
+        else:
+            self._table_output = self.table.output
+            if hasattr(self, 'pth_and_npth_single_file') and self.table.unify_pth_and_npth == 'auto':
+                self._table_unify_pth_and_npth = self.pth_and_npth_single_file
+            else:
+                if self.table.unify_pth_and_npth in ["no", "auto"]:
+                    self._table_unify_pth_and_npth = False
+                else:
+                    self._table_unify_pth_and_npth = True
+            self._table_group_slots_and_round_holes = self.table.group_slots_and_round_holes
+            self._table_units = self.table.units
         self._expand_id = 'drill'
         self._expand_ext = self._ext
 
@@ -117,6 +190,13 @@ class AnyDrill(VariantOptions):
         return 'in'+m.group(1)
 
     @staticmethod
+    def _get_layer_pair_names(layer_pair):
+        layer_cnt = GS.board.GetCopperLayerCount()
+        top_layer = layer_pair[0] + 1
+        bot_layer = layer_pair[1] + 1 if layer_pair[1] != B_Cu else layer_cnt
+        return f"(L{top_layer} - L{bot_layer})"
+
+    @staticmethod
     def _get_drill_groups(unified):
         """ Get the ID for all the generated files.
             It includes buried/blind vias. """
@@ -134,6 +214,59 @@ class AnyDrill(VariantOptions):
                     pairs.add(pair)
         groups.extend(list(pairs))
         return groups
+
+    def get_columns_config(self):
+        """Process the columns configuration."""
+        columns = self.table.columns if isinstance(self.table, DrillTable) else []
+        if not columns:
+            # Default column configuration based on VALID_COLUMNS
+            return [{"field": col, "name": col} for col in VALID_COLUMNS]
+
+        # Process custom columns
+        processed_columns = []
+        for col in columns:
+            if isinstance(col, str):
+                # Simple field name
+                processed_columns.append({"field": col, "name": col})
+            elif isinstance(col, dict):
+                # Detailed configuration
+                processed_columns.append({
+                    "field": col.get("field", ""),
+                    "name": col.get("name", col.get("field", "")),
+                })
+        return processed_columns
+
+    def validate_and_process_columns(self, cols, valid_columns):
+
+        processed_columns = []
+        valid_columns_l = {col.lower(): col for col in valid_columns}
+
+        for col in cols:
+            if isinstance(col, str):
+                # Simple field name
+                field = col
+                name = col
+            elif isinstance(col, dict):
+                # Detailed configuration
+                field = col.get("field", "")
+                name = col.get("name", field)
+            else:
+                logger.warning(f"Invalid column entry: {col}")
+
+            field_lower = field.lower()
+            if field_lower not in valid_columns_l:
+                logger.warning(f"Invalid column name `{field}`. Valid columns are: {list(valid_columns_l.values())}")
+                continue  # Skip invalid columns
+
+            processed_columns.append({
+                "field": valid_columns_l[field_lower],  # Use the original case from the valid columns list
+                "name": name,
+            })
+
+        if not processed_columns:
+            logger.error("No valid columns specified. At least one valid column is required.")
+
+        return processed_columns
 
     def get_file_names(self, output_dir):
         """ Returns a dict containing KiCad names and its replacement.
@@ -180,8 +313,13 @@ class AnyDrill(VariantOptions):
         if gen_map:
             drill_writer.SetMapFileFormat(self._map)
             logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
-        if not self.generate_drill_files and not gen_map and not self._report:
-            logger.warning(W_NODRILL+f"Not generating drill files nor drill maps nor report on `{self._parent.name}`")
+        if not self.generate_drill_files and not gen_map and not self._report and not self._table_output:
+            logger.warning(
+                W_NODRILL +
+                "Not generating drill files nor drill maps "
+                "nor report nor drill table on "
+                f"`{self._parent.name}`"
+            )
         drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
         # Rename the files
         files = self.get_file_names(output_dir)
@@ -194,6 +332,73 @@ class AnyDrill(VariantOptions):
             drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
             logger.debug("Generating drill report: "+drill_report_file)
             drill_writer.GenDrillReportFile(drill_report_file)
+        # Generate the drill table
+        if self._table_output:
+
+            hole_list, tool_list, hole_sets, npth = get_full_holes_list(self._table_unify_pth_and_npth,
+                                                                        self._table_group_slots_and_round_holes)
+
+            # Get column configuration
+
+            columns = self.get_columns_config()
+            columns = self.validate_and_process_columns(columns, VALID_COLUMNS)
+
+            for i, (tools, layer_pair) in enumerate(zip(tool_list, hole_sets)):
+
+                layer_pair_name = AnyDrill._get_layer_pair_names(layer_pair)
+
+                if npth and i == len(hole_sets)-1:
+                    layer_pair_name += '_NPTH'
+
+                csv_file = self.expand_filename(output_dir, self._table_output, f'{layer_pair_name}' + '_drill_table', 'csv')
+
+                logger.debug("Generating drill table: "+csv_file)
+
+                with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
+                    writer = csv.writer(file)
+
+                    # Write header
+                    writer.writerow([col["name"] for col in columns])
+
+                    # Write rows
+                    for tool in tools:
+                        row = []
+                        for col in columns:
+                            if col["field"] == "Count":
+                                value = (f'{tool.m_TotalCount-tool.m_OvalCount} + {tool.m_OvalCount}' if
+                                         tool.m_Hole_Shape == 2 else tool.m_TotalCount)
+                            elif col["field"] == "Hole Size":
+                                if self._table_units == 'millimeters':
+                                    value = f'{GS.to_mm(tool.m_Diameter):.2f}mm'
+                                elif self._table_units == 'mils':
+                                    value = f'{GS.to_mils(tool.m_Diameter):.2f}mils'
+                                elif self._table_units == 'mils_millimeters':
+                                    value = f'{GS.to_mils(tool.m_Diameter):.2f}mils ({GS.to_mm(tool.m_Diameter):.2f}mm)'
+                                else:
+                                    value = f'{GS.to_mm(tool.m_Diameter):.2f}mm ({GS.to_mils(tool.m_Diameter):.2f}mils)'
+                            elif col["field"] == "Plated":
+                                value = PLATED_DICT[tool.m_Hole_NotPlated]
+                            elif col["field"] == "Hole Shape":
+                                value = HOLE_SHAPE_DICT[tool.m_Hole_Shape]
+                            elif col["field"] == "Drill Layer Pair":
+                                value = f'{GS.board.GetLayerName(layer_pair[0])} - {GS.board.GetLayerName(layer_pair[1])}'
+                            elif col["field"] == "Hole Type":
+                                if not GS.ki5:
+                                    value = HOLE_TYPE_DICT[tool.m_HoleAttribute]
+                            else:
+                                value = ""
+                            row.append(value)
+                        writer.writerow(row)
+
+                    row = []
+                    for col in columns:
+                        if col["field"] == "Count":
+                            value = f"Total {sum(tool.m_TotalCount for tool in tools)}"
+                        else:
+                            value = ""
+                        row.append(value)
+                    writer.writerow(row)
+
         self.unfilter_pcb_components()
 
     def get_targets(self, out_dir):
@@ -203,4 +408,13 @@ class AnyDrill(VariantOptions):
             targets.append(f if f else k_f)
         if self._report:
             targets.append(self.expand_filename(out_dir, self._report, 'drill_report', 'txt'))
+        if self._table_output:
+            _, _, hole_sets, npth = get_full_holes_list(self._table_unify_pth_and_npth,
+                                                        self._table_group_slots_and_round_holes)
+            for i, layer_pair in enumerate(hole_sets):
+                layer_pair_name = AnyDrill._get_layer_pair_names(layer_pair)
+                if npth and i == len(hole_sets)-1:
+                    layer_pair_name += '_NPTH'
+                targets.append(self.expand_filename(out_dir, self._table_output,
+                               f'{layer_pair_name}' + '_drill_table', 'csv'))
         return targets

@@ -16,6 +16,8 @@ outputs:
       pth_id: drill
       report: '%f-%i.%x'
       map: 'pdf'
+      table:
+        unify_pth_and_npth: 'auto'
 
   - name: gerber_drills
     comment: "Gerber drill files"

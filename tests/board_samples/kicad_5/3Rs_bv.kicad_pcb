@@ -231,5 +231,6 @@
   (via blind (at 119.25 37.75) (size 0.8) (drill 0.4) (layers F.Cu In1.Cu) (net 0))
   (via blind (at 120.75 36.25) (size 0.8) (drill 0.4) (layers In1.Cu In2.Cu) (net 0))
   (via blind (at 119.25 34.5) (size 0.8) (drill 0.4) (layers In2.Cu B.Cu) (net 0))
-
+  (via (at 117 34) (size 0.8) (drill 0.4) (layers F.Cu B.Cu) (net 0))
+  
 )
