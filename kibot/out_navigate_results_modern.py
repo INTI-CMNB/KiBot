@@ -489,6 +489,7 @@ body.dark-mode .output-comment {
 /* Category boxes (folder) -------------------------------------------------- */
 
 .category-box {
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -552,6 +553,7 @@ body.dark-mode .category-box:hover {
 /* Output boxes (files) ----------------------------------------------------- */
 
 .output-box {
+    z-index: 999;
     background-color: var(--dark-bg-color-banner);
     border: 1px solid var(--dark-bg-color-banner);
     border-radius: 8px;
@@ -571,6 +573,11 @@ body.dark-mode .category-box:hover {
     position: relative;
     padding-top: var(--top-menu-height, 80px);
     margin-top: calc(-1 * var(--top-menu-height, 80px));
+    pointer-events: none; /* Make it non-interactive */
+}
+
+.output-virtual-box > * {
+    pointer-events: auto; /* Allow its children to remain interactive */
 }
 
 /* Some files (e.g. PDF, PNG) have wider output boxes */
