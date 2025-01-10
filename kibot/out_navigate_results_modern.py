@@ -1896,7 +1896,7 @@ class Navigate_Results_ModernOptions(BaseOptions):
             </label>
         '''
         code += (f'        <button id="home-button" onclick="location.href=\'{self.home}\'" '
-                f'style="font-size:{fsize};">🏠︎</button>\n')
+                 f'style="font-size:{fsize};">🏠︎</button>\n')
         code += '      </td>\n'
 
         code += '    </tr>\n'
