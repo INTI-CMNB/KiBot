@@ -24,11 +24,9 @@ Dependencies:
 """
 import base64
 import os
-import re
 import subprocess
 import pprint
 from shutil import copy2
-from math import ceil
 from .bom.kibot_logo import KIBOT_LOGO
 from .error import KiPlotConfigurationError
 from .gs import GS
@@ -38,7 +36,7 @@ from .misc import W_NOTYET, W_MISSTOOL, W_NOOUTPUTS, read_png, force_list
 from .pre_base import BasePreFlight
 from .registrable import RegOutput
 from .macros import macros, document, output_class  # noqa: F401
-from . import log, __version__
+from . import log
 
 logger = log.get_logger()
 EXT_IMAGE = {'gbr': 'file_gbr',
@@ -107,46 +105,46 @@ STYLE = """
 /* Colors =================================================================== */
 
 :root {
-	--light-bg-color: #ffffff;
-	--dark-bg-color: #1e1e2f;
-	--light-bg-color-banner: #dfdfdf;
-	--dark-bg-color-banner: #27293d;
-	--light-text-color: #444444;
-	--dark-text-color: #e5e5e5;
-	--light-hover-color: #902ec9;
-	--light-hover-color-act: #652f85;
-	--dark-hover-color: #ffa500;
-	--dark-hover-color-act: #cc8400;
-	--dark-text-color-accent: #a3a3c2;
-	--light-text-color-accent: #444444;
-	--light-banner-hover: #b0b0b0;
-	--dark-banner-hover: #383b4b;
-	--text-color-accent: #a3a3c2;
+    --light-bg-color: #ffffff;
+    --dark-bg-color: #1e1e2f;
+    --light-bg-color-banner: #dfdfdf;
+    --dark-bg-color-banner: #27293d;
+    --light-text-color: #444444;
+    --dark-text-color: #e5e5e5;
+    --light-hover-color: #902ec9;
+    --light-hover-color-act: #652f85;
+    --dark-hover-color: #ffa500;
+    --dark-hover-color-act: #cc8400;
+    --dark-text-color-accent: #a3a3c2;
+    --light-text-color-accent: #444444;
+    --light-banner-hover: #b0b0b0;
+    --dark-banner-hover: #383b4b;
+    --text-color-accent: #a3a3c2;
 }
 
 /* Main body ================================================================ */
 
 body {
-	margin: 0;
-	font-family: 'Roboto', sans-serif;
-	background-color: var(--dark-bg-color);
-	color: var(--dark-text-color);
-	transition: 
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+    transition:
         background-color 0.4s ease,
         color 0.4s ease,
         transition: scrollbar-color 0.2s ease-in-out;
 }
 
 body.dark-mode {
-	--text-color-accent: var(--dark-text-color-accent);
-	background-color: var(--dark-bg-color);
-	color: var(--dark-text-color);
+    --text-color-accent: var(--dark-text-color-accent);
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
 }
 
 body.light-mode {
-	--text-color-accent: var(--light-text-color-accent);
-	background-color: var(--light-bg-color);
-	color: var(--light-text-color);
+    --text-color-accent: var(--light-text-color-accent);
+    background-color: var(--light-bg-color);
+    color: var(--light-text-color);
 }
 
 /* Top Menu ================================================================= */
@@ -155,26 +153,26 @@ body.light-mode {
 /* [X/☰] [↩] [↪] <Category Path> <Title> (Logo) [☾/☀] [🏠︎] */
 
 #topmenu {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 1000;
-	background-color: var(--dark-bg-color-banner);
-	padding: 10px 0;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: var(--dark-bg-color-banner);
+    padding: 10px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body.light-mode #topmenu {
-  	background-color: var(--light-bg-color-banner);
+    background-color: var(--light-bg-color-banner);
 }
 
 body.dark-mode #topmenu {
-  	background-color: var(--dark-bg-color-banner);
+    background-color: var(--dark-bg-color-banner);
 }
 
 /* Buttons ================================================================== */
@@ -182,75 +180,75 @@ body.dark-mode #topmenu {
 /* button corresponds to the navigation buttons (forward, backward, home) */
 
 button, #open-sidenav, #close-sidenav {
-	background: none;
-	border: none;
-	color: var(--dark-text-color);
-	cursor: pointer;
-	transition: color 0.3s ease;
+    background: none;
+    border: none;
+    color: var(--dark-text-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 body.light-mode #topmenu button,
 body.light-mode #topmenu #open-sidenav,
 body.light-mode #topmenu #close-sidenav {
-  	color: var(--light-text-color);
+    color: var(--light-text-color);
 }
 
 body.dark-mode #topmenu button,
 body.dark-mode #topmenu #open-sidenav,
 body.dark-mode #topmenu #close-sidenav {
-  	color: var(--dark-text-color);
+    color: var(--dark-text-color);
 }
 
 button {
-	font-size: 20px;
-	margin: 0 10px;
+    font-size: 20px;
+    margin: 0 10px;
 }
 
 #open-sidenav, #close-sidenav {
-	width: 36px;
-	height: 36px;
-	line-height: 36px;
-	text-align: center;
-	font-size: 28px;
-	margin-left: 10px;
-	user-select: none; /* Prevent text selection */
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 28px;
+    margin-left: 10px;
+    user-select: none; /* Prevent text selection */
 }
 
 /* Hover effects */
 
 button:hover, #open-sidenav:hover, #close-sidenav:hover {
-  	color: var(--dark-hover-color);
+    color: var(--dark-hover-color);
 }
 
 body.dark-mode #topmenu button:hover,
 body.dark-mode #topmenu #open-sidenav:hover,
 body.dark-mode #topmenu #close-sidenav:hover {
-  	color: var(--dark-hover-color);
+    color: var(--dark-hover-color);
 }
 
 body.light-mode #topmenu button:hover,
 body.light-mode #topmenu #open-sidenav:hover,
 body.light-mode #topmenu #close-sidenav:hover {
-  	color: var(--light-hover-color);
+    color: var(--light-hover-color);
 }
 
 /* Active effects */
 
 button:active, #open-sidenav:active, #close-sidenav:active {
-	color: var(--dark-hover-color-act);
-	transition: none;
+    color: var(--dark-hover-color-act);
+    transition: none;
 }
 
 body.dark-mode #topmenu button:active,
 body.dark-mode #topmenu #open-sidenav:active,
 body.dark-mode #topmenu #close-sidenav:active {
-  	color: var(--dark-hover-color-act);
+    color: var(--dark-hover-color-act);
 }
 
 body.light-mode #topmenu button:active,
 body.light-mode #topmenu #open-sidenav:active,
 body.light-mode #topmenu #close-sidenav:active {
-  	color: var(--light-hover-color-act);
+    color: var(--light-hover-color-act);
 }
 
 /* Sidebar Navigation ======================================================= */
@@ -264,8 +262,8 @@ body.light-mode #topmenu #close-sidenav:active {
     background-color: #27293d;
     overflow-x: hidden;
     overflow-y: auto;
-    transition: 
-        width 0.5s ease, 
+    transition:
+        width 0.5s ease,
         padding-left 0.5s ease,
         scrollbar-color 0.2s ease-in-out,
         background-color 0.2s ease-in-out;
@@ -275,217 +273,217 @@ body.light-mode #topmenu #close-sidenav:active {
 
 
 body.dark-mode .sidenav {
-  	background-color: var(--dark-bg-color-banner);
+    background-color: var(--dark-bg-color-banner);
 }
 
 body.light-mode .sidenav {
-  	background-color: var(--light-bg-color-banner);
+    background-color: var(--light-bg-color-banner);
 }
 
 .sidenav > ul:first-child {
-  	margin-top: 20px; /* Padding between top menu and first element of sidenav */
+    margin-top: 20px; /* Padding between top menu and first element of sidenav */
 }
 
-/* Side Navigation Outputs -------------------------------------------------- */ 
+/* Side Navigation Outputs -------------------------------------------------- */
 
 .sidenav-output {
-	padding: 8px 30px;
-	text-decoration: none;
-	font-size: 16px;
-	color: var(--dark-text-color);
-	display: block;
-	transition: color 0.3s ease;
-	border-radius: 4px;
+    padding: 8px 30px;
+    text-decoration: none;
+    font-size: 16px;
+    color: var(--dark-text-color);
+    display: block;
+    transition: color 0.3s ease;
+    border-radius: 4px;
 }
 
 body.light-mode .sidenav-output {
-  	color: var(--light-text-color);
+    color: var(--light-text-color);
 }
 
 body.dark-mode .sidenav-output {
-  	color: var(--dark-text-color);
+    color: var(--dark-text-color);
 }
 
 /* Hover effects */
 
 .sidenav-output:hover {
-	color: var(--dark-hover-color);
-	background-color: var(--dark-banner-hover);
+    color: var(--dark-hover-color);
+    background-color: var(--dark-banner-hover);
 }
 
 body.dark-mode .sidenav-output:hover {
-	color: var(--dark-hover-color);
-	background-color: var(--dark-banner-hover);
+    color: var(--dark-hover-color);
+    background-color: var(--dark-banner-hover);
 }
 
 body.light-mode .sidenav-output:hover {
-	color: var(--light-hover-color);
-	background-color: var(--light-banner-hover);
+    color: var(--light-hover-color);
+    background-color: var(--light-banner-hover);
 }
 
 /* Active effects */
 
 .sidenav-output:active {
-  	color: var(--dark-hover-color-act);
+    color: var(--dark-hover-color-act);
 }
 
 body.dark-mode .sidenav-output:active {
-  	color: var(--dark-hover-color-act);
+    color: var(--dark-hover-color-act);
 }
 
 body.light-mode .sidenav-output:active {
-  	color: var(--light-hover-color-act);
+    color: var(--light-hover-color-act);
 }
 
 /* Side Navigation Categories ----------------------------------------------- */
 
 .sidenav-category {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	user-select: none; /* Prevent text selection */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    user-select: none; /* Prevent text selection */
 }
 
 .sidenav-category .folder > span {
-	display: flex;
-	align-items: center;
-	cursor: pointer;
-	color: var(--dark-text-color-accent);
-	padding: 10px 20px;
-	margin-bottom: 0px;
-	width: 100%;
-	transition: background-color 0.3s, color 0.3s;
-	border-radius: 4px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--dark-text-color-accent);
+    padding: 10px 20px;
+    margin-bottom: 0px;
+    width: 100%;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 4px;
 }
 
 .sidenav-category .folder-contents {
-	list-style: none;
-	margin-left: 20px;
-	padding: 0;
+    list-style: none;
+    margin-left: 20px;
+    padding: 0;
 }
 
 body.dark-mode .sidenav-category .folder > span {
-  	color: var(--dark-text-color-accent);
+    color: var(--dark-text-color-accent);
 }
 
 body.light-mode .sidenav-category .folder > span {
-  	color: var(--light-text-color);
+    color: var(--light-text-color);
 }
 
 /* Hover effects */
 
 .sidenav-category .folder > span:hover {
-	background-color: var(--dark-banner-hover);
-	color: var(--dark-hover-color);
+    background-color: var(--dark-banner-hover);
+    color: var(--dark-hover-color);
 }
 
 body.dark-mode .sidenav-category .folder > span:hover {
-	color: var(--dark-hover-color);
-	background-color: var(--dark-banner-hover);
+    color: var(--dark-hover-color);
+    background-color: var(--dark-banner-hover);
 }
 
 body.light-mode .sidenav-category .folder > span:hover {
-	color: var(--light-hover-color);
-	background-color: var(--light-banner-hover);
+    color: var(--light-hover-color);
+    background-color: var(--light-banner-hover);
 }
 
 /* Active effects */
 
 .sidenav-category .folder > span:active {
-	color: var(--dark-hover-color);
-	transition: none;
+    color: var(--dark-hover-color);
+    transition: none;
 }
 
 body.dark-mode .sidenav-category .folder > span:active {
-  	color: var(--dark-hover-color-act);
+    color: var(--dark-hover-color-act);
 }
 
 body.light-mode .sidenav-category .folder > span:active {
-  	color: var(--light-hover-color-act);
+    color: var(--light-hover-color-act);
 }
 
 /* Chevron (arrow) styling -------------------------------------------------- */
 
 .chevron {
-	display: block;
-	width: 0;
-	height: 0;
-	border: 8px solid transparent;
-	border-left-color: #606077;
-	margin-right: 8px;
-	transform-origin: 25% 50%;
-	transition: transform 0.3s ease, border-left-color 0.3s ease;
-	pointer-events: none;
+    display: block;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-left-color: #606077;
+    margin-right: 8px;
+    transform-origin: 25% 50%;
+    transition: transform 0.3s ease, border-left-color 0.3s ease;
+    pointer-events: none;
 }
 
 body.dark-mode .chevron {
-  	border-left-color: #606077;
+    border-left-color: #606077;
 }
 
 body.light-mode .chevron {
-  	border-left-color: #909090;
+    border-left-color: #909090;
 }
 
 /* We change styles for when the chevron is pointing down */
 
 .folder.open > span .chevron {
-	border-left-color: var(--dark-text-color-accent);
-	transform: rotate(90deg);
+    border-left-color: var(--dark-text-color-accent);
+    transform: rotate(90deg);
 }
 
 body.dark-mode .folder.open > span .chevron {
-  	border-left-color: var(--dark-text-color-accent);
+    border-left-color: var(--dark-text-color-accent);
 }
 
 body.light-mode .folder.open > span .chevron {
-  	border-left-color: var(--light-text-color-accent);
+    border-left-color: var(--light-text-color-accent);
 }
 
 /* Hover effects */
 
 body.dark-mode .folder > span:hover .chevron {
-  	border-left-color: var(--dark-hover-color)
+    border-left-color: var(--dark-hover-color)
 }
 
 body.light-mode .folder > span:hover .chevron {
-  	border-left-color: var(--light-hover-color)
+    border-left-color: var(--light-hover-color)
 }
 
 /* Active effects */
 
 body.dark-mode .folder > span:active .chevron {
-  	border-left-color: var(--dark-hover-color-act)
+    border-left-color: var(--dark-hover-color-act)
 }
 
 
 body.light-mode .folder > span:active .chevron {
-  	border-left-color: var(--light-hover-color-act)
+    border-left-color: var(--light-hover-color-act)
 }
 
 /* Main content ============================================================= */
 
 #main {
-	transition: margin-left 0.5s;
-	padding: 16px;
-	margin-top: 80px;
+    transition: margin-left 0.5s;
+    padding: 16px;
+    margin-top: 80px;
 }
 
 /* Comment field of output is used as a title for each output */
 
 .output-comment {
-	font-size: 1.4em;
-	font-weight: 500;
-	color: var(--dark-text-color);
-	margin: 20px 0 10px 0;
-	text-align: center;
+    font-size: 1.4em;
+    font-weight: 500;
+    color: var(--dark-text-color);
+    margin: 20px 0 10px 0;
+    text-align: center;
 }
 
 body.light-mode .output-comment {
-  	color: var(--light-text-color);
+    color: var(--light-text-color);
 }
 
 body.dark-mode .output-comment {
-  	color: var(--dark-text-color);
+    color: var(--dark-text-color);
 }
 
 /* Category boxes (folder) -------------------------------------------------- */
@@ -506,16 +504,16 @@ body.dark-mode .output-comment {
 }
 
 body.light-mode .category-box {
-	color: var(--light-text-color);
-	background-color: var(--light-bg-color-banner);
-	border: var(--light-bg-color-banner);
+    color: var(--light-text-color);
+    background-color: var(--light-bg-color-banner);
+    border: var(--light-bg-color-banner);
 }
 
 
 body.dark-mode .category-box {
-	color: var(--dark-text-color);
-	background-color: var(--dark-bg-color-banner);
-	border: var(--dark-bg-color-banner);
+    color: var(--dark-text-color);
+    background-color: var(--dark-bg-color-banner);
+    border: var(--dark-bg-color-banner);
 }
 
 .category-title {
@@ -528,44 +526,44 @@ body.dark-mode .category-box {
 }
 
 body.light-mode .category-title {
-  	color: var(--light-text-color);
+    color: var(--light-text-color);
 }
 
 body.dark-mode .category-title {
-  	color: var(--dark-text-color);
+    color: var(--dark-text-color);
 }
 
 /* Hover effects */
 
 .category-box:hover {
-		background-color: var(--dark-banner-hover);
-		transform: scale(1.05); /* Slight zoom effect */
-		cursor: pointer;
+    background-color: var(--dark-banner-hover);
+    transform: scale(1.05); /* Slight zoom effect */
+    cursor: pointer;
 }
 
 body.light-mode .category-box:hover {
-  	background-color: var(--light-banner-hover);
+    background-color: var(--light-banner-hover);
 }
 
 body.dark-mode .category-box:hover {
-  	background-color: var(--dark-banner-hover);
+    background-color: var(--dark-banner-hover);
 }
 
 /* Output boxes (files) ----------------------------------------------------- */
 
 .output-box {
-	background-color: var(--dark-bg-color-banner);
-	border: 1px solid var(--dark-bg-color-banner);
-	border-radius: 8px;
-	padding: 16px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 300px;
-	height: 140px;
-	text-decoration: none;
-	transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: var(--dark-bg-color-banner);
+    border: 1px solid var(--dark-bg-color-banner);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 140px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 /* Offset the scroll position */
@@ -578,143 +576,143 @@ body.dark-mode .category-box:hover {
 /* Some files (e.g. PDF, PNG) have wider output boxes */
 
 .output-box.wide {
-	width: 400px;
-	height: auto;
+    width: 400px;
+    height: auto;
 }
 
 .output-box img {
-	max-width: 100%;
-	max-height: 100%;
-	height: auto;
-	margin-bottom: 10px;
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    margin-bottom: 10px;
 }
 
 /* The output boxes are centered and wrap around */
 
 .items-container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 20px;
-	padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
 }
 
 body.light-mode .output-box {
-	color: var(--light-text-color);
-	background-color: var(--light-bg-color-banner);
-	border: var(--light-bg-color-banner);
+    color: var(--light-text-color);
+    background-color: var(--light-bg-color-banner);
+    border: var(--light-bg-color-banner);
 }
 
 body.dark-mode .output-box {
-	color: var(--dark-text-color);
-	background-color: var(--dark-bg-color-banner);
-	border: var(--dark-bg-color-banner);
+    color: var(--dark-text-color);
+    background-color: var(--dark-bg-color-banner);
+    border: var(--dark-bg-color-banner);
 }
 
 /* Hover effects */
 
 .output-box:hover {
-	background-color: var(--dark-banner-hover);
-	transform: scale(1.05);
-	cursor: pointer;
+    background-color: var(--dark-banner-hover);
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 body.light-mode .output-box:hover {
-  	background-color: var(--light-banner-hover);
+    background-color: var(--light-banner-hover);
 }
 
 body.dark-mode .output-box:hover {
-  	background-color: var(--dark-banner-hover);
+    background-color: var(--dark-banner-hover);
 }
 
 /* Name of the output below the icon */
 
 .output-box .output-name {
-	color: #8997c6;
-	font-size: 14px;
-	margin-top: 8px;
-	text-align: center;
+    color: #8997c6;
+    font-size: 14px;
+    margin-top: 8px;
+    text-align: center;
 }
 
 body.light-mode .output-box .output-name {
-  	color: var(--light-text-color-accent);
+    color: var(--light-text-color-accent);
 }
 
 body.dark-mode .output-box .output-name {
-  	color: #8997c6;
+    color: #8997c6;
 }
 
 /* Filename below the icon */
 
 .output-box .filename {
-	text-decoration: none;
-	color: var(--dark-text-color);
-	text-align: center;
-	font-size: 14px;
+    text-decoration: none;
+    color: var(--dark-text-color);
+    text-align: center;
+    font-size: 14px;
 }
 
 body.light-mode .output-box .filename {
-  	color: var(--light-text-color);
+    color: var(--light-text-color);
 }
 
 body.dark-mode .output-box .filename {
-  	color: var(--dark-text-color);
+    color: var(--dark-text-color);
 }
 
 /* Theme Toggle Switch ====================================================== */
 
 .theme-switch {
-	position: relative;
-	display: inline-block;
-	width: 50px;
-	height: 25px;
-	margin-left: 10px;
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    margin-left: 10px;
 }
 
 /* Hide the default checkbox button */
 
 .theme-switch input {
-	opacity: 0;
-	width: 0;
-	height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .theme-switch span {
-	position: absolute;
-	cursor: pointer;
-	background-color: var(--light-banner-hover);
-	border-radius: 25px;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	transform: translateY(-30%); /* Center vertically */
-	transition: 0.4s;
+    position: absolute;
+    cursor: pointer;
+    background-color: var(--light-banner-hover);
+    border-radius: 25px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(-30%); /* Center vertically */
+    transition: 0.4s;
 }
 
 .theme-switch span::before {
-	position: absolute;
-	content: "";
-	height: 20px;
-	width: 20px;
-	left: 4px;
-	bottom: 3px;
-	background-color: var(--light-bg-color);
-	border-radius: 50%;
-	transition: none; /* Disable animation by default */
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--light-bg-color);
+    border-radius: 50%;
+    transition: none; /* Disable animation by default */
 }
 
 .theme-switch span.animate::before {
-  	transition: transform 0.4s ease, background-color 0.4s ease;
+    transition: transform 0.4s ease, background-color 0.4s ease;
 }
 
 .theme-switch input:checked + span {
-  	background-color: var(--dark-bg-color);
+    background-color: var(--dark-bg-color);
 }
 
 .theme-switch input:checked + span::before {
-	transform: translateX(25px);
-	background-color: var(--dark-text-color);
+    transform: translateX(25px);
+    background-color: var(--dark-text-color);
 }
 
 /* Scrollbar ================================================================ */
@@ -987,8 +985,8 @@ body.no-transition,
 body.no-transition .theme-switch span,
 body.no-transition button,
 body.no-transition #close-sidenav,
-body.no-transition #home-button, 
-body.no-transition #back-button, 
+body.no-transition #home-button,
+body.no-transition #back-button,
 body.no-transition #forward-button,
 body.no-transition #topmenu,
 body.no-transition .sidenav-category .folder > span,
@@ -1003,129 +1001,129 @@ SCRIPT_NAV_BAR = """
 // Side Navigation functions ===================================================
 
 function openNav() {
-	const sidenav = document.getElementById("theSideNav");
-	const main = document.getElementById("main");
+    const sidenav = document.getElementById("theSideNav");
+    const main = document.getElementById("main");
 
-	sidenav.style.width = "360px";
-	sidenav.style.paddingLeft = "20px";
-	main.style.marginLeft = "360px";
-	document.getElementById("open-sidenav").style.display = "none";
-	document.getElementById("close-sidenav").style.display = "inline-block";
+    sidenav.style.width = "360px";
+    sidenav.style.paddingLeft = "20px";
+    main.style.marginLeft = "360px";
+    document.getElementById("open-sidenav").style.display = "none";
+    document.getElementById("close-sidenav").style.display = "inline-block";
 }
 
 function closeNav() {
-	const sidenav = document.getElementById("theSideNav");
-	const main = document.getElementById("main");
+    const sidenav = document.getElementById("theSideNav");
+    const main = document.getElementById("main");
 
-	sidenav.style.width = "0"; // Close the sidenav
-	sidenav.style.paddingLeft = "0"; // Reset padding
-	main.style.marginLeft = "0"; // Reset page content position
-	document.getElementById("open-sidenav").style.display = "inline-block";
-	document.getElementById("close-sidenav").style.display = "none";
+    sidenav.style.width = "0"; // Close the sidenav
+    sidenav.style.paddingLeft = "0"; // Reset padding
+    main.style.marginLeft = "0"; // Reset page content position
+    document.getElementById("open-sidenav").style.display = "inline-block";
+    document.getElementById("close-sidenav").style.display = "none";
 }
 
 function toggleFolder(folderHeader) {
-	const folder = folderHeader.parentElement;
-	const folderContents = folderHeader.nextElementSibling;
+    const folder = folderHeader.parentElement;
+    const folderContents = folderHeader.nextElementSibling;
 
-	if (folder.classList.contains("open")) {
-		folder.classList.remove("open");
-		folderContents.style.display = "none";
-	} else {
-		folder.classList.add("open");
-		folderContents.style.display = "block";
-	}
+    if (folder.classList.contains("open")) {
+        folder.classList.remove("open");
+        folderContents.style.display = "none";
+    } else {
+        folder.classList.add("open");
+        folderContents.style.display = "block";
+    }
 
-	// Save the updated state
-	saveSideNavState();
+    // Save the updated state
+    saveSideNavState();
 }
 
 function saveSideNavState() {
-	const sidenav = document.getElementById("theSideNav");
-	const isOpen = sidenav.style.width !== "0px"; // Check if sidenav is open
+    const sidenav = document.getElementById("theSideNav");
+    const isOpen = sidenav.style.width !== "0px"; // Check if sidenav is open
 
-	// Save the state of each folder
-	const folderStates = Array.from(document.querySelectorAll(".folder")).map(folder => ({
-		id: folder.querySelector("span").textContent.trim(), // Use folder name as identifier
-		isOpen: folder.classList.contains("open") // Check if folder is open
-	}));
+    // Save the state of each folder
+    const folderStates = Array.from(document.querySelectorAll(".folder")).map(folder => ({
+        id: folder.querySelector("span").textContent.trim(), // Use folder name as identifier
+        isOpen: folder.classList.contains("open") // Check if folder is open
+    }));
 
-	// Save the sidenav and folder states to localStorage
-	localStorage.setItem("sidenavState", JSON.stringify({ isOpen, folderStates }));
+    // Save the sidenav and folder states to localStorage
+    localStorage.setItem("sidenavState", JSON.stringify({ isOpen, folderStates }));
 }
 
 function restoresidenavState() {
-	const savedState = localStorage.getItem("sidenavState");
-	if (savedState) {
-		const { isOpen, folderStates } = JSON.parse(savedState);
-		const sidenav = document.getElementById("theSideNav");
-		const main = document.getElementById("main");
+    const savedState = localStorage.getItem("sidenavState");
+    if (savedState) {
+        const { isOpen, folderStates } = JSON.parse(savedState);
+        const sidenav = document.getElementById("theSideNav");
+        const main = document.getElementById("main");
 
-		// Temporarily disable animations on page load so elements don't move
-		sidenav.style.transition = "none";
-		main.style.transition = "none";
-		const chevrons = document.querySelectorAll(".chevron");
-		chevrons.forEach(chevron => {
-			chevron.style.transition = "none";
-		});
+        // Temporarily disable animations on page load so elements don't move
+        sidenav.style.transition = "none";
+        main.style.transition = "none";
+        const chevrons = document.querySelectorAll(".chevron");
+        chevrons.forEach(chevron => {
+            chevron.style.transition = "none";
+        });
 
-		// Restore side navigation state
-		if (isOpen) {
-			openNav()
-		} else {
-			closeNav()
-		}
+        // Restore side navigation state
+        if (isOpen) {
+            openNav()
+        } else {
+            closeNav()
+        }
 
-		// Restore folder open/closed states
-		folderStates.forEach(({ id, isOpen }) => {
-			const folder = Array.from(document.querySelectorAll(".folder"))
-				.find(folder => folder.querySelector("span").textContent.trim() === id);
+        // Restore folder open/closed states
+        folderStates.forEach(({ id, isOpen }) => {
+            const folder = Array.from(document.querySelectorAll(".folder"))
+                .find(folder => folder.querySelector("span").textContent.trim() === id);
 
-			if (folder) {
-				const folderContents = folder.querySelector(".folder-contents");
-				if (isOpen) {
-					folder.classList.add("open");
-					folderContents.style.display = "block";
-				} else {
-					folder.classList.remove("open");
-					folderContents.style.display = "none";
-				}
-			}
-		});
+            if (folder) {
+                const folderContents = folder.querySelector(".folder-contents");
+                if (isOpen) {
+                    folder.classList.add("open");
+                    folderContents.style.display = "block";
+                } else {
+                    folder.classList.remove("open");
+                    folderContents.style.display = "none";
+                }
+            }
+        });
 
-		// Re-enable animation
-		setTimeout(() => {
-			sidenav.style.transition = "";
-			main.style.transition = "";
-			chevrons.forEach(chevron => {
-				chevron.style.transition = "";
-			});
-		}, 100);
-	}
+        // Re-enable animation
+        setTimeout(() => {
+            sidenav.style.transition = "";
+            main.style.transition = "";
+            chevrons.forEach(chevron => {
+                chevron.style.transition = "";
+            });
+        }, 100);
+    }
 }
 
 function saveSidenavScrollPosition() {
-	const sidenav = document.getElementById("theSideNav");
-	const scrollPosition = sidenav.scrollTop;
-	localStorage.setItem("sidenavScrollPosition", scrollPosition);
+    const sidenav = document.getElementById("theSideNav");
+    const scrollPosition = sidenav.scrollTop;
+    localStorage.setItem("sidenavScrollPosition", scrollPosition);
 }
 
 function restoreSidenavScrollPosition() {
-	const sidenav = document.getElementById("theSideNav");
-	const savedPosition = localStorage.getItem("sidenavScrollPosition");
-	if (savedPosition !== null) {
-		sidenav.scrollTop = parseInt(savedPosition, 10);
-	}
+    const sidenav = document.getElementById("theSideNav");
+    const savedPosition = localStorage.getItem("sidenavScrollPosition");
+    if (savedPosition !== null) {
+        sidenav.scrollTop = parseInt(savedPosition, 10);
+    }
 }
 
 function adjustSidenavOffset() {
-	const topMenu = document.getElementById("topmenu");
-	const sidenav = document.getElementById("theSideNav");
+    const topMenu = document.getElementById("topmenu");
+    const sidenav = document.getElementById("theSideNav");
 
-	if (topMenu) {
-		const topMenuHeight = topMenu.offsetHeight;
-		document.documentElement.style.setProperty('--top-menu-height', `${topMenuHeight}px`);
-	}
+    if (topMenu) {
+        const topMenuHeight = topMenu.offsetHeight;
+        document.documentElement.style.setProperty('--top-menu-height', `${topMenuHeight}px`);
+    }
 }
 
 adjustSidenavOffset();
@@ -1146,8 +1144,8 @@ window.addEventListener("resize", adjustOutputOffset);
 
 // Prevent flickering on page navigation
 window.addEventListener("beforeunload", () => {
-	saveSideNavState();
-	saveSidenavScrollPosition();
+    saveSideNavState();
+    saveSidenavScrollPosition();
 });
 
 window.addEventListener("load", restoreSidenavScrollPosition);
@@ -1308,6 +1306,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 """
 
+
 def _run_command(cmd):
     logger.debug('- Executing: '+GS.pasteable_cmd(cmd))
     try:
@@ -1351,6 +1350,7 @@ class Navigate_Results_ModernOptions(BaseOptions):
         self._expand_id = 'navigate'
         self._expand_ext = 'html'
         self._variant_name = self._find_variant_name()
+
     def config(self, parent):
         super().config(parent)
         # Logo
@@ -1812,8 +1812,10 @@ class Navigate_Results_ModernOptions(BaseOptions):
         # Left-aligned section (sidenav button, Back/Forward buttons, and category path)
         code += '      <td style="width: 33%;" align="left">\n'
         if self.nav_bar:
-            code += f'        <span id="open-sidenav" style="font-size:{fsize};cursor:pointer" onclick="openNav()">&#9776;</span>\n'
-            code += f'        <span id="close-sidenav" style="font-size:{fsize};cursor:pointer;display:none;" onclick="closeNav()">⨉</span>\n'
+            code += (f'        <span id="open-sidenav" style="font-size:{fsize};cursor:pointer" '
+                     f'onclick="openNav()">&#9776;</span>\n')
+            code += (f'        <span id="close-sidenav" style="font-size:{fsize};cursor:pointer;display:none;" '
+                     f'onclick="closeNav()">⨉</span>\n')
         code += f'        <button id="back-button" onclick="history.back()" style="font-size:{fsize};">↩</button>\n'
         code += f'        <button id="forward-button" onclick="history.forward()" style="font-size:{fsize};">↪</button>\n'
 
@@ -1879,7 +1881,10 @@ class Navigate_Results_ModernOptions(BaseOptions):
             img_name = os.path.join('images', 'logo.png')
             if self.logo_url:
                 code += f'        <a href="{self.logo_url}" style="margin-right: 10px;">\n'
-            code += f'        <img src="{img_name}" alt="Logo" style="max-height: {logo_height}; vertical-align: middle; display: inline-block; position: relative; top: -5px;">\n'
+            code += (f'        <img src="{img_name}" alt="Logo" '
+                     f'style="max-height: {logo_height}; vertical-align: middle; display: inline-block; '
+                     f'position: relative; top: -5px;">\n')
+
             if self.logo_url:
                 code += '        </a>\n'
 
@@ -1890,7 +1895,8 @@ class Navigate_Results_ModernOptions(BaseOptions):
                 <span></span>
             </label>
         '''
-        code += f'        <button id="home-button" onclick="location.href=\'{self.home}\'" style="font-size:{fsize};">🏠︎</button>\n'
+        code += (f'        <button id="home-button" onclick="location.href=\'{self.home}\'" '
+                f'style="font-size:{fsize};">🏠︎</button>\n')
         code += '      </td>\n'
 
         code += '    </tr>\n'
@@ -1918,7 +1924,8 @@ class Navigate_Results_ModernOptions(BaseOptions):
             if self._git_command:
                 res = ''
                 try:
-                    res = run_command([self._git_command, 'remote', 'get-url', 'origin'], just_raise=True)
+                    res = run_command([self._git_command, 'remote', 'get-url', 'origin'],
+                                      just_raise=True)
                 except subprocess.CalledProcessError:
                     pass
                 if res:
