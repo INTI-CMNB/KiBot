@@ -997,7 +997,8 @@ body.no-transition #back-button,
 body.no-transition #forward-button,
 body.no-transition #topmenu,
 body.no-transition .sidenav-category .folder > span,
-body.no-transition .category-box {
+body.no-transition .category-box,
+#search-bar {
     transition: none !important; /* Disable transition during page load */
 }
 
