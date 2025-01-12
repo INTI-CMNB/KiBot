@@ -984,6 +984,15 @@ body.dark-mode .markdown-content a {
     color: var(--dark-hover-color);
 }
 
+.highlighted {
+    background-color: var(--light-banner-hover); /* Same as hover background */
+    color: var(--light-hover-color); /* Same as hover text color */
+}
+
+body.dark-mode .highlighted {
+    background-color: var(--dark-banner-hover); /* Same as hover background */
+    color: var(--dark-hover-color); /* Same as hover text color */
+}
 
 /* New classes to remove transitions on page load =========================== */
 
@@ -1170,24 +1179,19 @@ function initializeSearchBar(searchContainerId, outputSelector) {
     // Collect output names and their hrefs
     const outputs = Array.from(outputLinks).map(link => ({
         name: link.textContent.trim(),
-        href: link.getAttribute("href")
+        href: link.getAttribute("href"),
     }));
 
-    // Adjust autocomplete list width to match search bar width
+    let highlightedIndex = -1; // Index of the currently highlighted item
+
     function adjustAutocompleteWidth() {
-        const searchBarWidth = searchBar.offsetWidth; // Get search bar width
-        autocompleteList.style.width = `${searchBarWidth}px`; // Match autocomplete list width
+        const searchBarWidth = searchBar.offsetWidth;
+        autocompleteList.style.width = `${searchBarWidth}px`;
     }
 
-    // Initial width adjustment
-    adjustAutocompleteWidth();
-
-    // Update width on window resize to handle responsiveness
-    window.addEventListener("resize", adjustAutocompleteWidth);
-
-    // Update autocomplete suggestions
     function updateAutocomplete(query) {
         autocompleteList.innerHTML = ""; // Clear suggestions
+        highlightedIndex = -1; // Reset highlighting
 
         const matches = outputs.filter(output =>
             output.name.toLowerCase().includes(query.toLowerCase())
@@ -1205,7 +1209,19 @@ function initializeSearchBar(searchContainerId, outputSelector) {
         autocompleteList.style.display = matches.length ? "block" : "none";
     }
 
-    // Add event listeners for search bar input
+    function highlightItem(index) {
+        const items = autocompleteList.querySelectorAll("li");
+        items.forEach((item, i) => {
+            if (i === index) {
+                item.classList.add("highlighted");
+                item.scrollIntoView({ block: "nearest" });
+            } else {
+                item.classList.remove("highlighted");
+            }
+        });
+    }
+
+    // Add event listeners for search bar input and keydown
     searchBar.addEventListener("input", () => {
         const query = searchBar.value.trim();
         if (query) updateAutocomplete(query);
@@ -1215,18 +1231,41 @@ function initializeSearchBar(searchContainerId, outputSelector) {
         }
     });
 
+    searchBar.addEventListener("keydown", (event) => {
+        const items = autocompleteList.querySelectorAll("li");
+        if (!items.length) return;
+
+        if (event.key === "ArrowDown") {
+            event.preventDefault();
+            highlightedIndex = (highlightedIndex + 1) % items.length;
+            highlightItem(highlightedIndex);
+        } else if (event.key === "ArrowUp") {
+            event.preventDefault();
+            highlightedIndex = (highlightedIndex - 1 + items.length) % items.length;
+            highlightItem(highlightedIndex);
+        } else if (event.key === "Enter" && highlightedIndex >= 0) {
+            event.preventDefault();
+            items[highlightedIndex].click();
+        }
+    });
+
     // Hide suggestions when clicking outside
     document.addEventListener("click", (event) => {
         if (!searchBar.contains(event.target) && !autocompleteList.contains(event.target)) {
             autocompleteList.style.display = "none";
         }
     });
+
+    // Adjust width on window resize
+    adjustAutocompleteWidth();
+    window.addEventListener("resize", adjustAutocompleteWidth);
 }
 
 // Initialize search functionality
 document.addEventListener("DOMContentLoaded", () => {
     initializeSearchBar("search-container", ".sidenav-output");
 });
+
 </script>
 """
 
