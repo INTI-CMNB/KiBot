@@ -1158,6 +1158,75 @@ window.addEventListener("beforeunload", () => {
 
 window.addEventListener("load", restoreSidenavScrollPosition);
 document.addEventListener("DOMContentLoaded", restoresidenavState);
+
+function initializeSearchBar(searchContainerId, outputSelector) {
+    const searchContainer = document.getElementById(searchContainerId);
+    if (!searchContainer) return; // Exit if container is not found
+
+    const searchBar = searchContainer.querySelector("#search-bar");
+    const autocompleteList = searchContainer.querySelector("#autocomplete-list");
+    const outputLinks = document.querySelectorAll(outputSelector);
+
+    // Collect output names and their hrefs
+    const outputs = Array.from(outputLinks).map(link => ({
+        name: link.textContent.trim(),
+        href: link.getAttribute("href")
+    }));
+
+    // Adjust autocomplete list width to match search bar width
+    function adjustAutocompleteWidth() {
+        const searchBarWidth = searchBar.offsetWidth; // Get search bar width
+        autocompleteList.style.width = `${searchBarWidth}px`; // Match autocomplete list width
+    }
+
+    // Initial width adjustment
+    adjustAutocompleteWidth();
+
+    // Update width on window resize to handle responsiveness
+    window.addEventListener("resize", adjustAutocompleteWidth);
+
+    // Update autocomplete suggestions
+    function updateAutocomplete(query) {
+        autocompleteList.innerHTML = ""; // Clear suggestions
+
+        const matches = outputs.filter(output =>
+            output.name.toLowerCase().includes(query.toLowerCase())
+        );
+
+        matches.forEach(match => {
+            const listItem = document.createElement("li");
+            listItem.textContent = match.name;
+            listItem.addEventListener("click", () => {
+                window.location.href = match.href;
+            });
+            autocompleteList.appendChild(listItem);
+        });
+
+        autocompleteList.style.display = matches.length ? "block" : "none";
+    }
+
+    // Add event listeners for search bar input
+    searchBar.addEventListener("input", () => {
+        const query = searchBar.value.trim();
+        if (query) updateAutocomplete(query);
+        else {
+            autocompleteList.innerHTML = "";
+            autocompleteList.style.display = "none";
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", (event) => {
+        if (!searchBar.contains(event.target) && !autocompleteList.contains(event.target)) {
+            autocompleteList.style.display = "none";
+        }
+    });
+}
+
+// Initialize search functionality
+document.addEventListener("DOMContentLoaded", () => {
+    initializeSearchBar("search-container", ".sidenav-output");
+});
 </script>
 """
 
@@ -1244,73 +1313,6 @@ function adjustMainBodyOffset() {
 // Apply the adjustment on page load and window resize
 window.addEventListener("DOMContentLoaded", adjustMainBodyOffset);
 window.addEventListener("resize", adjustMainBodyOffset);
-
-document.addEventListener("DOMContentLoaded", function () {
-    const searchBar = document.getElementById("search-bar");
-    const autocompleteList = document.getElementById("autocomplete-list");
-    const outputLinks = document.querySelectorAll(".sidenav-output");
-
-    // Collect output names and their hrefs
-    const outputs = Array.from(outputLinks).map(link => ({
-        name: link.textContent.trim(),
-        href: link.getAttribute("href")
-    }));
-
-    function updateAutocompleteWidth() {
-        const searchBarWidth = searchBar.offsetWidth; // Get the width of the search bar
-        autocompleteList.style.width = `${searchBarWidth}px`; // Match autocomplete width to search bar
-    }
-
-    // Initial width adjustment
-    updateAutocompleteWidth();
-
-    // Update width on window resize to handle responsiveness
-    window.addEventListener("resize", updateAutocompleteWidth);
-
-
-    // Update autocomplete suggestions
-    function updateAutocomplete(query) {
-        // Clear previous suggestions
-        autocompleteList.innerHTML = "";
-
-        // Filter and display matching outputs
-        const matches = outputs.filter(output =>
-            output.name.toLowerCase().includes(query.toLowerCase())
-        );
-
-        if (matches.length > 0) {
-            matches.forEach(match => {
-                const listItem = document.createElement("li");
-                listItem.textContent = match.name;
-                listItem.addEventListener("click", () => {
-                    window.location.href = match.href; // Redirect to the selected output
-                });
-                autocompleteList.appendChild(listItem);
-            });
-            autocompleteList.style.display = "block"; // Show the list
-        } else {
-            autocompleteList.style.display = "none"; // Hide the list if no matches
-        }
-    }
-
-    // Add event listeners to the search bar
-    searchBar.addEventListener("input", () => {
-        const query = searchBar.value.trim();
-        if (query) {
-            updateAutocomplete(query);
-        } else {
-            autocompleteList.innerHTML = ""; // Clear suggestions
-            autocompleteList.style.display = "none"; // Hide the list
-        }
-    });
-
-    // Hide autocomplete list when clicking outside
-    document.addEventListener("click", (event) => {
-        if (!searchBar.contains(event.target) && !autocompleteList.contains(event.target)) {
-            autocompleteList.style.display = "none";
-        }
-    });
-});
 </script>
 """
 
@@ -1737,7 +1739,7 @@ class Navigate_Results_ModernOptions(BaseOptions):
         name, ext = os.path.splitext(name)
         code = '''
         <div id="theSideNav" class="sidenav">
-            <!-- Search bar with autocomplete -->
+            <!-- Search bar container -->
             <div id="search-container">
                 <input type="text" id="search-bar" placeholder="Search outputs..." autocomplete="off">
                 <ul id="autocomplete-list"></ul>
@@ -1745,62 +1747,6 @@ class Navigate_Results_ModernOptions(BaseOptions):
         '''
         code += self.generate_sidenav_one(node, 0, name, ext)
         code += '</div>\n'
-        code += """
-        <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchBar = document.getElementById("search-bar");
-            const autocompleteList = document.getElementById("autocomplete-list");
-            const outputLinks = document.querySelectorAll(".sidenav-output");
-
-            // Collect output names and their hrefs
-            const outputs = Array.from(outputLinks).map(link => ({
-                name: link.textContent.trim(),
-                href: link.getAttribute("href")
-            }));
-
-            // Update autocomplete suggestions
-            function updateAutocomplete(query) {
-                // Clear previous suggestions
-                autocompleteList.innerHTML = "";
-
-                // Filter and display matching outputs
-                const matches = outputs.filter(output =>
-                    output.name.toLowerCase().includes(query.toLowerCase())
-                );
-
-                matches.forEach(match => {
-                    const listItem = document.createElement("li");
-                    listItem.textContent = match.name;
-                    listItem.addEventListener("click", () => {
-                        window.location.href = match.href; // Redirect to the selected output
-                    });
-                    autocompleteList.appendChild(listItem);
-                });
-
-                // Hide the list if there are no matches
-                autocompleteList.style.display = matches.length ? "block" : "none";
-            }
-
-            // Add event listeners to the search bar
-            searchBar.addEventListener("input", () => {
-                const query = searchBar.value.trim();
-                if (query) {
-                    updateAutocomplete(query);
-                } else {
-                    autocompleteList.innerHTML = ""; // Clear suggestions
-                    autocompleteList.style.display = "none";
-                }
-            });
-
-            // Hide autocomplete list when clicking outside
-            document.addEventListener("click", (event) => {
-                if (!searchBar.contains(event.target) && !autocompleteList.contains(event.target)) {
-                    autocompleteList.style.display = "none";
-                }
-            });
-        });
-        </script>
-        """
         return code
 
     def generate_top_menu(self, category=''):
