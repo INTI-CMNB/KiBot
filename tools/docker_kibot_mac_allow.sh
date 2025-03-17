@@ -56,6 +56,7 @@ docker run --rm $INTERACTIVE \
     --user $USER_ID:$GROUP_ID \
     --env NO_AT_BRIDGE=1 \
     --env DISPLAY=docker.for.mac.host.internal:0 \
+    --env HOME="/Users/$USER" \
     --workdir=$(pwd) \
     --volume=/tmp/.X11-unix:/tmp/.X11-unix \
     --volume="/etc/group:/etc/group:ro" \
