@@ -215,10 +215,10 @@ class KiCostOptions(VariantOptions):
             cmd.extend(self.translate_fields)
         # Config specified by the user
         if self.kicost_config:
-            cfg_name = os.path.expanduser(self.kicost_config)
+            cfg_name = os.path.abspath(os.path.expandvars(os.path.expanduser(self.kicost_config)))
             if not os.path.isfile(cfg_name):
                 raise KiPlotConfigurationError(f"Missing config file: `{cfg_name}`")
-            cmd.extend(['--config', ])
+            cmd.extend(['--config', cfg_name])
         # Run the command
         try:
             run_command(cmd, err_msg='Failed to create costs spreadsheet, error {ret}', err_lvl=BOM_ERROR)
