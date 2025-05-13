@@ -175,12 +175,15 @@ class PCB2Blender_ToolsOptions(VariantOptions):
     def write_bounds(self, name, format, bounds):
         if format == 'TOML':
             with open(name, 'wt') as f:
-                f.write(f'top_left = [ {bounds[0]}, {bounds[1]} ]\n')
-                f.write(f'size = [ {bounds[2]}, {bounds[3]} ]\n')
+                if len(bounds) == 3:
+                    f.write(f'offset = {list(bounds)}\n')
+                else:
+                    f.write(f'top_left = [ {bounds[0]}, {bounds[1]} ]\n')
+                    f.write(f'size = [ {bounds[2]}, {bounds[3]} ]\n')
         else:
             with open(name, 'wb') as f:
-                # Four big endian float numbers
-                f.write(struct.pack("!ffff", *bounds))
+                # Four/Three big endian float numbers
+                f.write(struct.pack("!fff" if len(bounds) == 3 else "!ffff", *bounds))
 
     def do_board_bounds(self, dir_name):
         if not self.board_bounds_create:
@@ -394,7 +397,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             self.write_bounds(os.path.join(subdir, self.sub_boards_bounds_file), self.board_bounds_format, boarddef.bounds)
             for stacked in boarddef.stacked_boards:
                 self.write_bounds(os.path.join(subdir, self.sub_boards_stacked_prefix+stacked.name),
-                                  self.sub_board_bounds_format, stacked.offset)
+                                  self.board_bounds_format, stacked.offset)
 
     def run(self, output):
         super().run(output)
