@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.5] - UNRELEASED
 ### Added
 - Schematic: Support for private fields (#812)
+- Internal templates:
+  - PCB2Blender_2_17: generates a pcb2blender 2.17 file to import on Blender
+- PCB2Blender_Tools: Experimental v2.17 file generation
 
 ### Fixed
 - User.N layer numbering. I.e. pcb_print issues with their numbering (#808)

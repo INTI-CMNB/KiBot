@@ -292,7 +292,10 @@ Here is a list of currently defined templates and their outputs / groups:
    -  **_PCB2Blender_elements_2_1**: **_PCB2Blender_tools_2_1** + **_PCB2Blender_layers_2_1** + **_PCB2Blender_vrml_2_1**
 
 -  `PCB2Blender_2_7 <https://github.com/30350n/pcb2blender>`__: Similar to **PCB2Blender_2_1**, but for v2.7 or newer.
-   The content is the same, just using *2_1* instead of *2_7*
+   The content is the same, just using *2_7* instead of *2_1*
+
+-  `PCB2Blender_2_17 <https://github.com/30350n/pcb2blender>`__: Similar to **PCB2Blender_2_7**, but for v2.17 or newer.
+   The content is the same, just using *2_17* instead of *2_7*
 
 -  `PCB2Blender_2_1_haschtl <https://github.com/haschtl/pcb2blender>`__: Similar to **PCB2Blender_2_1**, but for the
    experimental **haschtl** fork.

@@ -3130,6 +3130,8 @@ outputs:
       board_bounds_dir: 'layers'
       # [string='bounds'] Name of the bounds file
       board_bounds_file: 'bounds'
+      # [string='BIN'] [BIN,TOML] Format for the board bounds file, also sub-boards. Use 'TOML' for 2.17+
+      board_bounds_format: 'BIN'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -3146,6 +3148,8 @@ outputs:
       pads_info_create: true
       # [string='pads'] Sub-directory where the pads info files are stored
       pads_info_dir: 'pads'
+      # [string='BIN'] [BIN,TOML] Format for the pads. Use 'TOML' for 2.17+
+      pads_info_format: 'BIN'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -3162,7 +3166,7 @@ outputs:
       stackup_dir: '.'
       # [string='board.yaml'] Name for the stackup file. Use 'stackup' for 2.7+
       stackup_file: 'board.yaml'
-      # [string='JSON'] [JSON,BIN] Format for the stackup file. Use 'BIN' for 2.7+
+      # [string='JSON'] [JSON,BIN,TOML] Format for the stackup file. Use 'BIN' for 2.7+
       stackup_format: 'JSON'
       # [string='bounds'] File name for the sub-PCBs bounds
       sub_boards_bounds_file: 'bounds'

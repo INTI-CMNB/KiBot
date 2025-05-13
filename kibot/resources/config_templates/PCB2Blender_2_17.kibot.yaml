@@ -1,0 +1,75 @@
+# PCB2Blender (PCB3D) format for plug-in v2.17
+# URL: https://github.com/30350n/pcb2blender
+kibot:
+  version: 1
+
+groups:
+  - name: _PCB2Blender_elements_2_17
+    outputs:
+      - _PCB2Blender_tools_2_17
+      - _PCB2Blender_layers_2_17
+      - _PCB2Blender_vrml_2_17
+
+outputs:
+  - name: _PCB2Blender_tools_2_17
+    comment: Pads information and board bounds for PCB3D 2.17
+    type: pcb2blender_tools
+    dir: '%f%v_pcb3d'
+    run_by_default: false
+    options:
+      stackup_create: true
+      stackup_file: stackup.toml
+      stackup_dir: layers
+      stackup_format: TOML
+      board_bounds_format: TOML
+      board_bounds_file: bounds.toml
+      sub_boards_bounds_file: bounds.toml
+      pads_info_format: TOML
+
+  - name: _PCB2Blender_layers_2_17
+    comment: SVG files for the layers for PCB3D 2.17
+    type: svg
+    dir: '%f%v_pcb3d/layers'
+    run_by_default: false
+    options:
+      output: "%i.%x"
+      margin: 1
+      limit_viewbox: true
+      svg_precision: 6
+      drill_marks: none
+    layers:
+      - F.Cu
+      - B.Cu
+      - F.Paste
+      - B.Paste
+      - layer: F.SilkS
+        suffix: F_SilkS
+      - layer: B.SilkS
+        suffix: B_SilkS
+      - F.Mask
+      - B.Mask
+
+  - name: _PCB2Blender_vrml_2_17
+    comment: VRML model for PCB3D 2.17
+    type: vrml
+    dir: '%f%v_pcb3d'
+    run_by_default: false
+    options:
+      output: pcb.wrl
+      dir_models: components
+      use_pcb_center_as_ref: false
+      model_units: meters
+
+  - name: _PCB2Blender_2_17
+    comment: PCB3D model for pcb2blender plug-in
+    type: compress
+    options:
+      output: '%f%v.pcb3D'
+      format: ZIP
+      files:
+        - from_output: _PCB2Blender_tools_2_17
+          from_output_dir: true
+        - from_output: _PCB2Blender_layers_2_17
+          dest: layers
+        - from_output: _PCB2Blender_vrml_2_17
+          from_output_dir: true

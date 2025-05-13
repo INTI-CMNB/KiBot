@@ -9289,6 +9289,13 @@
           null
         ],
         [
+          "board_bounds_format",
+          [
+            "DataTypeChoice"
+          ],
+          null
+        ],
+        [
           "pads_info_create",
           [
             "DataTypeBoolean"
@@ -9299,6 +9306,13 @@
           "pads_info_dir",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "pads_info_format",
+          [
+            "DataTypeChoice"
           ],
           null
         ],

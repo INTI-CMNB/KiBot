@@ -5,7 +5,7 @@
 # Project: KiBot (formerly KiPlot)
 # Some code is adapted from: https://github.com/30350n/pcb2blender
 from dataclasses import dataclass, field
-from enum import IntEnum
+from enum import IntEnum, Enum
 import json
 import os
 import re
@@ -74,6 +74,41 @@ SURFACE_FINISH_MAP = {
     "OSP": SurfaceFinish.NONE}
 
 
+class PadType(Enum):
+    UNKNOWN = -1
+    THT = 0
+    SMD = 1
+    CONN = 2
+    NPTH = 3
+
+
+class PadShape(Enum):
+    UNKNOWN = -1
+    CIRCLE = 0
+    RECT = 1
+    OVAL = 2
+    TRAPEZOID = 3
+    ROUNDRECT = 4
+    CHAMFERED_RECT = 5
+    CUSTOM = 6
+
+
+class DrillShape(Enum):
+    UNKNOWN = -1
+    CIRCULAR = 0
+    OVAL = 1
+
+
+class PadFabType(Enum):
+    NONE = 0
+    BGA = 1
+    FIDUCIAL = (2, 3)
+    TESTPOINT = 4
+    HEATSINK = 5
+    CASTELLATED = 6
+    MECHANICAL = 7
+
+
 def sanitized(name):
     """ Replace character that aren't alphabetic by _ """
     return re.sub(r"[\W]+", "_", name)
@@ -91,10 +126,14 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             """ Sub-directory where the bounds file is stored """
             self.board_bounds_file = 'bounds'
             """ Name of the bounds file """
+            self.board_bounds_format = 'BIN'
+            """ [BIN,TOML] Format for the board bounds file, also sub-boards. Use 'TOML' for 2.17+ """
             self.pads_info_create = True
             """ Create the files containing the PCB pads information """
             self.pads_info_dir = 'pads'
             """ Sub-directory where the pads info files are stored """
+            self.pads_info_format = 'BIN'
+            """ [BIN,TOML] Format for the pads. Use 'TOML' for 2.17+ """
             self.stackup_create = False
             """ Create a file containing the board stackup """
             self.stackup_file = 'board.yaml'
@@ -102,7 +141,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             self.stackup_dir = '.'
             """ Directory for the stackup file. Use 'layers' for 2.7+ """
             self.stackup_format = 'JSON'
-            """ [JSON,BIN] Format for the stackup file. Use 'BIN' for 2.7+ """
+            """ [JSON,BIN,TOML] Format for the stackup file. Use 'BIN' for 2.7+ """
             self.sub_boards_create = True
             """ Extract sub-PCBs and their Z axis position """
             self.sub_boards_dir = 'boards'
@@ -133,6 +172,16 @@ class PCB2Blender_ToolsOptions(VariantOptions):
         else:  # a list
             self.show_components = self.solve_kf_filters(self.show_components)
 
+    def write_bounds(self, name, format, bounds):
+        if format == 'TOML':
+            with open(name, 'wt') as f:
+                f.write(f'top_left = [ {bounds[0]}, {bounds[1]} ]\n')
+                f.write(f'size = [ {bounds[2]}, {bounds[3]} ]\n')
+        else:
+            with open(name, 'wb') as f:
+                # Four big endian float numbers
+                f.write(struct.pack("!ffff", *bounds))
+
     def do_board_bounds(self, dir_name):
         if not self.board_bounds_create:
             return
@@ -143,9 +192,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
         bounds = tuple(map(GS.to_mm, GS.get_rect_for(GS.board.ComputeBoundingBox(aBoardEdgesOnly=True))))
         # Apply 1 mm margin (x, y, w, h)
         bounds = (bounds[0]-1, bounds[1]-1, bounds[2]+2, bounds[3]+2)
-        with open(fname, 'wb') as f:
-            # Four big endian float numbers
-            f.write(struct.pack("!ffff", *bounds))
+        self.write_bounds(fname, self.board_bounds_format, bounds)
 
     @staticmethod
     def is_not_virtual_ki6(m):
@@ -173,20 +220,36 @@ class PCB2Blender_ToolsOptions(VariantOptions):
                 name = os.path.join(dir_name, sanitized("{}_{}_{}_{}".format(value, reference, i, j)))
                 is_flipped = pad.IsFlipped()
                 has_paste = pad.IsOnLayer(B_Paste if is_flipped else F_Paste)
-                with open(name, 'wb') as f:
-                    f.write(struct.pack("!ff????BBffffBff",
-                                        *map(GS.to_mm, pad.GetPosition()),
-                                        is_flipped,
-                                        has_model,
-                                        is_tht_or_smd,
-                                        has_paste,
-                                        pad.GetAttribute(),
-                                        pad.GetShape(),
-                                        *map(GS.to_mm, pad.GetSize()),
-                                        GS.get_pad_orientation_in_radians(pad),
-                                        pad.GetRoundRectRadiusRatio(),
-                                        pad.GetDrillShape(),
-                                        *map(GS.to_mm, pad.GetDrillSize())))
+                if self.pads_info_format == 'TOML':
+                    with open(name+'.toml', 'wt') as f:
+                        f.write(f'position = {list(map(GS.to_mm, pad.GetPosition()))}\n')
+                        f.write(f'is_flipped = {str(is_flipped).lower()}\n')
+                        f.write(f'has_model = {str(has_model).lower()}\n')
+                        f.write(f'is_tht_or_smd = {str(is_tht_or_smd).lower()}\n')
+                        f.write(f'has_paste = {str(has_paste).lower()}\n')
+                        f.write(f'pad_type = "{PadType(pad.GetAttribute()).name}"\n')
+                        f.write(f'shape = "{PadShape(pad.GetShape()).name}"\n')
+                        f.write(f'size = {list(map(GS.to_mm, pad.GetSize()))}\n')
+                        f.write(f'rotation = {GS.get_pad_orientation_in_radians(pad)}\n')
+                        f.write(f'roundness = {pad.GetRoundRectRadiusRatio()}\n')
+                        f.write(f'drill_shape = "{DrillShape(pad.GetDrillShape()).name}"\n')
+                        f.write(f'drill_size = {list(map(GS.to_mm, pad.GetDrillSize()))}\n')
+                        f.write(f'fab_type = "{PadFabType(pad.GetProperty()).name}"\n')
+                else:
+                    with open(name, 'wb') as f:
+                        f.write(struct.pack("!ff????BBffffBff",
+                                            *map(GS.to_mm, pad.GetPosition()),
+                                            is_flipped,
+                                            has_model,
+                                            is_tht_or_smd,
+                                            has_paste,
+                                            pad.GetAttribute(),
+                                            pad.GetShape(),
+                                            *map(GS.to_mm, pad.GetSize()),
+                                            GS.get_pad_orientation_in_radians(pad),
+                                            pad.GetRoundRectRadiusRatio(),
+                                            pad.GetDrillShape(),
+                                            *map(GS.to_mm, pad.GetDrillSize())))
 
     def parse_kicad_color(self, string):
         if string[0] == "#":
@@ -220,7 +283,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             logger.debug('Stackup: '+str(data))
             with open(fname, 'wt') as f:
                 f.write(data)
-        else:  # self.stackup_format == 'BIN':
+        else:  # self.stackup_format == 'BIN'/"TOML":
             # This is for 2.7+
             # Map the surface finish
             if GS.global_pcb_finish:
@@ -231,9 +294,20 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             thickness_mm = GS.to_mm(ds.GetBoardThickness())
             mask_color, mask_color_custom = self.parse_kicad_color(GS.global_solder_mask_color.upper())
             silks_color, silks_color_custom = self.parse_kicad_color(GS.global_silk_screen_color.upper())
-            with open(fname, 'wb') as f:
-                f.write(struct.pack("!fbBBBbBBBb", thickness_mm, mask_color, *mask_color_custom, silks_color,
-                                    *silks_color_custom, surface_finish))
+            if self.stackup_format == 'TOML':
+                mask_color_custom = [x/255.0 for x in mask_color_custom]
+                silks_color_custom = [x/255.0 for x in silks_color_custom]
+                with open(fname, 'wt') as f:
+                    f.write(f'thickness_mm = {thickness_mm}\n')
+                    f.write(f'mask_color = "{mask_color.name}"\n')
+                    f.write(f'mask_color_custom = {list(mask_color_custom)}\n')
+                    f.write(f'silks_color = "{silks_color.name}"\n')
+                    f.write(f'silks_color_custom = {list(silks_color_custom)}\n')
+                    f.write(f'surface_finish = "{surface_finish.name}"\n')
+            else:
+                with open(fname, 'wb') as f:
+                    f.write(struct.pack("!fbBBBbBBBb", thickness_mm, mask_color, *mask_color_custom, silks_color,
+                                        *silks_color_custom, surface_finish))
 
     def get_boarddefs(self):
         """ Extract the sub-PCBs and their positions using texts.
@@ -317,11 +391,10 @@ class PCB2Blender_ToolsOptions(VariantOptions):
         for boarddef in boarddefs.values():
             subdir = os.path.join(dir_name, boarddef.name)
             os.makedirs(subdir, exist_ok=True)
-            with open(os.path.join(subdir, self.sub_boards_bounds_file), 'wb') as f:
-                f.write(struct.pack("!ffff", *boarddef.bounds))
+            self.write_bounds(os.path.join(subdir, self.sub_boards_bounds_file), self.board_bounds_format, boarddef.bounds)
             for stacked in boarddef.stacked_boards:
-                with open(os.path.join(subdir, self.sub_boards_stacked_prefix+stacked.name), 'wb') as f:
-                    f.write(struct.pack("!fff", *stacked.offset))
+                self.write_bounds(os.path.join(subdir, self.sub_boards_stacked_prefix+stacked.name),
+                                  self.sub_board_bounds_format, stacked.offset)
 
     def run(self, output):
         super().run(output)
@@ -350,13 +423,14 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             files.append(os.path.join(out_dir, self.board_bounds_dir, self.board_bounds_file))
         if self.pads_info_create:
             dir_name = os.path.join(out_dir, self.pads_info_dir)
+            ext = '.toml' if self.pads_info_format == 'TOML' else ''
             for i, footprint in enumerate(GS.get_modules()):
                 value = footprint.GetValue()
                 reference = footprint.GetReference()
                 for j, pad in enumerate(footprint.Pads()):
                     if not self.solder_join_on_heatsink and is_heatsink_pad(pad):
                         continue
-                    files.append(os.path.join(dir_name, sanitized("{}_{}_{}_{}".format(value, reference, i, j))))
+                    files.append(os.path.join(dir_name, sanitized(f"{value}_{reference}_{i}_{j}")+ext))
         if self.stackup_create and (GS.global_pcb_finish or GS.stackup):
             files.append(os.path.join(out_dir, self.stackup_dir, self.stackup_file))
         if self.sub_boards_create:

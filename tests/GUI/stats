@@ -1,5 +1,5 @@
-53 outputs types with a total of 2124 different parameters
-Single type parameters: 1938 (91 %)
+53 outputs types with a total of 2126 different parameters
+Single type parameters: 1940 (91 %)
 Multi type parameters: 186 (9 %)
 Average parameters: 40
 Maximum number of parameters: 217
@@ -58,11 +58,11 @@ Outputs sorted by parameters:
 - copy_files: 29
 - position: 30
 - pdf_pcb_print: 31
-- pcb2blender_tools: 32
 - report: 33
 - svg_pcb_print: 33
 - vrml: 33
 - gerb_drill: 34
+- pcb2blender_tools: 34
 - kicost: 37
 - diff: 40
 - export_3d: 41
@@ -151,7 +151,7 @@ Outputs sorted by depth:
 -            Boolean:  536
 -             Number:  289
 - ListStringSingular:  288
--             Choice:  108
+-             Choice:  110
 -               Dict:   88
 -   ListDictOrString:   24
 -           ListDict:   20
@@ -167,7 +167,7 @@ Used as single data type:
 -            Boolean:  471 
 - ListStringSingular:  285 
 -             Number:  195 
--             Choice:  105 
+-             Choice:  107 
 -               Dict:   75 
 -           ListDict:   20 
 -         ListString:    9 ['blender_export.options.pcb3d.highlight', 'bom.options.group_fields', 'bom.options.group_fields_fallbacks', 'bom.options.no_conflict', 'kibom.options.conf.group_fields', 'pcbdraw.options.libs', 'pcbdraw.options.highlight', 'render_3d.options.highlight', 'vrml.options.highlight']
@@ -403,8 +403,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-92 totals types with a total of 2499 different parameters
-Single type parameters: 2289 (92 %)
+92 totals types with a total of 2501 different parameters
+Single type parameters: 2291 (92 %)
 Multi type parameters: 210 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -501,11 +501,11 @@ Totals sorted by parameters:
 - copy_files: 29
 - position: 30
 - pdf_pcb_print: 31
-- pcb2blender_tools: 32
 - report: 33
 - svg_pcb_print: 33
 - vrml: 33
 - gerb_drill: 34
+- pcb2blender_tools: 34
 - generic: 34
 - kicost: 37
 - diff: 40
@@ -634,7 +634,7 @@ Totals sorted by depth:
 -            Boolean:  636
 -             Number:  339
 - ListStringSingular:  317
--             Choice:  140
+-             Choice:  142
 -               Dict:   99
 -           ListDict:   30
 -   ListDictOrString:   27
@@ -650,7 +650,7 @@ Used as single data type:
 -            Boolean:  563 
 - ListStringSingular:  314 
 -             Number:  230 
--             Choice:  137 
+-             Choice:  139 
 -               Dict:   78 
 -           ListDict:   30 
 -         ListString:   12 
