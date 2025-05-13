@@ -2097,3 +2097,12 @@ def test_ipc2581_xml(test_dir):
     ctx.run()
     ctx.expect_out_file(prj+'-IPC-2581.xml', sub=True)
     ctx.clean_up(keep_project=True)
+
+
+def test_vrml_1(test_dir):
+    prj = 'light_control'
+    ctx = context.TestContext(test_dir, prj, 'vrml_1')
+    ctx.run()
+    ctx.expect_out_file(prj+'-vrml.wrl')
+    ctx.search_err('Missing component in generated VRML', invert=True)
+    ctx.clean_up(keep_project=True)
