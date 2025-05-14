@@ -351,6 +351,10 @@ class Globals(FiltersOptions):
             self.cache_3d_resistors = False
             """ Use a cache for the generated 3D models of colored resistors.
                 Will save time, but you could need to remove the cache if you need to regenerate them """
+            self.vrml_3d_model_workaround = True
+            """ KiCad 9 randomly skips some 3D models when creating VRML files.
+                So we scan the VRML and look for missing components and copy them.
+                Related to https://gitlab.com/kicad/code/kicad/-/issues/20877 """
             self.resources_dir = 'kibot_resources'
             """ Directory where various resources are stored. Currently we support colors and fonts.
                 They must be stored in sub-dirs. I.e. kibot_resources/fonts/MyFont.ttf

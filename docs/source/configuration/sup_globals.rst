@@ -226,5 +226,8 @@
          This is available for KiCad 8 and newer.
       -  ``variant`` :index:`: <pair: global options; variant>` [:ref:`string <string>`] (default: ``''``) Default variant to apply to all outputs. You can also use the `--variant` command line option to specify
          one or more variants to be generated.
+      -  ``vrml_3d_model_workaround`` :index:`: <pair: global options; vrml_3d_model_workaround>` [:ref:`boolean <boolean>`] (default: ``true``) KiCad 9 randomly skips some 3D models when creating VRML files.
+         So we scan the VRML and look for missing components and copy them. |br|
+         Related to https://gitlab.com/kicad/code/kicad/-/issues/20877.
       -  ``work_layer`` :index:`: <pair: global options; work_layer>` [:ref:`string <string>`] (default: ``'Margin'``) Layer used for temporal tasks, choose a layer you are not using in your design. Affected by global options.
 

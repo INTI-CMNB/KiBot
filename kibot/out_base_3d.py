@@ -501,6 +501,7 @@ class Base3DOptions(VariantOptions):
                 self._tmp_dir = os.path.abspath(self._tmp_dir)
             logger.debug('Using `{}` as dir for downloaded 3D models'.format(self._tmp_dir))
         rel_dirs.append(self._tmp_dir)
+        self.used_3d_models = {}
         # Look for all the footprints
         for m in GS.get_modules():
             ref = m.GetReference()
@@ -524,9 +525,12 @@ class Base3DOptions(VariantOptions):
                     continue
                 used_extra = [False]
                 full_name, is_embedded = do_expand_env(m3d.m_Filename, used_extra, extra_debug, lib_nickname)
-                if not is_embedded and not os.path.isfile(full_name):
-                    logger.debugl(2, 'Missing 3D model file {} ({})'.format(full_name, m3d.m_Filename))
+                if is_embedded:
+                    # Inside the PCB file, must be there
+                    continue
+                if not os.path.isfile(full_name):
                     # Missing 3D model
+                    logger.debugl(2, 'Missing 3D model file {} ({})'.format(full_name, m3d.m_Filename))
                     if self.download:
                         replace = self.try_download_kicad(m3d.m_Filename, full_name, downloaded, rel_dirs, force_wrl)
                         if replace is None and self.download_lcsc:
@@ -536,8 +540,11 @@ class Base3DOptions(VariantOptions):
                             self.replace_model(replace, m3d, force_wrl, is_copy_mode, rename_function, rename_data)
                     if full_name not in downloaded:
                         logger.warning(W_MISS3D+'Missing 3D model for {}: `{}`'.format(ref, full_name))
-                elif not is_embedded:  # File was found
+                    else:
+                        self.used_3d_models[os.path.basename(replace)] = replace
+                else:  # File was found
                     replace = self.do_colored_tht_resistor(full_name, sch_comp, used_extra)
+                    self.used_3d_models[os.path.basename(replace)] = replace
                     if used_extra[0] or is_copy_mode:
                         # The file is there, but we got it expanding a user defined text
                         # This is completely valid for KiCad, but kicad2step doesn't support it

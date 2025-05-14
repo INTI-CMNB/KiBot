@@ -11,6 +11,7 @@ Dependencies:
 """
 import os
 import re
+from shutil import copy2
 from .gs import GS
 from .out_base_3d import Base3DOptionsWithHL, Base3D
 from .misc import FAILED_EXECUTE, W_MISSWRL
@@ -181,13 +182,21 @@ class VRMLOptions(Base3DOptionsWithHL):
         # Execute it
         self.exec_with_retry(self.add_extra_options(cmd), FAILED_EXECUTE)
         # Warn about missing models
-        if self.dir_models:
+        if GS.global_vrml_3d_model_workaround and self.dir_models:
             assert os.path.isfile(name)
             with open(name) as f:
                 urls = find_vrml_inline_urls(f.read())
             for f in urls:
-                if not os.path.isfile(os.path.join(dname, f)):
+                basename = os.path.basename(f)
+                fullname = os.path.join(dname, f)
+                if not os.path.isfile(fullname):
                     logger.warning(W_MISSWRL+f'Missing component in generated VRML: `{f}`')
+                    model = self.used_3d_models.get(basename)
+                    if model is None:
+                        logger.warning(W_MISSWRL+f'Nothing known for: `{f}`')
+                    else:
+                        copy2(model, fullname)
+                        logger.warning(W_MISSWRL+f'Replaced using: `{model}`')
 
 
 @output_class

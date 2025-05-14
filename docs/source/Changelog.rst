@@ -26,6 +26,8 @@ Added
       Blender
 
 -  PCB2Blender_Tools: Experimental v2.17 file generation
+-  VRML: workaround for KiCad 9 randomly failing to copy 3D models
+   (#804)
 
 Fixed
 ~~~~~

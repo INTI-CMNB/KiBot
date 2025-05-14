@@ -2,6 +2,9 @@
 kibot:
   version: 1
 
+global:
+  vrml_3d_model_workaround: true
+
 outputs:
   - name: 'VRML export Test'
     comment: "Example of VRML export"
