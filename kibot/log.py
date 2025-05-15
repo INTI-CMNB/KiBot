@@ -120,6 +120,7 @@ class MyLogger(logging.Logger):
                 for f in filters:
                     if (f.number == number or f.error == id) and f._regex.search(buf):
                         MyLogger.n_filtered += 1
+                        self.debug('Filtered warning: '+buf, **kwargs)
                         return
         MyLogger.warn_cnt += 1
         MyLogger.warn_hash[buf] = 1
