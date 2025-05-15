@@ -218,7 +218,7 @@ def test_sch_missing_filtered(test_dir):
         ctx.search_err("Component .?Resistor.? doesn't specify its library")
     else:
         ctx.search_err("Component .?A:B:Resistor.? with more than one .?:.?")
-    ctx.search_err("Missing component .?l1:FooBar.?", invert=True)
+    ctx.search_err("WARNING:(.*)Missing component .?l1:FooBar.?", invert=True)
     ctx.search_err("Missing component(.*)Resistor", invert=context.ki5())
     ctx.search_err("Missing doc-lib entry for l1:C", invert=(not context.ki5()))
     ctx.search_out(r"Found 3 unique warning/s \(\d+ total, \d+ filtered\)")
