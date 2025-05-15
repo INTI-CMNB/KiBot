@@ -9,8 +9,10 @@ Dependencies:
     role: mandatory
     version: 2.1.0
 """
+import math
 import os
 import re
+import time
 from shutil import copy2
 from .gs import GS
 from .out_base_3d import Base3DOptionsWithHL, Base3D
@@ -179,6 +181,8 @@ class VRMLOptions(Base3DOptionsWithHL):
             cmd.extend(['-x', str(x), '-y', str(y), '-u', units])
         dname = os.path.dirname(name)
         cmd.extend([board_name, dname])
+        # Sleep until the next second to avoid race-condition on timestamps
+        time.sleep(math.ceil(time.time()) - time.time() or 1.0)
         # Execute it
         self.exec_with_retry(self.add_extra_options(cmd), FAILED_EXECUTE)
         # Warn about missing models
