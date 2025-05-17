@@ -758,13 +758,14 @@ class VariantOptions(BaseOptions):
                                 logger.debug(f" - Variant specific: {text}")
                             var = match.group(1)
                             slots = match.group(2).split(',') if match.group(2) else []
+
                             # Do the match
                             matched = self.variant.matches_variant(var)
                             if matched:
                                 self.apply_list_of_3D_models(enable, slots, m, var)
                                 break
             if not matched and default is not None:
-                self.apply_list_of_3D_models(enable, slots, m, '_default_')
+                self.apply_list_of_3D_models(enable, default, m, '_default_')
 
     def create_3D_highlight_file(self):
         if self._highlight_3D_file:
