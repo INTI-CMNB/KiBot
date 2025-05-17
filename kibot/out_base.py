@@ -712,7 +712,7 @@ class VariantOptions(BaseOptions):
 
     def apply_3D_variant_aspect(self, board, enable=False):
         """ Disable/Enable the 3D models that aren't for this variant.
-            This mechanism uses the MTEXT attributes. """
+            This mechanism uses the MTEXT or PCB_TEXT attributes. """
         # The magic text is %variant:slot1,slot2...%
         field_regex = re.compile(r'\%([^:]+):([\d,]*)\%')     # Generic (by name)
         field_regex_sp = re.compile(r'\$([^:]*):([\d,]*)\$')  # Variant specific
@@ -728,7 +728,7 @@ class VariantOptions(BaseOptions):
             matched = False
             # Look for text objects
             for gi in m.GraphicalItems():
-                if gi.GetClass() == 'MTEXT':
+                if gi.GetClass() in ['MTEXT', 'PCB_TEXT']:
                     # Check if the text matches the magic style
                     text = gi.GetText().strip()
                     match = field_regex.match(text)
