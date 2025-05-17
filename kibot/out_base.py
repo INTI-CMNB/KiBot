@@ -724,8 +724,8 @@ class VariantOptions(BaseOptions):
         for m in GS.get_modules_board(board):
             if extra_debug:
                 logger.debug("Processing module " + m.GetReference())
-            default = None
-            matched = False
+            default_slots = None
+            any_matched = False
             # Look for text objects
             for gi in m.GraphicalItems():
                 if gi.GetClass() in ['MTEXT', 'PCB_TEXT']:
@@ -737,13 +737,15 @@ class VariantOptions(BaseOptions):
                         var = match.group(1)
                         slots = match.group(2).split(',') if match.group(2) else []
                         # Do the match
+                        matched = False
                         if var == '_default_':
-                            default = slots
+                            default_slots = slots
                             if self.extra_debug:
-                                logger.debug('- Found defaults: {}'.format(slots))
+                                logger.debug('- Found defaults: {}'.format(default_slots))
                         else:
                             matched = var == variant_name
                         if matched:
+                            any_matched = True
                             self.apply_list_of_3D_models(enable, slots, m, var)
                             break
                     else:
@@ -752,13 +754,15 @@ class VariantOptions(BaseOptions):
                         if match:
                             var = match.group(1)
                             slots = match.group(2).split(',') if match.group(2) else []
+
                             # Do the match
                             matched = self.variant.matches_variant(var)
                             if matched:
+                                any_matched = True
                                 self.apply_list_of_3D_models(enable, slots, m, var)
                                 break
-            if not matched and default is not None:
-                self.apply_list_of_3D_models(enable, slots, m, '_default_')
+            if not any_matched and default_slots is not None:
+                self.apply_list_of_3D_models(enable, default_slots, m, '_default_')
 
     def create_3D_highlight_file(self):
         if self._highlight_3D_file:
