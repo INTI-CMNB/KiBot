@@ -727,7 +727,6 @@ class VariantOptions(BaseOptions):
             if extra_debug:
                 logger.debug("- Processing module " + m.GetReference())
             default = None
-            matched = False
             # Look for text objects
             for gi in m.GraphicalItems():
                 if gi.GetClass() in ['MTEXT', 'PCB_TEXT']:
@@ -746,10 +745,9 @@ class VariantOptions(BaseOptions):
                             if self.extra_debug:
                                 logger.debug('- Found defaults: {}'.format(slots))
                         else:
-                            matched = var == variant_name
-                        if matched:
-                            self.apply_list_of_3D_models(enable, slots, m, var)
-                            break
+                            if var == variant_name:
+                                self.apply_list_of_3D_models(enable, slots, m, var)
+                                break
                     else:
                         # Try with the variant specific pattern
                         match = field_regex_sp.match(text)
@@ -758,14 +756,14 @@ class VariantOptions(BaseOptions):
                                 logger.debug(f" - Variant specific: {text}")
                             var = match.group(1)
                             slots = match.group(2).split(',') if match.group(2) else []
-
                             # Do the match
-                            matched = self.variant.matches_variant(var)
-                            if matched:
+                            if self.variant.matches_variant(var):
                                 self.apply_list_of_3D_models(enable, slots, m, var)
                                 break
-            if not matched and default is not None:
-                self.apply_list_of_3D_models(enable, default, m, '_default_')
+            else:
+                # No match found
+                if default is not None:
+                    self.apply_list_of_3D_models(enable, default, m, '_default_')
 
     def create_3D_highlight_file(self):
         if self._highlight_3D_file:
