@@ -192,6 +192,10 @@ class VRMLOptions(Base3DOptionsWithHL):
                 if not os.path.isfile(fullname):
                     logger.warning(W_MISSWRL+f'Missing component in generated VRML: `{f}`')
                     model = self.used_3d_models.get(basename)
+                    if model is None and basename.startswith('kicad_embedded_'):
+                        embed_model = GS.get_embed_dir(basename)
+                        if os.path.isfile(embed_model):
+                            model = embed_model
                     if model is None:
                         logger.warning(W_MISSWRL+f'Nothing known for: `{f}`')
                     else:
