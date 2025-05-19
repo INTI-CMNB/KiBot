@@ -200,6 +200,12 @@ containing:
 
    %VARIANT_NAME:SLOT1,SLOT2,SLOTN%
 
+
+.. warning::
+   KiCad supported hidden text until version 8.
+   But KiCad 9 doesn't support it and removes them from KiCad 8 files!
+
+
 Where ``VARIANT_NAME`` is the name of the variant that will change the
 list of 3D models. The ``SLOT1,SLOT2,SLOTN`` is a comma separated list
 of 3D model positions in the list of 3D models. All the slots listed
@@ -207,7 +213,7 @@ will be enabled, the rest will be disabled.
 
 Here is an
 `example <https://github.com/INTI-CMNB/KiBot/tree/master/docs/samples/3D_Model_LCD>`__.
-In this example we have a display whose aspect and connectio can
+In this example we have a display whose aspect and connection can
 radically change according to the variant. We have two variants:
 
 -  ``left``, uses a ERM1602DNS-2.1 with a connector on the left and two
