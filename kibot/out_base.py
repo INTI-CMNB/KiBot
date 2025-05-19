@@ -690,6 +690,8 @@ class VariantOptions(BaseOptions):
                     models.append(model)
 
     def apply_list_of_3D_models(self, enable, slots, m, var):
+        if self.extra_debug:
+            logger.debug(f"  - Applying {enable} to {slots} for {var}")
         # Disable the unused models adding bogus text to the end
         slots = [int(v) for v in slots if v]
         models = m.Models()
@@ -699,7 +701,7 @@ class VariantOptions(BaseOptions):
             m_objs.insert(0, models.pop())
         for i, m3d in enumerate(m_objs):
             if self.extra_debug:
-                logger.debug('- {} {} {} {}'.format(var, i+1, i+1 in slots, m3d.m_Filename))
+                logger.debug(f"   - {i+1} applies: {i+1 not in slots} {m3d.m_Filename}")
             if i+1 not in slots:
                 if enable:
                     # Revert the added text
@@ -723,7 +725,7 @@ class VariantOptions(BaseOptions):
         variant_name = self.variant.name if self.variant else 'None'
         for m in GS.get_modules_board(board):
             if extra_debug:
-                logger.debug("Processing module " + m.GetReference())
+                logger.debug("- Processing module " + m.GetReference())
             default = None
             matched = False
             # Look for text objects
@@ -733,6 +735,8 @@ class VariantOptions(BaseOptions):
                     text = gi.GetText().strip()
                     match = field_regex.match(text)
                     if match:
+                        if extra_debug:
+                            logger.debug(f" - By variant name: {text}")
                         # Check if this is for the current variant
                         var = match.group(1)
                         slots = match.group(2).split(',') if match.group(2) else []
@@ -750,6 +754,8 @@ class VariantOptions(BaseOptions):
                         # Try with the variant specific pattern
                         match = field_regex_sp.match(text)
                         if match:
+                            if extra_debug:
+                                logger.debug(f" - Variant specific: {text}")
                             var = match.group(1)
                             slots = match.group(2).split(',') if match.group(2) else []
                             # Do the match
