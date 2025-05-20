@@ -712,11 +712,47 @@ class VariantOptions(BaseOptions):
             # Push it back to the module
             models.push_back(m3d)
 
+    def look_for_text_defs(self, m, field_regex, field_regex_sp, variant_name):
+        found_slots = found_var = None
+        # Look for text objects
+        for gi in m.GraphicalItems():
+            if gi.GetClass() in ['MTEXT', 'PCB_TEXT']:
+                # Check if the text matches the magic style
+                text = gi.GetText().strip()
+                match = field_regex.match(text)
+                if match:
+                    if self.extra_debug:
+                        logger.debug(f" - By variant name: {text}")
+                    # Check if this is for the current variant
+                    var = match.group(1)
+                    slots = match.group(2).split(',') if match.group(2) else []
+                    # Do the match by variant name
+                    if var == '_default_':
+                        found_slots, found_var = slots, var
+                        if self.extra_debug:
+                            logger.debug(f'- Found defaults: {found_slots}')
+                    else:
+                        if var == variant_name:
+                            return slots, var
+                else:
+                    # Try with the variant specific pattern
+                    match = field_regex_sp.match(text)
+                    if match:
+                        if self.extra_debug:
+                            logger.debug(f" - Variant specific: {text}")
+                        var = match.group(1)
+                        slots = match.group(2).split(',') if match.group(2) else []
+                        # Do the match using the variant mechanism
+                        if self.variant.matches_variant(var):
+                            return slots, var
+        return found_slots, found_var
+
     def apply_3D_variant_aspect(self, board, enable=False):
         """ Disable/Enable the 3D models that aren't for this variant.
             This mechanism uses the MTEXT or PCB_TEXT attributes. """
         # The magic text is %variant:slot1,slot2...%
         field_regex = re.compile(r'\%([^:]+):([\d,]*)\%')     # Generic (by name)
+        #                or $text_for_variant:slot1,slot2...$
         field_regex_sp = re.compile(r'\$([^:]*):([\d,]*)\$')  # Variant specific
         self.extra_debug = extra_debug = GS.debug_level > 3
         if extra_debug:
@@ -726,44 +762,9 @@ class VariantOptions(BaseOptions):
         for m in GS.get_modules_board(board):
             if extra_debug:
                 logger.debug("- Processing module " + m.GetReference())
-            default = None
-            # Look for text objects
-            for gi in m.GraphicalItems():
-                if gi.GetClass() in ['MTEXT', 'PCB_TEXT']:
-                    # Check if the text matches the magic style
-                    text = gi.GetText().strip()
-                    match = field_regex.match(text)
-                    if match:
-                        if extra_debug:
-                            logger.debug(f" - By variant name: {text}")
-                        # Check if this is for the current variant
-                        var = match.group(1)
-                        slots = match.group(2).split(',') if match.group(2) else []
-                        # Do the match
-                        if var == '_default_':
-                            default = slots
-                            if self.extra_debug:
-                                logger.debug('- Found defaults: {}'.format(slots))
-                        else:
-                            if var == variant_name:
-                                self.apply_list_of_3D_models(enable, slots, m, var)
-                                break
-                    else:
-                        # Try with the variant specific pattern
-                        match = field_regex_sp.match(text)
-                        if match:
-                            if extra_debug:
-                                logger.debug(f" - Variant specific: {text}")
-                            var = match.group(1)
-                            slots = match.group(2).split(',') if match.group(2) else []
-                            # Do the match
-                            if self.variant.matches_variant(var):
-                                self.apply_list_of_3D_models(enable, slots, m, var)
-                                break
-            else:
-                # No match found
-                if default is not None:
-                    self.apply_list_of_3D_models(enable, default, m, '_default_')
+            found_slots, found_var = self.look_for_text_defs(m, field_regex, field_regex_sp, variant_name)
+            if found_slots is not None:
+                self.apply_list_of_3D_models(enable, found_slots, m, found_var)
 
     def create_3D_highlight_file(self):
         if self._highlight_3D_file:
