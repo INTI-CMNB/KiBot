@@ -11,7 +11,7 @@ Insulation distance: ≥ 0.15 mm
 
 Minimum drill size: ≥ 0.35 mm (finished metalized hole: 0.25 mm)
 
-Minimum slot width: ≥ 0.6 mm
+Minimum slot width: ≥ 0.6 mm (PTH: 0.6, NPTH: N/A)
 
 Ring collar: ≥ 0.08 mm
 
