@@ -45,6 +45,7 @@ BOGUS_PDF = """%PDF-1.0
 1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>
 endobj 3 0 obj<</Type/Page/MediaBox[0 0 3 3]>>endobj
 trailer<</Root 1 0 R>>"""
+checked_multiple = set()
 
 
 def check_tool_binary_python(name):
@@ -75,6 +76,24 @@ def look_for_command(command):
     return cmd_full
 
 
+def check_multiple_installs(command):
+    if command in checked_multiple:
+        return
+    checked_multiple.add(command)
+    path_components = os.environ.get('PATH', '').split(os.pathsep)
+    found = set([os.path.realpath(os.path.join(p, command)) for p in path_components if os.path.isfile(os.path.join(p, command))])
+    other = check_tool_binary_python(command)
+    if other:
+        found.add(other)
+    other = check_tool_binary_local(command)
+    if other:
+        found.add(other)
+    if len(found) > 1:
+        print(do_color(f'Multiple installations for `{command}` please keep only one', 1))
+        for f in found:
+            print(do_color('- '+f, 1))
+
+
 def run_command(cmd, only_first_line=False, pre_ver_text=None, no_err_2=False, no_err_msg=False):
     global last_ok
     global last_cmd
@@ -82,6 +101,7 @@ def run_command(cmd, only_first_line=False, pre_ver_text=None, no_err_2=False, n
     if not cmd_full:
         last_ok = False
         return NOT_AVAIL
+    check_multiple_installs(cmd[0])
     cmd[0] = cmd_full
     last_cmd = None
     try:
