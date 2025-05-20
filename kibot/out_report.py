@@ -693,7 +693,7 @@ class ReportOptions(VariantOptions):
         self.oar_pads = self.oar_pads_ec = self.pad_drill = self.pad_drill_real = self.pad_drill_real_ec = INF
         self.pad_drill_pth = self.pad_drill_pth_real = INF
         self.pad_drill_npth = self.pad_drill_npth_real = INF
-        self.slot = INF
+        self.slot_pth = self.slot_npth = INF
         self.top_smd = self.top_tht = self.bot_smd = self.bot_tht = 0
         self.top_smd_dnp = self.top_tht_dnp = self.bot_smd_dnp = self.bot_tht_dnp = 0
         self.top_smd_dnc = self.top_tht_dnc = self.bot_smd_dnc = self.bot_tht_dnc = 0
@@ -798,7 +798,10 @@ class ReportOptions(VariantOptions):
                         d = dr.y
                         d_r = dr_y_real
                     self._drills_oval[m] = self._drills_oval.get(m, 0) + 1
-                    self.slot = min(self.slot, m[0])
+                    if is_pth:
+                        self.slot_pth = min(self.slot_pth, m[0])
+                    else:
+                        self.slot_npth = min(self.slot_npth, m[0])
                     # print('{} @ {}'.format(dr, pad.GetPosition()))
                     self._drills_real[d_r] = self._drills_real.get(d_r, 0) + 1
                 pad_sz = pad.GetSize()
@@ -810,6 +813,7 @@ class ReportOptions(VariantOptions):
                 oar_t = min(oar_x, oar_y)
                 oar_ec_t = min(oar_ec_x, oar_ec_y)
                 self.analyze_oar(oar_t, oar_ec_t, is_pth, min_oar, pad, dr_x_real, dr_y_real, pad_sz, dr)
+        self.slot = min(self.slot_pth, self.slot_npth)
         self._vias_m = sorted(self._vias.keys())
         self._vias_ec_m = sorted(self._vias_ec.keys())
         # Via Pad size

@@ -11,7 +11,7 @@ Insulation distance: ≥ ${clearance_mm} mm
 
 Minimum drill size: ≥ ${drill_real_mm} mm (finished metalized hole: ${drill_mm} mm)
 
-Minimum slot width: ≥ ${slot_mm} mm
+Minimum slot width: ≥ ${slot_mm} mm (PTH: ${slot_pth_mm}, NPTH: ${slot_npth_mm})
 
 Ring collar: ≥ ${oar_mm} mm
 

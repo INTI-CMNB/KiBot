@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal templates:
   - PCB2Blender_2_17: generates a pcb2blender 2.17 file to import on Blender
 - PCB2Blender_Tools: Experimental v2.17 file generation
+- Report: separated N/PTH slot sizes (#824)
 - VRML: workaround for KiCad 9 randomly failing to copy 3D models (#804)
 
 ### Fixed
