@@ -330,6 +330,20 @@ def pip_install(pip_command, dest=None, name='.'):
     return True
 
 
+def add_local_local_lib():
+    """ For some reason Debian's pip doesn't honor the --root + --prefix option and adds an extra `local`
+        So you get ~/.local/local/lib/... which isn't in the search path.
+        Here we add it """
+    lib_local_local = site.USER_SITE[:len(site.USER_BASE)]+'/local'+site.USER_SITE[len(site.USER_BASE):]
+    cur_path = os.environ.get('PYTHONPATH', '')
+    if lib_local_local not in cur_path:
+        if lib_local_local.endswith('site-packages'):
+            lib_local_local += os.pathsep+lib_local_local.replace('site-packages', 'dist-packages')
+        if cur_path:
+            lib_local_local += os.pathsep+cur_path
+        os.environ['PYTHONPATH'] = lib_local_local
+
+
 def pytool_downloader(dep, system, plat):
     # Check if we have a github repo as download page
     logger.debug('- Download URL: '+str(dep.url_down))
@@ -370,6 +384,7 @@ def pytool_downloader(dep, system, plat):
     full_name = os.path.join(site.USER_BASE, 'bin', dep.command)
     if not os.path.isfile(full_name) or not os.access(full_name, os.X_OK):
         full_name = os.path.join(site.USER_BASE, 'local', 'bin', dep.command)
+        add_local_local_lib()
     # Check it was successful
     return check_tool_binary_version(full_name, dep, no_cache=True)
 
@@ -711,6 +726,7 @@ def check_tool_binary_python(dep):
         if not os.path.isfile(full_name) or not os.access(full_name, os.X_OK):
             return None, None
         # WTF! ~/.local/local/bin??!! Looks like a Debian bug
+        add_local_local_lib()
     return check_tool_binary_version(full_name, dep)
 
 
