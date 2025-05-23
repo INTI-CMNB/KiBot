@@ -579,6 +579,7 @@ def config_output(out, dry=False, dont_stop=False):
     except SystemExit:
         if not dont_stop:
             raise
+        GS.errors_ignored = True
         ok = False
     return ok
 
@@ -610,6 +611,7 @@ def run_output(out, dont_stop=False):
         msg = "In section '"+out.name+"' ("+out.type+"): "+str(e)
         if dont_stop:
             logger.error(msg)
+            GS.errors_ignored = True
         else:
             config_error(msg)
     except (PlotError, KiPlotError, SchError) as e:
@@ -620,6 +622,7 @@ def run_output(out, dont_stop=False):
     except SystemExit:
         if not dont_stop:
             raise
+        GS.errors_ignored = True
 
 
 def configure_and_run(tree, out_dir, msg):

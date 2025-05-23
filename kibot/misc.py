@@ -51,6 +51,7 @@ CORRUPTED_PRO = 34
 BLENDER_ERROR = 35
 WARN_AS_ERROR = 36
 CHECK_FIELD = 37
+IGNORED_ERRORS = 38
 error_level_to_name = ['NONE',
                        'INTERNAL_ERROR',
                        'WRONG_ARGUMENTS',
@@ -88,7 +89,8 @@ error_level_to_name = ['NONE',
                        'CORRUPTED_PRO',
                        'BLENDER_ERROR',
                        'WARN_AS_ERROR',
-                       'CHECK_FIELD'
+                       'CHECK_FIELD',
+                       'IGNORED_ERRORS'
                        ]
 KICOST_SUBMODULE = '../submodules/KiCost/src/kicost'
 EXAMPLE_CFG = 'example_template.kibot.yaml'

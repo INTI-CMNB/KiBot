@@ -4,7 +4,7 @@ Usage:
   kibot [-b BOARD] [-e SCHEMA] [-c CONFIG] [-d OUT_DIR] [-s PRE]
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
-         [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
+         [-F] [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
          [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
@@ -40,13 +40,17 @@ Options:
   -C, --cli-order                  Generate outputs using the indicated order
   --config-outs                    Configure all outputs before listing them
   -d OUT_DIR, --out-dir OUT_DIR    The output directory [default: .]
-  -D, --dont-stop                  Try to continue if an output fails
+  -D, --dont-stop                  Try to continue if an output fails.
+                                   Note that currently this is for outputs
   --defs-from-env                  Use the environment vars as preprocessor
                                    values
   --defs-from-project              Use the KiCad vars as preprocessor values.
                                    They are stored in the project file
   -e SCHEMA, --schematic SCHEMA    The schematic file (.sch/.kicad_sch)
   -E DEF, --define DEF             Define preprocessor value (VAR=VAL)
+  -F, --fail-on-ignored            Return an error code if we skipped a fail.
+                                   Used in conjunction with -D and `dont_stop`
+                                   options
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks

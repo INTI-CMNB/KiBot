@@ -22,7 +22,7 @@ import shutil
 from subprocess import run, PIPE
 from . import context
 from kibot.misc import (DRC_ERROR, ERC_ERROR, BOM_ERROR, CORRUPTED_PCB, CORRUPTED_SCH, EXIT_BAD_CONFIG, NETLIST_DIFF,
-                        CHECK_FIELD)
+                        CHECK_FIELD, IGNORED_ERRORS)
 
 
 @pytest.mark.slow
@@ -338,13 +338,37 @@ def test_drc_error(test_dir):
 
 
 @pytest.mark.skipif(not context.ki8(), reason="Needs DRC CLI")
-def test_drc_error_k8(test_dir):
+def test_drc_error_k8_1(test_dir):
     """ Check we catch DRC errors """
     prj = 'warning-project'
     ctx = context.TestContext(test_dir, prj, 'drc_k8', '')
     ctx.run(DRC_ERROR)
     # Check all outputs are there
     ctx.expect_out_file(prj+'-drc.html')
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki8(), reason="Needs DRC CLI")
+def test_drc_error_k8_2(test_dir):
+    """ Check we can ignore DRC errors """
+    prj = 'warning-project'
+    ctx = context.TestContext(test_dir, prj, 'drc_k8_ds', '')
+    ctx.run()
+    # Check all outputs are there
+    ctx.expect_out_file(prj+'-drc.html')
+    ctx.search_err('Missing connection between items')
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki8(), reason="Needs DRC CLI")
+def test_drc_error_k8_3(test_dir):
+    """ Check we can ignore DRC errors, and then get an error """
+    prj = 'warning-project'
+    ctx = context.TestContext(test_dir, prj, 'drc_k8_ds', '')
+    ctx.run(IGNORED_ERRORS, extra=['-F'])
+    # Check all outputs are there
+    ctx.expect_out_file(prj+'-drc.html')
+    ctx.search_err('Missing connection between items')
     ctx.clean_up()
 
 

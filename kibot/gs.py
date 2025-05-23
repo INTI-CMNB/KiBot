@@ -130,6 +130,7 @@ class GS(object):
                             'in': 1000*IU_PER_MILS}
     ci_cd_detected = False
     stop_flag = False
+    errors_ignored = False    # We ignored at least one error
     # Maximum recursive replace
     MAXDEPTH = 20
     #
@@ -910,6 +911,7 @@ class GS(object):
                             logger.error(h[1])
         if level >= 0:
             exit(level)
+        GS.errors_ignored = True
 
     @staticmethod
     def get_shape(shape):

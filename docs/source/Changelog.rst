@@ -19,6 +19,10 @@ Versioning <https://semver.org/spec/v2.0.0.html>`__.
 Added
 ~~~~~
 
+-  CLI:
+
+   -  -F, –fail-on-ignored: to return error even when using -D (#828)
+
 -  Schematic: Support for private fields (#812)
 -  Internal templates:
 

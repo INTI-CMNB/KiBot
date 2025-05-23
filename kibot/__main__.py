@@ -11,7 +11,7 @@ Usage:
   kibot [-b BOARD] [-e SCHEMA] [-c CONFIG] [-d OUT_DIR] [-s PRE]
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
-         [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
+         [-F] [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
          [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
@@ -47,13 +47,17 @@ Options:
   -C, --cli-order                  Generate outputs using the indicated order
   --config-outs                    Configure all outputs before listing them
   -d OUT_DIR, --out-dir OUT_DIR    The output directory [default: .]
-  -D, --dont-stop                  Try to continue if an output fails
+  -D, --dont-stop                  Try to continue if an output fails.
+                                   Note that currently this is for outputs
   --defs-from-env                  Use the environment vars as preprocessor
                                    values
   --defs-from-project              Use the KiCad vars as preprocessor values.
                                    They are stored in the project file
   -e SCHEMA, --schematic SCHEMA    The schematic file (.sch/.kicad_sch)
   -E DEF, --define DEF             Define preprocessor value (VAR=VAL)
+  -F, --fail-on-ignored            Return an error code if we skipped a fail.
+                                   Used in conjunction with -D and `dont_stop`
+                                   options
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks
@@ -149,7 +153,7 @@ from .banner import get_banner, BANNERS
 from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
-                   FAILED_EXECUTE, W_ONMAC)
+                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -505,6 +509,8 @@ def main():
     logger.debug('KiBot {} verbose level: {} started on {}'.format(__version__, args.verbose, datetime.now()))
     apply_warning_filter(args)
     log.stop_on_warnings = args.stop_on_warnings
+    log.dont_stop = args.dont_stop
+    logger.debugl(2, f'Command line options: {args}')
 
     # Now we have the debug level set we can check (and optionally inform) KiCad info
     logger.debug('Start of initialization')
@@ -642,7 +648,6 @@ def main():
                     args.skip_pre = 'all'
                 generate_outputs(args.target, args.invert_sel, args.skip_pre, args.cli_order, args.no_priority,
                                  dont_stop=args.dont_stop)
-            return 0
         else:
             # Do all the job (preflight + outputs)
             if False:
@@ -659,6 +664,9 @@ def main():
                                  dont_stop=args.dont_stop)
     # Print total warnings
     logger.log_totals()
+
+    if args.fail_on_ignored and (GS.errors_ignored or log.errors_ignored):
+        exit(IGNORED_ERRORS)
 
 
 if __name__ == "__main__":
