@@ -83,6 +83,10 @@ class DiffOptions(AnyDiffOptions):
             """ [0,1000000] Error threshold for the `stats` mode, 0 is no error. When specified a
                 difference bigger than the indicated value will make the diff fail.
                 KiBot will return error level 29 and the diff generation will be aborted """
+            self.dpi = 150
+            """ [72,600] Resolution (Dots Per Inch) for the diff images.
+                Be careful to flush any cached images if you change it.
+                Also be careful with the values, images can become huge """
             self.add_link_id = False
             """ When enabled we create a symlink to the output file with a name that contains the
                 git hashes involved in the comparison. If you plan to compress the output don't
@@ -464,7 +468,8 @@ class DiffOptions(AnyDiffOptions):
         cmd = [self.command, '--no_reader', '--new_file_hash', new_hash, '--old_file_hash', old_hash,
                '--cache_dir', self.cache_dir, '--output_dir', dir_name, '--output_name', file_name,
                '--diff_mode', self.diff_mode, '--fuzz', str(self.fuzz), '--no_exist_check',
-               '--added_2color', self.color_added, '--removed_2color', self.color_removed]
+               '--added_2color', self.color_added, '--removed_2color', self.color_removed,
+               '--resolution', str(self.dpi)]
         self.add_zones_ops(cmd)
         if self.incl_file:
             cmd.extend(['--layers', self.incl_file])

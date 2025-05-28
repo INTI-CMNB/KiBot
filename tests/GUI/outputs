@@ -2339,6 +2339,13 @@
           null
         ],
         [
+          "dpi",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
           "add_link_id",
           [
             "DataTypeBoolean"

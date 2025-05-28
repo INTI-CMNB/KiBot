@@ -25,6 +25,9 @@ DiffOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+-  ``dpi`` :index:`: <pair: output - diff - options; dpi>` [:ref:`number <number>`] (default: ``150``) (range: 72 to 600) Resolution (Dots Per Inch) for the diff images.
+   Be careful to flush any cached images if you change it. |br|
+   Also be careful with the values, images can become huge.
 -  ``exclude_filter`` :index:`: <pair: output - diff - options; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to exclude components from processing.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
