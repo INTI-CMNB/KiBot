@@ -205,7 +205,7 @@ class CompressOptions(BaseOptions):
                 source = f.expand_filename_both(f.source, make_safe=False)
                 files_list = glob.iglob(os.path.join(out_dir, source), recursive=True)
                 if GS.debug_level > 1:
-                    files_list = list(files_list)
+                    files_list = [f for f in files_list if os.path.exists(f)]
                     logger.debug('- Pattern {} list of files: {}'.format(source, files_list))
             # Compute the reference dir when no f.dest
             out_dir = out_dir_cwd if f.from_cwd else out_dir_default
