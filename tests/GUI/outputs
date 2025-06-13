@@ -12158,6 +12158,13 @@
           null
         ],
         [
+          "separator",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "gerber_board_edge",
           [
             "DataTypeBoolean"

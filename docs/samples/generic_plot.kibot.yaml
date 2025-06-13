@@ -3982,6 +3982,9 @@ outputs:
       right_digits: 4
       # [boolean=true] Generate two separated files, one for the top and another for the bottom
       separate_files_for_front_and_back: true
+      # [string=','] CSV Separator. Only used for CSV format.
+      # Only one character can be specified
+      separator: ','
       # [string='millimeters'] [millimeters,inches,mils] Units used for the positions. Affected by global options
       units: 'millimeters'
       # [boolean=true] Use the auxiliary axis as origin for coordinates (KiCad default).

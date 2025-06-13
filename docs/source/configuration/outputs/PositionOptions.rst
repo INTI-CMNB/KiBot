@@ -39,6 +39,8 @@ PositionOptions parameters
 
 -  ``quote_all`` :index:`: <pair: output - position - options; quote_all>` [:ref:`boolean <boolean>`] (default: ``false``) When generating the CSV quote all values, even numbers.
 -  ``right_digits`` :index:`: <pair: output - position - options; right_digits>` [:ref:`number <number>`] (default: ``4``) number of digits for mantissa part of coordinates (0 is auto).
+-  ``separator`` :index:`: <pair: output - position - options; separator>` [:ref:`string <string>`] (default: ``','``) CSV Separator. Only used for CSV format.
+   Only one character can be specified.
 -  ``use_aux_axis_as_origin`` :index:`: <pair: output - position - options; use_aux_axis_as_origin>` [:ref:`boolean <boolean>`] (default: ``true``) Use the auxiliary axis as origin for coordinates (KiCad default).
    Supported by the gerber format.
 -  ``variant`` :index:`: <pair: output - position - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.

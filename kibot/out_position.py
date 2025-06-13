@@ -97,7 +97,7 @@ class PositionOptions(VariantOptions):
             self.quote_all = False
             """ When generating the CSV quote all values, even numbers """
             self.separator = ','
-            """ *CSV Separator. Only used for CSV format.
+            """ CSV Separator. Only used for CSV format.
                 Only one character can be specified """
             self.gerber_board_edge = False
             """ Include the board edge in the gerber output """
@@ -369,6 +369,9 @@ class Position(BaseOutput):  # noqa: F821
             self.options = PositionOptions
             """ *[dict={}] Options for the `position` output """
         self._category = 'PCB/fabrication/assembly'
+
+    def get_csv_separator(self):
+        return self.options.separator
 
     @staticmethod
     def get_conf_examples(name, layers):
