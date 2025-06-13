@@ -96,6 +96,9 @@ class PositionOptions(VariantOptions):
                 For KiCad 6+ we replace this concept by the option to exclude from position file """
             self.quote_all = False
             """ When generating the CSV quote all values, even numbers """
+            self.separator = ','
+            """ *CSV Separator. Only used for CSV format.
+                Only one character can be specified """
             self.gerber_board_edge = False
             """ Include the board edge in the gerber output """
         super().__init__()
@@ -114,6 +117,8 @@ class PositionOptions(VariantOptions):
             new_columns.append(PosColumns(new_col, new_name))
         self._columns = new_columns
         self._expand_ext = 'pos' if self.format == 'ASCII' else self.format.lower()
+        if len(self.separator) != 1:
+            raise KiPlotConfigurationError('The CSV separator must be one character (`{}`)'.format(self.separator))
 
     def _do_position_plot_ascii(self, output_dir, columns, modulesStr, maxSizes, modules_side):
         topf = None
@@ -188,12 +193,12 @@ class PositionOptions(VariantOptions):
         files = [f for f in [topf, botf, bothf] if f is not None]
 
         for f in files:
-            f.write(",".join(columns))
+            f.write(self.separator.join(columns))
             f.write("\n")
 
         for (m, is_bottom) in zip(modulesStr, modules_side):
             file = bothf if bothf is not None else (botf if is_bottom else topf)
-            file.write(",".join('{}'.format(e) for e in m))
+            file.write(self.separator.join('{}'.format(e) for e in m))
             file.write("\n")
 
         if topf is not None:
