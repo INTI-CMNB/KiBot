@@ -219,12 +219,17 @@ def comp_match(component, ref_prefix, ref=None, relax_severity=False, stronger=F
         # This is used to parse things like "1/8 W", but we get "1/8" here
         result = re.match(r'(\d+)\/(\d+)', component)
         if result:
-            val = int(result.group(1))/int(result.group(2))
-            val, pow = get_prefix(val, '')
-            parsed = ParsedValue(val, pow, get_unit('', ref_prefix))
-            # Cache the result
-            parser_cache[original+ref_prefix] = parsed
-            return parsed
+            # Avoid division by zero
+            if int(result.group(2)) != 0:
+                val = int(result.group(1))/int(result.group(2))
+                val, pow = get_prefix(val, '')
+                parsed = ParsedValue(val, pow, get_unit('', ref_prefix))
+                # Cache the result
+                parser_cache[original+ref_prefix] = parsed
+                return parsed
+            else
+                result = None
+                
     if not result:
         # Failed with the regex, try with the parser
         result = parse(ref_prefix[0]+' '+with_commas, with_extra=True, stronger=stronger)
