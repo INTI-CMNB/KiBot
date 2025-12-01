@@ -304,6 +304,21 @@ In this way you can change the code and you won’t need to install again.
 
 
 .. index::
+   pair: installation; pipx
+
+Installation using pipx
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: shell
+
+   pipx install kibot --system-site-packages --pip-args="--no-compile"
+
+
+Note that most of the things explained for `pip` and `virtualenv` might apply
+to the use of `pipx`.
+
+
+.. index::
    pair: installation; virtualenv
 
 Notes about virtualenv
