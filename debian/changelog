@@ -1,3 +1,9 @@
+kibot (1.8.6-1) UNRELEASED; urgency=medium
+
+  * Next release
+
+ -- Salvador Eduardo Tropea <salvador@inti.gob.ar>  Wed, 03 Dec 2025 08:30:40 -0300
+
 kibot (1.8.5-1) stable; urgency=medium
 
   * Added support for 9.0.6
