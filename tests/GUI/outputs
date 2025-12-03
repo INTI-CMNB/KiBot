@@ -5139,6 +5139,13 @@
           null
         ],
         [
+          "mark_when_checked",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "bom_view",
           [
             "DataTypeChoice"

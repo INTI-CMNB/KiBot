@@ -1845,6 +1845,11 @@ outputs:
       include_tracks: false
       # [string='FB'] [F,FB,B] Default layer view
       layer_view: 'FB'
+      # [string=''] Name of the checkbox column used to mark components when checked.
+      # When enabled components checked in this column will be displayed in green.
+      # Leave empty to disable it.
+      # Needs iBoM newer than 2.10.0.
+      mark_when_checked: ''
       # [string='ibom'] Output file name format supports substitutions:
       # %f : original pcb file name without extension.
       # %p : pcb/project title from pcb metadata.

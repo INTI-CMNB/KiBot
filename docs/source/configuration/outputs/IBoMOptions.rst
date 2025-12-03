@@ -48,6 +48,10 @@ IBoMOptions parameters
 -  ``hide_silkscreen`` :index:`: <pair: output - ibom - options; hide_silkscreen>` [:ref:`boolean <boolean>`] (default: ``false``) Hide silkscreen by default.
 -  ``highlight_pin1`` :index:`: <pair: output - ibom - options; highlight_pin1>` [:ref:`boolean <boolean>` | :ref:`string <string>`] (default: ``false``) (choices: "none", "all", "selected") Highlight pin1 by default.
 -  ``include_nets`` :index:`: <pair: output - ibom - options; include_nets>` [:ref:`boolean <boolean>`] (default: ``false``) Include netlist information in output..
+-  ``mark_when_checked`` :index:`: <pair: output - ibom - options; mark_when_checked>` [:ref:`string <string>`] (default: ``''``) Name of the checkbox column used to mark components when checked.
+   When enabled components checked in this column will be displayed in green. |br|
+   Leave empty to disable it. |br|
+   Needs iBoM newer than 2.10.0. |br|.
 -  ``name_format`` :index:`: <pair: output - ibom - options; name_format>` [:ref:`string <string>`] (default: ``'ibom'``) Output file name format supports substitutions:
    %f : original pcb file name without extension. |br|
    %p : pcb/project title from pcb metadata. |br|

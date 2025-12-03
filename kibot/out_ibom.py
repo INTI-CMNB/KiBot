@@ -22,7 +22,8 @@ Dependencies:
 import os
 from subprocess import (check_output, STDOUT, CalledProcessError)
 from shutil import which, rmtree
-from .misc import BOM_ERROR, W_EXTNAME, W_NONETLIST
+from .error import KiPlotConfigurationError
+from .misc import BOM_ERROR, W_EXTNAME, W_NONETLIST, W_IBOMNOCHK
 from .gs import GS
 from .out_base import VariantOptions
 from .macros import macros, document, output_class  # noqa: F401
@@ -55,6 +56,11 @@ class IBoMOptions(VariantOptions):
             """ Offset the back of the pcb by 180 degrees """
             self.checkboxes = 'Sourced,Placed'
             """ Comma separated list of checkbox columns """
+            self.mark_when_checked = ''
+            """ Name of the checkbox column used to mark components when checked.
+                When enabled components checked in this column will be displayed in green.
+                Leave empty to disable it.
+                Needs iBoM newer than 2.10.0. """
             self.bom_view = 'left-right'
             """ *[bom-only,left-right,top-bottom] Default BOM view """
             self.layer_view = 'FB'
@@ -146,6 +152,12 @@ class IBoMOptions(VariantOptions):
             self.extra_data_file = self.expand_filename('', self.extra_data_file, 'ibom', 'xml')
         if isinstance(self.highlight_pin1, bool):
             self.highlight_pin1 = 'all' if self.highlight_pin1 else 'none'
+        checkboxes = self.checkboxes.split(',')
+        if not checkboxes:
+            logger.warning(W_IBOMNOCHK+"No checkbox columns provided for iBoM")
+        elif self.mark_when_checked and self.mark_when_checked not in checkboxes:
+            raise KiPlotConfigurationError(f"The `mark_when_checked` ({self.mark_when_checked}) isn't in "
+                                           f"`checkboxes` ({checkboxes})")
 
     def get_targets(self, out_dir):
         if self.output:
