@@ -17,7 +17,7 @@ The KiCad project file is modified. |br|
 
    -  **set_text_variables** :index:`: <pair: preflight - set_text_variables; set_text_variables>`  [:ref:`KiCadVariable parameters <KiCadVariable_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) One or more variable definition.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   KiCadVariable
+- :ref:`KiCadVariable parameters <KiCadVariable_pre>`

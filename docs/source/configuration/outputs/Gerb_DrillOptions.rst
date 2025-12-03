@@ -1,5 +1,7 @@
 .. _Gerb_DrillOptions:
 
+:orphan:
+
 
 Gerb_DrillOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,9 +33,9 @@ Gerb_DrillOptions parameters
 -  ``variant`` :index:`: <pair: output - gerb_drill - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
    Used for sub-PCBs.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrillMap
-   DrillReport
-   DrillTable
+- :ref:`DrillMap parameters <DrillMap>`
+- :ref:`DrillReport parameters <DrillReport>`
+- :ref:`DrillTable parameters <DrillTable>`

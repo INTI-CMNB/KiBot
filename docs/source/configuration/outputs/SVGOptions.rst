@@ -1,5 +1,7 @@
 .. _SVGOptions:
 
+:orphan:
+
 
 SVGOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -81,8 +83,8 @@ SVGOptions parameters
 -  ``use_aux_axis_as_origin`` :index:`: <pair: output - svg - options; use_aux_axis_as_origin>` [:ref:`boolean <boolean>`] (default: ``false``) Use the auxiliary axis as origin for coordinates.
 -  ``variant`` :index:`: <pair: output - svg - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   CustomReport
-   PcbMargin
+- :ref:`CustomReport parameters <CustomReport>`
+- :ref:`PcbMargin parameters <PcbMargin>`

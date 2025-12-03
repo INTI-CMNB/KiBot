@@ -1,5 +1,7 @@
 .. _PcbDrawOptions:
 
+:orphan:
+
 
 PcbDrawOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -73,10 +75,10 @@ PcbDrawOptions parameters
    Note that any other content from this layer will be included.
 -  ``warnings`` :index:`: <pair: output - pcbdraw - options; warnings>` [:ref:`string <string>`] (default: ``'visible'``) (choices: "visible", "all", "none") Using visible only the warnings about components in the visible side are generated.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PcbDrawRemapComponents
-   PcbDrawResistorRemap
-   PcbDrawStyle
-   PcbMargin
+- :ref:`PcbDrawRemapComponents parameters <PcbDrawRemapComponents>`
+- :ref:`PcbDrawResistorRemap parameters <PcbDrawResistorRemap>`
+- :ref:`PcbDrawStyle parameters <PcbDrawStyle>`
+- :ref:`PcbMargin parameters <PcbMargin>`

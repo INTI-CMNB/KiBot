@@ -1,5 +1,7 @@
 .. _KiBoMOptions:
 
+:orphan:
+
 
 KiBoMOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -16,7 +18,7 @@ KiBoMOptions parameters
    variants with the ';' (semicolon) character. |br|
    This isn't related to the KiBot concept of variants.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   KiBoMConfig
+- :ref:`KiBoMConfig parameters <KiBoMConfig>`

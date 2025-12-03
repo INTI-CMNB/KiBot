@@ -1,5 +1,7 @@
 .. _Copy_FilesOptions:
 
+:orphan:
+
 
 Copy_FilesOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +40,7 @@ Copy_FilesOptions parameters
 
 -  ``variant`` :index:`: <pair: output - copy_files - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FilesListCopy
+- :ref:`FilesListCopy parameters <FilesListCopy>`

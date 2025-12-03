@@ -1,5 +1,7 @@
 .. _SubPCBOptions:
 
+:orphan:
+
 
 SubPCBOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~

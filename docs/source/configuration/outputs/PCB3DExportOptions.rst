@@ -1,5 +1,7 @@
 .. _PCB3DExportOptions:
 
+:orphan:
+
 
 PCB3DExportOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,7 @@
 .. _PcbMargin:
 
+:orphan:
+
 
 PcbMargin parameters
 ~~~~~~~~~~~~~~~~~~~~

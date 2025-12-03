@@ -1,5 +1,7 @@
 .. _PcbDrawResistorRemap:
 
+:orphan:
+
 
 PcbDrawResistorRemap parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

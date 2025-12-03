@@ -13,7 +13,7 @@ Field Renamer
    -  **name** :index:`: <pair: filter - field_rename; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
    -  ``rename`` :index:`: <pair: filter - field_rename; rename>`  [:ref:`FieldRename parameters <FieldRename_fi>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) Fields to rename.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FieldRename
+- :ref:`FieldRename parameters <FieldRename_fi>`

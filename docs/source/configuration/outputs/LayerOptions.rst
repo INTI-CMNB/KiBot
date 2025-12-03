@@ -1,5 +1,7 @@
 .. _LayerOptions:
 
+:orphan:
+
 
 LayerOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

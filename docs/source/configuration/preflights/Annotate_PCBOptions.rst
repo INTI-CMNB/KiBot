@@ -1,5 +1,7 @@
 .. _Annotate_PCBOptions_pre:
 
+:orphan:
+
 
 Annotate_PCBOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

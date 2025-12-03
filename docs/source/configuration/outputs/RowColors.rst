@@ -1,5 +1,7 @@
 .. _RowColors:
 
+:orphan:
+
 
 RowColors parameters
 ~~~~~~~~~~~~~~~~~~~~

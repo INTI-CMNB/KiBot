@@ -1,5 +1,7 @@
 .. _SpecOptions_fi:
 
+:orphan:
+
 
 SpecOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~

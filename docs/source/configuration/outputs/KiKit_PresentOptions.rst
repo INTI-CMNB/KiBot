@@ -1,5 +1,7 @@
 .. _KiKit_PresentOptions:
 
+:orphan:
+
 
 KiKit_PresentOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,7 +26,7 @@ KiKit_PresentOptions parameters
 -  ``template`` :index:`: <pair: output - kikit_present - options; template>` [:ref:`string <string>`] (default: ``'default'``) Path to a template directory or a name of built-in one.
    See KiKit's doc/present.md for template specification.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PresentBoards
+- :ref:`PresentBoards parameters <PresentBoards>`

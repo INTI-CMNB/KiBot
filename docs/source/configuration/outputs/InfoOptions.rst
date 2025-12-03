@@ -1,5 +1,7 @@
 .. _InfoOptions:
 
+:orphan:
+
 
 InfoOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~

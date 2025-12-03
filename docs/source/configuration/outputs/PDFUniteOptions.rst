@@ -1,5 +1,7 @@
 .. _PDFUniteOptions:
 
+:orphan:
+
 
 PDFUniteOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8,7 +10,7 @@ PDFUniteOptions parameters
 -  **outputs** :index:`: <pair: output - pdfunite - options; outputs>`  [:ref:`FilesListPDFUnite parameters <FilesListPDFUnite>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) Which files will be included.
 -  ``use_external_command`` :index:`: <pair: output - pdfunite - options; use_external_command>` [:ref:`boolean <boolean>`] (default: ``false``) Use the `pdfunite` tool instead of PyPDF2 Python module.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FilesListPDFUnite
+- :ref:`FilesListPDFUnite parameters <FilesListPDFUnite>`

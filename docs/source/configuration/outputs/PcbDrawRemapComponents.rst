@@ -1,5 +1,7 @@
 .. _PcbDrawRemapComponents:
 
+:orphan:
+
 
 PcbDrawRemapComponents parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

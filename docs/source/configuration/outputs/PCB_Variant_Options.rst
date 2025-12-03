@@ -1,5 +1,7 @@
 .. _PCB_Variant_Options:
 
+:orphan:
+
 
 PCB_Variant_Options parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

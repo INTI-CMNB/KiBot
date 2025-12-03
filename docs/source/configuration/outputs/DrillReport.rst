@@ -1,5 +1,7 @@
 .. _DrillReport:
 
+:orphan:
+
 
 DrillReport parameters
 ~~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,7 @@
 .. _NetlistOptions:
 
+:orphan:
+
 
 NetlistOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~

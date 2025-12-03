@@ -1,5 +1,7 @@
 .. _DrillTable:
 
+:orphan:
+
 
 DrillTable parameters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -14,7 +16,7 @@ DrillTable parameters
    holes in the same table. If 'auto' is chosen, the setting is copied
    from the `excellon` output's `pth_and_npth_single_file`.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrillTableColumns
+- :ref:`DrillTableColumns parameters <DrillTableColumns>`

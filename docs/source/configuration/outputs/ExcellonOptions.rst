@@ -1,5 +1,7 @@
 .. _ExcellonOptions:
 
+:orphan:
+
 
 ExcellonOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -39,9 +41,9 @@ ExcellonOptions parameters
    Used for sub-PCBs.
 -  ``zeros_format`` :index:`: <pair: output - excellon - options; zeros_format>` [:ref:`string <string>`] (default: ``'DECIMAL_FORMAT'``) (choices: "DECIMAL_FORMAT", "SUPPRESS_LEADING", "SUPPRESS_TRAILING", "KEEP_ZEROS") How to handle the zeros.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrillMap
-   DrillReport
-   DrillTable
+- :ref:`DrillMap parameters <DrillMap>`
+- :ref:`DrillReport parameters <DrillReport>`
+- :ref:`DrillTable parameters <DrillTable>`

@@ -1,5 +1,7 @@
 .. _SCH_ReplaceOptions_pre:
 
+:orphan:
+
 
 SCH_ReplaceOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,7 +19,7 @@ SCH_ReplaceOptions parameters
 
 -  ``replace_tags`` :index:`: <pair: preflight - sch_replace - sch_replace; replace_tags>`  [:ref:`TagReplaceSCH parameters <TagReplaceSCH_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) Tag or tags to replace.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   TagReplaceSCH
+- :ref:`TagReplaceSCH parameters <TagReplaceSCH_pre>`

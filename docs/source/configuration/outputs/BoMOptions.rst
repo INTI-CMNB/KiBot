@@ -1,5 +1,7 @@
 .. _BoMOptions:
 
+:orphan:
+
 
 BoMOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -145,12 +147,12 @@ BoMOptions parameters
    The combination between the default for this option and the defaults for the filters provides
    a behavior that mimics KiBoM default behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Aggregate
-   BoMCSV
-   BoMColumns
-   BoMHTML
-   BoMTXT
-   BoMXLSX
+- :ref:`Aggregate parameters <Aggregate>`
+- :ref:`BoMCSV parameters <BoMCSV>`
+- :ref:`BoMColumns parameters <BoMColumns>`
+- :ref:`BoMHTML parameters <BoMHTML>`
+- :ref:`BoMTXT parameters <BoMTXT>`
+- :ref:`BoMXLSX parameters <BoMXLSX>`

@@ -1,5 +1,7 @@
 .. _Aggregate:
 
+:orphan:
+
 
 Aggregate parameters
 ~~~~~~~~~~~~~~~~~~~~

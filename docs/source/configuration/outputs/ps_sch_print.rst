@@ -47,7 +47,7 @@ Parameters:
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
 -  ``run_by_default`` :index:`: <pair: output - ps_sch_print; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PS_SCH_PrintOptions
+- :ref:`PS_SCH_PrintOptions parameters <PS_SCH_PrintOptions>`

@@ -17,7 +17,7 @@ If you use DRC exclusions please consult the `drc_exclusions_workaround` global 
 
    -  **run_drc** :index:`: <pair: preflight - run_drc; run_drc>`  [:ref:`Run_DRCOptions parameters <Run_DRCOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Run_DRCOptions
+- :ref:`Run_DRCOptions parameters <Run_DRCOptions_pre>`

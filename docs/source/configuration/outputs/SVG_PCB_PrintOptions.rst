@@ -1,5 +1,7 @@
 .. _SVG_PCB_PrintOptions:
 
+:orphan:
+
 
 SVG_PCB_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

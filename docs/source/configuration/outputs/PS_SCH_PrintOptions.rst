@@ -1,5 +1,7 @@
 .. _PS_SCH_PrintOptions:
 
+:orphan:
+
 
 PS_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

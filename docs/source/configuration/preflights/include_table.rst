@@ -20,7 +20,7 @@ Only the width of the table is important, the height will be adjusted. |br|
 
    -  **include_table** :index:`: <pair: preflight - include_table; include_table>`  [:ref:`IncludeTableOptions parameters <IncludeTableOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   IncludeTableOptions
+- :ref:`IncludeTableOptions parameters <IncludeTableOptions_pre>`

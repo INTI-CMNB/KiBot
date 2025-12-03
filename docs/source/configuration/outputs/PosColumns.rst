@@ -1,5 +1,7 @@
 .. _PosColumns:
 
+:orphan:
+
 
 PosColumns parameters
 ~~~~~~~~~~~~~~~~~~~~~

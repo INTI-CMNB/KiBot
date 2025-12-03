@@ -1,5 +1,7 @@
 .. _IBoMOptions:
 
+:orphan:
+
 
 IBoMOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~

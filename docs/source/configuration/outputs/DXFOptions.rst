@@ -1,5 +1,7 @@
 .. _DXFOptions:
 
+:orphan:
+
 
 DXFOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -68,7 +70,7 @@ DXFOptions parameters
 -  ``use_aux_axis_as_origin`` :index:`: <pair: output - dxf - options; use_aux_axis_as_origin>` [:ref:`boolean <boolean>`] (default: ``false``) Use the auxiliary axis as origin for coordinates.
 -  ``variant`` :index:`: <pair: output - dxf - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   CustomReport
+- :ref:`CustomReport parameters <CustomReport>`

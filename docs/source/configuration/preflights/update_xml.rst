@@ -13,7 +13,7 @@ You can compare the PCB and schematic netlists using it (KiCad 6 and 7 only)
 
    -  **update_xml** :index:`: <pair: preflight - update_xml; update_xml>`  [:ref:`Update_XMLOptions parameters <Update_XMLOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Update_XMLOptions
+- :ref:`Update_XMLOptions parameters <Update_XMLOptions_pre>`

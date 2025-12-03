@@ -1,5 +1,7 @@
 .. _HPGL_SCH_PrintOptions:
 
+:orphan:
+
 
 HPGL_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

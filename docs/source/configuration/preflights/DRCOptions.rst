@@ -1,5 +1,7 @@
 .. _DRCOptions_pre:
 
+:orphan:
+
 
 DRCOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -25,7 +27,7 @@ DRCOptions parameters
 -  ``units`` :index:`: <pair: preflight - drc - drc; units>` [:ref:`string <string>`] (default: ``'millimeters'``) (choices: "millimeters", "inches", "mils") Units used for the positions. Affected by global options.
 -  ``warnings_as_errors`` :index:`: <pair: preflight - drc - drc; warnings_as_errors>` [:ref:`boolean <boolean>`] (default: ``false``) Warnings are considered errors, they still reported as warnings.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FilterOptionsXRC
+- :ref:`FilterOptionsXRC parameters <FilterOptionsXRC_pre>`

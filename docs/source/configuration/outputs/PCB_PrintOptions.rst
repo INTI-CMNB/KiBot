@@ -1,5 +1,7 @@
 .. _PCB_PrintOptions:
 
+:orphan:
+
 
 PCB_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -89,9 +91,9 @@ PCB_PrintOptions parameters
 -  ``variant`` :index:`: <pair: output - pcb_print - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 -  ``via_color`` :index:`: <pair: output - pcb_print - options; via_color>` [:ref:`string <string>`] (default: ``''``) Color used for through-hole `colored_vias`.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrillOptions
-   IncludeTableOptions
-   PagesOptions
+- :ref:`DrillOptions parameters <DrillOptions>`
+- :ref:`IncludeTableOptions parameters <IncludeTableOptions>`
+- :ref:`PagesOptions parameters <PagesOptions>`

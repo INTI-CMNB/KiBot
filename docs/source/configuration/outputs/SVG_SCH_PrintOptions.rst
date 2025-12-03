@@ -1,5 +1,7 @@
 .. _SVG_SCH_PrintOptions:
 
+:orphan:
+
 
 SVG_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

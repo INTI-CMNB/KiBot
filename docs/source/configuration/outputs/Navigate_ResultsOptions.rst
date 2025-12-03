@@ -1,5 +1,7 @@
 .. _Navigate_ResultsOptions:
 
+:orphan:
+
 
 Navigate_ResultsOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

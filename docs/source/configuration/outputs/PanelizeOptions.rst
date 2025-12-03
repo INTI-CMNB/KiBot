@@ -1,5 +1,7 @@
 .. _PanelizeOptions:
 
+:orphan:
+
 
 PanelizeOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +40,7 @@ PanelizeOptions parameters
 -  ``units`` :index:`: <pair: output - panelize - options; units>` [:ref:`string <string>`] (default: ``'mm'``) (choices: "millimeters", "inches", "mils", "mm", "cm", "dm", "m", "mil", "inch", "in") Units used when omitted.
 -  ``variant`` :index:`: <pair: output - panelize - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PanelizeConfig
+- :ref:`PanelizeConfig parameters <PanelizeConfig>`

@@ -1,5 +1,7 @@
 .. _Navigate_Results_RBOptions:
 
+:orphan:
+
 
 Navigate_Results_RBOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,7 @@
 .. _KiBoMRegex:
 
+:orphan:
+
 
 KiBoMRegex parameters
 ~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,7 @@
 .. _BoMRegex_fi:
 
+:orphan:
+
 
 BoMRegex parameters
 ~~~~~~~~~~~~~~~~~~~

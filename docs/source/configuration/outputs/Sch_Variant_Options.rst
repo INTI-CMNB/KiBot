@@ -1,5 +1,7 @@
 .. _Sch_Variant_Options:
 
+:orphan:
+
 
 Sch_Variant_Options parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

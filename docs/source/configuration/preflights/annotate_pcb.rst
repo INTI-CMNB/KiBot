@@ -13,7 +13,7 @@ The project must be fully annotated first
 
    -  **annotate_pcb** :index:`: <pair: preflight - annotate_pcb; annotate_pcb>`  [:ref:`Annotate_PCBOptions parameters <Annotate_PCBOptions_pre>`] [:ref:`dict <dict>`] (default: empty dict, default values used)  Options for the `annotate_pcb` preflight.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Annotate_PCBOptions
+- :ref:`Annotate_PCBOptions parameters <Annotate_PCBOptions_pre>`

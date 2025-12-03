@@ -1,5 +1,7 @@
 .. _SUColumnsFancy_pre:
 
+:orphan:
+
 
 SUColumnsFancy parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~

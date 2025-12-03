@@ -1,5 +1,7 @@
 .. _PresentBoards:
 
+:orphan:
+
 
 PresentBoards parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~

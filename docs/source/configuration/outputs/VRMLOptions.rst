@@ -1,5 +1,7 @@
 .. _VRMLOptions:
 
+:orphan:
+
 
 VRMLOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~

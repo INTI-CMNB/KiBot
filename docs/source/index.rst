@@ -33,6 +33,7 @@ KiBot (formerly KiPlot)
    :maxdepth: 3
    :caption: Notes and extra information:
 
+   examples_and_resources
    notes_gerber
    notes_position
    notes_3d

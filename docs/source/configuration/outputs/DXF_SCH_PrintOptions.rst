@@ -1,5 +1,7 @@
 .. _DXF_SCH_PrintOptions:
 
+:orphan:
+
 
 DXF_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

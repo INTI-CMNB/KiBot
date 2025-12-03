@@ -15,7 +15,7 @@ An example can be found `here <https://github.com/INTI-CMNB/KiBot/tree/dev/docs/
 
    -  **consolidate_pcbs** :index:`: <pair: preflight - consolidate_pcbs; consolidate_pcbs>`  [:ref:`PCB_Reference parameters <PCB_Reference_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) One or more PCBs to include.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PCB_Reference
+- :ref:`PCB_Reference parameters <PCB_Reference_pre>`

@@ -46,7 +46,7 @@ Generic filter
       Use `dnc_list` for ['dnc', 'do not change', 'fixed', 'no change'].
 
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   BoMRegex
+- :ref:`BoMRegex parameters <BoMRegex_fi>`

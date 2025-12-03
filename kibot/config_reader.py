@@ -968,7 +968,7 @@ def print_output_options(name, cl, indent, context=None, skip_keys=False, skip_o
                 i = 0
                 title = f'{v.__name__} parameters'
                 sub_pages.add(v.__name__)
-                print(f".. _{v.__name__+id}:\n\n")
+                print(f".. _{v.__name__+id}:\n\n:orphan:\n\n")
                 print(title)
                 print('~'*len(title)+'\n')
             print_output_options('', v, i, new_context, separate_files=separate_files, skip_keys=separate_files, id=id)
@@ -978,10 +978,17 @@ def print_output_options(name, cl, indent, context=None, skip_keys=False, skip_o
     if rst_mode:
         print()
     if sub_pages:
-        print('.. toctree::')
-        print('   :caption: Used dicts\n')
+        # Using a toctree breaks the hierarchy
+        # print('.. toctree::')
+        # print('   :caption: Used dicts\n')
+        # for p in sorted(sub_pages):
+        #     print('   '+p)
+        # Using include duplicates labels
+        # So we detach them from the hierarchy (orphan)
+        print('Used dicts')
+        print('----------\n')
         for p in sorted(sub_pages):
-            print('   '+p)
+            print(f'- :ref:`{p} parameters <{p+id}>`')
     # if num_opts == 0:
     #     print(ind_str+'  - No available options')
 

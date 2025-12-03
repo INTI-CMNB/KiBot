@@ -12,7 +12,7 @@ This preflight modifies the PCB. Even when a back-up is done use it carefully
 
    -  **pcb_replace** :index:`: <pair: preflight - pcb_replace; pcb_replace>`  [:ref:`PCB_ReplaceOptions parameters <PCB_ReplaceOptions_pre>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the `pcb_replace` preflight.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PCB_ReplaceOptions
+- :ref:`PCB_ReplaceOptions parameters <PCB_ReplaceOptions_pre>`

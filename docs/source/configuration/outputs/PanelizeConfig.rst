@@ -1,5 +1,7 @@
 .. _PanelizeConfig:
 
+:orphan:
+
 
 PanelizeConfig parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -24,18 +26,18 @@ PanelizeConfig parameters
 -  ``text3`` :index:`: <pair: output - panelize - options - configs; text3>`  [:ref:`PanelizeText parameters <PanelizeText>`] [:ref:`dict <dict>`] (default: ``null``) Used to add text to the panel.
 -  ``text4`` :index:`: <pair: output - panelize - options - configs; text4>`  [:ref:`PanelizeText parameters <PanelizeText>`] [:ref:`dict <dict>`] (default: ``null``) Used to add text to the panel.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PanelizeCopperfill
-   PanelizeCuts
-   PanelizeDebug
-   PanelizeFiducials
-   PanelizeFraming
-   PanelizeLayout
-   PanelizePage
-   PanelizePost
-   PanelizeSource
-   PanelizeTabs
-   PanelizeText
-   PanelizeTooling
+- :ref:`PanelizeCopperfill parameters <PanelizeCopperfill>`
+- :ref:`PanelizeCuts parameters <PanelizeCuts>`
+- :ref:`PanelizeDebug parameters <PanelizeDebug>`
+- :ref:`PanelizeFiducials parameters <PanelizeFiducials>`
+- :ref:`PanelizeFraming parameters <PanelizeFraming>`
+- :ref:`PanelizeLayout parameters <PanelizeLayout>`
+- :ref:`PanelizePage parameters <PanelizePage>`
+- :ref:`PanelizePost parameters <PanelizePost>`
+- :ref:`PanelizeSource parameters <PanelizeSource>`
+- :ref:`PanelizeTabs parameters <PanelizeTabs>`
+- :ref:`PanelizeText parameters <PanelizeText>`
+- :ref:`PanelizeTooling parameters <PanelizeTooling>`

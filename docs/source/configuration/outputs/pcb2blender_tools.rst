@@ -47,7 +47,7 @@ Parameters:
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
 -  ``run_by_default`` :index:`: <pair: output - pcb2blender_tools; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PCB2Blender_ToolsOptions
+- :ref:`PCB2Blender_ToolsOptions parameters <PCB2Blender_ToolsOptions>`

@@ -1,5 +1,7 @@
 .. _PDF_SCH_PrintOptions:
 
+:orphan:
+
 
 PDF_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

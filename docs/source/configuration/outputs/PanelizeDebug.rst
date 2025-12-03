@@ -1,5 +1,7 @@
 .. _PanelizeDebug:
 
+:orphan:
+
 
 PanelizeDebug parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~

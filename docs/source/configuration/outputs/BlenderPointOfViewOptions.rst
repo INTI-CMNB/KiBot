@@ -1,5 +1,7 @@
 .. _BlenderPointOfViewOptions:
 
+:orphan:
+
 
 BlenderPointOfViewOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

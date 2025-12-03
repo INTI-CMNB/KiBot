@@ -1,5 +1,7 @@
 .. _PositionOptions:
 
+:orphan:
+
 
 PositionOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,7 +47,7 @@ PositionOptions parameters
    Supported by the gerber format.
 -  ``variant`` :index:`: <pair: output - position - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PosColumns
+- :ref:`PosColumns parameters <PosColumns>`

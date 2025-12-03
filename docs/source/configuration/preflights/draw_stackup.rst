@@ -15,7 +15,7 @@ will contain the stackup
 
    -  **draw_stackup** :index:`: <pair: preflight - draw_stackup; draw_stackup>`  [:ref:`DrawStackupOptions parameters <DrawStackupOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrawStackupOptions
+- :ref:`DrawStackupOptions parameters <DrawStackupOptions_pre>`

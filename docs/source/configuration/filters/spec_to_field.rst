@@ -23,7 +23,7 @@ Spec to Field
       For a full list of fields consult the `specs` option.
 
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   SpecOptions
+- :ref:`SpecOptions parameters <SpecOptions_fi>`
