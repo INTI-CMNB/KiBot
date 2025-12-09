@@ -1646,3 +1646,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pick & place position
 - Debian package
 - Gerber job generation
+
+
+[Unreleased]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...dev
+[1.8.5]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5
+[1.8.4]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.3...v1.8.4
+[1.8.3]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.2...v1.8.3
+[1.8.2]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.1...v1.8.2
+[1.8.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.0...v1.8.1
+[1.8.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.7.0...v1.8.0
+[1.7.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.5...v1.7.0
+[1.6.5]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.4...v1.6.5
+[1.6.4]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.3...v1.6.4
+[1.6.3]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.2...v1.6.3
+[1.6.2]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.1...v1.6.2
+[1.6.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.0...v1.6.1
+[1.6.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.5.1...v1.6.0
+[1.5.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.5.0...v1.5.1
+[1.5.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.11.0...v1.0.0
+[0.11.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.10.1...v0.11.0
+[0.10.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.8.1...v0.9.0
+[0.8.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.6.2...v0.7.0
+[0.6.2]: https://github.com/INTI-CMNB/KiBot/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.5...v0.3.0
+[0.2.5]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/INTI-CMNB/KiBot/releases/tag/v0.1.1
