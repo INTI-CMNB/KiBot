@@ -42,3 +42,4 @@ Supported error levels
 - 36: WARN_AS_ERROR
 - 37: CHECK_FIELD
 - 38: IGNORED_ERRORS
+- 39: GOT_WARNINGS

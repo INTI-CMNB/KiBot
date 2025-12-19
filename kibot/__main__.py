@@ -58,6 +58,7 @@ Options:
   -F, --fail-on-ignored            Return an error code if we skipped a fail.
                                    Used in conjunction with -D and `dont_stop`
                                    options
+  --fail-on-warnings               Return an error code if we informed warnings.
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks
@@ -153,7 +154,7 @@ from .banner import get_banner, BANNERS
 from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
-                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS)
+                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -667,6 +668,9 @@ def main():
 
     if args.fail_on_ignored and (GS.errors_ignored or log.errors_ignored):
         exit(IGNORED_ERRORS)
+
+    if args.fail_on_warnings and logger.got_warnings():
+        exit(GOT_WARNINGS)
 
 
 if __name__ == "__main__":

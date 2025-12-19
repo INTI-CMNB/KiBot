@@ -19,6 +19,11 @@ Versioning <https://semver.org/spec/v2.0.0.html>`__.
 Added
 ~~~~~
 
+-  CLI:
+
+   -  –fail-on-warnings: to return error when we detected warning (See
+      #828)
+
 -  iBoM: ``mark_when_checked`` option (#881)
 
 `1.8.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5>`__ - 2025-11-26

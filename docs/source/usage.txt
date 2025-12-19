@@ -51,6 +51,7 @@ Options:
   -F, --fail-on-ignored            Return an error code if we skipped a fail.
                                    Used in conjunction with -D and `dont_stop`
                                    options
+  --fail-on-warnings               Return an error code if we informed warnings.
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks
