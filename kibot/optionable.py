@@ -202,7 +202,7 @@ class Optionable(object):
         for key, value in v.items():
             if not isinstance(value, str):
                 raise KiPlotConfigurationError(f"Key `{key}` of option `{k}` must be a string, not"
-                                               f" `{typeof(value,Optionable)}`")
+                                               f" `{typeof(value, Optionable)}`")
         return True
 
     def _perform_config_mapping(self):

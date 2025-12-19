@@ -47,8 +47,8 @@ for slot, cantidad in enumerate(histo):
         cut_done = True
 
 print(f'Runs: {total_n}')
-print(f'Total time: {round(total_tm)} s ({round(total_tm/60,1)} m)')
-print(f'Average: {round(avg,1)} s')
+print(f'Total time: {round(total_tm)} s ({round(total_tm/60, 1)} m)')
+print(f'Average: {round(avg, 1)} s')
 print(f'Cut: {cut*100} % ({cut_n}): {slot_cut} s ({total_n-cut_n})')
 
 with open('slowest.txt', 'wt') as f:

@@ -159,12 +159,12 @@ def report(all, kind):
     logger.info('-'*80)
     logger.info('Used as single data type:')
     for k, v in sorted(all.dts_s.items(), key=lambda x: len(x[1]), reverse=True):
-        logger.info(f'- {k:>18}: {len(v):4d} {"" if len(v)>10 else v}')
+        logger.info(f'- {k:>18}: {len(v):4d} {"" if len(v) > 10 else v}')
 
     logger.info('-'*80)
     logger.info(f'{len(all.dts_m)} different data type combinations')
     for k, v in sorted(all.dts_m.items(), key=lambda x: len(x[1]), reverse=True):
-        logger.info(f'- {k:>26}: {len(v):4d} {"" if len(v)>10 else v}')
+        logger.info(f'- {k:>26}: {len(v):4d} {"" if len(v) > 10 else v}')
 
 
 def scan_items(category, iterable, accum, totals, config):
