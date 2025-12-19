@@ -4,8 +4,8 @@ Usage:
   kibot [-b BOARD] [-e SCHEMA] [-c CONFIG] [-d OUT_DIR] [-s PRE]
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
-         [-F] [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
-         [--variant VAR] ... [TARGET...]
+         [--fail-on-warnings] [-F] [--warn-ci-cd] [--banner N]
+         [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
