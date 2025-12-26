@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - --fail-on-warnings: to return error when we detected warning (See #828)
 - iBoM: `mark_when_checked` option (#881)
 
+### Fixed
+- Blender export: problems with component values containing `/ ` (#885)
+
 
 ## [1.8.5] - 2025-11-26
 ### Added
