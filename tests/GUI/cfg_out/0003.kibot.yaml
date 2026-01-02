@@ -91,6 +91,11 @@ outputs:
       separator: ','
     aggregate:
     - file: output.bom.options.dict.aggregate.dict
+- name: output.bom_labels
+  type: bom_labels
+  comment: Generates a PDF to print labels for the BoM items
+  options:
+    output: output.bom_labels.options.dict
 - name: output.compress
   type: compress
   comment: Generates a compressed file containing output files
