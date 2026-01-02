@@ -15,8 +15,6 @@ Dependencies:
     downloader: python
 """
 import csv
-from reportlab.lib.pagesizes import mm
-from reportlab.pdfgen import canvas
 from .error import KiPlotConfigurationError
 from .gs import GS
 from .kiplot import config_output, run_output, look_for_output, get_output_targets, get_columns
@@ -72,6 +70,9 @@ class BoMLabelsOptions(VariantOptions):
         self.gen_labels(targets[0], dir_name)
 
     def gen_labels(self, ori, dest):
+        from reportlab.lib.pagesizes import mm
+        from reportlab.pdfgen import canvas
+
         self.ensure_tool('ReportLab')
         page_w = self.width * mm
         page_h = self.height * mm
