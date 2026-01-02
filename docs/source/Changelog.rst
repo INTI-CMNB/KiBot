@@ -19,6 +19,11 @@ Versioning <https://semver.org/spec/v2.0.0.html>`__.
 Added
 ~~~~~
 
+-  New outputs:
+
+   -  BoM Labels (bom_labels): [Experimental] To generate a PDF
+      containing labels for the BoM items. (#886)
+
 -  CLI:
 
    -  –fail-on-warnings: to return error when we detected warning (See

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- New outputs:
+  - BoM Labels (bom_labels): [Experimental] To generate a PDF containing
+    labels for the BoM items. (#886)
 - CLI:
   - --fail-on-warnings: to return error when we detected warning (See #828)
 - BoM: descriptive error when using `kicad` format and no options found.

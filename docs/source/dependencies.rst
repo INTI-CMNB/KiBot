@@ -141,7 +141,11 @@
 
 -  Optional to compress in RAR format for `compress`
 
-`XLSXWriter <https://pypi.org/project/XLSXWriter/>`__ :index:`: <pair: dependency; XLSXWriter>`  v1.1.2 |image51| |image52| |image53| |Auto-download|
+`ReportLab <https://pypi.org/project/ReportLab/>`__ :index:`: <pair: dependency; ReportLab>`  |image51| |image52| |Auto-download|
+
+-  Optional to create a PDF with BoM labels for `bom_labels`
+
+`XLSXWriter <https://pypi.org/project/XLSXWriter/>`__ :index:`: <pair: dependency; XLSXWriter>`  v1.1.2 |image53| |image54| |image55| |Auto-download|
 
 -  Optional to create XLSX files for `bom`
 
@@ -248,9 +252,13 @@
 .. |image50| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
    :target: https://packages.debian.org/stable/rar
 .. |image51| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
+   :target: https://pypi.org/project/ReportLab/
+.. |image52| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
+   :target: https://packages.debian.org/stable/python3-reportlab
+.. |image53| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
    :target: https://pypi.org/project/XLSXWriter/
-.. |image52| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/PyPI_logo_simplified-22x22.png
+.. |image54| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/PyPI_logo_simplified-22x22.png
    :target: https://pypi.org/project/XLSXWriter/
-.. |image53| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
+.. |image55| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
    :target: https://packages.debian.org/stable/python3-xlsxwriter
 

@@ -14,6 +14,7 @@ Notes:
    outputs/blender_export
    outputs/boardview
    outputs/bom
+   outputs/bom_labels
    outputs/compress
    outputs/copy_files
    outputs/diff

@@ -865,6 +865,56 @@ outputs:
         style: 'modern-blue'
         # [string='KiBot Bill of Materials'] BoM title
         title: 'KiBot Bill of Materials'
+  # BoM Labels Printer:
+  # You can find an explanation [here](https://sschueller.github.io/posts/ci-cd-with-kicad-2025/)
+  # You need to create a BoM in CSV format containing the fields to be used.
+  # The first field will be the header, the rest are extra data.
+  - name: 'bom_labels_example'
+    comment: 'Generates a PDF to print labels for the BoM items.'
+    type: 'bom_labels'
+    dir: 'Example/bom_labels_dir'
+    options:
+      # [string=''] BoM output used for the labels
+      bom: 'bom_labels'
+      # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      dnf_filter: '_null'
+      # [string|list(string)='_null'] Name of the filter to exclude components from processing.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      exclude_filter: '_null'
+      # [string='Helvetica-Bold'] Font used for the labels
+      font: 'Helvetica-Bold'
+      # [number=6] Default size of the header font, will be reduced to fit the text
+      font_size_header: 6
+      # [number=4] Default size of the normal font, will be reduced to fit the text
+      font_size_rest: 4
+      # [number=3] Distance from header to first line in mm
+      header_sep: 3
+      # [number=10] Label height in mm
+      height: 10
+      # [number=1.5] Regular line height in mm
+      line_height: 1.5
+      # [number=3] Top margin in mm
+      margin_top: 3
+      # [number=2] X margin in mm
+      margin_x: 2
+      # [string='%f-%i%I%v.%x'] Name for the generated PDF (%i=bom_labels %x=pdf). Affected by global options
+      output: '%f-%i%I%v.%x'
+      # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      pre_transform: '_null'
+      # [number=3] How many rows we print, including the header
+      rows: 3
+      # [string=''] Board variant to apply
+      variant: ''
+      # [number=20] Label width in mm
+      width: 20
   # Archiver (files compressor):
   # This is used to generate groups of files in compressed file format.
   - name: 'compress_example'

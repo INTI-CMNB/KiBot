@@ -1276,6 +1276,42 @@ deps = '{\
         "url": "https://gitlab.gnome.org/GNOME/librsvg",\
         "url_down": null\
     },\
+    "ReportLab": {\
+        "arch": "python-reportlab",\
+        "command": "reportlab",\
+        "comments": [],\
+        "deb_package": "python3-reportlab",\
+        "downloader": {},\
+        "downloader_str": "python",\
+        "extra_arch": null,\
+        "extra_checks": null,\
+        "extra_deb": null,\
+        "help_option": "--version",\
+        "importance": 1,\
+        "in_debian": true,\
+        "is_kicad_plugin": false,\
+        "is_python": true,\
+        "module_name": "reportlab",\
+        "name": "ReportLab",\
+        "no_cmd_line_version": false,\
+        "no_cmd_line_version_old": false,\
+        "output": "bom_labels",\
+        "plugin_dirs": null,\
+        "pypi_name": "ReportLab",\
+        "role": [\
+            {\
+                "all_versions": {},\
+                "desc": "Create a PDF with BoM labels",\
+                "mandatory": false,\
+                "max_version": null,\
+                "output": "bom_labels",\
+                "version": null\
+            }\
+        ],\
+        "tests": [],\
+        "url": null,\
+        "url_down": null\
+    },\
     "Requests": {\
         "arch": "python-requests",\
         "command": "requests",\
