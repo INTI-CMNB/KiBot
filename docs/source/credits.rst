@@ -38,6 +38,7 @@ Credits
    -  **Various fixes**: Henning Kleen (@hkleen)
    -  **SCH print all-pages option**: Kevin Dong (@kevin-dong-nai-jia)
    -  **Fancy Draw Stackup** and **Include table** preflights: Nguyen Vincent (@nguyen-v)
+   -  **BoM Labels**: Stefan Schüller (@sschueller)
 
 -  **Sources of inspiration and good ideas**:
 
