@@ -1,0 +1,29 @@
+kibot:
+  version: 1
+
+outputs:
+- name: basic_bom_labels
+  comment: BoM labels
+  type: bom_labels
+  dir: BoM
+  options:
+    bom: bom_labels
+
+- name: bom_labels
+  comment: BoM to Print Labels
+  type: bom
+  run_by_default: false
+  dir: BoM
+  options:
+    format: CSV
+    output: bom_labels.%x
+    group_fields:
+    - LCSC
+    sort_style: ref
+    columns:
+    - LCSC
+    - Value
+    - Footprint
+    csv:
+      hide_pcb_info: true
+      hide_stats_info: true
