@@ -773,6 +773,8 @@ class BoMOptions(BaseOptions):
         self._expand_id = 'bom'
         if self._format == 'kicad':
             kops = GS.load_pro_bom_fmt_settings()
+            if kops is None:
+                raise KiPlotConfigurationError("No KiCad BoM options found")
             self._expand_ext = os.path.splitext(GS.pro_bom_export_filename)[1]
             # Default to CSV, KiCad always saves some setting, if the user never used them the file name is empty and the
             # format is just CSV

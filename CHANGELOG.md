@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CLI:
   - --fail-on-warnings: to return error when we detected warning (See #828)
+- BoM: descriptive error when using `kicad` format and no options found.
 - iBoM: `mark_when_checked` option (#881)
 
 ### Fixed

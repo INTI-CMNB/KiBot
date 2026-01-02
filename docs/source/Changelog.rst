@@ -24,6 +24,8 @@ Added
    -  –fail-on-warnings: to return error when we detected warning (See
       #828)
 
+-  BoM: descriptive error when using ``kicad`` format and no options
+   found.
 -  iBoM: ``mark_when_checked`` option (#881)
 
 Fixed
