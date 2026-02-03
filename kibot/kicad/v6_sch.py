@@ -2515,6 +2515,13 @@ class SchematicV6(Schematic):
         cache_name = GS.get_embed_dir('kicad_embedded_'+o.checksum+os.path.splitext(name)[1])
         if os.path.isfile(cache_name):
             return cache_name
+        # if the embedded file is not in cache then save it to the cache
+        elif hasattr(o, 'data'):
+            if not os.path.exists(GS.get_embed_dir('')):
+                os.mkdir(GS.get_embed_dir(''))
+            with open(cache_name, 'wb') as f:
+                f.write(o.data.decode("utf-8"))
+            return cache_name
         raise SchError(f'Missing embedded file `{efile}`')
 
     def load(self, fname, project, parent=None):  # noqa: C901
