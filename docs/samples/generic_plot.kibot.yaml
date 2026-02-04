@@ -80,7 +80,7 @@ preflight:
   # [boolean|dict=false] Use a boolean for simple cases or fine-tune its behavior.
   draw_stackup: true
   # DRC
-  # Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+  # Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
   # You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily install the template.
   # This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer.
   # GUI exclusions and schematic parity are supported .
@@ -141,7 +141,7 @@ preflight:
         before: 'Git hash: <'
         after: '>'
   # Run DRC (**Deprecated for KiCad 8**)
-  # Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+  # Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
   # For KiCad 8 use *drc*
   # The report file name is controlled by the global output pattern (%i=drc %x=txt).
   # Note that the KiCad 6+ *Test for parity between PCB and schematic* option is not supported.

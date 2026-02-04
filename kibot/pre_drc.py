@@ -21,7 +21,7 @@ SECTION_RPT = {'schematic_parity': 'Footprint errors', 'unconnected_items': 'unc
 @pre_class
 class DRC(XRC):  # noqa: F821
     """ DRC
-        Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+        Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
         You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily install the template.
         This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer.
         GUI exclusions and schematic parity are supported """
