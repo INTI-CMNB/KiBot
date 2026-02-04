@@ -203,8 +203,11 @@ class MyLogger(logging.Logger):
                 filt_msg = ', {} filtered'.format(MyLogger.n_filtered)
             self.info('Found {} unique warning/s ({} total{})'.format(MyLogger.warn_cnt, MyLogger.warn_tcnt, filt_msg))
 
-    def got_warnings(self):
-        return MyLogger.warn_cnt or MyLogger.warn_tcnt
+    def got_warnings(self, fail_on_ignored=False):
+        if fail_on_ignored:
+            return MyLogger.warn_tcnt
+        else:
+            return MyLogger.warn_cnt
 
     def non_critical_error(self, msg, *args, **kwargs):
         buf = str(msg)
