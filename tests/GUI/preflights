@@ -570,6 +570,28 @@
           null
         ],
         [
+          "logo",
+          [
+            "DataTypeString",
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "logo_url",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "logo_force_height",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
           "filters",
           [
             "DataTypeListDict"
@@ -676,6 +698,28 @@
           "category",
           [
             "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "logo",
+          [
+            "DataTypeString",
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "logo_url",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "logo_force_height",
+          [
+            "DataTypeNumber"
           ],
           null
         ],

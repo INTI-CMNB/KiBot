@@ -23,6 +23,11 @@ DRCOptions parameters
    You can specify multiple formats.
 
 -  ``ignore_unconnected`` :index:`: <pair: preflight - drc - drc; ignore_unconnected>` [:ref:`boolean <boolean>`] (default: ``false``) Ignores the unconnected nets. Useful if you didn't finish the routing.
+-  ``logo`` :index:`: <pair: preflight - drc - drc; logo>` [:ref:`string <string>` | :ref:`boolean <boolean>`] (default: ``''``) PNG file to use as logo, use false to remove.
+   The KiBot logo is used by default.
+
+-  ``logo_force_height`` :index:`: <pair: preflight - drc - drc; logo_force_height>` [:ref:`number <number>`] (default: ``-1``) Force logo height in px. Useful to get consistent heights across different logos..
+-  ``logo_url`` :index:`: <pair: preflight - drc - drc; logo_url>` [:ref:`string <string>`] (default: ``'https://github.com/INTI-CMNB/KiBot/'``) Target link when clicking the logo.
 -  ``schematic_parity`` :index:`: <pair: preflight - drc - drc; schematic_parity>` [:ref:`boolean <boolean>`] (default: ``true``) Check if the PCB and the schematic are coincident.
 -  ``units`` :index:`: <pair: preflight - drc - drc; units>` [:ref:`string <string>`] (default: ``'millimeters'``) (choices: "millimeters", "inches", "mils") Units used for the positions. Affected by global options.
 -  ``warnings_as_errors`` :index:`: <pair: preflight - drc - drc; warnings_as_errors>` [:ref:`boolean <boolean>`] (default: ``false``) Warnings are considered errors, they still reported as warnings.

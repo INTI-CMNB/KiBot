@@ -33,6 +33,7 @@ Added
 -  BoM: descriptive error when using ``kicad`` format and no options
    found.
 -  iBoM: ``mark_when_checked`` option (#881)
+-  DRC/ERC: Configurable logo (#889)
 
 Fixed
 ~~~~~

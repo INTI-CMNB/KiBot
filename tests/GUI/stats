@@ -194,16 +194,16 @@ Used as single data type:
 -          String,StringDict:    1 ['pcbdraw.options.remap']
 ================================================================================
 ================================================================================
-24 preflights types with a total of 167 different parameters
-Single type parameters: 158 (95 %)
-Multi type parameters: 9 (5 %)
+24 preflights types with a total of 173 different parameters
+Single type parameters: 162 (94 %)
+Multi type parameters: 11 (6 %)
 Average parameters: 7
 Maximum number of parameters: 23
 Minimum number of parameters: 1
 Histogram:
   0-  9: *****************
- 10- 19: ******
- 20- 29: *
+ 10- 19: *****
+ 20- 29: **
 Preflights sorted by parameters:
 - annotate_power: 1
 - check_zone_fills: 1
@@ -225,9 +225,9 @@ Preflights sorted by parameters:
 - annotate_pcb: 11
 - check_fields: 11
 - draw_stackup: 15
-- erc: 15
-- drc: 18
+- erc: 18
 - include_table: 19
+- drc: 21
 - draw_fancy_stackup: 23
 Average depth: 1.9166666666666667
 Maximum depth: 3
@@ -264,9 +264,9 @@ Preflights sorted by depth:
 - sch_replace: 3
 --------------------------------------------------------------------------------
 9 different data types
--            Boolean:   50
--             String:   49
--             Number:   32
+-             String:   53
+-            Boolean:   52
+-             Number:   34
 -             Choice:   17
 -               Dict:   11
 - ListStringSingular:    6
@@ -275,9 +275,9 @@ Preflights sorted by depth:
 -   ListDictOrString:    3
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:   48 
+-             String:   50 
 -            Boolean:   42 
--             Number:   32 
+-             Number:   34 
 -             Choice:   17 
 - ListStringSingular:    6 ['check_fields.check_fields.exclude_filter', 'drc.drc.format', 'drc.drc.category', 'erc.erc.format', 'erc.erc.category', 'update_footprint.update_footprint']
 -   ListDictSingular:    5 ['check_fields.check_fields', 'consolidate_pcbs.consolidate_pcbs', 'pcb_replace.pcb_replace.replace_tags', 'sch_replace.sch_replace.replace_tags', 'set_text_variables.set_text_variables']
@@ -285,8 +285,9 @@ Used as single data type:
 -               Dict:    3 ['annotate_pcb.annotate_pcb', 'pcb_replace.pcb_replace', 'sch_replace.sch_replace']
 -   ListDictOrString:    2 ['draw_fancy_stackup.draw_fancy_stackup.columns', 'draw_stackup.draw_stackup.columns']
 --------------------------------------------------------------------------------
-2 different data type combinations
+3 different data type combinations
 -               Boolean,Dict:    8 ['include_table.include_table', 'draw_fancy_stackup.draw_fancy_stackup', 'draw_stackup.draw_stackup', 'drc.drc', 'erc.erc', 'run_drc.run_drc', 'run_erc.run_erc', 'update_xml.update_xml']
+-             Boolean,String:    2 ['drc.drc.logo', 'erc.erc.logo']
 -    ListDictOrString,String:    1 ['include_table.include_table.outputs']
 ================================================================================
 ================================================================================
@@ -405,16 +406,16 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-93 totals types with a total of 2538 different parameters
-Single type parameters: 2327 (92 %)
-Multi type parameters: 211 (8 %)
+93 totals types with a total of 2544 different parameters
+Single type parameters: 2331 (92 %)
+Multi type parameters: 213 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
 Minimum number of parameters: 1
 Histogram:
   0-  9: ************************
- 10- 19: **************
- 20- 29: ****************************
+ 10- 19: *************
+ 20- 29: *****************************
  30- 39: **********
  40- 49: *********
  50- 59: **
@@ -465,16 +466,16 @@ Totals sorted by parameters:
 - value_split: 13
 - info: 14
 - draw_stackup: 15
-- erc: 15
 - subparts: 16
 - netlist: 18
 - sch_variant: 18
-- drc: 18
+- erc: 18
 - boardview: 19
 - pdfunite: 19
 - include_table: 19
 - odb: 20
 - pcb_variant: 20
+- drc: 21
 - gencad: 22
 - populate: 22
 - rot_footprint: 22
@@ -634,9 +635,9 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1092
--            Boolean:  640
--             Number:  350
+-             String: 1096
+-            Boolean:  642
+-             Number:  352
 - ListStringSingular:  323
 -             Choice:  142
 -               Dict:  100
@@ -650,10 +651,10 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  911 
+-             String:  913 
 -            Boolean:  566 
 - ListStringSingular:  320 
--             Number:  241 
+-             Number:  243 
 -             Choice:  139 
 -               Dict:   79 
 -           ListDict:   30 
@@ -667,7 +668,7 @@ Used as single data type:
 --------------------------------------------------------------------------------
 11 different data type combinations
 -              Number,String:  107 
--             Boolean,String:   60 
+-             Boolean,String:   62 
 -     Combo,ListDictOrString:   12 
 -               Boolean,Dict:   10 ['pcb_print.options.include_table', 'pcb_print.options.drill', 'include_table.include_table', 'draw_fancy_stackup.draw_fancy_stackup', 'draw_stackup.draw_stackup', 'drc.drc', 'erc.erc', 'run_drc.run_drc', 'run_erc.run_erc', 'update_xml.update_xml']
 -                Dict,String:    7 ['blender_export.options.pcb3d', 'excellon.options.report', 'excellon.options.table', 'gerb_drill.options.report', 'gerb_drill.options.table', 'kibom.options.conf', 'pcbdraw.options.style']
