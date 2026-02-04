@@ -6,7 +6,7 @@
 DRC
 ~~~
 
-Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
 You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily install the template. |br|
 This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer. |br|
 GUI exclusions and schematic parity are supported

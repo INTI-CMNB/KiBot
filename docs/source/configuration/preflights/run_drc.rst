@@ -6,7 +6,7 @@
 Run DRC (**Deprecated for KiCad 8**)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
 For KiCad 8 use *drc*
 The report file name is controlled by the global output pattern (%i=drc %x=txt). |br|
 Note that the KiCad 6+ *Test for parity between PCB and schematic* option is not supported. |br|
