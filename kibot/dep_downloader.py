@@ -103,6 +103,12 @@ Dependencies:
     role: mandatory
     debian: python3-lark
     arch: python-lark
+  - name: ZStd
+    python_module: true
+    debian: python3-zstd
+    arch: python-zstd
+    downloader: python
+    role: Copy embedded files from the schematic to the KiCad cache
 """
 from copy import deepcopy
 import fnmatch

@@ -1475,6 +1475,42 @@ deps = '{\
         "url": null,\
         "url_down": null\
     },\
+    "ZStd": {\
+        "arch": "python-zstd",\
+        "command": "zstd",\
+        "comments": [],\
+        "deb_package": "python3-zstd",\
+        "downloader": {},\
+        "downloader_str": "python",\
+        "extra_arch": null,\
+        "extra_checks": null,\
+        "extra_deb": null,\
+        "help_option": "--version",\
+        "importance": 100,\
+        "in_debian": true,\
+        "is_kicad_plugin": false,\
+        "is_python": true,\
+        "module_name": "zstd",\
+        "name": "ZStd",\
+        "no_cmd_line_version": false,\
+        "no_cmd_line_version_old": false,\
+        "output": "global",\
+        "plugin_dirs": null,\
+        "pypi_name": "ZStd",\
+        "role": [\
+            {\
+                "all_versions": {},\
+                "desc": "Copy embedded files from the schematic to the KiCad cache",\
+                "mandatory": false,\
+                "max_version": null,\
+                "output": "global",\
+                "version": null\
+            }\
+        ],\
+        "tests": [],\
+        "url": null,\
+        "url_down": null\
+    },\
     "markdown2": {\
         "arch": "python-markdown2",\
         "command": "markdown2",\

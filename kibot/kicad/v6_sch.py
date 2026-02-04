@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2021-2025 Salvador E. Tropea
-# Copyright (c) 2021-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2021-2026 Salvador E. Tropea
+# Copyright (c) 2021-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -9,14 +9,14 @@ A basic implementation of the .kicad_sch file format.
 Currently oriented to collect the components for the BoM and create a variant of the SCH
 Documentation: https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/
 """
-# Encapsulate file/line
+import base64
 from collections import OrderedDict
 from copy import deepcopy
 import os
 import re
 from ..gs import GS
 from .. import log
-from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX
+from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -2515,6 +2515,21 @@ class SchematicV6(Schematic):
         cache_name = GS.get_embed_dir('kicad_embedded_'+o.checksum+os.path.splitext(name)[1])
         if os.path.isfile(cache_name):
             return cache_name
+        # If the embedded file is not in cache then save it to the cache
+        elif hasattr(o, 'data'):
+            command = GS.check_tool('global', 'ZStd')
+            if command is None:
+                GS.exit_with_error(f"Can't extract `{name}` embedded file because `zstd` module is not installed,"
+                                   " open the schematic using KiCad to populate the cache", DONT_STOP)
+            else:
+                dirname = GS.get_embed_dir('')
+                if not os.path.exists(dirname):
+                    os.mkdir(dirname)
+                import zstd
+                data = zstd.uncompress(base64.b64decode(''.join(o.data)))
+                with open(cache_name, 'wb') as f:
+                    f.write(data)
+                return cache_name
         raise SchError(f'Missing embedded file `{efile}`')
 
     def load(self, fname, project, parent=None):  # noqa: C901

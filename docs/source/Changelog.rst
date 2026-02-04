@@ -29,6 +29,7 @@ Added
    -  –fail-on-warnings: to return error when we detected warning (See
       #828)
 
+-  KiCad 9 embedded files: populate the cache if needed (See #890)
 -  BoM: descriptive error when using ``kicad`` format and no options
    found.
 -  iBoM: ``mark_when_checked`` option (#881)
