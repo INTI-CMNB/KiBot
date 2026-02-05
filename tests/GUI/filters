@@ -372,6 +372,13 @@
         "DataTypeBoolean"
       ],
       null
+    ],
+    [
+      "exclude_kicad_dnp",
+      [
+        "DataTypeBoolean"
+      ],
+      null
     ]
   ],
   "rot_footprint": [

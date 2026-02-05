@@ -291,11 +291,11 @@ Used as single data type:
 -    ListDictOrString,String:    1 ['include_table.include_table.outputs']
 ================================================================================
 ================================================================================
-12 filters types with a total of 138 different parameters
-Single type parameters: 138 (100 %)
+12 filters types with a total of 139 different parameters
+Single type parameters: 139 (100 %)
 Multi type parameters: 0 (0 %)
 Average parameters: 12
-Maximum number of parameters: 34
+Maximum number of parameters: 35
 Minimum number of parameters: 4
 Histogram:
   0-  9: *******
@@ -314,7 +314,7 @@ Filters sorted by parameters:
 - value_split: 13
 - subparts: 16
 - rot_footprint: 22
-- generic: 34
+- generic: 35
 Average depth: 1.3333333333333333
 Maximum depth: 2
 Minimum depth: 1
@@ -338,7 +338,7 @@ Filters sorted by depth:
 --------------------------------------------------------------------------------
 9 different data types
 -             String:   63
--            Boolean:   44
+-            Boolean:   45
 - ListStringSingular:    9
 -             Choice:    9
 -           ListDict:    4
@@ -349,7 +349,7 @@ Filters sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:   63 
--            Boolean:   44 
+-            Boolean:   45 
 - ListStringSingular:    9 ['field_modify.fields', 'field_modify.include', 'generic.keys', 'rot_footprint.rot_fields', 'rot_footprint.offset_fields', 'separate_pins.attribute', 'spec_to_field.specs.spec', 'spec_to_field.check_dist_fields', 'urlify.fields']
 -             Choice:    9 ['spec_to_field.specs.policy', 'spec_to_field.specs.collision', 'spec_to_field.specs.type', 'value_split.tolerance', 'value_split.voltage', 'value_split.package', 'value_split.temp_coef', 'value_split.power', 'value_split.autoplace_mechanism']
 -           ListDict:    4 ['field_rename.rename', 'generic.include_only', 'generic.exclude_any', 'rot_footprint.rotations_and_offsets']
@@ -406,8 +406,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-93 totals types with a total of 2544 different parameters
-Single type parameters: 2331 (92 %)
+93 totals types with a total of 2545 different parameters
+Single type parameters: 2332 (92 %)
 Multi type parameters: 213 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -510,7 +510,7 @@ Totals sorted by parameters:
 - vrml: 33
 - gerb_drill: 34
 - pcb2blender_tools: 34
-- generic: 34
+- generic: 35
 - kicost: 37
 - diff: 41
 - export_3d: 41
@@ -636,7 +636,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1096
--            Boolean:  642
+-            Boolean:  643
 -             Number:  352
 - ListStringSingular:  323
 -             Choice:  142
@@ -652,7 +652,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  913 
--            Boolean:  566 
+-            Boolean:  567 
 - ListStringSingular:  320 
 -             Number:  243 
 -             Choice:  139 

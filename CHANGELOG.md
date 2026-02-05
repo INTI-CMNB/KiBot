@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     labels for the BoM items. (#886)
 - CLI:
   - --fail-on-warnings: to return error when we detected warning (See #828)
+- generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
+  KiCad (See #887)
 - KiCad 9 embedded files: populate the cache if needed (See #890)
 - BoM: descriptive error when using `kicad` format and no options found.
 - iBoM: `mark_when_checked` option (#881)

@@ -1,0 +1,40 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+filters:
+  - name: 'top'
+    type: 'generic'
+    comment: 'Remove bottom components'
+    exclude_bottom: true
+
+  - name: 'bottom'
+    type: 'generic'
+    comment: 'Remove top components'
+    exclude_top: true
+
+  - name: 'dnp'
+    type: 'generic'
+    comment: 'Remove non DNP components'
+    invert: true
+    exclude_kicad_dnp: true
+
+outputs:
+  - name: 'top_dnp'
+    comment: "BoM for top DNP"
+    type: bom
+    dir: BoM
+    options:
+      output: 'top_dnp.%x'
+      exclude_filter: ['top', 'dnp']
+      kicad_dnp_applied: 'no'
+
+  - name: 'bottom_dnp'
+    comment: "BoM for bottom DNP"
+    type: bom
+    dir: BoM
+    options:
+      output: 'bottom_dnp.%x'
+      exclude_filter: ['bottom', 'dnp']
+      kicad_dnp_applied: 'no'
+
