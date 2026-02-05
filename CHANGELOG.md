@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Blender export: problems with component values containing `/ ` (#885)
 
+### Changed
+- `--fail-on-warnings` now ignores filtered warning (as the help suggested)
+  and you can get the old behavior adding `--fail-on-ignored` (#893)
+
 
 ## [1.8.5] - 2025-11-26
 ### Added

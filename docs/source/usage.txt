@@ -49,9 +49,11 @@ Options:
   -e SCHEMA, --schematic SCHEMA    The schematic file (.sch/.kicad_sch)
   -E DEF, --define DEF             Define preprocessor value (VAR=VAL)
   -F, --fail-on-ignored            Return an error code if we skipped a fail.
-                                   Used in conjunction with -D and `dont_stop`
-                                   options
+                                   Used in conjunction with -D/--dont-stop
+                                   and --fail-on-warnings options
   --fail-on-warnings               Return an error code if we informed warnings.
+                                   If --fail-on-ignored is enabled we also
+                                   return error for filtered warnings
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks

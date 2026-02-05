@@ -41,6 +41,13 @@ Fixed
 -  Blender export: problems with component values containing ``/``
    (#885)
 
+Changed
+~~~~~~~
+
+-  ``--fail-on-warnings`` now ignores filtered warning (as the help
+   suggested) and you can get the old behavior adding
+   ``--fail-on-ignored`` (#893)
+
 `1.8.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5>`__ - 2025-11-26
 -----------------------------------------------------------------------------------
 
@@ -109,6 +116,8 @@ Fixed
 -  Draw stackup, Print drill table, Include table:
 
    -  Workaround for KiCad 9.0.5 broken API to GetTextBox
+
+.. _changed-1:
 
 Changed
 ~~~~~~~
@@ -347,7 +356,7 @@ Fixed
    -  ``sketch_pads_on_fab_layers`` not inherited from parent when using
       layer names (See #777)
 
-.. _changed-1:
+.. _changed-2:
 
 Changed
 ~~~~~~~
@@ -426,7 +435,7 @@ Fixed
 -  Expansion of internal field names. KiCad expands “VALUE”, not
    “Value”, which is what you see in the GUI
 
-.. _changed-2:
+.. _changed-3:
 
 Changed
 ~~~~~~~
@@ -578,7 +587,7 @@ Fixed:
    fills, that could generate huge lines in the generated PCB, not
    supported by KiCad. (#660)
 
-.. _changed-3:
+.. _changed-4:
 
 Changed:
 ~~~~~~~~
@@ -709,7 +718,7 @@ Fixed
    -  Expansion of variables in fields could fail if the KiCad config
       wasn’t initialized
 
-.. _changed-4:
+.. _changed-5:
 
 Changed
 ~~~~~~~
@@ -739,7 +748,7 @@ Added
 -  Navigate results: A header and navigation bar (#582)
 -  BoM: support for SVG format in the logos (#383)
 
-.. _changed-5:
+.. _changed-6:
 
 Changed
 ~~~~~~~
@@ -936,7 +945,7 @@ Added
    -  Added a new mode where we can control the added/removed colors
       (#551)
 
-.. _changed-6:
+.. _changed-7:
 
 Changed
 ~~~~~~~
@@ -1161,7 +1170,7 @@ Added
    -  ``quote_all``: forces quotes to all values in the CSV output. (See
       #456)
 
-.. _changed-7:
+.. _changed-8:
 
 Changed
 ~~~~~~~
@@ -1341,7 +1350,7 @@ Fixed
 
    -  ref_y coordinate not used. (#419)
 
-.. _changed-8:
+.. _changed-9:
 
 Changed:
 ~~~~~~~~
@@ -1596,7 +1605,7 @@ Added
 
    -  Option to control the *SVG precision* (units scale)
 
-.. _changed-9:
+.. _changed-10:
 
 Changed
 ~~~~~~~
@@ -1741,7 +1750,7 @@ Fixed
 -  Position: Components wrongly separated by side when the side column
    wasn’t the last column (#313)
 
-.. _changed-10:
+.. _changed-11:
 
 Changed
 ~~~~~~~
@@ -1844,7 +1853,7 @@ Fixed
    when VAR isn’t defined. The old code tried to make it an absolute
    path.
 
-.. _changed-11:
+.. _changed-12:
 
 Changed
 ~~~~~~~
@@ -1907,7 +1916,7 @@ Fixed
    orientation.
 -  svg_pcb_print: page orientation for portrait.
 
-.. _changed-12:
+.. _changed-13:
 
 Changed
 ~~~~~~~
@@ -2067,7 +2076,7 @@ Added
 -  Support for ``--subst-models`` option for KiCad 6’s kicad2step.
    (#137)
 
-.. _changed-13:
+.. _changed-14:
 
 Changed
 ~~~~~~~
@@ -2158,7 +2167,7 @@ Added
 -  Basic KiCost support (**experimental**).
 -  Basic internal BoM and KiCost integration (**experimental**).
 
-.. _changed-14:
+.. _changed-15:
 
 Changed
 ~~~~~~~
@@ -2270,7 +2279,7 @@ Added
 -  KiAuto time-out control.
 -  Now you can import outputs from another config file.
 
-.. _changed-15:
+.. _changed-16:
 
 Changed
 ~~~~~~~
@@ -2317,7 +2326,7 @@ Added
 -  A filter to rotate footprints in the position file (#28).
 -  The step output now can download missing 3D models.
 
-.. _changed-16:
+.. _changed-17:
 
 Changed
 ~~~~~~~
@@ -2430,7 +2439,7 @@ Fixed
 `0.6.2 <https://github.com/INTI-CMNB/KiBot/compare/v0.6.1...v0.6.2>`__ - 2020-08-25
 -----------------------------------------------------------------------------------
 
-.. _changed-17:
+.. _changed-18:
 
 Changed
 ~~~~~~~
@@ -2463,7 +2472,7 @@ Added
 
 -  More robust behavior on GUI dependent commands.
 
-.. _changed-18:
+.. _changed-19:
 
 Changed
 ~~~~~~~
@@ -2515,7 +2524,7 @@ Added
    -  ``error_number`` -> ``number``
    -  ``regexp`` -> ``regex``
 
-.. _changed-19:
+.. _changed-20:
 
 Changed
 ~~~~~~~
@@ -2535,7 +2544,7 @@ Changed
 `0.5.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.4.0...v0.5.0>`__ - 2020-07-11
 -----------------------------------------------------------------------------------
 
-.. _changed-20:
+.. _changed-21:
 
 Changed
 ~~~~~~~
@@ -2641,7 +2650,7 @@ Added
 -  Better debug information when a BoM fails to be generated.
 -  Support for compressed YAML files.
 
-.. _changed-21:
+.. _changed-22:
 
 Changed
 ~~~~~~~
@@ -2683,7 +2692,7 @@ Fixed
 `0.2.4 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.3...v0.2.4>`__ - 2020-05-19
 -----------------------------------------------------------------------------------
 
-.. _changed-22:
+.. _changed-23:
 
 Changed
 ~~~~~~~
