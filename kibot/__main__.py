@@ -669,7 +669,7 @@ def main():
     if args.fail_on_ignored and (GS.errors_ignored or log.errors_ignored):
         exit(IGNORED_ERRORS)
 
-    if args.fail_on_warnings and logger.got_warnings():
+    if args.fail_on_warnings and logger.got_warnings(args.fail_on_ignored):
         exit(GOT_WARNINGS)
 
 
