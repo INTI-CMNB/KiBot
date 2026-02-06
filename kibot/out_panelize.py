@@ -784,6 +784,9 @@ class PanelizeOptions(VariantOptions):
             KiKit resets this option, most probably unintentionally.
             So here we read the old PCB and we see if the new one needs to be updated. """
         logger.debug('Copying viasonmask option')
+        if not os.path.isfile(new):
+            logger.debug(f'Skipped because the output is missing ({new})')
+            return
         # Read the old setting
         logger.debug('- Reading the old PCB')
         with open(old) as f:
