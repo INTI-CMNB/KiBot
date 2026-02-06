@@ -787,7 +787,7 @@ class PanelOptions(BaseOptions):
 
     def add_angle(self, ops, def_units=None):
         if def_units is None:
-            def_units = self._parent._parent.units
+            def_units = self._parent._parent.default_angles
         for op in ops:
             val = getattr(self, op)
             if isinstance(val, (int, float)):

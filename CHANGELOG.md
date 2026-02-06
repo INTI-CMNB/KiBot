@@ -16,11 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   KiCad (See #887)
 - KiCad 9 embedded files: populate the cache if needed (See #890)
 - BoM: descriptive error when using `kicad` format and no options found.
-- iBoM: `mark_when_checked` option (#881)
 - DRC/ERC: Configurable logo (#889)
+- iBoM: `mark_when_checked` option (#881)
 
 ### Fixed
 - Blender export: problems with component values containing `/ ` (#885)
+- Panelize:
+  - Problems when using angles (#898)
+  - Confusing error when the output wasn't generated
 
 ### Changed
 - `--fail-on-warnings` now ignores filtered warning (as the help suggested)
