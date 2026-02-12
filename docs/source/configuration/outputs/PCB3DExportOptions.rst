@@ -37,6 +37,9 @@ PCB3DExportOptions parameters
 -  ``kicad_3d_url`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'``) Base URL for the KiCad 3D models.
 -  ``kicad_3d_url_suffix`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``''``) Text added to the end of the download URL.
    Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2.
+-  ``kicad_3d_url_version`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url_version>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the *master* subdir in the URL by the KiCad version.
+   In this way we download the 3D model corresponding to the installed KiCad instead
+   of the last available.
 -  ``output`` :index:`: <pair: output - blender_export - options - pcb3d; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated PCB3D file (%i='blender_export' %x='pcb3d'). Affected by global options.
 -  ``pre_transform`` :index:`: <pair: output - blender_export - options - pcb3d; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|

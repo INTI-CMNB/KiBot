@@ -158,6 +158,10 @@ class Base3DOptions(VariantOptions):
             self.kicad_3d_url_suffix = ''
             """ Text added to the end of the download URL.
                 Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2 """
+            self.kicad_3d_url_version = True
+            """ Replace the *master* subdir in the URL by the KiCad version.
+                In this way we download the 3D model corresponding to the installed KiCad instead
+                of the last available """
         # Temporal dir used to store the downloaded files
         self._tmp_dir = None
         super().__init__()
@@ -206,6 +210,13 @@ class Base3DOptions(VariantOptions):
             return nm
         return name
 
+    def kicad_3d_download_url(self, fname):
+        kicad_3d_url = self.kicad_3d_url
+        if self.kicad_3d_url_version:
+            branch = f'/{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}/'
+            kicad_3d_url = kicad_3d_url.replace('/master/', branch)
+        return kicad_3d_url+urllib.parse.quote_plus(fname)+self.kicad_3d_url_suffix
+
     def try_download_kicad(self, model, full_name, downloaded, rel_dirs, force_wrl):
         if not (model.startswith('${KISYS3DMOD}/') or re.search(r"^\$\{KICAD\d+_3DMODEL_DIR\}\/", model)):
             return None
@@ -216,7 +227,7 @@ class Base3DOptions(VariantOptions):
             # Already downloaded
             return os.path.join(self._tmp_dir, fname)
         # Download the model
-        url = self.kicad_3d_url+urllib.parse.quote_plus(fname)+self.kicad_3d_url_suffix
+        url = self.kicad_3d_download_url(fname)
         replace = self.download_model(url, fname, rel_dirs)
         if not replace:
             return None
@@ -229,7 +240,7 @@ class Base3DOptions(VariantOptions):
         elif force_wrl:  # This should be a .step, so we download the wrl
             extra_fname = os.path.splitext(fname)[0]+'.wrl'
         if extra_fname is not None:
-            url = self.kicad_3d_url+urllib.parse.quote_plus(extra_fname)+self.kicad_3d_url_suffix
+            url = self.kicad_3d_download_url(extra_fname)
             self.download_model(url, extra_fname, rel_dirs)
         return replace
 

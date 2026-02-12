@@ -56,6 +56,9 @@ Export_3DOptions parameters
 -  ``kicad_3d_url`` :index:`: <pair: output - export_3d - options; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'``) Base URL for the KiCad 3D models.
 -  ``kicad_3d_url_suffix`` :index:`: <pair: output - export_3d - options; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``''``) Text added to the end of the download URL.
    Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2.
+-  ``kicad_3d_url_version`` :index:`: <pair: output - export_3d - options; kicad_3d_url_version>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the *master* subdir in the URL by the KiCad version.
+   In this way we download the 3D model corresponding to the installed KiCad instead
+   of the last available.
 -  ``min_distance`` :index:`: <pair: output - export_3d - options; min_distance>` [:ref:`number <number>`] (default: ``-1``) The minimum distance between points to treat them as separate ones (-1 is KiCad default: 0.01 mm).
    The units for this option are controlled by the `units` option.
 -  ``net_filter`` :index:`: <pair: output - export_3d - options; net_filter>` [:ref:`string <string>`] (default: ``''``) Only include copper items belonging to nets matching this wildcard.

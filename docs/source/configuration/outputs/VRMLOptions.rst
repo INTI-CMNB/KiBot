@@ -41,6 +41,9 @@ VRMLOptions parameters
 -  ``kicad_3d_url`` :index:`: <pair: output - vrml - options; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'``) Base URL for the KiCad 3D models.
 -  ``kicad_3d_url_suffix`` :index:`: <pair: output - vrml - options; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``''``) Text added to the end of the download URL.
    Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2.
+-  ``kicad_3d_url_version`` :index:`: <pair: output - vrml - options; kicad_3d_url_version>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the *master* subdir in the URL by the KiCad version.
+   In this way we download the 3D model corresponding to the installed KiCad instead
+   of the last available.
 -  ``model_units`` :index:`: <pair: output - vrml - options; model_units>` [:ref:`string <string>`] (default: ``'millimeters'``) (choices: "millimeters", "meters", "deciinches", "inches") Units used for the VRML (1 deciinch = 0.1 inches).
 -  ``pre_transform`` :index:`: <pair: output - vrml - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|

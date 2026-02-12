@@ -329,6 +329,10 @@ outputs:
         # [string=''] Text added to the end of the download URL.
         # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
         kicad_3d_url_suffix: ''
+        # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+        # In this way we download the 3D model corresponding to the installed KiCad instead
+        # of the last available
+        kicad_3d_url_version: true
         # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
         no_virtual: false
         # [string='%f-%i%I%v.%x'] Name for the generated PCB3D file (%i='blender_export' %x='pcb3d'). Affected by global options
@@ -1022,6 +1026,10 @@ outputs:
       # [string=''] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
       kicad_3d_url_suffix: ''
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [boolean=false] Create symlinks instead of copying files
       link_no_copy: false
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
@@ -1462,6 +1470,10 @@ outputs:
       # [string=''] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
       kicad_3d_url_suffix: ''
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [number=-1] The minimum distance between points to treat them as separate ones (-1 is KiCad default: 0.01 mm).
       # The units for this option are controlled by the `units` option
       min_distance: -1
@@ -2052,6 +2064,10 @@ outputs:
       # [string=''] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
       kicad_3d_url_suffix: ''
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
       no_virtual: false
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -4296,6 +4312,10 @@ outputs:
       # [string=''] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
       kicad_3d_url_suffix: ''
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [number=0] Steps to move in the X axis, positive is to the right.
       # Just like pressing the right arrow in the 3D viewer
       move_x: 0
@@ -4662,6 +4682,10 @@ outputs:
       # [string=''] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
       kicad_3d_url_suffix: ''
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [boolean=true] Use metric units instead of inches
       metric_units: true
       # [number=-1] The minimum distance between points to treat them as separate ones (-1 is KiCad default: 0.01 mm)
@@ -4951,6 +4975,10 @@ outputs:
       # [string=''] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
       kicad_3d_url_suffix: ''
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [string='millimeters'] [millimeters,meters,deciinches,inches] Units used for the VRML (1 deciinch = 0.1 inches)
       model_units: 'millimeters'
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
