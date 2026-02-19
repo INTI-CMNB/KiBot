@@ -85,7 +85,9 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         self._priority = 90
 
     def __str__(self):
-        return f'{self.type} ({pretty_list([v.name for v in self.set_text_variables])})'
+        if isinstance(self.set_text_variables, list):
+            return f'{self.type} ({pretty_list([v.name for v in self.set_text_variables])})'
+        return f'{self.type} (not configured)'
 
     @classmethod
     def get_example(cls):

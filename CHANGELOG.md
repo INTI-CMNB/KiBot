@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
   KiCad (See #887)
 - KiCad 9 embedded files: populate the cache if needed (See #890)
+- preflights:
+  - Mechanism to merge preflights from imports (`merge_pre`) (#900)
 - 3D models: option to download the latest 3D models (`kicad_3d_url_version`)
   (See #899)
 - BoM: descriptive error when using `kicad` format and no options found.

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """ Miscellaneous definitions """
 
+import collections
 from contextlib import contextmanager
 import hashlib
 import os
@@ -346,6 +347,7 @@ W_MISSWRL = '(W174) '
 W_STACKUP = '(W175) '
 W_NOVISLA = '(W176) '
 W_IBOMNOCHK = '(W177) '
+W_PREREDEF = '(W178) '
 # Somehow arbitrary, the colors are real, but can be different
 PCB_MAT_COLORS = {'fr1': "937042", 'fr2': "949d70", 'fr3': "adacb4", 'fr4': "332B16", 'fr5': "6cc290"}
 PCB_FINISH_COLORS = {'hal': "8b898c", 'hasl': "8b898c", 'imag': "8b898c", 'enig': "cfb96e", 'enepig': "cfb96e",
@@ -699,3 +701,14 @@ def get_file_hash(filepath, algorithm="sha256", buffer_size=65536):
             hash_obj.update(chunk)
 
     return hash_obj.hexdigest()  # Get the hexadecimal digest of the hash
+
+
+def update_dict(d, u):
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = update_dict(d.get(k, {}), v)
+        elif isinstance(v, list) and k in d:
+            d[k] = v+d[k]
+        else:
+            d[k] = v
+    return d
