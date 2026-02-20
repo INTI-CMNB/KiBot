@@ -905,7 +905,7 @@ class ReportOptions(VariantOptions):
         if self.blind_vias == 'no' and self.blind_vias_count:
             via_name = "Blind" if GS.ki10 else "Buried/blind"
             logger.warning(W_BLINDVIAS+f"{via_name} vias not allowed, but found {self.blind_vias_count}")
-        if self.buried_vias == 'no' and self.buried_vias_count:
+        if GS.ki10 and self.buried_vias == 'no' and self.buried_vias_count:
             logger.warning(W_BURIEDVIAS+f"Buried vias not allowed, but found {self.buried_vias_count}")
         if self.micro_vias == 'no' and self.micro_vias_count:
             logger.warning(W_MICROVIAS+f"Micro vias not allowed, but found {self.micro_vias_count}")
