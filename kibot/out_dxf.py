@@ -44,7 +44,10 @@ class DXFOptions(DrillMarks):
         # DXF_PLOTTER::DXF_UNITS isn't available
         # According to https://docs.kicad.org/doxygen/classDXF__PLOTTER.html 1 is mm
         po.SetDXFPlotUnits(DXF_UNITS_MILLIMETERS if self.metric_units else DXF_UNITS_INCHES)
-        po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
+        if GS.ki10:
+            po.SetDXFPlotMode(SKETCH if self.sketch_plot else FILLED)
+        else:
+            po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
         po.SetUseAuxOrigin(self.use_aux_axis_as_origin)
 
     def read_vals_from_po(self, po):

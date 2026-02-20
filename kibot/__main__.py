@@ -323,6 +323,7 @@ def detect_kicad():
     GS.ki7 = GS.kicad_version_major >= 7
     GS.ki8 = GS.kicad_version_major >= 8
     GS.ki9 = GS.kicad_version_major >= 9
+    GS.ki10 = GS.kicad_version_major >= 10
     GS.footprint_gr_type = 'MGRAPHIC' if not GS.ki8 else 'PCB_SHAPE'
     GS.board_gr_type = 'DRAWSEGMENT' if GS.ki5 else 'PCB_SHAPE'
     GS.footprint_update_local_coords = GS.dummy1 if GS.ki8 else GS.footprint_update_local_coords_ki7
