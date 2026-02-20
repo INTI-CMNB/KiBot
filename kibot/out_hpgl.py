@@ -49,6 +49,7 @@ class HPGLOptions(DrillMarks):
 class HPGL(AnyLayer):
     """ HPGL (Hewlett & Packard Graphics Language)
         Exports the PCB for plotters and laser printers.
+        Only available for KiCad 9 and older.
         This output is what you get from the File/Plot menu in pcbnew. """
     __doc__ += FONT_HELP_TEXT
 

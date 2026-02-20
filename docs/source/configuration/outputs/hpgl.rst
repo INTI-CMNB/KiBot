@@ -7,6 +7,7 @@ HPGL (Hewlett & Packard Graphics Language)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Exports the PCB for plotters and laser printers.
+Only available for KiCad 9 and older. |br|
 This output is what you get from the File/Plot menu in pcbnew. |br|
 
 .. note::

@@ -1704,6 +1704,7 @@ outputs:
       variant: ''
     layers: all
   # HPGL (Hewlett & Packard Graphics Language):
+  # Only available for KiCad 9 and older.
   # This output is what you get from the File/Plot menu in pcbnew.
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'hpgl_example'

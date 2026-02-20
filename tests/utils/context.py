@@ -37,6 +37,7 @@ KICAD_VERSION_7_0_11 = 7000011
 KICAD_VERSION_8_0_0 = 7099000
 KICAD_VERSION_9_0_0 = 9000000
 KICAD_VERSION_9_0_5 = 9000005
+KICAD_VERSION_10_0_0 = 10000000
 MODE_SCH = 1
 MODE_PCB = 0
 # Defined as True to collect real world queries
@@ -106,6 +107,10 @@ else:
         REF_DIR = 'tests/reference/5_1_6'
     PRO_EXT = '.pro'
 logging.debug('Detected KiCad v{}.{}.{} ({})'.format(kicad_major, kicad_minor, kicad_patch, kicad_version))
+
+
+def ki10():
+    return kicad_version >= KICAD_VERSION_10_0_0
 
 
 def ki9():
