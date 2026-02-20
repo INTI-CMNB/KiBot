@@ -125,7 +125,8 @@ Help options:
 """
 # Avoid passing KiCad faults to the user
 import wx
-wx.DisableAsserts()
+if hasattr(wx, "DisableAsserts"):
+    wx.DisableAsserts()
 
 from datetime import datetime
 from glob import glob
