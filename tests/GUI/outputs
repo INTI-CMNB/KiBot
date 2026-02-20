@@ -10205,6 +10205,13 @@
           null
         ],
         [
+          "buried_via_color",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "keep_temporal_files",
           [
             "DataTypeBoolean"

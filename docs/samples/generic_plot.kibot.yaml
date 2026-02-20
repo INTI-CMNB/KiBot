@@ -3282,6 +3282,8 @@ outputs:
       background_image: ''
       # [string=''] Color used for blind/buried `colored_vias`
       blind_via_color: ''
+      # [string=''] Color used for buried `colored_vias` (KiCad 10+)
+      buried_via_color: ''
       # [string='_builtin_classic'] Selects the color theme. Only applies to KiCad 6.
       # To use the KiCad 6 default colors select `_builtin_default`.
       # Usually user colors are stored as `user`, but you can give it another name

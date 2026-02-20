@@ -335,7 +335,15 @@ class Globals(FiltersOptions):
             """ The name of the schematic field that contains the distributor.
                 You can use `_field_distributor` as field name to use it in most places """
             self.allow_blind_buried_vias = True
-            """ Allow the use of buried vias. This value is only used for KiCad 7+.
+            """ Allow the use of blind/buried vias. This value is only used for KiCad 7+.
+                For KiCad 10+ use the separated options: `allow_blind_vias` and `allow_buried_vias`,
+                and leave it in `true`.
+                For KiCad 5 and 6 use the design rules settings, stored in the project """
+            self.allow_blind_vias = True
+            """ Allow the use of blind vias. This value is only used for KiCad 10+.
+                For KiCad 5 and 6 use the design rules settings, stored in the project """
+            self.allow_buried_vias = True
+            """ Allow the use of buried vias. This value is only used for KiCad 10+.
                 For KiCad 5 and 6 use the design rules settings, stored in the project """
             self.allow_microvias = True
             """ Allow the use of micro vias. This value is only used for KiCad 7+.

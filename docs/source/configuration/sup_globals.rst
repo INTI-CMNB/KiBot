@@ -19,7 +19,13 @@
             -  ``value`` :index:`: <pair: global options - aliases_for_3d_models; value>` [:ref:`string <string>`] (default: ``''``) Path to the 3D model.
             -  *variable* :index:`: <pair: global options - aliases_for_3d_models; variable>` Alias for name.
 
-      -  ``allow_blind_buried_vias`` :index:`: <pair: global options; allow_blind_buried_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of buried vias. This value is only used for KiCad 7+.
+      -  ``allow_blind_buried_vias`` :index:`: <pair: global options; allow_blind_buried_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of blind/buried vias. This value is only used for KiCad 7+.
+         For KiCad 10+ use the separated options: `allow_blind_vias` and `allow_buried_vias`,
+         and leave it in `true`. |br|
+         For KiCad 5 and 6 use the design rules settings, stored in the project.
+      -  ``allow_blind_vias`` :index:`: <pair: global options; allow_blind_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of blind vias. This value is only used for KiCad 10+.
+         For KiCad 5 and 6 use the design rules settings, stored in the project.
+      -  ``allow_buried_vias`` :index:`: <pair: global options; allow_buried_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of buried vias. This value is only used for KiCad 10+.
          For KiCad 5 and 6 use the design rules settings, stored in the project.
       -  ``allow_component_ranges`` :index:`: <pair: global options; allow_component_ranges>` [:ref:`boolean <boolean>`] (default: ``true``) Allow using ranges like *R5-R20* in the `show_components` and `highlight` options.
          If you have references that looks like a range you should disable this option.

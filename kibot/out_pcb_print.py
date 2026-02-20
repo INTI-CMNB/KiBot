@@ -54,9 +54,9 @@ from .kicad.patch_svg import patch_svg_file
 from .kicad.config import KiConf
 from .kicad.v5_sch import SchError
 from .kicad.pcb import PCB
-from .misc import (PDF_PCB_PRINT, W_PDMASKFAIL, W_MISSTOOL, PCBDRAW_ERR, W_PCBDRAW, VIATYPE_THROUGH, VIATYPE_BLIND_BURIED,
-                   VIATYPE_MICROVIA, FONT_HELP_TEXT, W_BUG16418, pretty_list, try_int, W_NOPAGES, W_NOLAYERS, W_NOTHREPE,
-                   RENDERERS, read_png, EMBED_PREFIX, KICAD_VERSION_9_0_1, W_NOVISLA)
+from .misc import (PDF_PCB_PRINT, W_PDMASKFAIL, W_MISSTOOL, PCBDRAW_ERR, W_PCBDRAW, FONT_HELP_TEXT, W_BUG16418, pretty_list,
+                   try_int, W_NOPAGES, W_NOLAYERS, W_NOTHREPE, RENDERERS, read_png, EMBED_PREFIX, KICAD_VERSION_9_0_1,
+                   W_NOVISLA)
 from .create_pdf import create_pdf_from_pages
 from .macros import macros, document, output_class  # noqa: F401
 from .drill_marks import DRILL_MARKS_MAP, add_drill_marks
@@ -377,7 +377,8 @@ class PCB_PrintOptions(VariantOptions):
     _pad_colors = {'pad_color': 'pad_through_hole',
                    'via_color': 'via_through',
                    'micro_via_color': 'via_micro',
-                   'blind_via_color': 'via_blind_buried'}
+                   'blind_via_color': 'via_blind_buried',
+                   'buried_via_color': 'via_blind_buried'}
 
     def __init__(self):
         with document:
@@ -436,6 +437,8 @@ class PCB_PrintOptions(VariantOptions):
             """ Color used for micro `colored_vias` """
             self.blind_via_color = ''
             """ Color used for blind/buried `colored_vias` """
+            self.buried_via_color = ''
+            """ Color used for buried `colored_vias` (KiCad 10+)"""
             self.keep_temporal_files = False
             """ Store the temporal page and layer files in the output dir and don't delete them """
             self.force_edge_cuts = False
@@ -1169,9 +1172,13 @@ class PCB_PrintOptions(VariantOptions):
             if self.colored_pads:
                 re_filled_zones |= self.plot_pads(la, pc, p, filelist)
             if self.colored_vias:
-                re_filled_zones |= self.plot_vias(la, pc, p, filelist, VIATYPE_THROUGH, self.via_color)
-                re_filled_zones |= self.plot_vias(la, pc, p, filelist, VIATYPE_BLIND_BURIED, self.blind_via_color)
-                re_filled_zones |= self.plot_vias(la, pc, p, filelist, VIATYPE_MICROVIA, self.micro_via_color)
+                re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_THROUGH, self.via_color)
+                if GS.ki10:
+                    re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_BLIND, self.blind_via_color)
+                    re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_BURIED, self.buried_via_color)
+                else:
+                    re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_BLIND_BURIED, self.blind_via_color)
+                re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_MICROVIA, self.micro_via_color)
 
             GS.board.Remove(track1)
             GS.board.Remove(track2)

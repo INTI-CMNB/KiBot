@@ -36,12 +36,18 @@ Added
 
    -  Mechanism to merge preflights from imports (``merge_pre``) (#900)
 
+-  Global options:
+
+   -  ``allow_blind_vias`` and ``allow_buried_vias``: for KiCad 10 to
+      replace the unified ``allow_blind_buried_vias``
+
 -  3D models: option to download the latest 3D models
    (``kicad_3d_url_version``) (See #899)
 -  BoM: descriptive error when using ``kicad`` format and no options
    found.
 -  DRC/ERC: Configurable logo (#889)
 -  iBoM: ``mark_when_checked`` option (#881)
+-  Report: ``buried_vias_count`` for KiCad 10
 
 Fixed
 ~~~~~

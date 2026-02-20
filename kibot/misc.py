@@ -129,10 +129,6 @@ MOD_ALLOW_SOLDERMASK_BRIDGES = 64
 MOD_ALLOW_MISSING_COURTYARD = 128
 # This is what a virtual component gets when loaded by KiCad 6
 MOD_VIRTUAL = MOD_EXCLUDE_FROM_POS_FILES | MOD_EXCLUDE_FROM_BOM
-# VIATYPE, not exported by KiCad 5 (6, 7 and 8 defines it the same way)
-VIATYPE_THROUGH = 3
-VIATYPE_BLIND_BURIED = 2
-VIATYPE_MICROVIA = 1
 
 # Supported values for "do not fit"
 DNF = {
@@ -348,6 +344,7 @@ W_STACKUP = '(W175) '
 W_NOVISLA = '(W176) '
 W_IBOMNOCHK = '(W177) '
 W_PREREDEF = '(W178) '
+W_BURIEDVIAS = '(W179) '
 # Somehow arbitrary, the colors are real, but can be different
 PCB_MAT_COLORS = {'fr1': "937042", 'fr2': "949d70", 'fr3': "adacb4", 'fr4': "332B16", 'fr5': "6cc290"}
 PCB_FINISH_COLORS = {'hal': "8b898c", 'hasl': "8b898c", 'imag': "8b898c", 'enig': "cfb96e", 'enepig': "cfb96e",

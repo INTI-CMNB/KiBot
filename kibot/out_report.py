@@ -22,7 +22,7 @@ import pcbnew
 
 from .gs import GS
 from .misc import (UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES, W_WRONGEXT, W_UNKPADSH,
-                   W_WRONGOAR, W_ECCLASST, VIATYPE_THROUGH, VIATYPE_BLIND_BURIED, VIATYPE_MICROVIA, W_BLINDVIAS, W_MICROVIAS)
+                   W_WRONGOAR, W_ECCLASST, W_BLINDVIAS, W_MICROVIAS, W_BURIEDVIAS)
 from .registrable import RegOutput
 from .out_base import VariantOptions
 from .error import KiPlotConfigurationError
@@ -656,7 +656,7 @@ class ReportOptions(VariantOptions):
         self._drills_ec = {}
         track_type = 'TRACK' if GS.ki5 else 'PCB_TRACK'
         via_type = 'VIA' if GS.ki5 else 'PCB_VIA'
-        self.thru_vias_count = self.blind_vias_count = self.micro_vias_count = self.vias_count = 0
+        self.thru_vias_count = self.blind_vias_count = self.buried_vias_count = self.micro_vias_count = self.vias_count = 0
         for t in tracks:
             tclass = t.GetClass()
             if tclass == track_type:
@@ -677,11 +677,16 @@ class ReportOptions(VariantOptions):
                 self._drills_ec[d_ec] = self._drills_ec.get(d_ec, 0) + 1
                 self.vias_count += 1
                 via_t = via.GetViaType()
-                if via_t == VIATYPE_THROUGH:
+                logger.error(via_t)
+                if via_t == GS.VIATYPE_THROUGH:
                     self.thru_vias_count += 1
-                elif via_t == VIATYPE_BLIND_BURIED:
+                elif not GS.ki10 and via_t == GS.VIATYPE_BLIND_BURIED:
                     self.blind_vias_count += 1
-                elif via_t == VIATYPE_MICROVIA:
+                elif GS.ki10 and via_t == GS.VIATYPE_BLIND:
+                    self.blind_vias_count += 1
+                elif GS.ki10 and via_t == GS.VIATYPE_BURIED:
+                    self.buried_vias_count += 1
+                elif via_t == GS.VIATYPE_MICROVIA:
                     self.micro_vias_count += 1
         self.track_min = min(self.track_d, self.track)
         ###########################################################
@@ -887,16 +892,23 @@ class ReportOptions(VariantOptions):
         ###########################################################
         # Vias
         ###########################################################
-        if GS.ki7:
+        if GS.ki10:
+            self.micro_vias = YES_NO[GS.global_allow_microvias]
+            self.blind_vias = YES_NO[GS.global_allow_blind_vias and GS.global_allow_blind_buried_vias]
+            self.buried_vias = YES_NO[GS.global_allow_buried_vias and GS.global_allow_blind_buried_vias]
+        elif GS.ki7:
             self.micro_vias = YES_NO[GS.global_allow_microvias]
             self.blind_vias = YES_NO[GS.global_allow_blind_buried_vias]
         else:
             self.micro_vias = YES_NO[ds.m_MicroViasAllowed]
             self.blind_vias = YES_NO[ds.m_BlindBuriedViaAllowed]
         if self.blind_vias == 'no' and self.blind_vias_count:
-            logger.warning(W_BLINDVIAS+"Buried/blind vias not allowed, but found {}".format(self.blind_vias_count))
+            via_name = "Blind" if GS.ki10 else "Buried/blind"
+            logger.warning(W_BLINDVIAS+f"{via_name} vias not allowed, but found {self.blind_vias_count}")
+        if self.buried_vias == 'no' and self.buried_vias_count:
+            logger.warning(W_BURIEDVIAS+f"Buried vias not allowed, but found {self.buried_vias_count}")
         if self.micro_vias == 'no' and self.micro_vias_count:
-            logger.warning(W_MICROVIAS+"Micro vias not allowed, but found {}".format(self.micro_vias_count))
+            logger.warning(W_MICROVIAS+f"Micro vias not allowed, but found {self.micro_vias_count}")
         self.uvia_pad = ds.m_MicroViasMinSize
         self.uvia_drill = ds.m_MicroViasMinDrill
         via_sizes = board.GetViasDimensionsList()

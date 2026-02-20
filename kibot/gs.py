@@ -133,6 +133,11 @@ class GS(object):
     errors_ignored = False    # We ignored at least one error
     # Maximum recursive replace
     MAXDEPTH = 20
+    # VIATYPE, not exported by KiCad 5 (6, 7, 8 and 9 defines it the same way)
+    # For KiCad 10 we adjust it
+    VIATYPE_THROUGH = 3
+    VIATYPE_BLIND_BURIED = 2
+    VIATYPE_MICROVIA = 1
     #
     # Global defaults
     #
@@ -229,6 +234,9 @@ class GS(object):
     global_work_layer = None
     # Only for KiCad 9+
     global_disable_kicad_cross_on_fab = None
+    # Only for KiCad 10+
+    global_allow_blind_vias = None
+    global_allow_buried_vias = None
     pasteable_cmd = shlex.join if hasattr(shlex, 'join') else lambda x: str(x)   # novermin
 
     @staticmethod
