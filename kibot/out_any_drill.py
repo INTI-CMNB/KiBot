@@ -15,7 +15,7 @@ from .optionable import Optionable
 from .out_base import VariantOptions
 from .gs import GS
 from .layer import Layer
-from .misc import W_NODRILL
+from .misc import W_NODRILL, DONT_STOP
 from .macros import macros, document  # noqa: F401
 from . import log
 
@@ -306,8 +306,11 @@ class AnyDrill(VariantOptions):
         files = self.get_file_names(output_dir)
         for k_f, f in files.items():
             if f:
-                logger.debug("Renaming {} -> {}".format(k_f, f))
-                os.replace(k_f, f)
+                logger.debug(f"Renaming {k_f} -> {f}")
+                if not os.path.isfile(k_f):
+                    GS.exit_with_error(f"Missing `{k_f}` drill file, KiCad bug? please report", DONT_STOP)
+                else:
+                    os.replace(k_f, f)
         # Generate the report
         if self._report:
             drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
