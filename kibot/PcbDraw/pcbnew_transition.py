@@ -109,7 +109,13 @@ def isV9(version=KICAD_VERSION):
         return True
     return version[0] == 9
 
-if not isV6(KICAD_VERSION) and not isV7(KICAD_VERSION) and not isV8(KICAD_VERSION) and not isV9(KICAD_VERSION):
+def isV10(version=KICAD_VERSION):
+    if version[0] == 9 and version[1] == 99:
+        return True
+    return version[0] == 10
+
+if (not isV6(KICAD_VERSION) and not isV7(KICAD_VERSION) and not isV8(KICAD_VERSION) and not isV9(KICAD_VERSION) and
+    not isV10(KICAD_VERSION)):
     # Introduce new functions
     pcbnew.NewBoard = NewBoard
 
@@ -166,7 +172,7 @@ except ImportError:
     pcbnew.RADIANS_T = EDA_ANGLE_T.RADIANS_T
     pcbnew.TENTHS_OF_A_DEGREE_T = EDA_ANGLE_T.TENTHS_OF_A_DEGREE_T
 
-if not isV7(KICAD_VERSION) and not isV8(KICAD_VERSION) and not isV9(KICAD_VERSION):
+if not isV7(KICAD_VERSION) and not isV8(KICAD_VERSION) and not isV9(KICAD_VERSION) and not isV10(KICAD_VERSION):
     # VECTOR2I & wxPoint
     class _transition_VECTOR2I(pcbnew.wxPoint):
         def __init__(self, *args, **kwargs):
@@ -227,4 +233,4 @@ if not isV7(KICAD_VERSION) and not isV8(KICAD_VERSION) and not isV9(KICAD_VERSIO
 
 # There are some incompatibilites that cannot be monkeypatched in a right way;
 # let's export them as new types:
-pcbnew.FIELD_TYPE = pcbnew.PCB_FIELD if isV8() or isV9() else pcbnew.FP_TEXT
+pcbnew.FIELD_TYPE = pcbnew.PCB_FIELD if isV8() or isV9() or isV10() else pcbnew.FP_TEXT
