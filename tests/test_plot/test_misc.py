@@ -497,7 +497,11 @@ def test_example_4(test_dir):
     ctx = context.TestContext(test_dir, 'good-project', 'pre_and_position')
     ctx.run(extra=['--example', '-P'], no_verbose=True, no_yaml_file=True)
     assert ctx.expect_out_file(EXAMPLE_CFG)
-    ctx.search_in_file(EXAMPLE_CFG, ['GND.Cu', 'pen_width: 35.0'])
+    to_search = ['GND.Cu']
+    if not context.ki10():
+        # No more HPGL ik KiCad 10
+        to_search.append('pen_width: 35.0')
+    ctx.search_in_file(EXAMPLE_CFG, to_search)
     ctx.search_not_in_file(EXAMPLE_CFG, ["layer: 'F.Adhes"])
     ctx.clean_up()
 
@@ -509,7 +513,11 @@ def test_example_5(test_dir):
     ctx.run(extra=['--example', '-p', '-d', output_dir], no_verbose=True, no_yaml_file=True, no_out_dir=True)
     file = os.path.join('pp', EXAMPLE_CFG)
     assert ctx.expect_out_file(file)
-    ctx.search_in_file(file, ['layers: selected', 'pen_width: 35.0'])
+    to_search = ['layers: selected']
+    if not context.ki10():
+        # No more HPGL ik KiCad 10
+        to_search.append('pen_width: 35.0')
+    ctx.search_in_file(file, to_search)
     ctx.clean_up()
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from pcbnew import PLOT_FORMAT_DXF, SKETCH, FILLED
@@ -54,7 +54,8 @@ class DXFOptions(DrillMarks):
         super().read_vals_from_po(po)
         self.polygon_mode = po.GetDXFPlotPolygonMode()
         self.metric_units = po.GetDXFPlotUnits() == 1
-        self.sketch_plot = po.GetPlotMode() == SKETCH
+        plot_mode = po.GetDXFPlotMode() if GS.ki10 else po.GetPlotMode()
+        self.sketch_plot = plot_mode == SKETCH
         self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
 
 

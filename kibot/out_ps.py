@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
@@ -24,7 +24,7 @@ class PSOptions(DrillMarks):
             self.negative_plot = False
             """ Invert black and white """
             self.sketch_plot = False
-            """ Don't fill objects, just draw the outline """
+            """ Don't fill objects, just draw the outline (KiCad older than 10) """
             self.scale_adjust_x = 1.0
             """ Fine grain adjust for the X scale (floating point multiplier) """
             self.scale_adjust_y = 1.0
@@ -42,7 +42,8 @@ class PSOptions(DrillMarks):
         po.SetFineScaleAdjustX(self.scale_adjust_x)
         po.SetFineScaleAdjustX(self.scale_adjust_y)
         po.SetA4Output(self.a4_output)
-        po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
+        if not GS.ki10:
+            po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
         if GS.ki5:
             po.SetLineWidth(FromMM(self.line_width))
         po.SetNegative(self.negative_plot)
@@ -54,7 +55,8 @@ class PSOptions(DrillMarks):
         self.scale_adjust_x = po.GetFineScaleAdjustX()
         self.scale_adjust_y = po.GetFineScaleAdjustX()
         self.a4_output = po.GetA4Output()
-        self.sketch_plot = po.GetPlotMode() == SKETCH
+        if not GS.ki10:
+            self.sketch_plot = po.GetPlotMode() == SKETCH
         if GS.ki5:
             self.line_width = ToMM(po.GetLineWidth())
         self.negative_plot = po.GetNegative()
