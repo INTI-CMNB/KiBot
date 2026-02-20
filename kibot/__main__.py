@@ -123,6 +123,10 @@ Help options:
   --help-variants                  List supported variants and details
 
 """
+# Avoid passing KiCad faults to the user
+import wx
+wx.DisableAsserts()
+
 from datetime import datetime
 from glob import glob
 import locale
