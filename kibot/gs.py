@@ -965,8 +965,12 @@ class GS(object):
             new_fields = [fld for fld in flds.keys() if not footprint.HasField(fld)]
             footprint.SetFields(flds)
             # New fields are added as visible, so we must hide them (OMG!)
-            for fld in new_fields:
-                footprint.GetFieldByName(fld).SetVisible(False)
+            if GS.ki10:
+                for fld in new_fields:
+                    footprint.GetField(fld).SetVisible(False)
+            else:
+                for fld in new_fields:
+                    footprint.GetFieldByName(fld).SetVisible(False)
         elif GS.ki6:
             footprint.SetProperties(flds)
 
