@@ -105,9 +105,15 @@ test_docker_local_1_ki6:
 test_docker_local_1_ki8:
 	rm -rf output
 	rm -f tests/.local
+	docker run --rm -v $(CWD):$(CWD) --workdir="$(CWD)" ghcr.io/inti-cmnb/kicad_auto_test:ki8 \
+		/bin/bash -c "flake8 . --count --statistics ; python3-coverage run src/kibot --help-outputs > /dev/null; pytest-3 --log-cli-level debug -k '$(SINGLE_TEST)' --test_dir=output ; $(PY_COV) html; chown -R $(USER_ID):$(GROUP_ID) output/ tests/ .coverage.* htmlcov/ .cache"
+
+test_docker_local_1_ki10:
+	rm -rf output
+	rm -f tests/.local
 	# Run in the same directory to make the __pycache__ valid
 	# Also change the owner of the files to the current user (we run as root like in GitHub)
-	docker run --rm -v $(CWD):$(CWD) --workdir="$(CWD)" ghcr.io/inti-cmnb/kicad_auto_test:ki8 \
+	docker run --rm -v $(CWD):$(CWD) --workdir="$(CWD)" ghcr.io/inti-cmnb/kicad_auto_test:ki10 \
 		/bin/bash -c "flake8 . --count --statistics ; python3-coverage run src/kibot --help-outputs > /dev/null; pytest-3 --log-cli-level debug -k '$(SINGLE_TEST)' --test_dir=output ; $(PY_COV) html; chown -R $(USER_ID):$(GROUP_ID) output/ tests/ .coverage.* htmlcov/ .cache"
 
 test_docker_local_1_ki7:
@@ -141,6 +147,8 @@ test_docker_local_1_sn:
 # rm -R .cache/ ; KIBOT_COPY_REF="1" SINGLE_TEST=test_print_sch_variant_ni_2 make test_docker_local_1_sn
 
 t1k8: test_docker_local_1_ki8
+
+t1k10: test_docker_local_1_ki10
 
 t1n: test_docker_local_1_n
 
