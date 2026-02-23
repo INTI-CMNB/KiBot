@@ -197,6 +197,14 @@ def _get_yes_no(items, pos, name):
     return sym == 'yes'
 
 
+def _get_yes_no_maybe_alone(items, pos, name):
+    # ATTRIBUTE alone used to indicate "yes"
+    if len(items) < pos+1:
+        return True
+    sym = _check_symbol(items, pos, name)
+    return sym == 'yes'
+
+
 def _get_id(items, pos, name):
     value = _check_symbol_value(items, pos, name, 'id')
     return _check_integer(value, 1, 'id')

@@ -22,7 +22,7 @@ from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
                            _check_float, _check_str, _check_symbol_value, _check_symbol_float, _check_symbol_int,
                            _check_symbol_str, _get_offset, _get_yes_no, _get_at, _get_size, _get_xy, _get_points,
-                           _check_relaxed, Color, _symbol, _check_floats)
+                           _check_relaxed, Color, _symbol, _check_floats, _get_yes_no_maybe_alone)
 from .v5_sch import SchematicComponent, Schematic
 
 logger = log.get_logger()
@@ -31,6 +31,7 @@ NO_YES = [Symbol('no'), Symbol('yes')]
 version = None
 KICAD_7_VER = 20230121
 KICAD_8_VER = 20231120
+KICAD_10_VER = 20260101
 SHEET_FILE = {'Sheet file', 'Sheetfile'}
 SHEET_NAME = {'Sheet name', 'Sheetname'}
 
@@ -666,6 +667,8 @@ class SchematicFieldV6(object):
         self.do_not_autoplace = False
         self.show_name = False
         self.private = False
+        # KiCad 10 moved it from the "effects"
+        self.hide = None
 
     def visible(self, v):
         self.effects.hide = not v
@@ -713,9 +716,11 @@ class SchematicFieldV6(object):
             elif i_type == 'id':
                 field.number = _check_integer(i, 1, name+' id')
             elif i_type == 'do_not_autoplace':
-                field.do_not_autoplace = True
+                field.do_not_autoplace = _get_yes_no_maybe_alone(i, 1, i_type)
             elif i_type == 'show_name':
-                field.show_name = True
+                field.show_name = _get_yes_no_maybe_alone(i, 1, i_type)
+            elif i_type == 'hide':
+                field.hide = _get_yes_no(i, 1, i_type)
             else:
                 raise SchError('Unknown property attribute `{}`'.format(i))
         if not found_at:
@@ -734,10 +739,17 @@ class SchematicFieldV6(object):
             # Removed in KiCad 7
             data.append(_symbol('id', [self.number]))
         data.append(_symbol('at', [self.x, self.y, self.ang]))
-        if self.do_not_autoplace:
-            data.append(_symbol('do_not_autoplace'))
-        if self.show_name:
-            data.append(_symbol('show_name'))
+        if version < KICAD_10_VER:
+            if self.do_not_autoplace:
+                data.append(_symbol('do_not_autoplace'))
+            if self.show_name:
+                data.append(_symbol('show_name'))
+        else:
+            data.append(_symbol_yn('do_not_autoplace', self.do_not_autoplace))
+            data.append(_symbol_yn('show_name', self.show_name))
+            if self.hide is not None:
+                # Always in this version
+                data.append(_symbol_yn('hide', self.hide))
         if self.effects:
             data.extend([Sep(), self.effects.write(), Sep()])
         return _symbol('property', data)
