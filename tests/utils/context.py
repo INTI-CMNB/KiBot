@@ -60,7 +60,9 @@ if kicad_version >= KICAD_VERSION_5_99:
     if km > 9:
         km = 9
     BOARDS_DIR = '../board_samples/kicad_'+str(km)
-    if kicad_version >= KICAD_VERSION_9_0_5:
+    if kicad_version >= KICAD_VERSION_10_0_0:
+        REF_DIR = 'tests/reference/10_0_0'
+    elif kicad_version >= KICAD_VERSION_9_0_5:
         REF_DIR = 'tests/reference/9_0_5'
     elif kicad_version >= KICAD_VERSION_9_0_0:
         REF_DIR = 'tests/reference/9_0_1'
