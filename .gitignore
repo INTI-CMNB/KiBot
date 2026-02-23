@@ -44,6 +44,7 @@ ojo/
 log
 .*~
 *.dst
+.history
 
 # Gerber specs that can't be uploaded to GitHub
 info/Gerber/
