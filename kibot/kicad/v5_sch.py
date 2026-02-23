@@ -914,6 +914,7 @@ class SchematicComponent(object):
         self.kicad_dnp = None       # Do Not Populate
         # KiCad 10
         self.in_pos_files = None
+        self.duplicate_pin_numbers_are_jumpers = None
         # Exclude from simulation is a field Sim.Enable
 
     def get_field_value(self, field, lower=False):

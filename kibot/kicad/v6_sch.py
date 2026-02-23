@@ -801,6 +801,7 @@ class LibComponent(object):
         self.in_bom = True
         self.on_board = True
         self.in_pos_files = None
+        self.duplicate_pin_numbers_are_jumpers = None
         self.is_power = False
         self.unit = 0
         self.unit_name = None
@@ -882,6 +883,8 @@ class LibComponent(object):
                 comp.on_board = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_pos_files':
                 comp.in_pos_files = _get_yes_no(i, 1, i_type)
+            elif i_type == 'duplicate_pin_numbers_are_jumpers':
+                comp.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
             elif i_type == 'power':
                 # Not yet documented
                 comp.is_power = True
@@ -1026,6 +1029,8 @@ class LibComponent(object):
             sdata.append(_symbol_yn('on_board', s.on_board))
             if s.in_pos_files is not None:
                 sdata.append(_symbol_yn('in_pos_files', s.in_pos_files))
+            if s.duplicate_pin_numbers_are_jumpers is not None:
+                sdata.append(_symbol_yn('duplicate_pin_numbers_are_jumpers', s.duplicate_pin_numbers_are_jumpers))
         sdata.append(Sep())
         if s.unit_name is not None:
             sdata.append(_symbol('unit_name', [s.unit_name]))
@@ -1244,6 +1249,8 @@ class SchematicComponentV6(SchematicComponent):
                 comp.on_board = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_pos_files':
                 comp.in_pos_files = _get_yes_no(i, 1, i_type)
+            elif i_type == 'duplicate_pin_numbers_are_jumpers':
+                comp.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
                 comp.kicad_dnp = _get_yes_no(i, 1, i_type)
             elif i_type == 'fields_autoplaced':
@@ -1343,6 +1350,8 @@ class SchematicComponentV6(SchematicComponent):
         data.append(_symbol_yn('on_board', self.on_board))
         if self.in_pos_files is not None:
             data.append(_symbol_yn('in_pos_files', self.in_pos_files))
+        if self.duplicate_pin_numbers_are_jumpers is not None:
+            data.append(_symbol_yn('duplicate_pin_numbers_are_jumpers', self.duplicate_pin_numbers_are_jumpers))
         if dnp is not None:
             data.append(_symbol_yn('dnp', dnp))
         if self.fields_autoplaced:
@@ -1776,6 +1785,7 @@ class Sheet(object):
         self.dnp = None
         # KiCad 10 attributes
         self.in_pos_files = None
+        self.duplicate_pin_numbers_are_jumpers = None
 
     def load_project(self, prj):
         name = _check_str(prj, 1, 'instance project')
@@ -1820,6 +1830,8 @@ class Sheet(object):
                 sheet.on_board = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_pos_files':
                 sheet.in_pos_files = _get_yes_no(i, 1, i_type)
+            elif i_type == 'duplicate_pin_numbers_are_jumpers':
+                sheet.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
                 sheet.dnp = _get_yes_no(i, 1, i_type)
             elif i_type == 'property':
@@ -1878,6 +1890,8 @@ class Sheet(object):
             data.append(_symbol_yn('on_board', self.on_board))
         if self.in_pos_files is not None:
             data.append(_symbol_yn('in_pos_files', self.in_pos_files))
+        if self.duplicate_pin_numbers_are_jumpers is not None:
+            data.append(_symbol_yn('duplicate_pin_numbers_are_jumpers', self.duplicate_pin_numbers_are_jumpers))
         if self.dnp is not None:
             data.append(_symbol_yn('dnp', self.dnp))
         if self.fields_autoplaced:
@@ -2476,6 +2490,9 @@ class SchematicV6(Schematic):
             return True
         if c.in_pos_files != r.in_pos_files:
             SchematicV6.log_difference(r, c, 'in_pos_files status')
+            return True
+        if c.duplicate_pin_numbers_are_jumpers != r.duplicate_pin_numbers_are_jumpers:
+            SchematicV6.log_difference(r, c, 'duplicate_pin_numbers_are_jumpers status')
             return True
         return False
 
