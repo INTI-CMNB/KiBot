@@ -1,0 +1,13 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: 'diff_pcb'
+    comment: "PCB difference with reference file (KiCad 10)"
+    type: diff
+    layers: ['F.Cu', 'In1.Cu']
+    options:
+      old: tests/board_samples/kicad_10/light_control.kicad_pcb
+      old_type: file
+      cache_dir: .cache
+      # zones: unfill
