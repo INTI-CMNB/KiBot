@@ -912,6 +912,8 @@ class SchematicComponent(object):
         self.in_pcb_only = False    # Not in schematic
         # KiCad 7 PCB flags
         self.kicad_dnp = None       # Do Not Populate
+        # KiCad 10
+        self.in_pos_files = None
         # Exclude from simulation is a field Sim.Enable
 
     def get_field_value(self, field, lower=False):

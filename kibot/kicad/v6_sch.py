@@ -800,6 +800,7 @@ class LibComponent(object):
         self.exclude_from_sim = None
         self.in_bom = True
         self.on_board = True
+        self.in_pos_files = None
         self.is_power = False
         self.unit = 0
         self.unit_name = None
@@ -879,6 +880,8 @@ class LibComponent(object):
                 comp.in_bom = _get_yes_no(i, 1, i_type)
             elif i_type == 'on_board':
                 comp.on_board = _get_yes_no(i, 1, i_type)
+            elif i_type == 'in_pos_files':
+                comp.in_pos_files = _get_yes_no(i, 1, i_type)
             elif i_type == 'power':
                 # Not yet documented
                 comp.is_power = True
@@ -1021,6 +1024,8 @@ class LibComponent(object):
                 sdata.append(_symbol_yn('exclude_from_sim', s.exclude_from_sim))
             sdata.append(_symbol_yn('in_bom', s.in_bom))
             sdata.append(_symbol_yn('on_board', s.on_board))
+            if s.in_pos_files is not None:
+                sdata.append(_symbol_yn('in_pos_files', s.in_pos_files))
         sdata.append(Sep())
         if s.unit_name is not None:
             sdata.append(_symbol('unit_name', [s.unit_name]))
@@ -1237,6 +1242,8 @@ class SchematicComponentV6(SchematicComponent):
                 comp.in_bom = _get_yes_no(i, 1, i_type)
             elif i_type == 'on_board':
                 comp.on_board = _get_yes_no(i, 1, i_type)
+            elif i_type == 'in_pos_files':
+                comp.in_pos_files = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
                 comp.kicad_dnp = _get_yes_no(i, 1, i_type)
             elif i_type == 'fields_autoplaced':
@@ -1334,6 +1341,8 @@ class SchematicComponentV6(SchematicComponent):
             data.append(_symbol_yn('exclude_from_sim', self.exclude_from_sim))
         data.append(_symbol_yn('in_bom', self.in_bom))
         data.append(_symbol_yn('on_board', self.on_board))
+        if self.in_pos_files is not None:
+            data.append(_symbol_yn('in_pos_files', self.in_pos_files))
         if dnp is not None:
             data.append(_symbol_yn('dnp', dnp))
         if self.fields_autoplaced:
@@ -1765,6 +1774,8 @@ class Sheet(object):
         self.in_bom = None
         self.on_board = None
         self.dnp = None
+        # KiCad 10 attributes
+        self.in_pos_files = None
 
     def load_project(self, prj):
         name = _check_str(prj, 1, 'instance project')
@@ -1807,6 +1818,8 @@ class Sheet(object):
                 sheet.in_bom = _get_yes_no(i, 1, i_type)
             elif i_type == 'on_board':
                 sheet.on_board = _get_yes_no(i, 1, i_type)
+            elif i_type == 'in_pos_files':
+                sheet.in_pos_files = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
                 sheet.dnp = _get_yes_no(i, 1, i_type)
             elif i_type == 'property':
@@ -1863,6 +1876,8 @@ class Sheet(object):
             data.append(_symbol_yn('in_bom', self.in_bom))
         if self.on_board is not None:
             data.append(_symbol_yn('on_board', self.on_board))
+        if self.in_pos_files is not None:
+            data.append(_symbol_yn('in_pos_files', self.in_pos_files))
         if self.dnp is not None:
             data.append(_symbol_yn('dnp', self.dnp))
         if self.fields_autoplaced:
@@ -2458,6 +2473,9 @@ class SchematicV6(Schematic):
             return True
         if c.on_board != r.on_board:
             SchematicV6.log_difference(r, c, 'on_board status')
+            return True
+        if c.in_pos_files != r.in_pos_files:
+            SchematicV6.log_difference(r, c, 'in_pos_files status')
             return True
         return False
 
