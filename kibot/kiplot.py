@@ -216,6 +216,7 @@ def load_board(pcb_file=None, forced=False):
             board = pcbnew.LoadBoard(pcb_file)
         if board is None:
             # KiCad 9 doesn't stop and returns None
+            GS.exit_with_error('Error loading PCB file. Corrupted?', CORRUPTED_PCB)
             raise OSError
         if GS.global_work_layer and board.GetLayerID(GS.global_work_layer) < 0:
             raise KiPlotConfigurationError(f"Unknown layer used for the global `work_layer` option"
