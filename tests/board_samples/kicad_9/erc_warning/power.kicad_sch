@@ -1,5 +1,5 @@
 (kicad_sch
-	(version 20241209)
+	(version 20250114)
 	(generator "eeschema")
 	(generator_version "9.0")
 	(uuid "fb03d859-dcc9-4533-b352-64830e0e5423")
@@ -60,7 +60,7 @@
 			(symbol "C-passive_0_1"
 				(polyline
 					(pts
-						(xy -0.635 0) (xy -0.381 0)
+						(xy -0.635 0) (xy -1.27 0)
 					)
 					(stroke
 						(width 0)
@@ -72,7 +72,7 @@
 				)
 				(polyline
 					(pts
-						(xy -0.635 0) (xy -1.27 0)
+						(xy -0.635 0) (xy -0.381 0)
 					)
 					(stroke
 						(width 0)
