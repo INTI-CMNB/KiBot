@@ -1132,6 +1132,8 @@ class SchematicComponentV6(SchematicComponent):
         self.all_instances = {}
         # v8
         self.exclude_from_sim = None
+        # v10
+        self.body_style = None
 
     def set_ref(self, ref):
         self.ref = ref
@@ -1250,6 +1252,9 @@ class SchematicComponentV6(SchematicComponent):
                 # This is documented as mandatory, but isn't always there
                 comp.unit = _check_integer(i, 1, name+' unit')
                 comp.unit_specified = True
+            elif i_type == 'body_style':
+                # Not documented 2026/02/23
+                comp.body_style = _check_integer(i, 1, name+' '+i_type)
             elif i_type == 'convert':
                 # Not documented 2022/04/17
                 comp.convert = _check_integer(i, 1, name+' convert')
@@ -1353,6 +1358,8 @@ class SchematicComponentV6(SchematicComponent):
             data.append(_symbol('mirror', [Symbol(self.mirror)]))
         if self.unit_specified:
             data.append(_symbol('unit', [self.unit]))
+        if self.body_style is not None:
+            data.append(_symbol('body_style', [self.body_style]))
         if self.convert is not None:
             data.append(_symbol('convert', [self.convert]))
         data.append(Sep())
