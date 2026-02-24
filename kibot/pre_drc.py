@@ -166,7 +166,7 @@ class DRC(XRC):  # noqa: F821
                 logf(txt)
 
     def get_command(self, output):
-        cmd = ['kicad-cli', 'pcb', 'drc', '-o', output, '--format', 'json', '--severity-all', '--units',
+        cmd = [GS.kicad_cli, 'pcb', 'drc', '-o', output, '--format', 'json', '--severity-all', '--units',
                UNITS_2_KICAD[self._units]]
         if self._schematic_parity:
             cmd.append('--schematic-parity')

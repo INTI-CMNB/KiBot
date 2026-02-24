@@ -242,7 +242,7 @@ class PositionOptions(VariantOptions):
             raise KiPlotConfigurationError("Gerber position needs KiCad 7+")
 
         pcb_name = self.save_tmp_board_if_variant()
-        cmd_base = ['kicad-cli', 'pcb', 'export', 'pos', '--format', 'gerber']
+        cmd_base = [GS.kicad_cli, 'pcb', 'export', 'pos', '--format', 'gerber']
         if self.use_aux_axis_as_origin:
             cmd_base.append('--use-drill-file-origin')
         if self.gerber_board_edge:

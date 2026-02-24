@@ -51,7 +51,7 @@ class ODBOptions(VariantOptions):
         name = self.fix_dir_name(name)
         super().run(name)
         board_name = self.save_tmp_board_if_variant()
-        cmd = ['kicad-cli', 'pcb', 'export', 'odb', '-o', name, '--compression', self.compression, '--units',
+        cmd = [GS.kicad_cli, 'pcb', 'export', 'odb', '-o', name, '--compression', self.compression, '--units',
                UNITS_2_KICAD[self.units], '--precision', str(int(self.precision)), board_name]
         run_command(cmd)
 

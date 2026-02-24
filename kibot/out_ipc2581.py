@@ -75,7 +75,7 @@ class IPC2581Options(VariantOptions):
             GS.exit_with_error("`IPC2581` needs KiCad 9+", MISSING_TOOL)
         super().run(name)
         board_name = self.save_tmp_board_if_variant()
-        cmd = ['kicad-cli', 'pcb', 'export', 'ipc2581', '-o', name, '--units', UNITS_2_KICAD[self.units],
+        cmd = [GS.kicad_cli, 'pcb', 'export', 'ipc2581', '-o', name, '--units', UNITS_2_KICAD[self.units],
                '--precision', str(int(self.precision)), '--version', self.version]
         if self.compress:
             cmd.append('--compress')

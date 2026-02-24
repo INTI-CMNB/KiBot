@@ -96,6 +96,7 @@ class GS(object):
     kicad_conf_path = None
     kicad_share_path = None
     kicad_dir = 'kicad'
+    kicad_cli = 'kicad-cli'
     kicad_plugins_dirs = []
     # KiCad version: major*1e6+minor*1e3+patch
     kicad_version_n = 0

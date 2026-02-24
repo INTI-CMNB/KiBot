@@ -112,7 +112,7 @@ class Export_3DOptions(Base3DOptions):
         super().run(output)
         # Make units explicit
         # Base command with overwrite
-        cmd = ['kicad-cli', 'pcb', 'export', self.format, '-o', output, '-f']
+        cmd = [GS.kicad_cli, 'pcb', 'export', self.format, '-o', output, '-f']
         # Origin
         if self.origin == 'drill':
             cmd.append('--drill-origin')

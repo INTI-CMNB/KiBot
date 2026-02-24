@@ -39,7 +39,7 @@ class JobSetOptions(Base3DOptions):
             GS.exit_with_error(f"Missing jobset file `{jobset_file}`", MISSING_FILES)
         super().run(output)
         # Base command with overwrite
-        cmd = ['kicad-cli', 'jobset', 'run', '--file', os.path.abspath(jobset_file)]
+        cmd = [GS.kicad_cli, 'jobset', 'run', '--file', os.path.abspath(jobset_file)]
         if self.run_output:
             cmd.extend(['--output', self.run_output])
         if self.stop_on_error:

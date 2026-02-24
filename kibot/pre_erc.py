@@ -172,7 +172,7 @@ class ERC(XRC):  # noqa: F821
             self.sheet_paths[path] = s.fname_rel
 
     def get_command(self, output):
-        cmd = ['kicad-cli', 'sch', 'erc', '-o', output, '--format', 'json', '--severity-all',
+        cmd = [GS.kicad_cli, 'sch', 'erc', '-o', output, '--format', 'json', '--severity-all',
                '--units', UNITS_2_KICAD[self._units], GS.sch_file]
         return cmd
 
