@@ -1078,6 +1078,7 @@ class GS(object):
         # But KiCad doesn't read the exclusions, so they get lost
         # As a workaround we restore the project, there is no need to change it
         prj = GS.read_pro()
+        logger.debugl(2, f"Saving PCB file to `{pcb_file}`")
         board.Save(pcb_file)
         GS.write_pro(prj)
 
