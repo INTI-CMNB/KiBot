@@ -214,7 +214,9 @@ class Base3DOptions(VariantOptions):
     def kicad_3d_download_url(self, fname):
         kicad_3d_url = self.kicad_3d_url
         if self.kicad_3d_url_version:
-            branch = f'/{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}/'
+            # *-rc? tags are created before the release, using the release will fail
+            extra = GS.kicad_version[GS.kicad_version.index("-rc"):][:4] if '-rc' in GS.kicad_version else ''
+            branch = f'/{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}{extra}/'
             kicad_3d_url = kicad_3d_url.replace('/master/', branch)
         return kicad_3d_url+urllib.parse.quote_plus(fname)+self.kicad_3d_url_suffix
 
