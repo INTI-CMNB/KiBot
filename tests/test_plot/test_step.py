@@ -150,8 +150,9 @@ def test_step_rel_dir_1(test_dir):
     ctx.expect_out_file_d(name)
     # Check the R and C 3D models are there
     ctx.search_in_file_d(name, [r"PRODUCT\('R',"])
-    # KiCad 7/8 says "Add", 9 says "Adding"
-    ctx.search_err(['Add(.*) component R1'])
+    # KiCad 7/8 says "Add", 9 says "Adding", 10 says nothing
+    if not context.ki10():
+        ctx.search_err(['Add(.*) component R1'])
     ctx.clean_up(keep_project=True)
 
 
