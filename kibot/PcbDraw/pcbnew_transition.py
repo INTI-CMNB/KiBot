@@ -89,6 +89,9 @@ def pathGetItemDescription(item):
 
 KICAD_VERSION = getVersion()
 
+def isV5(version=KICAD_VERSION):
+    return version[0] == 5
+
 def isV6(version=KICAD_VERSION):
     if version[0] == 5 and version[1] == 99:
         return True

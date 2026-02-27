@@ -18,7 +18,7 @@ from typing import Callable, Dict, List, Optional, Tuple, TypeVar, Union, Any
 from . import np
 from .unit import read_resistance
 from lxml import etree, objectify # type: ignore
-from .pcbnew_transition import isV6, isV7, isV8, isV9, pcbnew # type: ignore
+from .pcbnew_transition import isV5, isV6, isV7, pcbnew # type: ignore
 from ..gs import GS
 
 T = TypeVar("T")
@@ -32,7 +32,7 @@ PKG_BASE = os.path.dirname(__file__)
 
 etree.register_namespace("xlink", "http://www.w3.org/1999/xlink")
 
-LEGACY_KICAD = not isV6() and not isV7() and not isV8() and not isV9()
+LEGACY_KICAD = isV5()
 
 default_style = {
     "copper": "#417e5a",
@@ -104,9 +104,9 @@ class SvgPathItem:
         dx = p1[0] - p2[0]
         dy = p1[1] - p2[1]
         pseudo_distance = dx*dx + dy*dy
-        if isV7() or isV8() or isV9():
-            return pseudo_distance < 0.01 ** 2
-        return pseudo_distance < 100 ** 2
+        if isV5() or isV6():
+            return pseudo_distance < 100 ** 2
+        return pseudo_distance < 0.01 ** 2
 
     def format(self, first: bool) -> str:
         ret = ""
@@ -389,7 +389,7 @@ def strip_style_svg(root: etree.Element, keys: List[str], forbidden_colors: List
             for key, val in styles.items():
                 if key not in keys or val == 'none':
                     new_styles[key] = val
-                elif isV8() or isV9():
+                elif not (isV5() or isV6() or isV7()):
                     new_styles[key] = new_val
             el.attrib["style"] = ";" \
                 .join([f"{key}: {val}" for key, val in new_styles.items()]) \
@@ -1066,15 +1066,15 @@ class PcbPlotter():
 
         self.yield_warning: Callable[[str, str], None] = lambda tag, msg: None # Handle warnings
 
-        if isV7() or isV8() or isV9():
-            self.ki2svg = self._ki2svg_v7
-            self.svg2ki = self._svg2ki_v7
+        if isV5():
+            self.ki2svg = self._ki2svg_v5
+            self.svg2ki = self._svg2ki_v5
         elif isV6():
             self.ki2svg = self._ki2svg_v6
             self.svg2ki = self._svg2ki_v6
         else:
-            self.ki2svg = self._ki2svg_v5
-            self.svg2ki = self._svg2ki_v5
+            self.ki2svg = self._ki2svg_v7
+            self.svg2ki = self._svg2ki_v7
 
     @property
     def svg_precision(self) -> int:
@@ -1262,7 +1262,7 @@ class PcbPlotter():
             popt.SetTextMode(pcbnew.PLOT_TEXT_MODE_STROKE)
             if isV6():
                 popt.SetSvgPrecision(self.svg_precision, False)
-            elif isV7() or isV8() or isV9():
+            elif not isV5():
                 popt.SetSvgPrecision(self.svg_precision)
             for action in to_plot:
                 if len(action.layers) == 0:
