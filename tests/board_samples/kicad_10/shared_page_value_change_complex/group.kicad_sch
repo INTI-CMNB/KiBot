@@ -1,0 +1,146 @@
+(kicad_sch
+	(version 20260101)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "b55844e1-2ad8-4e96-8c88-aee43f497339")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 134.62 73.66)
+		(size 24.13 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "4ea64d1f-5820-44f2-a8e7-ebfd678427eb")
+		(property "Sheetname" "Low Pass Filter A1"
+			(at 134.62 72.9484 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "filter.kicad_sch"
+			(at 134.62 86.9446 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "OUT" output
+			(at 158.75 80.01 0)
+			(uuid "c6331915-9340-4aeb-8eab-7e222fef7d18")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "IN" input
+			(at 134.62 80.01 180)
+			(uuid "369a3eb4-b629-4643-b4bf-a4f6d738962c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "value_change"
+				(path "/f41402a7-f3c6-4f55-a71c-c7fa34cf9d1a/f526d132-2d8c-4aa7-a506-166671bbad32"
+					(page "7")
+				)
+				(path "/f41402a7-f3c6-4f55-a71c-c7fa34cf9d1a/7a273ceb-90c2-41c3-886f-c622f777334b"
+					(page "9")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 134.62 92.71)
+		(size 24.13 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "685b8cad-25ce-4e81-9215-637d908973dc")
+		(property "Sheetname" "Low Pass Filter B1"
+			(at 134.62 91.9984 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "filter.kicad_sch"
+			(at 134.62 105.9946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "OUT" output
+			(at 158.75 99.06 0)
+			(uuid "446bcd67-0d8a-477f-99e3-d60fe7fdda4c")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "IN" input
+			(at 134.62 99.06 180)
+			(uuid "d891f93e-d0be-431a-9a1e-0a7f863263cf")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "value_change"
+				(path "/f41402a7-f3c6-4f55-a71c-c7fa34cf9d1a/f526d132-2d8c-4aa7-a506-166671bbad32"
+					(page "6")
+				)
+				(path "/f41402a7-f3c6-4f55-a71c-c7fa34cf9d1a/7a273ceb-90c2-41c3-886f-c622f777334b"
+					(page "8")
+				)
+			)
+		)
+	)
+)

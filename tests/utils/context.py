@@ -57,8 +57,8 @@ kicad_patch = int(m.group(3))
 kicad_version = kicad_major*1000000+kicad_minor*1000+kicad_patch
 if kicad_version >= KICAD_VERSION_5_99:
     km = kicad_major+(0 if kicad_minor < 99 else 1)
-    if km > 9:
-        km = 9
+    # if km > 9:
+    #    km = 9
     BOARDS_DIR = '../board_samples/kicad_'+str(km)
     if kicad_version >= KICAD_VERSION_10_0_0:
         REF_DIR = 'tests/reference/10_0_0'
