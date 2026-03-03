@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2024 Salvador E. Tropea
-# Copyright (c) 2022-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # KiCad bugs:
 # - Text bold doesn't work
 # - Shape Line and Rect swapped
 """
-KiCad v5/6/7/8 Worksheet format.
+KiCad v5/6/7/8/9 Worksheet format.
 A basic implementation of the .kicad_wks file format.
 Documentation: https://dev-docs.kicad.org/en/file-formats/sexpr-worksheet/
 """
 from base64 import b64decode
+from copy import deepcopy
 import io
 from pcbnew import wxPoint, wxSize, FromMM, wxPointMM
 from ..gs import GS
@@ -30,7 +31,7 @@ else:
 from .pcb import get_embedded_file
 from .pcb_draw_helpers import (GR_TEXT_HJUSTIFY_LEFT, GR_TEXT_HJUSTIFY_RIGHT, GR_TEXT_HJUSTIFY_CENTER,
                                GR_TEXT_VJUSTIFY_TOP, GR_TEXT_VJUSTIFY_CENTER, GR_TEXT_VJUSTIFY_BOTTOM)
-from .sexpdata import load, dumps, SExpData
+from .sexpdata import load, dumps, SExpData, Symbol
 from .sexp_helpers import (_check_is_symbol_list, _check_float, _check_integer, _check_symbol_value, _check_str, _check_symbol,
                            _check_relaxed, _get_points, _check_symbol_str, Color)
 from ..svgutils.transform import ImageElement, GroupElement
@@ -48,6 +49,7 @@ KI5_2_KI6 = {'K': 'KICAD_VERSION', 'S': '#', 'N': '##', 'C0': 'COMMENT1', 'C1': 
              'C3': 'COMMENT4', 'C4': 'COMMENT5', 'C5': 'COMMENT6', 'C6': 'COMMENT7', 'C7': 'COMMENT8',
              'C8': 'COMMENT9', 'Y': 'COMPANY', 'F': 'FILENAME', 'D': 'ISSUE_DATE', 'Z': 'PAPER', 'R': 'REVISION',
              'P': 'SHEETNAME', 'T': 'TITLE'}
+REVERSE_OPTION = {'page1only': 'notonpage1', 'notonpage1': 'page1only'}
 
 
 class WksError(Exception):
@@ -589,8 +591,27 @@ class Worksheet(object):
                 new_sexp.append(e)
         self.sexp = new_sexp
 
-    def save(self, fname):
-        """ Save the sexp to a file """
+    def save(self, fname, page=None):
+        """ Save the sexp to a file.
+            Can also adapt the `option` to match the page when using a tool for only one page """
+        sexp = self.sexp
+        if page is not None and page != 1:
+            # A page number is provided
+            # Here we change things so KiCad can print it as page 1, but the page looks correct
+            logger.debugl(2, f" - Changing things for page {page}")
+            sexp = deepcopy(self.sexp)
+            for e in sexp[1:]:
+                e_type = _check_is_symbol_list(e)
+                for o in e[1:]:
+                    if isinstance(o, list):
+                        smb = _check_is_symbol_list(o)
+                        if smb == 'option':
+                            # page1only -> notonpage1
+                            # notonpage1 -> page1only
+                            old = o[1]
+                            o[1] = Symbol(REVERSE_OPTION[_check_symbol(o, 1, smb)])
+                            logger.debugl(3, f"  - Changing {e_type}: {old} -> {o[1]}")
+
         with open(fname, 'wt') as f:
-            f.write(dumps(self.sexp))
+            f.write(dumps(sexp))
             f.write('\n')

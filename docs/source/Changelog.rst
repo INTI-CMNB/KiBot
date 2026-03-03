@@ -61,6 +61,9 @@ Fixed
    -  Problems when using angles (#898)
    -  Confusing error when the output wasn’t generated
 
+-  PCB Print: worksheet page 1 vs other pages look when using the
+   internal mechanism (#903)
+
 Changed
 ~~~~~~~
 

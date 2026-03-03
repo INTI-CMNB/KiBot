@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Panelize:
   - Problems when using angles (#898)
   - Confusing error when the output wasn't generated
+- PCB Print: worksheet page 1 vs other pages look when using the internal
+  mechanism (#903)
 
 ### Changed
 - `--fail-on-warnings` now ignores filtered warning (as the help suggested)

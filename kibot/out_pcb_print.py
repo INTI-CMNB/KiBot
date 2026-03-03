@@ -736,7 +736,7 @@ class PCB_PrintOptions(VariantOptions):
         # Expand the variables in the copied worksheet
         tb_vars = self.fill_kicad_vars(page, pages, p)
         ws.expand(tb_vars, remove_images=True)
-        ws.save(wks)
+        ws.save(wks, page)
         # Plot the frame using a helper script
         # kicad-cli fails: https://gitlab.com/kicad/code/kicad/-/issues/18928
         script = os.path.join(GS.get_resource_path('tools'), 'frame_plotter')
