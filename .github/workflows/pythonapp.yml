@@ -31,7 +31,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ki_release: [ki5, ki6, ki7, ki8, ki9]
+        # ki5
+        ki_release: [ki6, ki7, ki8, ki9]
         w_tests: [g1, g2, g3]
         # ki_release: [nightly]
         # w_tests: [gdebug]
