@@ -44,7 +44,11 @@ def test_bom_cfg_1(test_dir):
     ctx.run()
     csv = prj+'-bom.csv'
     ctx.expect_out_file_d(csv)
-    ctx.search_in_file_d(csv, ['R,R1,100 R_0805_2012Metric ~', 'R,R2,200 R_0805_2012Metric ~', 'C,C1,1uF C_0805_2012Metric ~'])
+    if context.ki10():
+        ctx.search_in_file_d(csv, ['R,R1,100 R_0805_2012Metric', 'R,R2,200 R_0805_2012Metric', 'C,C1,1uF C_0805_2012Metric'])
+    else:
+        ctx.search_in_file_d(csv, ['R,R1,100 R_0805_2012Metric ~', 'R,R2,200 R_0805_2012Metric ~',
+                                   'C,C1,1uF C_0805_2012Metric ~'])
     ctx.clean_up()
 
 
