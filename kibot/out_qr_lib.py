@@ -35,6 +35,17 @@ def is_symbol(name, sexp):
     return isinstance(sexp, list) and len(sexp) >= 1 and isinstance(sexp[0], Symbol) and sexp[0].value() == name
 
 
+def is_field(s):
+    if GS.ki10:
+        # KiCad 10: (property "FieldN" "VALUE"
+        # This is like the schematic
+        return (is_symbol('property', s) and len(s) > 2 and isinstance(s[1], str) and s[1].startswith('Field') and
+                isinstance(s[2], str))
+    # KiCad 6 to 9: (fp_text user "VALUE" ...
+    return (is_symbol('fp_text', s) and len(s) > 2 and isinstance(s[1], Symbol) and s[1].value() == 'user' and
+            isinstance(s[2], str))
+
+
 def compute_size(qr, is_sch=True, use_mm=True):
     if is_sch:
         qrc = qr._code_sch
@@ -346,8 +357,7 @@ class QR_LibOptions(BaseOptions):
         sexp.extend(self.qr_draw_fp(size, size_rect, center, qrc, qr.pcb_negative, layer, do_sep=False))
         # Update the fields
         for s in sexp:
-            if (is_symbol('fp_text', s) and len(s) > 2 and isinstance(s[1], Symbol) and s[1].value() == 'user' and
-               isinstance(s[2], str)):
+            if is_field(s):
                 res = s[2].split(':')
                 if len(res) > 1:
                     logger.debug('- Updating field `{}`'.format(res[0]))
