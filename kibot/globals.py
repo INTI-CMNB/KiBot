@@ -188,7 +188,8 @@ class Globals(FiltersOptions):
                 Related to https://gitlab.com/kicad/code/kicad/-/issues/3792 """
             self.castellated_pads = False
             """ Has the PCB castellated pads?
-                KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads """
+                KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads
+                KiCad 10: no longer exists """
             self.copper_finish = None
             """ {pcb_finish} """
             self.copper_thickness = 35

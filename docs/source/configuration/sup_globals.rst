@@ -35,7 +35,8 @@
       -  ``cache_3d_resistors`` :index:`: <pair: global options; cache_3d_resistors>` [:ref:`boolean <boolean>`] (default: ``false``) Use a cache for the generated 3D models of colored resistors.
          Will save time, but you could need to remove the cache if you need to regenerate them.
       -  ``castellated_pads`` :index:`: <pair: global options; castellated_pads>` [:ref:`boolean <boolean>`] (default: ``false``) Has the PCB castellated pads?
-         KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads.
+         KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads
+         KiCad 10: no longer exists.
       -  ``colored_tht_resistors`` :index:`: <pair: global options; colored_tht_resistors>` [:ref:`boolean <boolean>`] (default: ``true``) Try to add color bands to the 3D models of KiCad THT resistors.
       -  *copper_finish* :index:`: <pair: global options; copper_finish>` Alias for pcb_finish.
       -  ``copper_thickness`` :index:`: <pair: global options; copper_thickness>` [:ref:`number <number>` | :ref:`string <string>`] Copper thickness in micrometers (1 Oz is 35 micrometers).
