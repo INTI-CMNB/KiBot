@@ -832,6 +832,8 @@ class LibComponent(object):
         self.embedded_fonts = None
         self.embedded_files = []    # I.e. datasheet
         self.embedded_file_names = {}
+        # KiCad 10
+        self.body_styles = None
 
     def get_field_value(self, field):
         field = field.lower()
@@ -875,6 +877,8 @@ class LibComponent(object):
             vis_obj = None
             if i_type == 'pin_numbers':
                 comp.pin_numbers_hide = _check_hide(i, 1, i_type)
+            elif i_type == 'body_styles':
+                comp.body_styles = [v.value() for v in i[1:]]
             elif i_type == 'pin_names':
                 value = _check_len(i, 1, i_type)
                 index = 1
@@ -1023,6 +1027,8 @@ class LibComponent(object):
                 # Use an alternative name
                 lib_id = CROSSED_LIB+':'+s.name
         sdata = [lib_id]
+        if s.body_styles:
+            sdata.append(_symbol('body_styles', [Symbol(v) for v in s.body_styles]))
         if s.is_power:
             sdata.append(_symbol('power', []))
         if s.pin_numbers_hide:
