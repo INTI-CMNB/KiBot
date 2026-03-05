@@ -10,3 +10,4 @@ parity_not_in_bom.xml
 board_characteristics*.kicad_pcb
 draw_stackup.kicad_pcb
 .history
+~*.lck
