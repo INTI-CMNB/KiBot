@@ -1175,6 +1175,22 @@ def test_report_simple_1(test_dir):
     ctx.clean_up(keep_project=True)
 
 
+@pytest.mark.skipif(not context.ki10(), reason="Needs KiCad 10")
+def test_pcb_stats_simple_1(test_dir):
+    prj = 'light_control'
+    ctx = context.TestContext(test_dir, prj, 'pcb_stats_simple_1', POS_DIR)
+    ctx.run()
+    name = prj+'-statistics.txt'
+    fname = ctx.expect_out_file(name)
+    with open(fname) as f:
+        data = f.read()
+    data = re.sub(r'- Date: (.*)', '', data)
+    with open(fname, "w") as f:
+        f.write(data)
+    ctx.compare_txt(name)
+    ctx.clean_up(keep_project=True)
+
+
 @pytest.mark.slow
 @pytest.mark.eeschema
 def test_report_simple_2(test_dir):

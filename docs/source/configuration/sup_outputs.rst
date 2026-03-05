@@ -44,6 +44,7 @@ Notes:
    outputs/panelize
    outputs/pcb2blender_tools
    outputs/pcb_print
+   outputs/pcb_stats
    outputs/pcb_variant
    outputs/pcbdraw
    outputs/pdf

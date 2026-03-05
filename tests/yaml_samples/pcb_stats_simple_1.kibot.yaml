@@ -1,0 +1,8 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+outputs:
+  - name: 'stats_simple'
+    comment: "Simple PCB stats"
+    type: pcb_stats

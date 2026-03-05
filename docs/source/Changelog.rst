@@ -23,6 +23,7 @@ Added
 
    -  BoM Labels (bom_labels): [Experimental] To generate a PDF
       containing labels for the BoM items. (#886)
+   -  PCB stats (pcb_stats): The KiCad 10 PCB statistics
 
 -  CLI:
 

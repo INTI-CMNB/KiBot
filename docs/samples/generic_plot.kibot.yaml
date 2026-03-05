@@ -3575,6 +3575,42 @@ outputs:
       variant: ''
       # [string=''] Color used for through-hole `colored_vias`
       via_color: ''
+  # PCB statistics:
+  # Corresponds to what you get in the Inspect -> Show Board Statistics menu
+  - name: 'pcb_stats_example'
+    comment: 'Generates basic PCB statistics using KiCad 10 or newer.'
+    type: 'pcb_stats'
+    dir: 'Example/pcb_stats_dir'
+    options:
+      # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      dnf_filter: '_null'
+      # [string|list(string)='_null'] Name of the filter to exclude components from processing.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      exclude_filter: '_null'
+      # [boolean=false] Exclude footprints without pads
+      exclude_footprints_without_pads: false
+      # [string='txt'] [txt,json] Output file format
+      format: 'txt'
+      # [string='%f-%i%I%v.%x'] Name for the generated report file (%i='statistics' %x='txt/json'). Affected by global options
+      output: '%f-%i%I%v.%x'
+      # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      pre_transform: '_null'
+      # [boolean=false] Subtract holes from the board area
+      subtract_holes_from_board: false
+      # [boolean=false] Subtract holes from copper areas
+      subtract_holes_from_copper: false
+      # [string='millimeters'] [millimeters,inches] Units used for the values. Affected by global options
+      units: 'millimeters'
+      # [string=''] Board variant to apply
+      variant: ''
   # PCB with variant generator:
   # This copy isn't intended for development.
   # Is just a tweaked version of the original where you can look at the results.
