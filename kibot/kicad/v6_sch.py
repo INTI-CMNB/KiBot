@@ -1568,6 +1568,41 @@ class SchematicBitmapV6(object):
         return _symbol('image', data)
 
 
+class Group(object):
+    @staticmethod
+    def parse(items):
+        grp = Group()
+        grp.uuid = None
+        grp.members = None
+        grp.lib_id = None
+        name = 'group'
+        grp.name = _check_str(items, 1, name)
+        logger.error(items)
+        for c, i in enumerate(items[2:]):
+            i_type = _check_is_symbol_list(i)
+            if i_type == 'members':
+                grp.members = i[1:]
+                logger.error(grp.members)
+            elif i_type == 'uuid':
+                grp.uuid = get_uuid(items, c+2, name)
+            elif i_type == 'lib_id':
+                grp.lib_id = _check_str(i, 1, name+' '+i_type)
+            else:
+                raise SchError(f'Unknown `{name}` attribute `{i}`')
+        return grp
+
+    def write(self):
+        data = [self.name, Sep()]
+        add_uuid(data, self.uuid)
+        if self.lib_id:
+            data.append(_symbol('lib_id', [self.lib_id]))
+            data.append(Sep())
+        if self.members:
+            data.append(_symbol('members', [Sep()] + self.members))
+            data.append(Sep())
+        return _symbol('group', data)
+
+
 class Text(object):
     @staticmethod
     def parse(items, name):
@@ -2402,6 +2437,8 @@ class SchematicV6(Schematic):
             _add_items(self.rule_areas, sch)
             # Symbols
             _add_items(self.symbols, sch, sep=True, cross=cross, exp_hierarchy=exp_hierarchy)
+            # Groups (KiCad 10+)
+            _add_items(self.groups, sch)
             # Sheets
             _add_items(self.sheets, sch, sep=True, exp_hierarchy=exp_hierarchy)
             # Sheet instances
@@ -2649,6 +2686,7 @@ class SchematicV6(Schematic):
         self.glabels = []
         self.hlabels = []
         self.net_class_flags = []
+        self.groups = []
         self.sheets = []
         self.sheet_instances = []
         self.bus_alias = []
@@ -2743,6 +2781,9 @@ class SchematicV6(Schematic):
                     logger.debug(f"- Loaded {obj} [id {id(obj)}]  UUID {obj.uuid} original UUID {obj.uuid_ori}")
                 self.symbols.append(obj)
                 self.symbol_uuids[path_join(self.sheet_path_ori, obj.uuid_ori)] = obj
+            elif e_type == 'group':
+                # New on KiCad 10
+                self.groups.append(Group.parse(e))
             elif e_type == 'sheet':
                 obj = Sheet.parse(e)
                 self.sheets.append(obj)

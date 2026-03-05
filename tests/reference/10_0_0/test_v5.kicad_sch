@@ -2019,6 +2019,13 @@
     )
   )
 
+  (group "test_v5"
+    (uuid "d976b094-c755-4192-b8da-3ab5bde2dd80")
+    (lib_id "Library:test_v5")
+    (members
+      "0f41a909-27c4-4be2-9d5e-9ae2108c8ff5" "632acde9-b7fd-4f04-8cb4-d2cbb06b3595" "dabe541b-b164-4180-97a4-5ca761b86800" "df6e18b8-ccd0-4c1e-900a-b2a90cf8d87a" "e12e827e-36be-4503-8eef-6fc7e8bc5d49")
+  )
+
   (sheet (at 101.6 76.2) (size 25.4 12.7) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (stroke (width 0) (type solid))
     (fill (color 0 0 0 0))
