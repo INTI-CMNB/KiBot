@@ -2027,11 +2027,12 @@ class Table(object):
         self.row_heights = []
         self.cells = []
         self.name = 'table'
+        self.uuid = None
 
     @staticmethod
     def parse(items):
         tb = Table()
-        for i in items[1:]:
+        for c, i in enumerate(items[1:]):
             i_type = _check_is_symbol_list(i)
             if i_type == 'column_count':
                 tb.column_count = _check_integer(i, 1, tb.name+' '+i_type)
@@ -2043,6 +2044,8 @@ class Table(object):
                 tb.column_widths = _check_floats(i, 1, tb.name+' '+i_type)
             elif i_type == 'row_heights':
                 tb.row_heights = _check_floats(i, 1, tb.name+' '+i_type)
+            elif i_type == 'uuid':
+                tb.uuid = get_uuid(items, c+1, tb.name+' '+i_type)
             elif i_type == 'cells':
                 tb.cells = []
                 for cell in i[1:]:
@@ -2064,6 +2067,7 @@ class Table(object):
             data.extend([_symbol('column_widths', self.column_widths), Sep()])
         if self.row_heights:
             data.extend([_symbol('row_heights', self.row_heights), Sep()])
+        add_uuid(data, self.uuid)
         if self.cells:
             cells = []
             _add_items(self.cells, cells)
