@@ -1,0 +1,13 @@
+kiplot:
+  version: 1
+
+outputs:
+  - name: 3D_PDF
+    comment: "Generate 3D model (PDF)"
+    type: export_3d
+    dir: 3D
+    options:
+      include_tracks: true
+      include_pads: true
+      format: pdf
+

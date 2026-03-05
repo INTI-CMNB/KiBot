@@ -11,7 +11,7 @@ Export_3DOptions parameters
    They are downloaded to a temporal directory and discarded. |br|
    If you want to cache the downloaded files specify a directory using the
    KIBOT_3D_MODELS environment variable.
--  **format** :index:`: <pair: output - export_3d - options; format>` [:ref:`string <string>`] (default: ``'step'``) (choices: "step", "glb", "stl", "xao", "brep") 3D format used.
+-  **format** :index:`: <pair: output - export_3d - options; format>` [:ref:`string <string>`] (default: ``'step'``) (choices: "step", "glb", "stl", "xao", "brep", "ply", "u3d", "pdf") 3D format used.
 
    - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
    - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
@@ -20,7 +20,10 @@ Export_3DOptions parameters
 
    - STL: 3D printer format, from stereolithography CAD software created by 3D Systems. |br|
    - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations. |br|
-   - BRep: Part of Open CASCADE Technology (OCCT).
+   - BRep: Part of Open CASCADE Technology (OCCT)
+   - PLY: Polygon File Format or the Stanford Triangle Format (KiCad 10+). |br|
+   - U3D: Universal 3D (ECMA-363) primarily used to embed interactive 3D models into PDF documents. (KiCad 10+)
+   - PDF: Portable Document Format with the 3D model (KiCad 10+).
 -  **no_virtual** :index:`: <pair: output - export_3d - options; no_virtual>` [:ref:`boolean <boolean>`] (default: ``false``) Used to exclude 3D models for components with 'virtual' attribute.
 -  **origin** :index:`: <pair: output - export_3d - options; origin>` [:ref:`string <string>`] (default: ``'grid'``) (choices: "grid", "drill", "center") (also accepts any string) Determines the coordinates origin.
    Using `grid` the coordinates are the same as you have in the design sheet. |br|
@@ -28,7 +31,7 @@ Export_3DOptions parameters
    Using `center` you'll get the center of the board as origin. |br|
    You can define any other origin using the format 'X,Y', i.e. '3.2,-10'. Don't put units here. |br|
    The units used here are the ones specified by the `units` option.
--  **output** :index:`: <pair: output - export_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep'). Affected by global options.
+-  **output** :index:`: <pair: output - export_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options.
 -  ``board_only`` :index:`: <pair: output - export_3d - options; board_only>` [:ref:`boolean <boolean>`] (default: ``false``) Only generate a board with no components.
 -  ``cut_vias_in_body`` :index:`: <pair: output - export_3d - options; cut_vias_in_body>` [:ref:`boolean <boolean>`] (default: ``false``) Cut via holes in board body even if conductor layers are not exported.
 -  ``dnf_filter`` :index:`: <pair: output - export_3d - options; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as not fitted.

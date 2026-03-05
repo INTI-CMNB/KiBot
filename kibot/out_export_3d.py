@@ -22,16 +22,19 @@ class Export_3DOptions(Base3DOptions):
     def __init__(self):
         with document:
             self.output = GS.def_global_output
-            """ *Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep') """
+            """ *Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep/ply/u3d/pdf') """
             self.format = 'step'
-            """ *[step,glb,stl,xao,brep] 3D format used.
+            """ *[step,glb,stl,xao,brep,ply,u3d,pdf] 3D format used.
                 - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
                 - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
                   known as WebGL Transmissions Format or WebGL TF.
                 - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
                 - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
-                - BRep: Part of Open CASCADE Technology (OCCT) """
-            #    - PLY: Polygon File Format or the Stanford Triangle Format.
+                - BRep: Part of Open CASCADE Technology (OCCT)
+                - PLY: Polygon File Format or the Stanford Triangle Format (KiCad 10+).
+                - U3D: Universal 3D (ECMA-363) primarily used to embed interactive 3D models into PDF documents. (KiCad 10+)
+                - PDF: Portable Document Format with the 3D model (KiCad 10+)
+                """
             self.origin = 'grid'
             """ *[grid,drill,center,*] Determines the coordinates origin.
                 Using `grid` the coordinates are the same as you have in the design sheet.
@@ -109,10 +112,13 @@ class Export_3DOptions(Base3DOptions):
     def run(self, output):
         if not GS.ki9:
             GS.exit_with_error("`export_3d` needs KiCad 9+", MISSING_TOOL)
+        if self.format in {'ply', 'u3d', 'pdf'} and not GS.ki10:
+            GS.exit_with_error(f"`{self.format}` needs KiCad 10+", MISSING_TOOL)
         super().run(output)
         # Make units explicit
         # Base command with overwrite
-        cmd = [GS.kicad_cli, 'pcb', 'export', self.format, '-o', output, '-f']
+        format = self.format if self.format != 'pdf' else '3dpdf'
+        cmd = [GS.kicad_cli, 'pcb', 'export', format, '-o', output, '-f']
         # Origin
         if self.origin == 'drill':
             cmd.append('--drill-origin')

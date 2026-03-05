@@ -50,6 +50,18 @@ def test_step_k9(test_dir):
     ctx.clean_up()
 
 
+# Generate 3D PDF files using kicad-cli
+@pytest.mark.skipif(not context.ki10(), reason="Needs KiCad 10")
+def test_3d_pdf(test_dir):
+    prj = 'bom'
+    ctx = context.TestContext(test_dir, prj, 'export_3d_pdf_simple', STEP_DIR)
+    ctx.run()
+    # Check all outputs are there
+    name = prj+'-3D.pdf'
+    ctx.expect_out_file_d(name)
+    ctx.clean_up()
+
+
 @pytest.mark.slow
 @pytest.mark.kicad2step
 def test_step_2(test_dir):
