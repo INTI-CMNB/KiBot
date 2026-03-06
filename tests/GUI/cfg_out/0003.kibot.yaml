@@ -332,6 +332,11 @@ outputs:
       - layer: output.pcb_print.options.dict.pages.dict.repeat_layers.dict
     include_table: false
     drill: false
+- name: output.pcb_stats
+  type: pcb_stats
+  comment: Generates basic PCB statistics using KiCad 10 or newer
+  options:
+    output: output.pcb_stats.options.dict
 - name: output.pcb_variant
   type: pcb_variant
   comment: Creates a copy of the PCB with all the filters and variants applied
