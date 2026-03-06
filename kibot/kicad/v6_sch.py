@@ -1186,7 +1186,7 @@ class SymbolInstance(object):
                         instance.value = _check_symbol_str(v, c+4, name, 'value')
                     elif i_type == 'footprint':
                         # KiCad 6 only
-                        instance.footprint = _check_symbol_str(v, c+5, name, 'footprint')
+                        instance.footprint = _check_symbol_str(v, c+4, name, 'footprint')
                     elif i_type == 'variant':
                         # KiCad 10 (not documented 2026/03/06)
                         variant = Variant.parse(i)
