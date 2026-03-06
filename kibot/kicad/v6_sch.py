@@ -4,7 +4,7 @@
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
-KiCad v6/7 Schematic format.
+KiCad v6/7/8/9/10 Schematic format.
 A basic implementation of the .kicad_sch file format.
 Currently oriented to collect the components for the BoM and create a variant of the SCH
 Documentation: https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/
@@ -16,7 +16,7 @@ import os
 import re
 from ..gs import GS
 from .. import log
-from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP
+from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -1082,12 +1082,91 @@ class LibComponent(object):
         return _symbol('symbol', sdata)
 
 
+class Variant(object):
+    """ Class used to describe a variant of a component instance """
+    def __init__(self):
+        super().__init__()
+        self.name = None
+        self.dnp = None
+        self.exclude_from_sim = None
+        self.in_bom = None
+        self.on_board = None
+        self.in_pos_files = None
+        self.fields = OrderedDict()
+
+    @staticmethod
+    def parse_field(items):
+        name = value = None
+        nm = 'variant field '
+        for i in items[1:]:
+            i_type = _check_is_symbol_list(i)
+            n = nm+i_type
+            if i_type == 'name':
+                name = _check_str(i, 1, n)
+            elif i_type == 'value':
+                value = _check_str(i, 1, n)
+            else:
+                raise SchError(f'Unknown {nm}attribute `{i}`')
+        if name is None:
+            raise SchError('Variant field without name')
+        if value is None:
+            raise SchError(f'Variant field `{name}` without value')
+        return name, value
+
+    @staticmethod
+    def parse(items):
+        o = Variant()
+        name = 'variant '
+        for i in items[1:]:
+            i_type = _check_is_symbol_list(i)
+            n = name+i_type
+            if i_type == 'name':
+                o.name = _check_str(i, 1, n)
+            elif i_type == 'dnp':
+                o.dnp = _get_yes_no(i, 1, n)
+            elif i_type == 'exclude_from_sim':
+                o.exclude_from_sim = _get_yes_no(i, 1, n)
+            elif i_type == 'in_bom':
+                o.in_bom = _get_yes_no(i, 1, n)
+            elif i_type == 'on_board':
+                o.on_board = _get_yes_no(i, 1, n)
+            elif i_type == 'in_pos_files':
+                o.in_pos_files = _get_yes_no(i, 1, n)
+            elif i_type == 'field':
+                name, value = Variant.parse_field(i)
+                o.fields[name] = value
+            else:
+                raise SchError(f'Unknown {name}attribute `{i}`')
+        if o.name is None:
+            raise SchError('Variant reference without a name')
+        return o
+
+    def write(self):
+        data = [_symbol('name', [self.name]), Sep()]
+        if self.dnp is not None:
+            data.append(_symbol_yn('dnp', self.dnp))
+        if self.exclude_from_sim is not None:
+            data.append(_symbol_yn('exclude_from_sim', self.exclude_from_sim))
+        if self.in_bom is not None:
+            data.append(_symbol_yn('in_bom', self.in_bom))
+        if self.on_board is not None:
+            data.append(_symbol_yn('on_board', self.on_board))
+        if self.in_pos_files is not None:
+            data.append(_symbol_yn('in_pos_files', self.in_pos_files))
+        for name, value in self.fields.items():
+            data.append(_symbol('field', [Sep(), _symbol('name', [name]), Sep(), _symbol('value', [value]), Sep()]))
+
+        return _symbol('variant', data)
+
+
 class SymbolInstance(object):
     def __init__(self):
         super().__init__()
-        # Doesn't exist on v7
+        # The following two were an experiment in KiCad 6 that prove to be wrong
         self.value = None
         self.footprint = None
+        # KiCad 10
+        self.variants = OrderedDict()
 
     @staticmethod
     def parse(items):
@@ -1100,9 +1179,18 @@ class SymbolInstance(object):
             instance.reference = _check_symbol_str(v, 2, name, 'reference')
             instance.unit = _check_symbol_int(v, 3, name, 'unit')
             if len(v) > 4:
-                # KiCad 6
-                instance.value = _check_symbol_str(v, 4, name, 'value')
-                instance.footprint = _check_symbol_str(v, 5, name, 'footprint')
+                for c, i in enumerate(v[4:]):
+                    i_type = _check_is_symbol_list(i)
+                    if i_type == 'value':
+                        # KiCad 6 only
+                        instance.value = _check_symbol_str(v, c+4, name, 'value')
+                    elif i_type == 'footprint':
+                        # KiCad 6 only
+                        instance.footprint = _check_symbol_str(v, c+5, name, 'footprint')
+                    elif i_type == 'variant':
+                        # KiCad 10 (not documented 2026/03/06)
+                        variant = Variant.parse(i)
+                        instance.variants[variant.name] = variant
             instances.append(instance)
         return instances
 
@@ -1114,6 +1202,8 @@ class SymbolInstance(object):
             data.append(_symbol('value', [self.value]))
         if self.footprint is not None:
             data.append(_symbol('footprint', [self.footprint]))
+        for v in self.variants.values():
+            data.extend([v.write(), Sep()])
         data.append(Sep())
         return _symbol('path', data)
 
@@ -1140,6 +1230,7 @@ class SchematicComponentV6(SchematicComponent):
         self.exclude_from_sim = None
         # v10
         self.body_style = None
+        self.used_variants = {}
 
     def set_ref(self, ref):
         self.ref = ref
@@ -1201,11 +1292,18 @@ class SchematicComponentV6(SchematicComponent):
             self.pin_alternates[pin_name] = _check_symbol_str(i, 3, name, 'alternate')
 
     def load_project(self, prj):
+        # IMPORTANT!!! The name of the project is bogus, the only important thing is the path
+        # In fact the real ID is the first component of the path
+        # So we can't use it as a reliable key
+        # I.e. if you edit a sheet without a project and then open it from a project ...
         name = _check_str(prj, 1, 'instance project')
         instances = SymbolInstance().parse(prj[1:])
+        variants = set()
         for i in instances:
             self.all_instances[i.path] = i
-        return name, instances
+            variants |= i.variants.keys()
+        id = [a for a in instances[0].path.split('/') if a][0]
+        return name, instances, id, variants
 
     def load_instances(self, i):
         self.projects = []
@@ -1213,7 +1311,9 @@ class SchematicComponentV6(SchematicComponent):
             i_type = _check_is_symbol_list(prj)
             if i_type != 'project':
                 raise SchError('Found `{}` instead of `project` in symbol instance'.format(i_type))
-            self.projects.append(self.load_project(prj))
+            name, instances, id, variants = self.load_project(prj)
+            self.projects.append((name, instances))
+            self.used_variants[id] = variants
 
     @staticmethod
     def load(c, project, parent):
@@ -1309,7 +1409,7 @@ class SchematicComponentV6(SchematicComponent):
             # PINS...
             elif i_type == 'pin':
                 comp.load_pin(i, name)
-            # KiCad v7 instances
+            # KiCad v7+ instances
             elif i_type == 'instances':
                 comp.load_instances(i)
                 # We should get an instance for us
@@ -1317,6 +1417,7 @@ class SchematicComponentV6(SchematicComponent):
                 ins = comp.all_instances.get(p_path)
                 if ins is None:
                     raise SchError('Missing {} symbol instance for `{}`'.format(comp.name, p_path))
+                comp.variants = ins.variants
                 # Memorize its path (v7 style, with parent)
                 comp.p_path_ori = p_path
                 comp.p_path = parent.get_full_path(False)
@@ -1325,6 +1426,7 @@ class SchematicComponentV6(SchematicComponent):
                 v6_ins.path = path_join('/', '/'.join(ins.path.split('/')[2:]), comp.uuid_ori)
                 v6_ins.reference = ins.reference
                 v6_ins.unit = ins.unit
+                v6_ins.variants = ins.variants
                 # Add to the root symbol_instances, so we reconstruct it (like in a v6 file)
                 parent.root_sheet.symbol_instances.append(v6_ins)
             else:
@@ -2652,6 +2754,7 @@ class SchematicV6(Schematic):
             UUID_Validator.reset()
             self.root_file_path = os.path.dirname(os.path.abspath(fname))
             self.embedded_file_names = {}
+            self.used_variants = {}
         else:
             self.fields = parent.fields
             self.fields_lc = parent.fields_lc
@@ -2663,6 +2766,7 @@ class SchematicV6(Schematic):
             self.root_sheet = parent.root_sheet
             self.root_file_path = parent.root_file_path
             self.embedded_file_names = parent.embedded_file_names
+            self.used_variants = parent.used_variants
         self.symbol_instances = []
         self.parent = parent
         self.fname = fname
@@ -2777,6 +2881,7 @@ class SchematicV6(Schematic):
                 self.net_class_flags.append(NetClassFlag.parse(e))
             elif e_type == 'symbol':
                 obj = SchematicComponentV6.load(e, self.project, self)
+                update_dict(self.used_variants, obj.used_variants)
                 if extra_debug:
                     logger.debug(f"- Loaded {obj} [id {id(obj)}]  UUID {obj.uuid} original UUID {obj.uuid_ori}")
                 self.symbols.append(obj)
@@ -2790,7 +2895,7 @@ class SchematicV6(Schematic):
                 self._create_flat_name(obj)
             elif e_type == 'sheet_instances':
                 self.sheet_instances = SheetInstance.parse(e)
-            elif e_type == 'symbol_instances':
+            elif e_type == 'symbol_instances':  # KiCad 6 only, 7+ moved it to the "symbol"s
                 self.symbol_instances = SymbolInstance.parse(e)
             elif e_type == 'embedded_fonts':  # KiCad 9
                 self.embedded_fonts = _get_yes_no(e, 1, e_type)
@@ -2843,6 +2948,7 @@ class SchematicV6(Schematic):
             # Transfer the instance data
             comp.set_ref(s.reference)
             comp.unit = s.unit
+            comp.variants = s.variants
             # Value and footprint were available in v6, but they were just copies, not really used
             if s.value is not None:
                 comp.set_value(s.value)

@@ -706,6 +706,8 @@ def update_dict(d, u):
             d[k] = update_dict(d.get(k, {}), v)
         elif isinstance(v, list) and k in d:
             d[k] = v+d[k]
+        elif isinstance(v, set) and k in d:
+            d[k] |= v
         else:
             d[k] = v
     return d
