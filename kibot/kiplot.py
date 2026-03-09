@@ -162,8 +162,9 @@ def run_command(command, change_to=None, just_raise=False, use_x11=False, err_ms
         logger.debug('- CWD: '+change_to)
     old_lang = None
     if force_en:
-        old_lang = os.environ['LANG']
-        os.environ['LANG'] = 'en'
+        old_lang = os.environ.get('LANG')
+        if old_lang:
+            os.environ['LANG'] = 'en'
     try:
         if use_x11 and not GS.on_windows:
             logger.debug('Using Xvfb to run the command')
@@ -179,7 +180,7 @@ def run_command(command, change_to=None, just_raise=False, use_x11=False, err_ms
             err_msg = err_msg.format(ret=e.returncode)
         GS.exit_with_error(err_msg, err_lvl, e)
     finally:
-        if old_lang is not None:
+        if old_lang:
             os.environ['LANG'] = old_lang
 
     msg = try_decode_utf8(res.stdout, 'output from command', logger)
