@@ -28,12 +28,13 @@ except Exception:
     pass
 import os
 from shutil import copy2, rmtree
+from subprocess import CalledProcessError
 from .error import KiPlotConfigurationError
 from .gs import GS
 from .kicad.color_theme import load_color_theme
 from .kiplot import load_any_sch
 from .layer import Layer
-from .misc import W_NOTHCMP
+from .misc import W_NOTHCMP, W_BADGITREPO, try_decode_utf8
 from .out_any_diff import AnyDiffOptions, has_repo
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
@@ -297,7 +298,16 @@ class KiRiOptions(AnyDiffOptions):
                     git_tmp_wd = GS.mkdtemp('kiri-checkout')
                     logger.debug('Checking out '+hash+' to '+git_tmp_wd)
                     self.run_git(['worktree', 'add', '--detach', '--force', git_tmp_wd, hash])
-                    self.run_git(['submodule', 'update', '--init', '--recursive'], cwd=git_tmp_wd)
+                    try:
+                        self.run_git(['submodule', 'update', '--init', '--recursive'], cwd=git_tmp_wd, just_raise=True)
+                    except CalledProcessError as e:
+                        if b'No url found for submodule' in e.output:
+                            # Just an uninitialized submodule, report it and continue, see #888
+                            logger.warning(W_BADGITREPO+f"Broken git repo: {e}")
+                            msg = try_decode_utf8(e.output, 'output from command', logger)
+                            logger.warning(W_BADGITREPO+msg)
+                        else:
+                            raise
                     # Generate SVGs for the schematic
                     name_sch = self.do_cache(self.sch_rel_name, git_tmp_wd, hash)
                     # Generate SVGs for the PCB

@@ -70,7 +70,7 @@ class AnyDiffOptions(VariantOptions):
     def run_git(self, cmd, cwd=None, just_raise=False):
         if cwd is None:
             cwd = self.repo_dir
-        return run_command([self.git_command]+cmd, change_to=cwd, just_raise=just_raise)
+        return run_command([self.git_command]+cmd, change_to=cwd, just_raise=just_raise, force_en=True)
 
     def git_dirty(self, file=None):
         ops = ['status', '--porcelain', '-uno']

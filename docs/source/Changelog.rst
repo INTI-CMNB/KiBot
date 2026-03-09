@@ -48,6 +48,7 @@ Added
    found.
 -  DRC/ERC: Configurable logo (#889)
 -  iBoM: ``mark_when_checked`` option (#881)
+-  KiRi: Support for uninitialized submodules (#888)
 -  Report: ``buried_vias_count`` for KiCad 10
 
 Fixed
