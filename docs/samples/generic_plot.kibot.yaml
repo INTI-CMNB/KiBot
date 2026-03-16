@@ -1347,11 +1347,13 @@ outputs:
       # [number=0] number of digits for integer part of coordinates (0 is auto)
       left_digits: 0
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
-      # Not generated unless a format is specified
+      # Not generated unless a format is specified.
+      # KiCad 10 doesn't support HPGL
       map:
         # [string='%f-%i%I%v.%x'] Name for the map file, KiCad defaults if empty (%i='PTH_drill_map'). Affected by global options
         output: '%f-%i%I%v.%x'
-        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map
+        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map.
+        # KiCad 10 doesn't support HPGL
         type: 'pdf'
       # [boolean=true] Use metric units instead of inches
       metric_units: true
@@ -1571,11 +1573,13 @@ outputs:
       # [boolean=true] Generate drill files. Set to False and choose map format if only map is to be generated
       generate_drill_files: true
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
-      # Not generated unless a format is specified
+      # Not generated unless a format is specified.
+      # KiCad 10 doesn't support HPGL
       map:
         # [string='%f-%i%I%v.%x'] Name for the map file, KiCad defaults if empty (%i='PTH_drill_map'). Affected by global options
         output: '%f-%i%I%v.%x'
-        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map
+        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map.
+        # KiCad 10 doesn't support HPGL
         type: 'pdf'
       # [string] Force this replacement for %i when generating NPTH files
       npth_id: null

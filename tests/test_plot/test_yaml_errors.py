@@ -127,6 +127,14 @@ def test_drill_map_wrong_type_3(test_dir):
     ctx.clean_up()
 
 
+@pytest.mark.skipif(not context.ki10(), reason="No HPGL in v10+")
+def test_drill_map_wrong_type_4(test_dir):
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_wrong_type_4')
+    ctx.run(EXIT_BAD_CONFIG)
+    assert ctx.search_err("support HPGL")
+    ctx.clean_up()
+
+
 @pytest.mark.indep
 def test_drill_report_no_type_1(test_dir):
     ctx = context.TestContext(test_dir, '3Rs', 'error_drill_report_no_type')

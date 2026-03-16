@@ -33,7 +33,8 @@ class DrillMap(Optionable):
             self.output = GS.def_global_output
             """ *Name for the map file, KiCad defaults if empty (%i='PTH_drill_map') """
             self.type = 'pdf'
-            """ [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map """
+            """ [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map.
+                KiCad 10 doesn't support HPGL """
         super().__init__()
         self._unknown_is_error = True
 
@@ -129,7 +130,8 @@ class AnyDrill(VariantOptions):
             """ Use the auxiliary axis as origin for coordinates """
             self.map = DrillMap
             """ [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
-                Not generated unless a format is specified """
+                Not generated unless a format is specified.
+                KiCad 10 doesn't support HPGL """
             self.output = GS.def_global_output
             """ *name for the drill file, KiCad defaults if empty (%i='PTH_drill') """
             self.report = DrillReport
@@ -164,6 +166,8 @@ class AnyDrill(VariantOptions):
         else:
             map = self.map.type
             self._map_output = self.map.output
+        if GS.ki10 and map == 'hpgl':
+            raise KiPlotConfigurationError("KiCad 10+ doesn't support HPGL")
         self._map_ext = self._map_ext[map]
         self._map = self._map_map[map]
         # Solve the report for both cases
