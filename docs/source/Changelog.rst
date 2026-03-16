@@ -32,6 +32,7 @@ Added
 
 -  generic filter: ``exclude_kicad_dnp`` to exclude components marked as
    DNP in KiCad (See #887)
+-  Variants: Experimental KiCad variants
 -  KiCad 9 embedded files: populate the cache if needed (See #890)
 -  preflights:
 

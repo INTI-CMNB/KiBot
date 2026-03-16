@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2024 Salvador E. Tropea
-# Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Note: the algorithm used to detect the PCB outline is adapted from KiKit project.
@@ -16,7 +16,7 @@ from .misc import KIKIT_UNIT_ALIASES
 from .gs import GS
 from .kiplot import run_command
 from .kicad.pcb import PCB
-from .macros import macros, document  # noqa: F401
+from .macros import macros, document, variant_class  # noqa: F401
 from . import log
 
 logger = log.get_logger()
@@ -364,7 +364,7 @@ class SubPCBOptions(PanelOptions):
             comps_hash[c].included = True
 
 
-class BaseVariant(RegVariant):
+class BasicVariant(RegVariant):
     def __init__(self):
         super().__init__()
         self._unknown_is_error = True
@@ -377,6 +377,28 @@ class BaseVariant(RegVariant):
             """ A comment for documentation purposes """
             self.file_id = ''
             """ Text to use as the replacement for %v expansion """
+        self._sub_pcb = None
+
+    def get_variant_field(self):
+        """ Returns the name of the field used to determine if the component belongs to the variant """
+        return None
+
+    def matches_variant(self, text):
+        """ This is a generic match mechanism used by variants that doesn't really have a matching mechanism """
+        return self.name.lower() == text.lower()
+
+    def fix_doc(self, name, value=None):
+        what = '_null'
+        if value is None:
+            value = ''
+            what = "='"+what+"'"
+        self.set_doc(name, self.get_doc_simple(name).replace(what, value))
+
+
+class BaseVariant(BasicVariant):
+    def __init__(self):
+        super().__init__()
+        with document:
             # * Filters
             self.pre_transform = Optionable
             """ [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -399,24 +421,8 @@ class BaseVariant(RegVariant):
                 [this](https://github.com/INTI-CMNB/KiBot/tree/master/docs/1_SCH_2_part_PCBs).
                 But if you really need it you can define the sub-PCBs here.
                 Then you just use *VARIANT[SUB_PCB_NAME]* instead of just *VARIANT* """
-        self._sub_pcb = None
 
-    def get_variant_field(self):
-        """ Returns the name of the field used to determine if the component belongs to the variant """
-        return None
-
-    def matches_variant(self, text):
-        """ This is a generic match mechanism used by variants that doesn't really have a matching mechanism """
-        return self.name.lower() == text.lower()
-
-    def fix_doc(self, name, value=None):
-        what = '_null'
-        if value is None:
-            value = ''
-            what = "='"+what+"'"
-        self.set_doc(name, self.get_doc_simple(name).replace(what, value))
-
-    def filter(self, comps):
+    def filter(self, comps, call_back=None):
         # Apply all the filters
         comps = apply_pre_transform(comps, self.pre_transform)
         apply_exclude_filter(comps, self.exclude_filter)

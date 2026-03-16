@@ -17,7 +17,7 @@ Usage:
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
   kibot [-v...] [-c PLOT_CONFIG] [--banner N] [-E DEF] ... [--only-names]
-        [--sub-pcbs] --list-variants
+        [--sub-pcbs] [-e SCHEMA] --list-variants
   kibot [-v...] [-b BOARD] [-d OUT_DIR] [-p | -P] [--banner N] --example
   kibot [-v...] [--start PATH] [-d OUT_DIR] [--dry] [--banner N]
          [-t, --type TYPE]... --quick-start
@@ -158,6 +158,7 @@ if os.environ.get('KIAUS_USE_NIGHTLY'):  # pragma: no cover (nightly)
         os.environ['PYTHONPATH'] = pcbnew_path
     nightly = True
 from .banner import get_banner, BANNERS
+from .error import KiPlotConfigurationError
 from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
@@ -591,11 +592,12 @@ def main():
 
     # Determine the YAML file
     plot_config = solve_config(args.plot_config, args.only_names, args.gui or args.internal_check)
-    if not (args.list or args.list_variants) or args.config_outs:
+    if not args.list or args.config_outs:
         # Determine the SCH file
         GS.set_sch(solve_schematic('.', args.schematic, args.board_file, plot_config))
-        # Determine the PCB file
-        GS.set_pcb(solve_board_file('.', args.board_file))
+        if not args.list_variants:
+            # Determine the PCB file
+            GS.set_pcb(solve_board_file('.', args.board_file))
         # Determine the project file
         GS.set_pro(solve_project_file())
         check_needs_convert()
@@ -613,6 +615,13 @@ def main():
                           args.output_name_first)
         sys.exit(0)
 
+    # Import KiCad variants from the project or from the schematic
+    from .var_kicad import KiCad
+    KiCad.add_default()
+    if not KiCad.get_from_pro():
+        if GS.sch_file:
+            KiCad.get_from_sch()
+
     if args.list_variants:
         list_variants(logger, args.only_names, args.sub_pcbs)
         sys.exit(0)
@@ -628,6 +637,10 @@ def main():
         from .GUI.analyze import analyze
         analyze()
     else:
+        if not args.variant and GS.ki10 and GS.global_kicad_default_variant:
+            # For KiCad 10 we have a "Default" variant, needed to apply various things
+            # This is how KiCad shows in the GUI
+            args.variant = ['Default']
         if args.variant:
             # One or more variants specified at the CLI
             if 'ALL' in args.variant:
@@ -644,7 +657,10 @@ def main():
                 if variant == 'NONE':
                     solved_variants[''] = None
                 else:
-                    solved_variants[variant] = RegOutput.check_variant(variant)
+                    try:
+                        solved_variants[variant] = RegOutput.check_variant(variant)
+                    except KiPlotConfigurationError as e:
+                        GS.exit_with_error(str(e), EXIT_BAD_ARGS)
             # Now iterate all of them
             first = True
             for var_name, var_obj in solved_variants.items():

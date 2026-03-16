@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
@@ -11,6 +11,7 @@ Main KiBot code
 from copy import deepcopy
 from collections import OrderedDict
 import gzip
+import json
 import os
 import re
 from sys import path as sys_path
@@ -27,7 +28,7 @@ from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, vers
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1)
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -294,8 +295,28 @@ def load_any_sch(file, project, fatal=True, extra_msg=None):
     else:
         sch = Schematic()
         load_libs = True
+    # Schematic UUID mapping
+    # Check if we have a project
+    mapped_uuid = None
+    if GS.pro_file:
+        # Projects can override the SCH UUID
+        file_base = os.path.basename(file)
+        try:
+            with open(GS.pro_file, 'rt') as f:
+                data = json.load(f)
+            for mentry in data["schematic"]["top_level_sheets"]:
+                if mentry["filename"] == file_base:
+                    mapped_uuid = mentry["uuid"]
+                    logger.debug(f"Mapping schematic `{file_base}` to UUID `{mapped_uuid}` found in `{GS.pro_file}`")
+                    break
+        except Exception as e:
+            # This is not fatal
+            logger.debug(f"Failed to get the top level sheets: {e}")
+        if mapped_uuid is None:
+            logger.warning(W_NOUUIDMAP+"Unable to map the SCH file to an UUID")
+    # End of schematic UUID mapping
     try:
-        sch.load(file, project)
+        sch.load(file, project, mapped_uuid=mapped_uuid)
         if load_libs:
             sch.load_libs(file)
         if GS.debug_level > 1:
@@ -415,7 +436,7 @@ def get_all_components(collapse=True):
     return comps
 
 
-def get_board_comps_data(comps):
+def get_board_comps_data(comps, kicad_variant=None):
     """ Add information from the PCB to the list of components from the schematic.
         Note that we do it every time the function is called to reset transformation filters like rot_footprint. """
     if not GS.pcb_file:
@@ -426,6 +447,9 @@ def get_board_comps_data(comps):
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
     env.update(GS.load_pro_variables())
+    if kicad_variant is not None:
+        old_variant = GS.board.GetCurrentVariant()
+        GS.board.SetCurrentVariant(kicad_variant)
     for m in GS.get_modules():
         ref = m.GetReference()
         attrs = m.GetAttributes()
@@ -512,6 +536,8 @@ def get_board_comps_data(comps):
                     elif name:
                         # We have pad a valid pad, assume this is all SMD and keep looking
                         c.smd = True
+    if kicad_variant is not None:
+        GS.board.SetCurrentVariant(old_variant)
 
 
 def expand_comp_fields(c, env):

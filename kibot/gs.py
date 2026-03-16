@@ -231,6 +231,7 @@ class GS(object):
     global_erc_grid = None
     global_kicad_dnp_applied = None
     global_kicad_dnp_applies_to_3D = None
+    global_kicad_default_variant = None
     global_cross_using_kicad = None
     global_work_layer = None
     # Only for KiCad 9+

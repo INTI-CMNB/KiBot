@@ -74,7 +74,7 @@ class KiCost(BaseVariant):  # noqa: F821
         # None of the variants matched
         return False
 
-    def filter(self, comps):
+    def filter(self, comps, call_back=None):
         GS.variant = [self.variant]
         comps = super().filter(comps)
         logger.debug("Applying KiCost style variant `{}`".format(self.name))

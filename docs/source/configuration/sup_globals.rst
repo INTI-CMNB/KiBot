@@ -165,6 +165,7 @@
          to 'no', otherwise an error is produced. |br|.
       -  ``kiauto_time_out_scale`` :index:`: <pair: global options; kiauto_time_out_scale>` [:ref:`number <number>`] (default: ``0.0``) Time-out multiplier for KiAuto operations.
       -  ``kiauto_wait_start`` :index:`: <pair: global options; kiauto_wait_start>` [:ref:`number <number>`] (default: ``0``) Time to wait for KiCad in KiAuto operations.
+      -  ``kicad_default_variant`` :index:`: <pair: global options; kicad_default_variant>` [:ref:`boolean <boolean>`] (default: ``true``) For KiCad 10+ use the `Default` variant, even when no variant is specified.
       -  ``kicad_dnp_applied`` :index:`: <pair: global options; kicad_dnp_applied>` [:ref:`boolean <boolean>`] (default: ``true``) The KiCad v7 PCB flag *Do Not Populate* is applied to our fitted flag before running any filter.
       -  ``kicad_dnp_applies_to_3D`` :index:`: <pair: global options; kicad_dnp_applies_to_3D>` [:ref:`boolean <boolean>`] (default: ``true``) The KiCad v7 PCB flag *Do Not Populate* is applied to our fitted flag for 3D models,
          even when no filter/variant is specified. Disabling `kicad_dnp_applied` also disables

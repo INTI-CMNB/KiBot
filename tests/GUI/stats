@@ -363,34 +363,36 @@ Used as single data type:
 0 different data type combinations
 ================================================================================
 ================================================================================
-3 variants types with a total of 74 different parameters
-Single type parameters: 59 (80 %)
-Multi type parameters: 15 (20 %)
-Average parameters: 25
+4 variants types with a total of 78 different parameters
+Single type parameters: 63 (81 %)
+Multi type parameters: 15 (19 %)
+Average parameters: 20
 Maximum number of parameters: 25
-Minimum number of parameters: 24
+Minimum number of parameters: 4
 Histogram:
-  0-  9: 
+  0-  9: *
  10- 19: 
  20- 29: ***
 Variants sorted by parameters:
+- kicad: 4
 - kibom: 24
 - ibom: 25
 - kicost: 25
-Average depth: 2.0
+Average depth: 1.75
 Maximum depth: 2
-Minimum depth: 2
+Minimum depth: 1
 Histogram:
 0: 
-1: 
+1: *
 2: ***
 Variants sorted by depth:
+- kicad: 1
 - kibom: 2
 - ibom: 2
 - kicost: 2
 --------------------------------------------------------------------------------
 6 different data types
--             String:   44
+-             String:   48
 - ListStringSingular:   15
 -             Number:   15
 -             Choice:    6
@@ -398,7 +400,7 @@ Variants sorted by depth:
 -           ListDict:    3
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:   29 
+-             String:   33 
 - ListStringSingular:   15 
 -             Choice:    6 ['kibom.sub_pcbs.units', 'kibom.sub_pcbs.tool', 'ibom.sub_pcbs.units', 'ibom.sub_pcbs.tool', 'kicost.sub_pcbs.units', 'kicost.sub_pcbs.tool']
 -            Boolean:    6 ['kibom.sub_pcbs.strip_annotation', 'kibom.sub_pcbs.center_result', 'ibom.sub_pcbs.strip_annotation', 'ibom.sub_pcbs.center_result', 'kicost.sub_pcbs.strip_annotation', 'kicost.sub_pcbs.center_result']
@@ -408,14 +410,14 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-94 totals types with a total of 2575 different parameters
-Single type parameters: 2361 (92 %)
+95 totals types with a total of 2579 different parameters
+Single type parameters: 2365 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
 Minimum number of parameters: 1
 Histogram:
-  0-  9: ************************
+  0-  9: *************************
  10- 19: *************
  20- 29: ******************************
  30- 39: **********
@@ -452,6 +454,7 @@ Totals sorted by parameters:
 - run_erc: 4
 - update_xml: 4
 - urlify: 4
+- kicad: 4
 - filters: 5
 - expand_text_vars: 5
 - field_rename: 6
@@ -532,12 +535,12 @@ Totals sorted by parameters:
 - pcb_print: 117
 - bom: 154
 - panelize: 217
-Average depth: 2.1914893617021276
+Average depth: 2.1789473684210527
 Maximum depth: 5
 Minimum depth: 1
 Histogram:
 0: 
-1: *****************
+1: ******************
 2: *************************************************
 3: **********************
 4: *****
@@ -560,6 +563,7 @@ Totals sorted by depth:
 - value_split: 1
 - var_rename: 1
 - var_rename_kicost: 1
+- kicad: 1
 - boardview: 2
 - bom_labels: 2
 - diff: 2
@@ -639,7 +643,7 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1106
+-             String: 1110
 -            Boolean:  655
 -             Number:  353
 - ListStringSingular:  328
@@ -655,7 +659,7 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  922 
+-             String:  926 
 -            Boolean:  578 
 - ListStringSingular:  325 
 -             Number:  244 
@@ -682,4 +686,4 @@ Used as single data type:
 -                Dict,Number:    2 ['pcbdraw.options.margin', 'svg.options.margin']
 -             Boolean,Choice:    1 ['ibom.options.highlight_pin1']
 -          String,StringDict:    1 ['pcbdraw.options.remap']
-Found 3 unique warning/s (4 total)
+Found 4 unique warning/s (5 total)

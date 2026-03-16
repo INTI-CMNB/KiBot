@@ -10,7 +10,7 @@ Usage:
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
   kibot [-v...] [-c PLOT_CONFIG] [--banner N] [-E DEF] ... [--only-names]
-        [--sub-pcbs] --list-variants
+        [--sub-pcbs] [-e SCHEMA] --list-variants
   kibot [-v...] [-b BOARD] [-d OUT_DIR] [-p | -P] [--banner N] --example
   kibot [-v...] [--start PATH] [-d OUT_DIR] [--dry] [--banner N]
          [-t, --type TYPE]... --quick-start

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2024 Salvador E. Tropea
-# Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: MIT
 # Project: KiBot (formerly KiPlot)
 """
@@ -525,11 +525,13 @@ class BoMOptions(BaseOptions):
             self.exclude_filter = Optionable
             """ [string|list(string)='_mechanical'] Name of the filter to exclude components from BoM processing.
                 The default filter (built-in filter '_mechanical') excludes test points, fiducial marks, mounting holes, etc.
+                When using KiCad variants the default is '_null'.
                 Please consult the built-in filters explanation to fully understand what is excluded by default.
                 This option is for simple cases, consider using a full variant for complex cases """
             self.dnf_filter = Optionable
             """ [string|list(string)='_kibom_dnf_CONFIG_FIELD'] Name of the filter to mark components as 'Do Not Fit'.
                 The default filter marks components with a DNF value or DNF in the Config field.
+                When using KiCad variants the default is '_null'.
                 This option is for simple cases, consider using a full variant for complex cases """
             self.dnc_filter = Optionable
             """ [string|list(string)='_kibom_dnc_CONFIG_FIELD'] Name of the filter to mark components as 'Do Not Change'.
@@ -799,9 +801,18 @@ class BoMOptions(BaseOptions):
             self.xlsx.extra_info = [self.expand_filename_both(t, make_safe=False) for t in self.xlsx.extra_info]
         # Filters
         self.pre_transform = BaseFilter.solve_filter(self.pre_transform, 'pre_transform', is_transform=True)
-        self.exclude_filter = BaseFilter.solve_filter(self.exclude_filter, 'exclude_filter')
-        self.dnf_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(self.dnf_filter, self.fit_field), 'dnf_filter')
-        self.dnc_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(self.dnc_filter, self.fit_field), 'dnc_filter')
+        exclude_filter = self.exclude_filter
+        dnf_filter = self.dnf_filter
+        dnc_filter = self.dnc_filter
+        if self.variant and self.variant.type == 'kicad':
+            # If we are using KiCad variants remove the defaults
+            if not self.get_user_defined('exclude_filter'):
+                exclude_filter = '_null'
+            if not self.get_user_defined('dnf_filter'):
+                dnf_filter = '_null'
+        self.exclude_filter = BaseFilter.solve_filter(exclude_filter, 'exclude_filter')
+        self.dnf_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(dnf_filter, self.fit_field), 'dnf_filter')
+        self.dnc_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(dnc_filter, self.fit_field), 'dnc_filter')
         # Fields excluded from conflict warnings
         if isinstance(self.no_conflict, type):
             no_conflict = set()
@@ -977,6 +988,40 @@ class BoMOptions(BaseOptions):
             self.xlsx.logo = png
         return png
 
+    def kicad_var_cb(self, c):
+        """ KiCad variants implementation specific for BoM.
+            `no in BoM` -> not included
+            `DNP` -> not fitted """
+        vname = 'Default'
+        v = None
+        if self.variant:
+            v = c.variants.get(self.variant.name)
+            if v:
+                logger.debugl(4, f"- Found variant {self.variant.name} for {c.ref}")
+                vname = self.variant.name
+        # Included
+        if self.exclude_marked_in_sch:
+            in_bom = v.in_bom if v is not None and v.in_bom is not None else c.in_bom
+            if c.included and not in_bom:
+                c.included = in_bom
+                logger.debugl(3, f'- {c.ref} excluded by `{vname}` from schematic')
+        if self.exclude_marked_in_pcb:
+            # The variant was applied by "get_board_comps_data"
+            if c.included and not c.in_bom_pcb:
+                c.included = c.in_bom_pcb
+                logger.debugl(3, f'- {c.ref} excluded from PCB')
+        # DNP (aka DNF)
+        if self._kicad_dnp_applied_solved:
+            dnp = v.dnp if v is not None and v.dnp is not None else c.kicad_dnp
+            if dnp:
+                c.set_fitted(False)
+                logger.debugl(3, f'- {c.ref} DNP by `{vname}`')
+        # Fields
+        if v is not None:
+            for name, value in v.fields.items():
+                c.set_field(name, value)
+                logger.debugl(3, f'- {c.ref} field `{name}` set to `{value}` by `{vname}`')
+
     def run(self, output):
         format = self._format
         if format == 'xlsx':
@@ -1002,7 +1047,8 @@ class BoMOptions(BaseOptions):
             self.variant._sub_pcb.apply(comps_hash)
             comps = [c for c in comps_hash.values() if c.included]
             must_revert_sub_pcb = True
-        get_board_comps_data(comps)
+        kicad_variant = self.variant.name if self.variant and self.variant.type == 'kicad' and GS.ki10 else None
+        get_board_comps_data(comps, kicad_variant=kicad_variant)
         if self.count_smd_tht and not GS.pcb_file:
             logger.warning(W_NEEDSPCB+"`count_smd_tht` is enabled, but no PCB provided")
             self.count_smd_tht = False
@@ -1013,26 +1059,43 @@ class BoMOptions(BaseOptions):
         # Aggregate components from other projects
         self.aggregate_comps(comps)
         # Apply all the filters
-        reset_filters(comps, kicad_dnp_applied=self.kicad_dnp_applied)
-        if self.exclude_marked_in_sch:
-            logger.debug('Transfer "Exclude from bill of materials" from schematic')
-            for c in comps:
-                if c.included and not c.in_bom:
-                    c.included = c.in_bom
-                    logger.debugl(3, f'- {c.ref} excluded')
-        if self.exclude_marked_in_pcb:
-            logger.debug('Transfer "Exclude from bill of materials" from PCB')
-            for c in comps:
-                if c.included and not c.in_bom_pcb:
-                    c.included = c.in_bom_pcb
-                    logger.debugl(3, f'- {c.ref} excluded')
-        comps = apply_pre_transform(comps, self.pre_transform)
-        apply_exclude_filter(comps, self.exclude_filter)
-        apply_fitted_filter(comps, self.dnf_filter)
-        apply_fixed_filter(comps, self.dnc_filter)
-        # Apply the variant
-        if self.variant:
-            comps = self.variant.filter(comps)
+        if kicad_variant is not None:
+            # For KiCad variants we handle things in a different way
+            # We reset the filter and DON'T apply DNP flag from KiCad
+            reset_filters(comps, kicad_dnp_applied='no')
+            # All the work is done by variant
+            if self.kicad_dnp_applied == 'global':
+                self._kicad_dnp_applied_solved = GS.global_kicad_dnp_applied
+            else:
+                self._kicad_dnp_applied_solved = self.kicad_dnp_applied == 'yes'
+            comps = self.variant.filter(comps, self.kicad_var_cb)
+            # Now we apply the extra user stuff
+            comps = apply_pre_transform(comps, self.pre_transform)
+            apply_exclude_filter(comps, self.exclude_filter)
+            apply_fitted_filter(comps, self.dnf_filter)
+            apply_fixed_filter(comps, self.dnc_filter)
+        else:
+            # Legacy variants
+            reset_filters(comps, kicad_dnp_applied=self.kicad_dnp_applied)
+            if self.exclude_marked_in_sch:
+                logger.debug('Transfer "Exclude from bill of materials" from schematic')
+                for c in comps:
+                    if c.included and not c.in_bom:
+                        c.included = c.in_bom
+                        logger.debugl(3, f'- {c.ref} excluded')
+            if self.exclude_marked_in_pcb:
+                logger.debug('Transfer "Exclude from bill of materials" from PCB')
+                for c in comps:
+                    if c.included and not c.in_bom_pcb:
+                        c.included = c.in_bom_pcb
+                        logger.debugl(3, f'- {c.ref} excluded')
+            comps = apply_pre_transform(comps, self.pre_transform)
+            apply_exclude_filter(comps, self.exclude_filter)
+            apply_fitted_filter(comps, self.dnf_filter)
+            apply_fixed_filter(comps, self.dnc_filter)
+            # Apply the variant
+            if self.variant:
+                comps = self.variant.filter(comps)
         # Now expand the text variables, the user can disable it and insert a customized filter
         # in the variant or even before.
         if self.expand_text_vars:

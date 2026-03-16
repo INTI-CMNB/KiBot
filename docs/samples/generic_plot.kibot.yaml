@@ -586,10 +586,12 @@ outputs:
       dnc_filter: '_kibom_dnc_CONFIG_FIELD'
       # [string|list(string)='_kibom_dnf_CONFIG_FIELD'] Name of the filter to mark components as 'Do Not Fit'.
       # The default filter marks components with a DNF value or DNF in the Config field.
+      # When using KiCad variants the default is '_null'.
       # This option is for simple cases, consider using a full variant for complex cases
       dnf_filter: '_kibom_dnf_CONFIG_FIELD'
       # [string|list(string)='_mechanical'] Name of the filter to exclude components from BoM processing.
       # The default filter (built-in filter '_mechanical') excludes test points, fiducial marks, mounting holes, etc.
+      # When using KiCad variants the default is '_null'.
       # Please consult the built-in filters explanation to fully understand what is excluded by default.
       # This option is for simple cases, consider using a full variant for complex cases
       exclude_filter: '_mechanical'

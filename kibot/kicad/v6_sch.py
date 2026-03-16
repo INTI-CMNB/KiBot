@@ -16,7 +16,7 @@ import os
 import re
 from ..gs import GS
 from .. import log
-from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict
+from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -1416,14 +1416,23 @@ class SchematicComponentV6(SchematicComponent):
                 p_path = parent.get_full_path()
                 ins = comp.all_instances.get(p_path)
                 if ins is None:
-                    raise SchError('Missing {} symbol instance for `{}`'.format(comp.name, p_path))
+                    # This is a KiCad bug or the user editing the schematic outside a project
+                    # KiCad has numerous bugs when dealing with edition outside a project or using multiple projects on
+                    # the same directory
+                    logger.warning(W_UUIDSCHISSUE+f"No instance for `{p_path}` using the first")
+                    # We take the first, this is what KiCad silently does
+                    ins = next(iter(comp.all_instances.items()))[1]
+                    # And we pretend this is the correct path
+                    ins_p_path = p_path
+                else:
+                    ins_p_path = ins.path
                 comp.variants = ins.variants
                 # Memorize its path (v7 style, with parent)
                 comp.p_path_ori = p_path
                 comp.p_path = parent.get_full_path(False)
                 # Translate the instance to the v6 format (remove UUID for / and add the component UUID)
                 v6_ins = SymbolInstance()
-                v6_ins.path = path_join('/', '/'.join(ins.path.split('/')[2:]), comp.uuid_ori)
+                v6_ins.path = path_join('/', '/'.join(ins_p_path.split('/')[2:]), comp.uuid_ori)
                 v6_ins.reference = ins.reference
                 v6_ins.unit = ins.unit
                 v6_ins.variants = ins.variants
@@ -2735,7 +2744,7 @@ class SchematicV6(Schematic):
                 return cache_name
         raise SchError(f'Missing embedded file `{efile}`')
 
-    def load(self, fname, project, parent=None):  # noqa: C901
+    def load(self, fname, project, parent=None, mapped_uuid=None):  # noqa: C901
         """ Load a v6.x KiCad Schematic.
             The caller must be sure the file exists.
             Only the schematics are loaded not the libs. """
@@ -2825,7 +2834,7 @@ class SchematicV6(Schematic):
             elif e_type == 'generator_version':
                 self.generator_version = _check_str(e, 1, e_type)
             elif e_type == 'uuid':
-                self.uuid_ori = _check_relaxed(e, 1, e_type)
+                self.uuid_ori = mapped_uuid or _check_relaxed(e, 1, e_type)
                 uuid, _ = UUID_Validator.validate(self.uuid_ori)
                 self.id = self.uuid = uuid
             elif e_type == 'paper':

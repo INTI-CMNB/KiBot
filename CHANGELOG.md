@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - --fail-on-warnings: to return error when we detected warning (See #828)
 - generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
   KiCad (See #887)
+- Variants: Experimental KiCad variants
 - KiCad 9 embedded files: populate the cache if needed (See #890)
 - preflights:
   - Mechanism to merge preflights from imports (`merge_pre`) (#900)

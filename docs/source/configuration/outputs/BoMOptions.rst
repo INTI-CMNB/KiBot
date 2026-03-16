@@ -79,10 +79,12 @@ BoMOptions parameters
 
 -  ``dnf_filter`` :index:`: <pair: output - bom - options; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_kibom_dnf_CONFIG_FIELD'``) Name of the filter to mark components as 'Do Not Fit'.
    The default filter marks components with a DNF value or DNF in the Config field. |br|
+   When using KiCad variants the default is '_null'. |br|
    This option is for simple cases, consider using a full variant for complex cases.
 
 -  ``exclude_filter`` :index:`: <pair: output - bom - options; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_mechanical'``) Name of the filter to exclude components from BoM processing.
    The default filter (built-in filter '_mechanical') excludes test points, fiducial marks, mounting holes, etc. |br|
+   When using KiCad variants the default is '_null'. |br|
    Please consult the built-in filters explanation to fully understand what is excluded by default. |br|
    This option is for simple cases, consider using a full variant for complex cases.
 
