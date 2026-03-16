@@ -8,7 +8,7 @@ import os
 import re
 import csv
 from pcbnew import (PLOT_FORMAT_HPGL, PLOT_FORMAT_POST, PLOT_FORMAT_GERBER, PLOT_FORMAT_DXF, PLOT_FORMAT_SVG,
-                    PLOT_FORMAT_PDF, wxPoint, B_Cu, F_Cu)
+                    PLOT_FORMAT_PDF, wxPoint, B_Cu, F_Cu, GERBER_WRITER)
 from .error import KiPlotConfigurationError
 from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT, HOLE_TYPE_DICT
 from .optionable import Optionable
@@ -245,8 +245,15 @@ class AnyDrill(VariantOptions):
             tclass = t.GetClass()
             if tclass == via_type:
                 via = t.Cast()
-                l1 = AnyDrill._get_layer_name(via.TopLayer())
-                l2 = AnyDrill._get_layer_name(via.BottomLayer())
+                l1i = via.TopLayer()
+                l1 = AnyDrill._get_layer_name(l1i)
+                l2i = via.BottomLayer()
+                l2 = AnyDrill._get_layer_name(l2i)
+                if GS.ki10 and l1i > l2i:
+                    # KiCad bug https://gitlab.com/kicad/code/kicad/-/work_items/23452
+                    aux = l1
+                    l1 = l2
+                    l2 = aux
                 pair = l1+'-'+l2
                 if pair != 'front-back':
                     pairs.add(pair)
@@ -305,7 +312,11 @@ class AnyDrill(VariantOptions):
                 "nor report nor drill table on "
                 f"`{self._parent.name}`"
             )
-        drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
+        if GS.ki10 and isinstance(drill_writer, GERBER_WRITER):
+            # KiCad 10 inconsistency ...
+            drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map, True)
+        else:
+            drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
         # Rename the files
         files = self.get_file_names(output_dir)
         for k_f, f in files.items():
@@ -319,7 +330,11 @@ class AnyDrill(VariantOptions):
         if self._report:
             drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
             logger.debug("Generating drill report: "+drill_report_file)
-            drill_writer.GenDrillReportFile(drill_report_file)
+            if GS.ki10:
+                logger.error("No drill reports until KiCad bug https://gitlab.com/kicad/code/kicad/-/work_items/23268 "
+                             "is fixed")
+            else:
+                drill_writer.GenDrillReportFile(drill_report_file)
         # Generate the drill table
         if self._table_output:
 
