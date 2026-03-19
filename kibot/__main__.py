@@ -646,7 +646,7 @@ def main():
         from .GUI.analyze import analyze
         analyze()
     else:
-        if not args.variant and GS.ki10 and GS.global_kicad_default_variant:
+        if not args.variant and GS.ki10 and GS.global_kicad_default_variant and GS.sch:
             # For KiCad 10 we have a "Default" variant, needed to apply various things
             # This is how KiCad shows in the GUI
             args.variant = ['Default']
