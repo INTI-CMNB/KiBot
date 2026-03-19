@@ -1344,7 +1344,9 @@ outputs:
       exclude_filter: '_null'
       # [boolean=true] Generate drill files. Set to False and choose map format if only map is to be generated
       generate_drill_files: true
-      # [number=0] number of digits for integer part of coordinates (0 is auto)
+      # [number=0] number of digits for integer part of coordinates (0 is auto).
+      # Doesn't apply to DECIMAL_FORMAT.
+      # Default is 3 and currently can't be configured from the GUI, avoid using it
       left_digits: 0
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
       # Not generated unless a format is specified.
@@ -1379,7 +1381,9 @@ outputs:
         # [string=''] Name of the drill report. Not generated unless a name is specified.
         # (%i='drill_report' %x='txt')
         filename: ''
-      # [number=0] number of digits for mantissa part of coordinates (0 is auto)
+      # [number=0] number of digits for mantissa part of coordinates (0 is auto).
+      # Doesn't apply to DECIMAL_FORMAT.
+      # Default is 3 and currently can't be configured from the GUI, avoid using it
       right_digits: 0
       # [boolean=true] Use route command for oval holes (G00), otherwise use G85
       route_mode_for_oval_holes: true

@@ -33,9 +33,13 @@ class ExcellonOptions(AnyDrill):
             self.zeros_format = 'DECIMAL_FORMAT'
             """ [DECIMAL_FORMAT,SUPPRESS_LEADING,SUPPRESS_TRAILING,KEEP_ZEROS] How to handle the zeros """
             self.left_digits = 0
-            """ number of digits for integer part of coordinates (0 is auto) """
+            """ number of digits for integer part of coordinates (0 is auto).
+                Doesn't apply to DECIMAL_FORMAT.
+                Default is 3 and currently can't be configured from the GUI, avoid using it """
             self.right_digits = 0
-            """ number of digits for mantissa part of coordinates (0 is auto) """
+            """ number of digits for mantissa part of coordinates (0 is auto).
+                Doesn't apply to DECIMAL_FORMAT.
+                Default is 3 and currently can't be configured from the GUI, avoid using it """
             self.route_mode_for_oval_holes = True
             """ Use route command for oval holes (G00), otherwise use G85 """
         self._ext = 'drl'
