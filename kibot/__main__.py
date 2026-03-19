@@ -331,10 +331,19 @@ def detect_kicad():
     GS.ki9 = GS.kicad_version_major >= 9
     GS.ki10 = GS.kicad_version_major >= 10
     if GS.ki10:
-        GS.VIATYPE_THROUGH = pcbnew.VIATYPE_THROUGH
-        GS.VIATYPE_BLIND = pcbnew.VIATYPE_BLIND
-        GS.VIATYPE_BURIED = pcbnew.VIATYPE_BURIED
-        GS.VIATYPE_MICROVIA = pcbnew.VIATYPE_MICROVIA
+        # From pcbnew/pcb_track_types.h
+        # pcbnew definitions found in RC1, but not in RC2
+        if hasattr(pcbnew, 'VIATYPE_THROUGH'):
+            GS.VIATYPE_THROUGH = pcbnew.VIATYPE_THROUGH     # always a through hole vi
+            GS.VIATYPE_BLIND = pcbnew.VIATYPE_BLIND         # this via can be on internal layers
+            GS.VIATYPE_BURIED = pcbnew.VIATYPE_BURIED       # this via can be on internal layers
+            GS.VIATYPE_MICROVIA = pcbnew.VIATYPE_MICROVIA   # this via which connect from an external layer
+            # to the near neighbor internal layer
+        else:
+            GS.VIATYPE_THROUGH = 4
+            GS.VIATYPE_BLIND = 2
+            GS.VIATYPE_BURIED = 3
+            GS.VIATYPE_MICROVIA = 1
     GS.footprint_gr_type = 'MGRAPHIC' if not GS.ki8 else 'PCB_SHAPE'
     GS.board_gr_type = 'DRAWSEGMENT' if GS.ki5 else 'PCB_SHAPE'
     GS.footprint_update_local_coords = GS.dummy1 if GS.ki8 else GS.footprint_update_local_coords_ki7
