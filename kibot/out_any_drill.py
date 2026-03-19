@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Drill table contributed by Nguyen Vincent (@nguyen-v)
@@ -11,6 +11,7 @@ from pcbnew import (PLOT_FORMAT_HPGL, PLOT_FORMAT_POST, PLOT_FORMAT_GERBER, PLOT
                     PLOT_FORMAT_PDF, wxPoint, B_Cu, F_Cu, GERBER_WRITER)
 from .error import KiPlotConfigurationError
 from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT, HOLE_TYPE_DICT
+from .kiplot import run_command
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .gs import GS
@@ -166,8 +167,14 @@ class AnyDrill(VariantOptions):
         else:
             map = self.map.type
             self._map_output = self.map.output
-        if GS.ki10 and map == 'hpgl':
-            raise KiPlotConfigurationError("KiCad 10+ doesn't support HPGL")
+        if GS.ki10:
+            if map == 'hpgl':
+                raise KiPlotConfigurationError("KiCad 10+ doesn't support HPGL")
+            if map == 'gerber':
+                self._map_cli = 'gerberx2'
+            else:
+                self._map_cli = map
+        self._map_type = map
         self._map_ext = self._map_ext[map]
         self._map = self._map_map[map]
         # Solve the report for both cases
@@ -260,12 +267,17 @@ class AnyDrill(VariantOptions):
         groups.extend(list(pairs))
         return groups
 
-    def get_file_names(self, output_dir):
+    def get_file_names(self, output_dir, just_drills=False, tmp_base=None):
         """ Returns a dict containing KiCad names and its replacement.
-            If no replacement is needed the replacement is empty """
+            If no replacement is needed the replacement is empty.
+            tmp_base is used to specify the `GS.pcb_basename` for a temporal variant.
+            I don't really know if variants really apply to drill files, but is currently supported """
         filenames = {}
         self._configure_writer(GS.board, wxPoint(0, 0))
         files = AnyDrill._get_drill_groups(self._unified_output)
+        force_rename = tmp_base is not None
+        if not force_rename:
+            tmp_base = GS.pcb_basename
         for d in files:
             kicad_id = '-'+d if d else d
             kibot_id = self.solve_id(d)
@@ -274,17 +286,22 @@ class AnyDrill(VariantOptions):
                 kicad_id_main += '-drl'
                 if not GS.ki8:
                     kicad_id_map = kicad_id_main
-            if self.generate_drill_files:
-                k_file = self.expand_filename(output_dir, '%f'+kicad_id_main+'.%x', '', self._ext)
+            if self.generate_drill_files or just_drills:
+                k_file = self.expand_filename(output_dir, tmp_base+kicad_id_main+'.%x', '', self._ext)
                 file = ''
                 if self.output:
                     file = self.expand_filename(output_dir, self.output, kibot_id, self._ext)
+                elif force_rename:
+                    # To get the real name instead of the temporal one
+                    file = k_file.replace(tmp_base, GS.pcb_basename)
                 filenames[k_file] = file
-            if self._map is not None:
-                k_file = self.expand_filename(output_dir, '%f'+kicad_id_map+'-drl_map.%x', '', self._map_ext)
+            if self._map is not None and not just_drills:
+                k_file = self.expand_filename(output_dir, tmp_base+kicad_id_map+'-drl_map.%x', '', self._map_ext)
                 file = ''
                 if self._map_output:
                     file = self.expand_filename(output_dir, self._map_output, kibot_id+'_map', self._map_ext)
+                elif force_rename:
+                    file = k_file.replace(tmp_base, GS.pcb_basename)
                 filenames[k_file] = file
         return filenames
 
@@ -298,13 +315,11 @@ class AnyDrill(VariantOptions):
             offset = GS.get_aux_origin()
         else:
             offset = wxPoint(0, 0)
-        drill_writer = self._configure_writer(GS.board, offset)
+        drill_writer, use_cli = self._configure_writer(GS.board, offset)
 
         logger.debug("Generating drill files in "+output_dir)
         gen_map = self._map is not None
-        if gen_map:
-            drill_writer.SetMapFileFormat(self._map)
-            logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
+
         if not self.generate_drill_files and not gen_map and not self._report and not self._table_output:
             logger.warning(
                 W_NODRILL +
@@ -312,13 +327,51 @@ class AnyDrill(VariantOptions):
                 "nor report nor drill table on "
                 f"`{self._parent.name}`"
             )
-        if GS.ki10 and isinstance(drill_writer, GERBER_WRITER):
-            # KiCad 10 inconsistency ...
-            drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map, True)
+
+        if use_cli:
+            # Using kicad-cli
+            fname = self.save_tmp_board() if self.will_filter_pcb_components() else GS.pcb_file
+            odir = output_dir  # if self.generate_drill_files else tempfile.gettempdir()
+            cmd = [GS.kicad_cli, 'pcb', 'export', 'drill', '--output', odir] + drill_writer
+            if gen_map:
+                logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
+                cmd.extend(['--generate-map', '--map-format', self._map_cli])
+            if self._report:
+                drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+                logger.debug("Generating drill report: "+drill_report_file)
+                cmd.extend(['--generate-report', '--report-path', drill_report_file])
+            run_command(cmd + [fname])
+            if self._files_to_remove:
+                self.remove_temporals()
+            tmp_base = os.path.splitext(os.path.basename(fname))[0]
+            if not self.generate_drill_files:
+                # We can't prevent kicad-cli from generating them, so just remove them
+                files = self.get_file_names(output_dir, tmp_base=tmp_base, just_drills=True)
+                for f in files.keys():
+                    os.remove(f)
         else:
-            drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
+            # Using Python API
+            if gen_map:
+                drill_writer.SetMapFileFormat(self._map)
+                logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
+            if GS.ki10 and isinstance(drill_writer, GERBER_WRITER):
+                # KiCad 10 inconsistency ...
+                drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map, True)
+            else:
+                drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
+            # Generate the report
+            if self._report:
+                drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+                logger.debug("Generating drill report: "+drill_report_file)
+                if GS.ki10:
+                    logger.error("No drill reports until KiCad bug https://gitlab.com/kicad/code/kicad/-/work_items/23268 "
+                                 "is fixed")
+                else:
+                    drill_writer.GenDrillReportFile(drill_report_file)
+            tmp_base = None
+
         # Rename the files
-        files = self.get_file_names(output_dir)
+        files = self.get_file_names(output_dir, tmp_base=tmp_base)
         for k_f, f in files.items():
             if f:
                 logger.debug(f"Renaming {k_f} -> {f}")
@@ -326,15 +379,6 @@ class AnyDrill(VariantOptions):
                     GS.exit_with_error(f"Missing `{k_f}` drill file, KiCad bug? please report", DONT_STOP)
                 else:
                     os.replace(k_f, f)
-        # Generate the report
-        if self._report:
-            drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
-            logger.debug("Generating drill report: "+drill_report_file)
-            if GS.ki10:
-                logger.error("No drill reports until KiCad bug https://gitlab.com/kicad/code/kicad/-/work_items/23268 "
-                             "is fixed")
-            else:
-                drill_writer.GenDrillReportFile(drill_report_file)
         # Generate the drill table
         if self._table_output:
 

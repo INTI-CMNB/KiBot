@@ -82,9 +82,7 @@ def do_3Rs(test_dir, conf, modern, single=False):
         npth_pdf_drl = npth_pdf_drl.replace('-NPTH', '')
         npth_csv_drl = npth_csv_drl.replace('_NPTH', '')
 
-    if not context.ki10():
-        # KiCad 10 bug https://gitlab.com/kicad/code/kicad/-/work_items/23268
-        ctx.expect_out_file(os.path.join(DRILL_DIR, report))
+    ctx.expect_out_file(os.path.join(DRILL_DIR, report))
     ctx.expect_out_file(pth_drl)
     ctx.expect_out_file(npth_drl)
     ctx.expect_out_file(f1_drl)
