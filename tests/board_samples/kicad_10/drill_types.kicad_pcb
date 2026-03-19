@@ -857,6 +857,19 @@
 		(layer "Edge.Cuts")
 		(uuid "00000000-0000-0000-0000-00005ea76efc")
 	)
+	(gr_text "Reserved for table"
+		(at 51 58.25 0)
+		(layer "Cmts.User")
+		(uuid "9e0d7d54-b080-48c2-a362-342413b9c768")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
 	(via
 		(at 115 32)
 		(size 1)
@@ -1004,6 +1017,10 @@
 		(filling no)
 		(net "")
 		(uuid "0f54db53-a272-4955-88fb-d7ab00657bb0")
+	)
+	(group "kibot_table_drill_table"
+		(uuid "6f378885-1aed-4707-b756-6dcc9a83073a")
+		(members "8f769ff7-0ab1-44a8-ac30-8af10f3c087c" "9e0d7d54-b080-48c2-a362-342413b9c768")
 	)
 	(embedded_fonts no)
 )
