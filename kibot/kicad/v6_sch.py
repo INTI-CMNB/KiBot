@@ -2326,7 +2326,7 @@ def _add_items(items, sch, sep=False, cross=None, pre_sep=True, exp_hierarchy=No
         args = {}
         if exp_hierarchy is not None:
             args['exp_hierarchy'] = exp_hierarchy
-        if exp_hierarchy is not None:
+        if alt_variants is not None:
             args['alt_variants'] = alt_variants
         if cross is not None:
             args['cross'] = cross
