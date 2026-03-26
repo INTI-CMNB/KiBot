@@ -2339,12 +2339,15 @@ def _add_items(items, sch, sep=False, cross=None, pre_sep=True, exp_hierarchy=No
             sch.pop()
 
 
-def _add_items_list(name, items, sch):
+def _add_items_list(name, items, sch, alt_variants=None):
     if not len(items):
         return
     data = [Sep()]
     for s in items:
-        data.append(s.write())
+        if alt_variants is not None:
+            data.append(s.write(alt_variants=alt_variants))
+        else:
+            data.append(s.write())
         data.append(Sep())
     sch.extend([Sep(), _symbol(name, data), Sep()])
 
@@ -2598,7 +2601,7 @@ class SchematicV6(Schematic):
                             # s.path = path_join(os.path.dirname(s.path), c.uuid)
                             s.path = path_join(c.path, c.uuid)
                 if base_sheet == self or not exp_hierarchy:
-                    _add_items_list('symbol_instances', instances, sch)
+                    _add_items_list('symbol_instances', instances, sch, alt_variants=False)
             # Fonts
             if self.embedded_fonts is not None:
                 sch.append(_symbol_yn('embedded_fonts', self.embedded_fonts))
