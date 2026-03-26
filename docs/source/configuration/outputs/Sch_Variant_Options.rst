@@ -18,6 +18,10 @@ Sch_Variant_Options parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+-  ``include`` :index:`: <pair: output - sch_variant - options; include>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_all\_'``) [:ref:`comma separated <comma_sep>`] When exporting a KiCad 10 file also include the listed variants.
+   The `_all_` keyword means all other variants. |br|
+   The variant indicated by the `variant` option will be the `Default` KiCad variant.
+
 -  ``pre_transform`` :index:`: <pair: output - sch_variant - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

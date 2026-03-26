@@ -1,0 +1,31 @@
+# Example KiBot config file
+# No reference variant, so we get "Default" + 3 variants
+kibot:
+  version: 1
+
+variants:
+  - name: 'production'
+    comment: 'Production variant'
+    type: ibom
+    file_id: '_(production)'
+    variants_blacklist: T2
+
+  - name: 'test'
+    comment: 'Test variant'
+    type: ibom
+    file_id: '_(test)'
+    variants_blacklist: T1
+
+  - name: 'default'
+    comment: 'Default variant'
+    type: ibom
+    variants_blacklist: T2,T3
+
+outputs:
+  - name: 'sch_ki10_export'
+    comment: "Schematic w/all variants"
+    type: sch_variant
+    dir: default_variant
+    options:
+      copy_project: true
+

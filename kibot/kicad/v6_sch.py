@@ -1158,6 +1158,22 @@ class Variant(object):
 
         return _symbol('variant', data)
 
+    def __repr__(self):
+        str = f'{self.name}'
+        if self.dnp is not None:
+            str += f' dnp:{self.dnp}'
+        if self.exclude_from_sim is not None:
+            str += f' exclude_from_sim:{self.exclude_from_sim}'
+        if self.in_bom is not None:
+            str += f' in_bom:{self.in_bom}'
+        if self.on_board is not None:
+            str += f' on_board:{self.on_board}'
+        if self.in_pos_files is not None:
+            str += f' in_pos_files:{self.in_pos_files}'
+        for k, v in self.fields.items():
+            str += f' {k}={v}'
+        return str
+
 
 class SymbolInstance(object):
     def __init__(self):
@@ -1167,6 +1183,8 @@ class SymbolInstance(object):
         self.footprint = None
         # KiCad 10
         self.variants = OrderedDict()
+        # Used to save a version with modified variants, i.e. converting legacy variants
+        self.alt_variants = OrderedDict()
 
     @staticmethod
     def parse(items):
@@ -1194,7 +1212,8 @@ class SymbolInstance(object):
             instances.append(instance)
         return instances
 
-    def write(self):
+    def write(self, alt_variants):
+        # alt_variants is used to save it using an alternative set of variants, i.e. when exporting legacy variants
         data = [self.path, Sep(),
                 _symbol('reference', [self.reference]),
                 _symbol('unit', [self.unit])]
@@ -1202,7 +1221,8 @@ class SymbolInstance(object):
             data.append(_symbol('value', [self.value]))
         if self.footprint is not None:
             data.append(_symbol('footprint', [self.footprint]))
-        for v in self.variants.values():
+        variants = self.alt_variants if alt_variants else self.variants
+        for v in variants.values():
             data.extend([v.write(), Sep()])
         data.append(Sep())
         return _symbol('path', data)
@@ -1436,6 +1456,7 @@ class SchematicComponentV6(SchematicComponent):
                 v6_ins.reference = ins.reference
                 v6_ins.unit = ins.unit
                 v6_ins.variants = ins.variants
+                v6_ins.alt_variants = ins.alt_variants
                 # Add to the root symbol_instances, so we reconstruct it (like in a v6 file)
                 parent.root_sheet.symbol_instances.append(v6_ins)
             else:
@@ -1455,7 +1476,7 @@ class SchematicComponentV6(SchematicComponent):
         comp.path = parent.sheet_path
         return comp
 
-    def write(self, exp_hierarchy, cross):
+    def write(self, exp_hierarchy, cross, alt_variants):
         lib_id = self.lib_id
         is_crossed = not (self.fitted or not self.included)
         native_cross = GS.ki7 and GS.global_cross_using_kicad
@@ -1522,7 +1543,7 @@ class SchematicComponentV6(SchematicComponent):
                         else:
                             # Don't store bogus instances
                             continue
-                    ins_data.extend([i.write(), Sep()])
+                    ins_data.extend([i.write(alt_variants=alt_variants), Sep()])
                 prj_data.extend([_symbol('project', ins_data), Sep()])
             data.extend([_symbol('instances', prj_data), Sep()])
         return _symbol('symbol', data)
@@ -2298,13 +2319,15 @@ def _symbol_yn(name, val):
     return [Symbol(name), NO_YES[val]]
 
 
-def _add_items(items, sch, sep=False, cross=None, pre_sep=True, exp_hierarchy=None):
+def _add_items(items, sch, sep=False, cross=None, pre_sep=True, exp_hierarchy=None, alt_variants=None):
     if len(items):
         if pre_sep:
             sch.append(Sep())
         args = {}
         if exp_hierarchy is not None:
             args['exp_hierarchy'] = exp_hierarchy
+        if exp_hierarchy is not None:
+            args['alt_variants'] = alt_variants
         if cross is not None:
             args['cross'] = cross
         for i in items:
@@ -2458,7 +2481,8 @@ class SchematicV6(Schematic):
             f.write(dumps(lib))
             f.write('\n')
 
-    def save(self, fname=None, dest_dir=None, base_sheet=None, saved=None, cross=False, exp_hierarchy=False, dry=False):
+    def save(self, fname=None, dest_dir=None, base_sheet=None, saved=None, cross=False, exp_hierarchy=False, dry=False,
+             alt_variants=False):
         # Switch to the current version
         global version
         version = self.version
@@ -2547,7 +2571,7 @@ class SchematicV6(Schematic):
             # Tables
             _add_items(self.rule_areas, sch)
             # Symbols
-            _add_items(self.symbols, sch, sep=True, cross=cross, exp_hierarchy=exp_hierarchy)
+            _add_items(self.symbols, sch, sep=True, cross=cross, exp_hierarchy=exp_hierarchy, alt_variants=alt_variants)
             # Groups (KiCad 10+)
             _add_items(self.groups, sch)
             # Sheets
@@ -2599,11 +2623,11 @@ class SchematicV6(Schematic):
         for sch in self.sheets:
             if sch.sch:
                 sch.sch.save(sch.flat_file if exp_hierarchy else sch.sch.fname_rel, dest_dir, base_sheet, saved, cross=cross,
-                             exp_hierarchy=exp_hierarchy, dry=dry)
+                             exp_hierarchy=exp_hierarchy, dry=dry, alt_variants=alt_variants)
 
-    def save_variant(self, dest_dir):
+    def save_variant(self, dest_dir, alt_variants=False):
         fname = os.path.basename(self.fname)
-        self.save(fname, dest_dir, cross=True, exp_hierarchy=self.check_exp_hierarchy())
+        self.save(fname, dest_dir, cross=True, exp_hierarchy=self.check_exp_hierarchy(), alt_variants=alt_variants)
         return fname
 
     def file_names_variant(self, dest_dir):
@@ -2958,6 +2982,7 @@ class SchematicV6(Schematic):
             comp.set_ref(s.reference)
             comp.unit = s.unit
             comp.variants = s.variants
+            comp.alt_variants = s.alt_variants
             # Value and footprint were available in v6, but they were just copies, not really used
             if s.value is not None:
                 comp.set_value(s.value)

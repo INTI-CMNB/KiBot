@@ -1,5 +1,5 @@
-55 outputs types with a total of 2189 different parameters
-Single type parameters: 2001 (91 %)
+55 outputs types with a total of 2190 different parameters
+Single type parameters: 2002 (91 %)
 Multi type parameters: 188 (9 %)
 Average parameters: 40
 Maximum number of parameters: 217
@@ -30,9 +30,9 @@ Histogram:
 Outputs sorted by parameters:
 - info: 14
 - netlist: 18
-- sch_variant: 18
 - boardview: 19
 - pdfunite: 19
+- sch_variant: 19
 - odb: 20
 - pcb_variant: 20
 - gencad: 22
@@ -154,7 +154,7 @@ Outputs sorted by depth:
 -             String:  946
 -            Boolean:  552
 -             Number:  301
-- ListStringSingular:  298
+- ListStringSingular:  299
 -             Choice:  112
 -               Dict:   90
 -   ListDictOrString:   24
@@ -169,7 +169,7 @@ Outputs sorted by depth:
 Used as single data type:
 -             String:  780 
 -            Boolean:  485 
-- ListStringSingular:  295 
+- ListStringSingular:  296 
 -             Number:  207 
 -             Choice:  109 
 -               Dict:   77 
@@ -410,8 +410,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-95 totals types with a total of 2579 different parameters
-Single type parameters: 2365 (92 %)
+95 totals types with a total of 2580 different parameters
+Single type parameters: 2366 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -473,10 +473,10 @@ Totals sorted by parameters:
 - draw_stackup: 15
 - subparts: 16
 - netlist: 18
-- sch_variant: 18
 - erc: 18
 - boardview: 19
 - pdfunite: 19
+- sch_variant: 19
 - include_table: 19
 - odb: 20
 - pcb_variant: 20
@@ -646,7 +646,7 @@ Totals sorted by depth:
 -             String: 1110
 -            Boolean:  655
 -             Number:  353
-- ListStringSingular:  328
+- ListStringSingular:  329
 -             Choice:  144
 -               Dict:  101
 -           ListDict:   30
@@ -661,7 +661,7 @@ Totals sorted by depth:
 Used as single data type:
 -             String:  926 
 -            Boolean:  578 
-- ListStringSingular:  325 
+- ListStringSingular:  326 
 -             Number:  244 
 -             Choice:  141 
 -               Dict:   80 

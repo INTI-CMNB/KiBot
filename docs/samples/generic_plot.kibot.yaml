@@ -4549,8 +4549,8 @@ outputs:
       # [string=''] Board variant to apply
       variant: ''
   # Schematic with variant generator:
-  # This copy isn't intended for development.
-  # Is just a tweaked version of the original where you can look at the results.
+  # This copy isn't intended for development without a careful review.
+  # Can be used to export legacy variants to KiCad 10 variants.
   # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
   - name: 'sch_variant_example'
     comment: 'Creates a copy of the schematic with all the filters and variants applied.'
@@ -4570,6 +4570,10 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
+      # [string|list(string)='_all_'] {comma_sep} When exporting a KiCad 10 file also include the listed variants.
+      # The `_all_` keyword means all other variants.
+      # The variant indicated by the `variant` option will be the `Default` KiCad variant
+      include: '_all_'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

@@ -1143,10 +1143,10 @@ class VariantOptions(BaseOptions):
         if self._files_to_remove:
             self.remove_temporals()
 
-    def load_list_components(self):
+    def load_list_components(self, forced=False):
         """ Makes the list of components available """
         self._files_to_remove = []
-        if not self.dnf_filter and not self.variant and not self.pre_transform and not self.exclude_filter:
+        if not self.dnf_filter and not self.variant and not self.pre_transform and not self.exclude_filter and not forced:
             return
         # Get the components list from the schematic
         comps = get_all_components(collapse=self._collapse_components)

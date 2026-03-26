@@ -1,0 +1,13 @@
+# Example KiBot config file
+# Nothing to export
+kibot:
+  version: 1
+
+outputs:
+  - name: 'sch_ki10_export'
+    comment: "Schematic w/all variants"
+    type: sch_variant
+    dir: default_variant
+    options:
+      copy_project: true
+
