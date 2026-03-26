@@ -626,7 +626,7 @@ def main():
 
     # Import KiCad variants from the project or from the schematic
     from .var_kicad import KiCad
-    KiCad.add_default()
+    # KiCad.add_default()
     if not KiCad.get_from_pro():
         if GS.sch_file:
             KiCad.get_from_sch()
@@ -646,7 +646,7 @@ def main():
         from .GUI.analyze import analyze
         analyze()
     else:
-        if not args.variant and GS.ki10 and GS.global_kicad_default_variant and GS.sch:
+        if not args.variant and GS.ki10 and GS.global_kicad_default_variant and GS.sch and RegOutput.is_variant('Default'):
             # For KiCad 10 we have a "Default" variant, needed to apply various things
             # This is how KiCad shows in the GUI
             args.variant = ['Default']
