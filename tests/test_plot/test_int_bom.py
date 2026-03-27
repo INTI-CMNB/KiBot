@@ -1612,7 +1612,7 @@ def test_int_bom_fil_1(test_dir):
 def test_int_bom_fil_2(test_dir):
     prj = 'kibom-variant_3'
     ctx = context.TestContextSCH(test_dir, prj, 'int_bom_fil_2', BOM_DIR)
-    ctx.run()
+    ctx.run(extra_debug=True)
     rows, header, info = ctx.load_csv('smd.csv')
     ref_column = header.index(REF_COLUMN_NAME)
     check_kibom_test_netlist(rows, ref_column, 3, None, ['R2', 'C2', 'FID1'])
@@ -1620,7 +1620,7 @@ def test_int_bom_fil_2(test_dir):
     check_kibom_test_netlist(rows, ref_column, 3, None, ['R1', 'C1', 'FID1'])
     rows, header, info = ctx.load_csv('virtual.csv')
     check_kibom_test_netlist(rows, ref_column, 2, None, ['R1', 'R2', 'C1', 'C2'])
-    ctx.search_err(r".?R3.? component in board, but not in schematic")
+    ctx.search_err(r"Repeated R3")
     ctx.test_compress(prj+'-result.zip', ['BoM/smd.csv', 'BoM/tht.csv', 'BoM/virtual.csv'])
     ctx.clean_up(keep_project=True)
 
