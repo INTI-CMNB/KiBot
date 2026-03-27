@@ -442,7 +442,10 @@ def get_board_comps_data(comps, kicad_variant=None):
     if not GS.pcb_file:
         return
     load_board()
-    comps_hash = {c.ref: c for c in comps}
+    if GS.ki6:
+        comps_hash = {c.sheet_full_path: c for c in comps}
+    else:
+        comps_hash = {c.ref: c for c in comps}
     # Get the KiCad variables for fields
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
@@ -452,22 +455,39 @@ def get_board_comps_data(comps, kicad_variant=None):
         GS.board.SetCurrentVariant(kicad_variant)
     for m in GS.get_modules():
         ref = m.GetReference()
+        # logger.error(f'{ref} {m.m_Uuid.AsString()} -> {m.GetPath().AsString()}')
         attrs = m.GetAttributes()
-        c = comps_hash.get(ref)
+        if GS.ki6:
+            # By full sheet path
+            c = comps_hash.get(m.GetPath().AsString())
+        else:
+            # By reference
+            c = comps_hash.get(ref)
         if c is None:
             if not (attrs & MOD_BOARD_ONLY) and not ref.startswith('KiKit_'):
                 logger.warning(W_PCBNOSCH+f'`{ref}` component in board, but not in schematic')
             if not GS.global_include_components_from_pcb:
                 # v1.6.3 behavior
+                logger.debugl(3, f"Not including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
                 continue
             # Create a component for this so we can include/exclude it using filters
             c = create_component_from_footprint(m, ref, env)
             if c is None:
                 continue
+            if GS.ki6:
+                logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
             comps.append(c)
         if c.has_pcb_info:
-            # We already got this reference and filled the PCB info, this is another copy
-            c = c.copy()
+            if GS.ki6:
+                # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
+                c = create_component_from_footprint(m, ref, env)
+                if c is None:
+                    continue
+                logger.debugl(3, f"Repeated {c.ref} PCB {m.m_Uuid.AsString()} SCH {m.GetPath().AsString()} making a new one")
+            else:
+                # When using references they can be repeated
+                # We already got this reference and filled the PCB info, this is another copy
+                c = c.copy()
             comps.append(c)
         new_value = m.GetValue()
         if new_value != c.value and '${' not in c.value:
@@ -479,10 +499,10 @@ def get_board_comps_data(comps, kicad_variant=None):
         c.footprint_x = center.x
         c.footprint_y = center.y
         (c.footprint_w, c.footprint_h) = GS.get_fp_size(m)
-        c.has_pcb_info = True
         c.pad_properties = {}
         if GS.global_use_pcb_fields:
             copy_fields(c, m, env)
+        c.has_pcb_info = True
         # Net
         net_name = set()
         net_class = set()
@@ -515,6 +535,7 @@ def get_board_comps_data(comps, kicad_variant=None):
                 c.in_bom_pcb = False
             if attrs & MOD_BOARD_ONLY:
                 c.in_pcb_only = True
+            c.pcb_id = m.m_Uuid.AsString()
             look_for_type = (not c.smd) and (not c.tht)
             for pad in m.Pads():
                 p = PadProperty()

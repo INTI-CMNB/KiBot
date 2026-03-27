@@ -2993,6 +2993,7 @@ class SchematicV6(Schematic):
                 comp.set_footprint(s.footprint)
             comp.sheet_path = path
             comp.sheet_path_h = self.path_to_human(path)
+            comp.sheet_full_path = s.path
             comp.id = comp.uuid
             if s.reference[-1] == '?':
                 comp.annotation_error = True
