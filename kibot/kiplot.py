@@ -479,11 +479,16 @@ def get_board_comps_data(comps, kicad_variant=None):
             comps.append(c)
         if c.has_pcb_info:
             if GS.ki6:
-                # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
-                c = create_component_from_footprint(m, ref, env)
-                if c is None:
+                if c.ref != ref:
+                    # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
+                    logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
+                                  " unrelated, making a new one")
+                    c = create_component_from_footprint(m, ref, env)
+                    if c is None:
+                        continue
+                else:
+                    logger.debugl(3, f"Repeated {c.ref}/{ref}")
                     continue
-                logger.debugl(3, f"Repeated {c.ref} PCB {m.m_Uuid.AsString()} SCH {m.GetPath().AsString()} making a new one")
             else:
                 # When using references they can be repeated
                 # We already got this reference and filled the PCB info, this is another copy
