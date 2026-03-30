@@ -12,7 +12,7 @@
 
 -  Mandatory
 
-`KiCad Automation tools <https://github.com/INTI-CMNB/KiAuto>`__ :index:`: <pair: dependency; KiCad Automation tools>`  v2.3.4 |image10| |PyPi dependency| |Auto-download|
+`KiCad Automation tools <https://github.com/INTI-CMNB/KiAuto>`__ :index:`: <pair: dependency; KiCad Automation tools>`  v2.3.6 |image10| |PyPi dependency| |Auto-download|
 
 -  Mandatory for: `convert_pcb`, `dxf_sch_print`, `gencad`, `hpgl_sch_print`, `netlist`, `pdf_pcb_print`, `pdf_sch_print`, `ps_sch_print`, `render_3d`, `run_drc`, `run_erc`, `step`, `svg_pcb_print`, `svg_sch_print`, `update_xml`, `vrml`
 -  Optional to:

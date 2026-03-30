@@ -1285,7 +1285,7 @@ outputs:
     type: 'dxf_sch_print'
     dir: 'Example/dxf_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -1309,6 +1309,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output DXF (%i=schematic, %x=dxf). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -1814,7 +1816,7 @@ outputs:
     type: 'hpgl_sch_print'
     dir: 'Example/hpgl_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -1840,6 +1842,8 @@ outputs:
       origin: 'bottom_left'
       # [string='%f-%i%I%v.%x'] Filename for the output HPGL (%i=schematic, %x=plt). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [number=0.4826] Pen size (diameter) [mm]
       pen_size: 0.4826
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -3956,7 +3960,7 @@ outputs:
     type: 'pdf_sch_print'
     dir: 'Example/pdf_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -3980,6 +3984,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output PDF (%i=schematic, %x=pdf). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4229,7 +4235,7 @@ outputs:
     type: 'ps_sch_print'
     dir: 'Example/ps_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -4253,6 +4259,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output postscript (%i=schematic, %x=ps). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4952,7 +4960,7 @@ outputs:
     type: 'svg_sch_print'
     dir: 'Example/svg_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -4976,6 +4984,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output SVG (%i=schematic, %x=svg). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

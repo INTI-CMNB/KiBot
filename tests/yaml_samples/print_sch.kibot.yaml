@@ -9,3 +9,4 @@ outputs:
     dir: .
     options:
       output: Schematic.pdf
+      pages: "-3"

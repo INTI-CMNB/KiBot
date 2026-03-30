@@ -53,6 +53,7 @@ Added
 -  Report: ``buried_vias_count`` for KiCad 10
 -  SCH/PCB Variant: ``include`` option to export legacy variants to
    KiCad 10
+-  SCH Print: specify pages to be included (#907)
 
 Fixed
 ~~~~~

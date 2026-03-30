@@ -1,5 +1,5 @@
-55 outputs types with a total of 2191 different parameters
-Single type parameters: 2003 (91 %)
+55 outputs types with a total of 2196 different parameters
+Single type parameters: 2008 (91 %)
 Multi type parameters: 188 (9 %)
 Average parameters: 40
 Maximum number of parameters: 217
@@ -40,22 +40,22 @@ Outputs sorted by parameters:
 - populate: 22
 - download_datasheets: 23
 - kicanvas: 24
-- dxf_sch_print: 25
 - jobset: 25
-- pdf_sch_print: 25
-- ps_sch_print: 25
 - qr_lib: 25
-- svg_sch_print: 25
 - compress: 26
+- dxf_sch_print: 26
 - ipc2581: 26
 - kiri: 26
 - navigate_results: 26
 - navigate_results_rb: 26
+- pdf_sch_print: 26
+- ps_sch_print: 26
 - stencil_3d: 26
-- hpgl_sch_print: 27
+- svg_sch_print: 26
 - kikit_present: 27
 - step: 27
 - bom_labels: 28
+- hpgl_sch_print: 28
 - stencil_for_jig: 28
 - copy_files: 31
 - pdf_pcb_print: 31
@@ -151,7 +151,7 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  946
+-             String:  951
 -            Boolean:  552
 -             Number:  301
 - ListStringSingular:  300
@@ -167,7 +167,7 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  780 
+-             String:  785 
 -            Boolean:  485 
 - ListStringSingular:  297 
 -             Number:  207 
@@ -410,8 +410,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-95 totals types with a total of 2581 different parameters
-Single type parameters: 2367 (92 %)
+95 totals types with a total of 2586 different parameters
+Single type parameters: 2372 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -489,24 +489,24 @@ Totals sorted by parameters:
 - draw_fancy_stackup: 23
 - kicanvas: 24
 - kibom: 24
-- dxf_sch_print: 25
 - jobset: 25
-- pdf_sch_print: 25
-- ps_sch_print: 25
 - qr_lib: 25
-- svg_sch_print: 25
 - ibom: 25
 - kicost: 25
 - compress: 26
+- dxf_sch_print: 26
 - ipc2581: 26
 - kiri: 26
 - navigate_results: 26
 - navigate_results_rb: 26
+- pdf_sch_print: 26
+- ps_sch_print: 26
 - stencil_3d: 26
-- hpgl_sch_print: 27
+- svg_sch_print: 26
 - kikit_present: 27
 - step: 27
 - bom_labels: 28
+- hpgl_sch_print: 28
 - stencil_for_jig: 28
 - copy_files: 31
 - pdf_pcb_print: 31
@@ -643,7 +643,7 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1110
+-             String: 1115
 -            Boolean:  655
 -             Number:  353
 - ListStringSingular:  330
@@ -659,7 +659,7 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  926 
+-             String:  931 
 -            Boolean:  578 
 - ListStringSingular:  327 
 -             Number:  244 

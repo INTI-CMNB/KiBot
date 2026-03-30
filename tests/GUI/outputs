@@ -3291,6 +3291,13 @@
           null
         ],
         [
+          "pages",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "color_theme",
           [
             "DataTypeString"
@@ -5134,6 +5141,13 @@
           "all_pages",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "pages",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -12040,6 +12054,13 @@
           null
         ],
         [
+          "pages",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "color_theme",
           [
             "DataTypeString"
@@ -13069,6 +13090,13 @@
           "all_pages",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "pages",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -15462,6 +15490,13 @@
           "all_pages",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "pages",
+          [
+            "DataTypeString"
           ],
           null
         ],
