@@ -10779,6 +10779,13 @@
           null
         ],
         [
+          "include",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"

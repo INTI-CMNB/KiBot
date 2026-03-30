@@ -51,7 +51,8 @@ Added
 -  iBoM: ``mark_when_checked`` option (#881)
 -  KiRi: Support for uninitialized submodules (#888)
 -  Report: ``buried_vias_count`` for KiCad 10
--  SCH Variant: ``include`` option to export legacy variants to KiCad 10
+-  SCH/PCB Variant: ``include`` option to export legacy variants to
+   KiCad 10
 
 Fixed
 ~~~~~

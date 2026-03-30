@@ -3622,8 +3622,8 @@ outputs:
       # [string=''] Board variant to apply
       variant: ''
   # PCB with variant generator:
-  # This copy isn't intended for development.
-  # Is just a tweaked version of the original where you can look at the results.
+  # This copy isn't intended for development without a careful review.
+  # Can be used to export legacy variants to KiCad 10 variants
   - name: 'pcb_variant_example'
     comment: 'Creates a copy of the PCB with all the filters and variants applied.'
     type: 'pcb_variant'
@@ -3644,6 +3644,10 @@ outputs:
       # [boolean=false] Hide components in the Fab layer that are marked as excluded by a variant.
       # Affected by global options
       hide_excluded: false
+      # [string|list(string)='_all_'] {comma_sep} When exporting a KiCad 10 file also include the listed variants.
+      # The `_all_` keyword means all other variants.
+      # The variant indicated by the `variant` option will be the `Default` KiCad variant
+      include: '_all_'
       # [string='%f-%i%I%v.%x'] Filename for the output (%i=variant, %x=kicad_pcb). Affected by global options
       output: '%f-%i%I%v.%x'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.

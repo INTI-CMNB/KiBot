@@ -20,6 +20,10 @@ PCB_Variant_Options parameters
 
 -  ``hide_excluded`` :index:`: <pair: output - pcb_variant - options; hide_excluded>` [:ref:`boolean <boolean>`] (default: ``false``) Hide components in the Fab layer that are marked as excluded by a variant.
    Affected by global options.
+-  ``include`` :index:`: <pair: output - pcb_variant - options; include>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_all\_'``) [:ref:`comma separated <comma_sep>`] When exporting a KiCad 10 file also include the listed variants.
+   The `_all_` keyword means all other variants. |br|
+   The variant indicated by the `variant` option will be the `Default` KiCad variant.
+
 -  ``pre_transform`` :index:`: <pair: output - pcb_variant - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

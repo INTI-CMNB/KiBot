@@ -1,5 +1,5 @@
-55 outputs types with a total of 2190 different parameters
-Single type parameters: 2002 (91 %)
+55 outputs types with a total of 2191 different parameters
+Single type parameters: 2003 (91 %)
 Multi type parameters: 188 (9 %)
 Average parameters: 40
 Maximum number of parameters: 217
@@ -34,7 +34,7 @@ Outputs sorted by parameters:
 - pdfunite: 19
 - sch_variant: 19
 - odb: 20
-- pcb_variant: 20
+- pcb_variant: 21
 - gencad: 22
 - pcb_stats: 22
 - populate: 22
@@ -154,7 +154,7 @@ Outputs sorted by depth:
 -             String:  946
 -            Boolean:  552
 -             Number:  301
-- ListStringSingular:  299
+- ListStringSingular:  300
 -             Choice:  112
 -               Dict:   90
 -   ListDictOrString:   24
@@ -169,7 +169,7 @@ Outputs sorted by depth:
 Used as single data type:
 -             String:  780 
 -            Boolean:  485 
-- ListStringSingular:  296 
+- ListStringSingular:  297 
 -             Number:  207 
 -             Choice:  109 
 -               Dict:   77 
@@ -410,8 +410,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-95 totals types with a total of 2580 different parameters
-Single type parameters: 2366 (92 %)
+95 totals types with a total of 2581 different parameters
+Single type parameters: 2367 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -479,7 +479,7 @@ Totals sorted by parameters:
 - sch_variant: 19
 - include_table: 19
 - odb: 20
-- pcb_variant: 20
+- pcb_variant: 21
 - drc: 21
 - gencad: 22
 - pcb_stats: 22
@@ -646,7 +646,7 @@ Totals sorted by depth:
 -             String: 1110
 -            Boolean:  655
 -             Number:  353
-- ListStringSingular:  329
+- ListStringSingular:  330
 -             Choice:  144
 -               Dict:  101
 -           ListDict:   30
@@ -661,7 +661,7 @@ Totals sorted by depth:
 Used as single data type:
 -             String:  926 
 -            Boolean:  578 
-- ListStringSingular:  326 
+- ListStringSingular:  327 
 -             Number:  244 
 -             Choice:  141 
 -               Dict:   80 

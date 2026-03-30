@@ -7,8 +7,8 @@ PCB with variant generator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Creates a copy of the PCB with all the filters and variants applied.
-This copy isn't intended for development. |br|
-Is just a tweaked version of the original where you can look at the results. |br|
+This copy isn't intended for development without a careful review. |br|
+Can be used to export legacy variants to KiCad 10 variants
 
 Type: ``pcb_variant``
 
