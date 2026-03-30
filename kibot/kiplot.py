@@ -444,6 +444,7 @@ def get_board_comps_data(comps, kicad_variant=None):
     load_board()
     if GS.ki6:
         comps_hash = {c.sheet_full_path: c for c in comps}
+        comps_hash_ref = {c.ref: c for c in comps}
     else:
         comps_hash = {c.ref: c for c in comps}
     # Get the KiCad variables for fields
@@ -460,6 +461,12 @@ def get_board_comps_data(comps, kicad_variant=None):
         if GS.ki6:
             # By full sheet path
             c = comps_hash.get(m.GetPath().AsString())
+            if c is None:
+                # Check if we have a component with the same reference in the schematic
+                c = comps_hash_ref.get(ref)
+                if c is not None:
+                    logger.warning(W_PCBNOSCH+f"{ref} not linked to an existing schematic component, "
+                                   f"but {ref} found in schematic, assuming this is the same")
         else:
             # By reference
             c = comps_hash.get(ref)
