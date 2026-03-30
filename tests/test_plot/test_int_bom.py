@@ -1620,7 +1620,7 @@ def test_int_bom_fil_2(test_dir):
     check_kibom_test_netlist(rows, ref_column, 3, None, ['R1', 'C1', 'FID1'])
     rows, header, info = ctx.load_csv('virtual.csv')
     check_kibom_test_netlist(rows, ref_column, 2, None, ['R1', 'R2', 'C1', 'C2'])
-    ctx.search_err(r"Repeated R3")
+    ctx.search_err(r"Repeated PCB R3")
     ctx.test_compress(prj+'-result.zip', ['BoM/smd.csv', 'BoM/tht.csv', 'BoM/virtual.csv'])
     ctx.clean_up(keep_project=True)
 
