@@ -2123,6 +2123,7 @@ def test_ipc2581_xml(test_dir):
     ctx.clean_up(keep_project=True)
 
 
+@pytest.mark.slow
 def test_vrml_1(test_dir):
     prj = 'light_control'
     ctx = context.TestContext(test_dir, prj, 'vrml_1')
