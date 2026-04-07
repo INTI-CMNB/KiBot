@@ -30,6 +30,7 @@ Added
    -  –fail-on-warnings: to return error when we detected warning (See
       #828)
 
+-  Schematic: Support for private text on symbols (#914)
 -  generic filter: ``exclude_kicad_dnp`` to exclude components marked as
    DNP in KiCad (See #887)
 -  Variants: Experimental KiCad variants

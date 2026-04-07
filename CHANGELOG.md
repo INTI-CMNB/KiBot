@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - PCB stats (pcb_stats): The KiCad 10 PCB statistics
 - CLI:
   - --fail-on-warnings: to return error when we detected warning (See #828)
+- Schematic: Support for private text on symbols (#914)
 - generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
   KiCad (See #887)
 - Variants: Experimental KiCad variants

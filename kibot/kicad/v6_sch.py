@@ -536,18 +536,27 @@ class DrawTextV6(object):
         self.x = self.y = self.ang = 0
         self.effects = None
         self.box = Box()
+        self.private = False
 
     @staticmethod
     def parse(items):
         text = DrawTextV6()
-        text.text = _check_str(items, 1, 'text')
-        text.x, text.y, text.ang = _get_at(items, 2, 'text')
-        text.effects = _get_effects(items, 3, 'text')
+        name = 'text'
+        offset = 0
+        if isinstance(items[1], Symbol):
+            assert items[1].value() == 'private', items[1].value()
+            offset = 1
+            text.private = True
+        text.text = _check_str(items, offset+1, name)
+        text.x, text.y, text.ang = _get_at(items, offset+2, name)
+        text.effects = _get_effects(items, offset+3, name)
         return text
 
     def write(self):
-        data = [self.text, _symbol('at', [self.x, self.y, self.ang]), Sep()]
-        data.extend([self.effects.write(), Sep()])
+        data = []
+        if self.private:
+            data.append(Symbol('private'))
+        data.extend([self.text, _symbol('at', [self.x, self.y, self.ang]), Sep(), self.effects.write(), Sep()])
         return _symbol('text', data)
 
 

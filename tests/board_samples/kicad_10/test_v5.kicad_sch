@@ -1,5 +1,5 @@
 (kicad_sch
-	(version 20260101)
+	(version 20260306)
 	(generator "eeschema")
 	(generator_version "10.0")
 	(uuid "e6521bef-4109-48f7-8b88-4121b0468927")
@@ -3591,10 +3591,8 @@
 	(group "test_v5"
 		(uuid "d976b094-c755-4192-b8da-3ab5bde2dd80")
 		(lib_id "Library:test_v5")
-		(members "0f41a909-27c4-4be2-9d5e-9ae2108c8ff5" "632acde9-b7fd-4f04-8cb4-d2cbb06b3595"
-			"dabe541b-b164-4180-97a4-5ca761b86800" "df6e18b8-ccd0-4c1e-900a-b2a90cf8d87a"
-			"e12e827e-36be-4503-8eef-6fc7e8bc5d49"
-		)
+		(members
+		"0f41a909-27c4-4be2-9d5e-9ae2108c8ff5" "632acde9-b7fd-4f04-8cb4-d2cbb06b3595" "dabe541b-b164-4180-97a4-5ca761b86800" "df6e18b8-ccd0-4c1e-900a-b2a90cf8d87a" "e12e827e-36be-4503-8eef-6fc7e8bc5d49")
 	)
 	(sheet
 		(at 101.6 76.2)
