@@ -353,7 +353,9 @@ def read_svg_unique2(filename: str, prefix: str) -> etree.Element:
         content = f.read()
     for i in ids:
         content = content.replace("#"+i, "#" + prefix + i)
-    root = etree.fromstring(str.encode(content))
+    # Create a parser that allows huge files
+    parser = etree.XMLParser(huge_tree=True)
+    root = etree.fromstring(str.encode(content), parser=parser)
     for el in root.getiterator():
         if "id" in el.attrib and el.attrib["id"] != "origin":
             el.attrib["id"] = prefix + el.attrib["id"]

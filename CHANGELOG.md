@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - DRC/ERC: Configurable logo (#889)
 - iBoM: `mark_when_checked` option (#881)
 - KiRi: Support for uninitialized submodules (#888)
+- PcbDraw: Allow huge files, usually from panels.
 - Report: `buried_vias_count` for KiCad 10
 - SCH/PCB Variant: `include` option to export legacy variants to KiCad 10
 - SCH Print: specify pages to be included (#907)
