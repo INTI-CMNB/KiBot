@@ -138,68 +138,74 @@ def matrix(data: List[List[Numeric]]) -> Matrix:
     return np.array(data, dtype=np.float32)
 
 
-if not WITH_NUMPY:
-    # Pure Python implementation, slightly slower (i.e. 12.5 vs 11 s or 6.8 vs 5.2 s)
-    class PointIndex:
-        """Spatial index for fast endpoint matching during contour building."""
+# Pure Python implementation is slightly slower (i.e. 12.5 vs 11 s or 6.8 vs 5.2 s)
+class PointIndex:
+    """Spatial index for fast endpoint matching during contour building."""
 
-        def __init__(self, elements: List[SvgPathItem]) -> None:
-            self._elements = elements
-            n = len(elements)
-            self._active = [True] * n
-            self._starts = np.array([(e.start[0], e.start[1]) for e in elements]) if n > 0 else []
-            self._ends = np.array([(e.end[0], e.end[1]) for e in elements]) if n > 0 else []
-            self._start_index: Dict[Point, Set[int]] = defaultdict(set)
-            self._end_index: Dict[Point, Set[int]] = defaultdict(set)
-            for i, e in enumerate(elements):
-                self._start_index[e.start].add(i)
-                self._end_index[e.end].add(i)
+    def __init__(self, elements: List[SvgPathItem]) -> None:
+        self._elements = elements
+        n = len(elements)
+        self._active = np.ones(n, dtype=bool)
+        self._starts = np.array([(e.start[0], e.start[1]) for e in elements]) if n > 0 else np.empty((0, 2))
+        self._ends = np.array([(e.end[0], e.end[1]) for e in elements]) if n > 0 else np.empty((0, 2))
+        self._start_index: Dict[Point, Set[int]] = defaultdict(set)
+        self._end_index: Dict[Point, Set[int]] = defaultdict(set)
+        for i, e in enumerate(elements):
+            self._start_index[e.start].add(i)
+            self._end_index[e.end].add(i)
 
-        def has_active(self) -> bool:
-            return any(self._active) # bool(np.any(self._active))
+    def has_active(self) -> bool:
+        return bool(np.any(self._active))
 
-        def pop_first_active(self) -> SvgPathItem:
-            """Remove and return the first active element (seed for new contour)."""
-            try:
-                i = self._active.index(True)
-            except ValueError:
-                i = 0
-            self._mark_used(i)
-            return self._elements[i]
+    def pop_first_active(self) -> SvgPathItem:
+        """Remove and return the first active element (seed for new contour)."""
+        i = int(np.argmax(self._active))
+        self._mark_used(i)
+        return self._elements[i]
 
-        def find_by_end(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._ends, self._end_index, flip=False)
+    def find_by_end(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._ends, self._end_index, flip=False)
 
-        def find_by_start(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._starts, self._start_index, flip=False)
+    def find_by_start(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._starts, self._start_index, flip=False)
 
-        def find_by_start_flipped(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._starts, self._start_index, flip=True)
+    def find_by_start_flipped(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._starts, self._start_index, flip=True)
 
-        def find_by_end_flipped(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._ends, self._end_index, flip=True)
+    def find_by_end_flipped(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._ends, self._end_index, flip=True)
 
-        def _take(self, ref: Point, points: np.ndarray,
-                  index: Dict[Point, Set[int]], flip: bool) -> Optional[SvgPathItem]:
-            """Find an active element matching ref, mark it used, optionally flip."""
-            i = self._find(ref, points, index)
-            if i is None:
+    def _take(self, ref: Point, points: np.ndarray,
+              index: Dict[Point, Set[int]], flip: bool) -> Optional[SvgPathItem]:
+        """Find an active element matching ref, mark it used, optionally flip."""
+        i = self._find(ref, points, index)
+        if i is None:
+            return None
+        self._mark_used(i)
+        if flip:
+            self._elements[i].flip()
+        return self._elements[i]
+
+    def _find(self, ref: Point, points: np.ndarray,
+              index: Dict[Point, Set[int]]) -> Optional[int]:
+        # Fast path: exact dict lookup
+        candidates = index.get(ref)
+        if candidates:
+            for idx in candidates:
+                if self._active[idx]:
+                    return idx
+
+        # Slow path: Standard Python distance on active elements
+        if WITH_NUMPY:
+            active_idx = np.where(self._active)[0]
+            if len(active_idx) == 0:
                 return None
-            self._mark_used(i)
-            if flip:
-                self._elements[i].flip()
-            return self._elements[i]
-
-        def _find(self, ref: Point, points: np.ndarray,
-                  index: Dict[Point, Set[int]]) -> Optional[int]:
-            # Fast path: exact dict lookup
-            candidates = index.get(ref)
-            if candidates:
-                for idx in candidates:
-                    if self._active[idx]:
-                        return idx
-
-            # Slow path: Standard Python distance on active elements
+            diffs = points[active_idx] - np.array(ref)
+            sq_dists = diffs[:, 0]**2 + diffs[:, 1]**2
+            best = np.argmin(sq_dists)
+            if sq_dists[best] < 0.0001:  # 0.01^2, matches SvgPathItem.is_same
+                return int(active_idx[best])
+        else:
             best_idx = None
             min_sq_dist = float('inf')
             ref_x, ref_y = ref[0], ref[1]
@@ -221,84 +227,12 @@ if not WITH_NUMPY:
             if best_idx is not None and min_sq_dist < 0.0001:  # 0.01^2
                 return best_idx
 
-            return None
+        return None
 
-        def _mark_used(self, i: int) -> None:
-            self._active[i] = False
-            self._start_index[self._elements[i].start].discard(i)
-            self._end_index[self._elements[i].end].discard(i)
-else:
-    # Original implementation
-    class PointIndex:
-        """Spatial index for fast endpoint matching during contour building."""
-
-        def __init__(self, elements: List[SvgPathItem]) -> None:
-            self._elements = elements
-            n = len(elements)
-            self._active = np.ones(n, dtype=bool)
-            self._starts = np.array([(e.start[0], e.start[1]) for e in elements]) if n > 0 else np.empty((0, 2))
-            self._ends = np.array([(e.end[0], e.end[1]) for e in elements]) if n > 0 else np.empty((0, 2))
-            self._start_index: Dict[Point, Set[int]] = defaultdict(set)
-            self._end_index: Dict[Point, Set[int]] = defaultdict(set)
-            for i, e in enumerate(elements):
-                self._start_index[e.start].add(i)
-                self._end_index[e.end].add(i)
-
-        def has_active(self) -> bool:
-            return bool(np.any(self._active))
-
-        def pop_first_active(self) -> SvgPathItem:
-            """Remove and return the first active element (seed for new contour)."""
-            i = int(np.argmax(self._active))
-            self._mark_used(i)
-            return self._elements[i]
-
-        def find_by_end(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._ends, self._end_index, flip=False)
-
-        def find_by_start(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._starts, self._start_index, flip=False)
-
-        def find_by_start_flipped(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._starts, self._start_index, flip=True)
-
-        def find_by_end_flipped(self, ref: Point) -> Optional[SvgPathItem]:
-            return self._take(ref, self._ends, self._end_index, flip=True)
-
-        def _take(self, ref: Point, points: np.ndarray,
-                  index: Dict[Point, Set[int]], flip: bool) -> Optional[SvgPathItem]:
-            """Find an active element matching ref, mark it used, optionally flip."""
-            i = self._find(ref, points, index)
-            if i is None:
-                return None
-            self._mark_used(i)
-            if flip:
-                self._elements[i].flip()
-            return self._elements[i]
-
-        def _find(self, ref: Point, points: np.ndarray,
-                  index: Dict[Point, Set[int]]) -> Optional[int]:
-            # Fast path: exact dict lookup
-            candidates = index.get(ref)
-            if candidates:
-                for idx in candidates:
-                    if self._active[idx]:
-                        return idx
-            # Slow path: vectorized numpy distance on active elements
-            active_idx = np.where(self._active)[0]
-            if len(active_idx) == 0:
-                return None
-            diffs = points[active_idx] - np.array(ref)
-            sq_dists = diffs[:, 0]**2 + diffs[:, 1]**2
-            best = np.argmin(sq_dists)
-            if sq_dists[best] < 0.0001:  # 0.01^2, matches SvgPathItem.is_same
-                return int(active_idx[best])
-            return None
-
-        def _mark_used(self, i: int) -> None:
-            self._active[i] = False
-            self._start_index[self._elements[i].start].discard(i)
-            self._end_index[self._elements[i].end].discard(i)
+    def _mark_used(self, i: int) -> None:
+        self._active[i] = False
+        self._start_index[self._elements[i].start].discard(i)
+        self._end_index[self._elements[i].end].discard(i)
 
 
 def extract_arg(args: List[Any], index: int, default: Any=None) -> Any:
@@ -573,6 +507,94 @@ def empty_svg(**attrs: str) -> etree.ElementTree:
         root.attrib[key] = value
     return document
 
+def get_best_path_new(elements, path):
+    index = PointIndex(elements)
+    while index.has_active():
+        outline = [index.pop_first_active()]
+        size = 0
+        while size != len(outline) and index.has_active():
+            size = len(outline)
+
+            e = index.find_by_end(outline[0].start)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+            e = index.find_by_start_flipped(outline[0].start)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+            e = index.find_by_start(outline[-1].end)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+            e = index.find_by_end_flipped(outline[-1].end)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+        for i, x in enumerate(outline):
+            path += x.format(first=(i == 0))
+
+    return path
+
+def pseudo_distance(a: Point, b: Point) -> Numeric:
+    a0 = a[0] - b[0]
+    a1 = a[1] - b[1]
+    return a0*a0 + a1*a1
+
+def get_closest(reference: Point, elems: List[Point]) -> int:
+    try:
+        return elems.index(reference)
+    except ValueError:
+        return int(np.argmin([pseudo_distance(reference, x) for x in elems]))
+
+def get_best_path(elements, path):
+    while len(elements) > 0:
+        # Initiate seed for the outline
+        outline = [elements[0]]
+        elements = elements[1:]
+        size = 0
+        # Append new segments to the ends of outline until there is none to append.
+        while size != len(outline) and len(elements) > 0:
+            size = len(outline)
+
+            i = get_closest(outline[0].start, [x.end for x in elements])
+            if SvgPathItem.is_same(outline[0].start, elements[i].end):
+                outline.insert(0, elements[i])
+                del elements[i]
+                continue
+
+            i = get_closest(outline[0].start, [x.start for x in elements])
+            if SvgPathItem.is_same(outline[0].start, elements[i].start):
+                e = elements[i]
+                e.flip()
+                outline.insert(0, e)
+                del elements[i]
+                continue
+
+            i = get_closest(outline[-1].end, [x.start for x in elements])
+            if SvgPathItem.is_same(outline[-1].end, elements[i].start):
+                outline.insert(0, elements[i])
+                del elements[i]
+                continue
+
+            i = get_closest(outline[-1].end, [x.end for x in elements])
+            if SvgPathItem.is_same(outline[-1].end, elements[i].end):
+                e = elements[i]
+                e.flip()
+                outline.insert(0, e)
+                del elements[i]
+                continue
+        # ...then, append it to path.
+        first = True
+        for x in outline:
+            path += x.format(first)
+            first = False
+    return path
+
 def get_board_polygon(svg_elements: etree.Element) -> etree.Element:
     """
     Try to connect independents segments on Edge.Cuts and form a polygon
@@ -605,35 +627,7 @@ def get_board_polygon(svg_elements: etree.Element) -> etree.Element:
                 s = " M {0} {1} m-{2} 0 a {2} {2} 0 1 0 {3} 0 a {2} {2} 0 1 0 -{3} 0 ".format(
                     att["cx"], att["cy"], att["r"], 2 * float(att["r"]))
                 path += s
-    index = PointIndex(elements)
-    while index.has_active():
-        outline = [index.pop_first_active()]
-        size = 0
-        while size != len(outline) and index.has_active():
-            size = len(outline)
-
-            e = index.find_by_end(outline[0].start)
-            if e is not None:
-                outline.insert(0, e)
-                continue
-
-            e = index.find_by_start_flipped(outline[0].start)
-            if e is not None:
-                outline.insert(0, e)
-                continue
-
-            e = index.find_by_start(outline[-1].end)
-            if e is not None:
-                outline.insert(0, e)
-                continue
-
-            e = index.find_by_end_flipped(outline[-1].end)
-            if e is not None:
-                outline.insert(0, e)
-                continue
-
-        for i, x in enumerate(outline):
-            path += x.format(first=(i == 0))
+    path = get_best_path_new(elements, path) if GS.ki7 else get_best_path(elements, path)
     e = etree.Element("path", d=path, style="fill-rule: evenodd;")
     return e
 
