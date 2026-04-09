@@ -1481,6 +1481,35 @@ class PCB_PrintOptions(VariantOptions):
             c.included = v
         self.restore_graphics_from_layer(GS.board, self._comps_hash_for_fab_ex, self._layer_id_ex, self._graphs_ex)
 
+    def apply_ki10_holes_workaround(self):
+        """ KiCad holes are pads with a drill of the same size.
+            KiCad 10.0.0 plots holes and pads in the same way, black, so you can't tell if the object is a hole or a pad.
+            KiCad 9- draws a small copper border in black and the drill in white.
+            Here we create a small difference between the drill and the pad to get the same result.
+            Will most probably fail for complex drills """
+        self.ki10_holes = []
+        if not GS.ki10:
+            return
+        for m in GS.get_modules():
+            for pad in m.Pads():
+                dr = pad.GetDrillSize()
+                if dr.x < 100:
+                    continue
+                drx = dr.x
+                dry = dr.y
+                pdx = pad.GetSizeX()
+                pdy = pad.GetSizeY()
+                if drx == pdx and dry == pdy:
+                    logger.debug(f"Applying KiCad 10 workaround: drill size {dr} pad size {pad.GetSizeX()} {pad.GetSizeY()}")
+                    self.ki10_holes.append((pad, drx, dry))
+                    pad.SetDrillSizeX(drx - 100)
+                    pad.SetDrillSizeY(dry - 100)
+
+    def undo_ki10_holes_workaround(self):
+        for (pad, drx, dry) in self.ki10_holes:
+            pad.SetDrillSizeX(drx)
+            pad.SetDrillSizeY(dry)
+
     def generate_output(self, output):
         self.check_tools()
         if not self._pages:
@@ -1579,6 +1608,9 @@ class PCB_PrintOptions(VariantOptions):
             if p.layers == ['all'] and not p.get_user_defined('layers'):
                 logger.warning(W_NOLAYERS+f'No layers specified for `{p}` (`{self._parent.name}`), including `all`')
             re_filled_zones = False
+            # Workaround for KiCad 10.0.0 bug that plots pads and holes in an ambiguous way
+            # https://gitlab.com/kicad/code/kicad/-/issues/23275
+            self.apply_ki10_holes_workaround()
             for pos, la in enumerate(p._layers):
                 id = la._id
                 logger.debug('- Plotting layer {} ({})'.format(la.layer, id))
@@ -1616,6 +1648,7 @@ class PCB_PrintOptions(VariantOptions):
                     for item in items:
                         if isinstance(item, PCB_SHAPE):
                             GS.board.Delete(item)
+            self.undo_ki10_holes_workaround()
             # 2) Plot the frame using an empty layer and 1.0 scale
             po.SetMirror(False)
             if self.plot_sheet_reference:
