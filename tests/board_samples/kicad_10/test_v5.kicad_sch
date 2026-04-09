@@ -3170,6 +3170,26 @@
 		)
 		(uuid "ebadd2a5-21ab-4a7e-b5bc-6f737367e560")
 	)
+	(rule_area
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board no)
+		(dnp yes)
+		(polyline
+			(pts
+				(xy 165.1 85.09) (xy 195.58 85.09) (xy 195.58 106.68) (xy 194.31 107.95) (xy 163.83 107.95) (xy 162.56 106.68)
+				(xy 162.56 87.63)
+			)
+			(stroke
+				(width -0.0001)
+				(type dash)
+			)
+			(fill
+				(type none)
+			)
+			(uuid "216fa06d-1e17-40b6-ad78-090ea2ca5018")
+		)
+	)
 	(symbol
 		(lib_id "l1:Resistor")
 		(at 33.02 87.63 270)

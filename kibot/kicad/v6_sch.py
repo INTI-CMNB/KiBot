@@ -16,7 +16,7 @@ import os
 import re
 from ..gs import GS
 from .. import log
-from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE
+from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE, W_SCHNOTIMP
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -1718,12 +1718,10 @@ class Group(object):
         grp.lib_id = None
         name = 'group'
         grp.name = _check_str(items, 1, name)
-        logger.error(items)
         for c, i in enumerate(items[2:]):
             i_type = _check_is_symbol_list(i)
             if i_type == 'members':
                 grp.members = i[1:]
-                logger.error(grp.members)
             elif i_type == 'uuid':
                 grp.uuid = get_uuid(items, c+2, name)
             elif i_type == 'lib_id':
@@ -2251,11 +2249,19 @@ class Table(object):
         return _symbol(self.name, data)
 
 
+def not_imp(name, i_type):
+    logger.warning(W_SCHNOTIMP+f"`{i_type}` attribute of `{name}` not implemented")
+
+
 class RuleArea(object):
     def __init__(self):
         super().__init__()
         self.poly_line = None
         self.name = 'rule_area'
+        self.exclude_from_sim = None
+        self.in_bom = None
+        self.on_board = None
+        self.dnp = None
 
     @staticmethod
     def parse(items):
@@ -2264,12 +2270,38 @@ class RuleArea(object):
             i_type = _check_is_symbol_list(i)
             if i_type == 'polyline':
                 o.poly_line = DrawPolyLine.parse(i)
+            elif i_type == 'exclude_from_sim':
+                o.exclude_from_sim = _get_yes_no(i, 1, i_type)
+            elif i_type == 'in_bom':
+                o.in_bom = _get_yes_no(i, 1, i_type)
+                if not o.in_bom:
+                    not_imp(o.name, i_type)
+            elif i_type == 'on_board':
+                o.on_board = _get_yes_no(i, 1, i_type)
+                if not o.on_board:
+                    not_imp(o.name, i_type)
+            elif i_type == 'dnp':
+                o.dnp = _get_yes_no(i, 1, i_type)
+                if not o.dnp:
+                    not_imp(o.name, i_type)
             else:
                 raise SchError(f'Unknown {o.name} attribute `{i}`')
         return o
 
     def write(self):
         data = [Sep()]
+        if self.exclude_from_sim is not None:
+            data.append(_symbol_yn('exclude_from_sim', self.exclude_from_sim))
+            data.append(Sep())
+        if self.in_bom is not None:
+            data.append(_symbol_yn('in_bom', self.in_bom))
+            data.append(Sep())
+        if self.on_board is not None:
+            data.append(_symbol_yn('on_board', self.on_board))
+            data.append(Sep())
+        if self.dnp is not None:
+            data.append(_symbol_yn('dnp', self.dnp))
+            data.append(Sep())
         if self.poly_line:
             data.extend([self.poly_line.write(), Sep()])
         return _symbol(self.name, data)
