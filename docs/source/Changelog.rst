@@ -75,6 +75,7 @@ Fixed
 
 -  PCB Print: worksheet page 1 vs other pages look when using the
    internal mechanism (#903)
+-  Allow empty ``dir`` option
 
 Changed
 ~~~~~~~

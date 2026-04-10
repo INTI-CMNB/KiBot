@@ -171,7 +171,7 @@ class BaseOutput(RegOutput):
             out = RegOutput.get_output(to_dis)
             if out is None:
                 raise KiPlotConfigurationError('Unknown output `{}` in `disable_run_by_default`'.format(to_dis))
-        if self.dir[0] == '+':
+        if self.dir and self.dir[0] == '+':
             self.dir = (GS.global_dir if GS.global_dir is not None else './') + self.dir[1:]
         if not self.category:
             self.category = self.force_list(self._category)
