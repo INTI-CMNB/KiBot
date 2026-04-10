@@ -34,6 +34,7 @@ from .kicad.v5_sch import SchematicComponent, SchematicField
 from .bom.columnlist import ColumnList, BoMError
 from .bom.bom import do_bom
 from .var_kibom import KiBoM
+from .var_kicad import KiCad
 from .fil_base import (BaseFilter, apply_exclude_filter, apply_fitted_filter, apply_fixed_filter, reset_filters,
                        KICOST_NAME_TRANSLATIONS, apply_pre_transform)
 from .macros import macros, document, output_class  # noqa: F401
@@ -472,7 +473,9 @@ class BoMOptions(BaseOptions):
                 The `_kibom_simple` variant is a KiBoM variant without any filters and it provides some basic
                 compatibility with KiBoM. Note that this output has default filters that behaves like KiBoM.
                 The combination between the default for this option and the defaults for the filters provides
-                a behavior that mimics KiBoM default behavior """
+                a behavior that mimics KiBoM default behavior.
+                If you want to use KiCad 10 variants: use the name of the KiCad 10 variant, `Default` is the
+                default variant """
             self.output = GS.def_global_output
             """ *filename for the output (%i=bom). The extension depends on the selected format.
                 In the case of the **KICAD** format the extension comes from the name you selected in KiCad's
@@ -684,6 +687,9 @@ class BoMOptions(BaseOptions):
             # If the user didn't specify them they have equivalent defaults to the ones we are removing
             self.variant.clear_filters()
             return
+        if GS.ki10 and self.variant == 'Default' and not RegOutput.is_variant('Default'):
+            # When using KiCad 10 and specifying the name of the default KiCad variant, but it isn't defined, create it
+            KiCad.add_default()
         self.variant = RegOutput.check_variant(self.variant)
 
     def process_columns_config(self, cols, valid_columns, extra_columns, group_fields=None):

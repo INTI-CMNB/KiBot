@@ -25,6 +25,8 @@ outputs:
     comment: "Bill of Materials in CSV format"
     type: bom
     dir: BoM
+    options:
+      variant: Default
 
   - name: 'bom_internal_v1'
     comment: "Bill of Materials in CSV format for variant V1"

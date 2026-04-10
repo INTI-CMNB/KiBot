@@ -147,7 +147,9 @@ BoMOptions parameters
    The `_kibom_simple` variant is a KiBoM variant without any filters and it provides some basic
    compatibility with KiBoM. Note that this output has default filters that behaves like KiBoM. |br|
    The combination between the default for this option and the defaults for the filters provides
-   a behavior that mimics KiBoM default behavior.
+   a behavior that mimics KiBoM default behavior. |br|
+   If you want to use KiCad 10 variants: use the name of the KiCad 10 variant, `Default` is the
+   default variant.
 
 Used dicts
 ----------
