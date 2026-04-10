@@ -91,7 +91,7 @@ def test_erc_fail_k8_2(test_dir):
 
 def test_erc_fail_2(test_dir):
     """ Using a dummy SCH """
-    prj = '3Rs'
+    prj = 'dummy' if context.ki10() else '3Rs'
     ctx = context.TestContext(test_dir, prj, 'erc', '')
     ctx.run(CORRUPTED_SCH)
     ctx.clean_up()
