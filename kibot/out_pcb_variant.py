@@ -135,7 +135,10 @@ class PCB_Variant_Options(VariantOptions):
         for c in self._comps:
             if not hasattr(c, 'pcb_id'):
                 continue
-            m = GS.board.ResolveItem(KIID(c.pcb_id)).Cast()
+            m = GS.board.ResolveItem(KIID(c.pcb_id))
+            if m.GetClass() == "DELETED_BOARD_ITEM":
+                continue
+            m = m.Cast()
             m.SetDNP(not c.fitted)
             m.SetExcludedFromBOM(not c.included)
             for f in c.fields:
