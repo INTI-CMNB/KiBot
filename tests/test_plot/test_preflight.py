@@ -483,6 +483,7 @@ def test_update_xml_not_in_bom(test_dir):
 
 @pytest.mark.slow
 @pytest.mark.eeschema
+@pytest.mark.skipif(context.ki10(), reason="We load it before KiCad")
 def test_update_xml_fail(test_dir):
     """ Using a dummy SCH """
     prj = '3Rs'
