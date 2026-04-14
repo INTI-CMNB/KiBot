@@ -577,8 +577,8 @@ class KiConf(object):
 
     def check_lib_table(fname, table_name):
         KiConf.init(fname)
-        if KiConf.config_dir:
-            fp_name = os.path.join(KiConf.config_dir, table_name)
+        if GS.kicad_conf_path:
+            fp_name = os.path.join(GS.kicad_conf_path, table_name)
             if not os.path.isfile(fp_name):
                 # No global fp lib table
                 global_fp_name = os.path.join(KiConf.template_dir, table_name) if KiConf.template_dir else None
