@@ -314,9 +314,9 @@ class XRC(BasePreFlight):
         # Differences between ERC and DRC
         if GS.sch_file:
             # May be needed by DRC when checking parity?
-            KiConf.check_sym_lib_table(force=GS.ki10)
+            KiConf.check_sym_lib_table()
         if GS.pcb_file:
-            KiConf.check_fp_lib_table(force=GS.ki10)
+            KiConf.check_fp_lib_table()
         if self._sch_related:
             nm = 'ERC'
             err = ERC_ERROR
