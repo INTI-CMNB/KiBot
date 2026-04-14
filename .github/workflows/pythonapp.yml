@@ -90,7 +90,7 @@ jobs:
         ./${{ matrix.w_tests }}.sh
     - name: Store coverage
       if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Test_Coverage_${{ matrix.ki_release }}_${{ matrix.w_tests }}
         path: .coverage.*
@@ -104,7 +104,7 @@ jobs:
         ls -la coverage* .coverage*
     - name: Store results
       if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Test_Output_${{ matrix.ki_release }}_${{ matrix.w_tests }}
         # Important! empty directories are skipped!!!!
@@ -190,7 +190,7 @@ jobs:
         ./g4.sh
     - name: Store coverage
       if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Test_Coverage_Independent
         path: .coverage.*
@@ -202,7 +202,7 @@ jobs:
         python3-coverage html -d output/htmlcov_independent
     - name: Store results
       if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Test_Output_Independent
         # Important! empty directories are skipped!!!!
@@ -291,7 +291,7 @@ jobs:
         python3-coverage html -d htmlcov
 
     - name: Store result
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Test_Coverage_combined
         path: htmlcov
