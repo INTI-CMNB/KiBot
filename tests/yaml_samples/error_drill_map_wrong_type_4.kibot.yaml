@@ -1,0 +1,27 @@
+# Drills and Gerber drills
+kibot:
+  version: 1
+
+outputs:
+
+  - name: excellon_drill
+    comment: "Excellon drill files"
+    type: excellon
+    dir: Drill
+    options:
+      metric_units: true
+      pth_and_npth_single_file: false
+      use_aux_axis_as_origin: false
+      minimal_header: false
+      mirror_y_axis: false
+      report:
+        filename: 'report.rpt'
+      map: hpgl
+
+  - name: gerber_drills
+    comment: "Gerber drill files"
+    type: gerb_drill
+    dir: Drill
+    options:
+      use_aux_axis_as_origin: false
+
