@@ -269,7 +269,7 @@
 			(uuid "b1f3d5f2-cf1a-4ecc-bd0f-375f4d72d1a8")
 		)
 		(embedded_fonts no)
-		(model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0805_2012Metric.wrl"
+		(model "${KICAD6_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_0805_2012Metric.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -663,7 +663,7 @@
 			(uuid "e87e7715-e05d-4071-a657-65eacaab75c4")
 		)
 		(embedded_fonts no)
-		(model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0805_2012Metric.wrl"
+		(model "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0805_2012Metric.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -716,14 +716,6 @@
 		(uuid "00000000-0000-0000-0000-00005ebea29b")
 	)
 	(segment
-		(start 147.2375 78.6)
-		(end 149.7725 78.6)
-		(width 0.25)
-		(layer "F.Cu")
-		(net "GND")
-		(uuid "4ebf58f7-8428-4480-b240-bb7d3c895103")
-	)
-	(segment
 		(start 145.3625 78.6)
 		(end 146.4625 77.5)
 		(width 0.25)
@@ -754,6 +746,14 @@
 		(layer "F.Cu")
 		(net "Net-(C1-Pad1)")
 		(uuid "88783723-a7d1-470c-aea1-fc38629b827f")
+	)
+	(segment
+		(start 147.2375 78.6)
+		(end 149.7725 78.6)
+		(width 0.25)
+		(layer "F.Cu")
+		(net "GND")
+		(uuid "4ebf58f7-8428-4480-b240-bb7d3c895103")
 	)
 	(embedded_fonts no)
 )

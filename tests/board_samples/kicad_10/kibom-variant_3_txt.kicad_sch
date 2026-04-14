@@ -778,7 +778,7 @@
 				)
 			)
 		)
-		(property "default:_3D_model" "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2010_5025Metric.wrl"
+		(property "default:_3D_model" "${KICAD6_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2010_5025Metric.step"
 			(at 63.5 43.18 0)
 			(hide yes)
 			(show_name no)
