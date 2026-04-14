@@ -34,8 +34,8 @@ PCB3DExportOptions parameters
 
 -  ``highlight_on_top`` :index:`: <pair: output - blender_export - options - pcb3d; highlight_on_top>` [:ref:`boolean <boolean>`] (default: ``false``) Highlight over the component (not under).
 -  ``highlight_padding`` :index:`: <pair: output - blender_export - options - pcb3d; highlight_padding>` [:ref:`number <number>`] (default: ``1.5``) (range: 0 to 1000) How much the highlight extends around the component [mm].
--  ``kicad_3d_url`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'``) Base URL for the KiCad 3D models.
--  ``kicad_3d_url_suffix`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``''``) Text added to the end of the download URL.
+-  ``kicad_3d_url`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/api/v4/projects/21604637/repository/files/'``) Base URL for the KiCad 3D models.
+-  ``kicad_3d_url_suffix`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``'/raw?ref=VERSION'``) Text added to the end of the download URL.
    Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2.
 -  ``kicad_3d_url_version`` :index:`: <pair: output - blender_export - options - pcb3d; kicad_3d_url_version>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the *master* subdir in the URL by the KiCad version.
    In this way we download the 3D model corresponding to the installed KiCad instead

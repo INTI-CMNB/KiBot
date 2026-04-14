@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `--fail-on-warnings` now ignores filtered warning (as the help suggested)
   and you can get the old behavior adding `--fail-on-ignored` (#893)
+- 3D models: GitLab URL. Because the old URL is now blocked.
 
 
 ## [1.8.5] - 2025-11-26

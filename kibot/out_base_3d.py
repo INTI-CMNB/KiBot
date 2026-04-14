@@ -14,7 +14,7 @@ from .bom.units import comp_match
 from .EasyEDA.easyeda_3d import download_easyeda_3d_model
 from .fil_base import reset_filters
 from .misc import (W_MISS3D, W_FAILDL, W_DOWN3D, DISABLE_3D_MODEL_TEXT, W_BADTOL, W_BADRES, W_RESVALISSUE, W_RES3DNAME,
-                   W_MISSWRL, EMBED_PREFIX, get_file_hash)
+                   W_MISSWRL, EMBED_PREFIX, get_file_hash, USER_AGENT)
 from .gs import GS
 from .optionable import Optionable
 from .out_base import VariantOptions, BaseOutput
@@ -153,9 +153,9 @@ class Base3DOptions(VariantOptions):
                 them from LCSC database. In order to work you'll need to provide the LCSC
                 part number. The field containing the LCSC part number is defined by the
                 `field_lcsc_part` global variable """
-            self.kicad_3d_url = 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
+            self.kicad_3d_url = 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
             """ Base URL for the KiCad 3D models """
-            self.kicad_3d_url_suffix = ''
+            self.kicad_3d_url_suffix = '/raw?ref=VERSION'
             """ Text added to the end of the download URL.
                 Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2 """
             self.kicad_3d_url_version = True
@@ -186,7 +186,7 @@ class Base3DOptions(VariantOptions):
         logger.debug('Downloading `{}`'.format(url))
         failed = False
         try:
-            r = requests.get(url, allow_redirects=True)
+            r = requests.get(url, allow_redirects=True, headers={'User-Agent': USER_AGENT}, timeout=20)
         except Exception:
             failed = True
         if failed or r.status_code != 200:
@@ -213,12 +213,17 @@ class Base3DOptions(VariantOptions):
 
     def kicad_3d_download_url(self, fname):
         kicad_3d_url = self.kicad_3d_url
+        kicad_3d_url_suffix = self.kicad_3d_url_suffix
         if self.kicad_3d_url_version:
             # *-rc? tags are created before the release, using the release will fail
             extra = GS.kicad_version[GS.kicad_version.index("-rc"):][:4] if '-rc' in GS.kicad_version else ''
-            branch = f'/{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}{extra}/'
-            kicad_3d_url = kicad_3d_url.replace('/master/', branch)
-        return kicad_3d_url+urllib.parse.quote_plus(fname)+self.kicad_3d_url_suffix
+            # This worked until around 2026/04/13
+            # branch = f'/{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}{extra}/'
+            # kicad_3d_url = kicad_3d_url.replace('/master/', branch)
+            # This is nicer as we use the API
+            branch = f'{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}{extra}'
+            kicad_3d_url_suffix = kicad_3d_url_suffix.replace('VERSION', branch)
+        return kicad_3d_url+urllib.parse.quote_plus(fname)+kicad_3d_url_suffix
 
     def try_download_kicad(self, model, full_name, downloaded, rel_dirs, force_wrl, force_step):
         if not (model.startswith('${KISYS3DMOD}/') or re.search(r"^\$\{KICAD\d+_3DMODEL_DIR\}\/", model)):

@@ -324,11 +324,11 @@ outputs:
         highlight_on_top: false
         # [number=1.5] [0,1000] How much the highlight extends around the component [mm]
         highlight_padding: 1.5
-        # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-        kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-        # [string=''] Text added to the end of the download URL.
+        # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+        kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+        # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
         # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-        kicad_3d_url_suffix: ''
+        kicad_3d_url_suffix: '/raw?ref=VERSION'
         # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
         # In this way we download the 3D model corresponding to the installed KiCad instead
         # of the last available
@@ -1025,11 +1025,11 @@ outputs:
           source_type: 'files'
       # [boolean=true] Store the file pointed by symlinks, not the symlink
       follow_links: true
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
       # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
       # In this way we download the 3D model corresponding to the installed KiCad instead
       # of the last available
@@ -1480,11 +1480,11 @@ outputs:
       include_tracks: false
       # [boolean=false] Export zones
       include_zones: false
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
       # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
       # In this way we download the 3D model corresponding to the installed KiCad instead
       # of the last available
@@ -2079,11 +2079,11 @@ outputs:
       # [string=''] Name of the KiCad jobset file you want to use. Should have `kicad_jobset` extension.
       # Leave empty to look for a jobset with the same name as the project
       jobset: ''
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
       # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
       # In this way we download the 3D model corresponding to the installed KiCad instead
       # of the last available
@@ -4373,11 +4373,11 @@ outputs:
       highlight_on_top: false
       # [number=1.5] [0,1000] How much the highlight extends around the component [mm]
       highlight_padding: 1.5
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
       # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
       # In this way we download the 3D model corresponding to the installed KiCad instead
       # of the last available
@@ -4747,11 +4747,11 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
       # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
       # In this way we download the 3D model corresponding to the installed KiCad instead
       # of the last available
@@ -5042,11 +5042,11 @@ outputs:
       highlight_on_top: false
       # [number=1.5] [0,1000] How much the highlight extends around the component [mm]
       highlight_padding: 1.5
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
       # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
       # In this way we download the 3D model corresponding to the installed KiCad instead
       # of the last available

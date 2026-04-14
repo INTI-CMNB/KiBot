@@ -56,8 +56,8 @@ Export_3DOptions parameters
 -  ``include_soldermask`` :index:`: <pair: output - export_3d - options; include_soldermask>` [:ref:`boolean <boolean>`] (default: ``false``) Export soldermask layers as a set of flat faces.
 -  ``include_tracks`` :index:`: <pair: output - export_3d - options; include_tracks>` [:ref:`boolean <boolean>`] (default: ``false``) Export tracks and vias.
 -  ``include_zones`` :index:`: <pair: output - export_3d - options; include_zones>` [:ref:`boolean <boolean>`] (default: ``false``) Export zones.
--  ``kicad_3d_url`` :index:`: <pair: output - export_3d - options; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'``) Base URL for the KiCad 3D models.
--  ``kicad_3d_url_suffix`` :index:`: <pair: output - export_3d - options; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``''``) Text added to the end of the download URL.
+-  ``kicad_3d_url`` :index:`: <pair: output - export_3d - options; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/api/v4/projects/21604637/repository/files/'``) Base URL for the KiCad 3D models.
+-  ``kicad_3d_url_suffix`` :index:`: <pair: output - export_3d - options; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``'/raw?ref=VERSION'``) Text added to the end of the download URL.
    Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2.
 -  ``kicad_3d_url_version`` :index:`: <pair: output - export_3d - options; kicad_3d_url_version>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the *master* subdir in the URL by the KiCad version.
    In this way we download the 3D model corresponding to the installed KiCad instead
