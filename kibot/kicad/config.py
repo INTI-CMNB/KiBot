@@ -565,31 +565,36 @@ class KiConf(object):
             KiConf.fp_aliases = KiConf.load_all_lib_aliases(FP_LIB_TABLE, KiConf.footprint_dir, '*.pretty')
         return KiConf.fp_aliases
 
-    def check_fp_lib_table(fname=None):
+    def check_fp_lib_table(fname=None, force=False):
         if fname is None:
             fname = GS.pcb_file
-        KiConf.check_lib_table(fname, FP_LIB_TABLE)
+        KiConf.check_lib_table(fname, FP_LIB_TABLE, force)
 
-    def check_sym_lib_table(fname=None):
+    def check_sym_lib_table(fname=None, force=False):
         if fname is None:
             fname = GS.sch_file
-        KiConf.check_lib_table(fname, SYM_LIB_TABLE)
+        KiConf.check_lib_table(fname, SYM_LIB_TABLE, force)
 
-    def check_lib_table(fname, table_name):
+    def check_lib_table(fname, table_name, force):
         KiConf.init(fname)
+        if KiConf.config_dir is None and GS.kicad_conf_path and force:
+            # In force mode we try harder to get the table
+            # If we don't have a KiCad config file at least create the config dir
+            os.makedirs(GS.kicad_conf_path, exist_ok=True)
+            KiConf.config_dir = GS.kicad_conf_path
         if KiConf.config_dir:
-            fp_name = os.path.join(KiConf.config_dir, table_name)
-            if not os.path.isfile(fp_name):
-                # No global fp lib table
-                global_fp_name = os.path.join(KiConf.template_dir, table_name) if KiConf.template_dir else None
-                if global_fp_name and os.path.isfile(global_fp_name):
+            if not os.path.isfile(os.path.join(KiConf.config_dir, table_name)):
+                # No global lib table
+                global_table_name = os.path.join(KiConf.template_dir, table_name) if KiConf.template_dir else None
+                if global_table_name and os.path.isfile(global_table_name):
                     # Try to copy the template
                     if not GS.ci_cd_detected:
                         logger.warning(f'{W_MISLIBTAB}Missing default system footprint table {table_name},'
                                        ' copying the template')
-                    logger.debug(f'Copying {global_fp_name} to {fp_name}')
-                    copy2(global_fp_name, fp_name)
-                    atexit.register(KiConf.remove_lib_table, fp_name)
+                    table_name = os.path.join(os.path.dirname(fname), table_name)
+                    logger.debug(f'Copying {global_table_name} to {table_name}')
+                    copy2(global_table_name, table_name)
+                    atexit.register(KiConf.remove_lib_table, table_name)
 
     def remove_lib_table(fname):
         if os.path.isfile(fname):
