@@ -14,6 +14,7 @@ import os
 from shutil import move
 from .macros import macros, document, pre_class  # noqa: F401
 from .gs import GS
+from .kicad.config import KiConf
 from .optionable import Optionable
 from .kiplot import load_sch
 from .misc import ERC_ERROR, W_DEPR
@@ -76,6 +77,9 @@ class Run_ERC(BasePreFlight):  # noqa: F821
         if GS.ki8:
             logger.warning(W_DEPR+'For KiCad 8 use the `erc` preflight instead of `run_erc`')
         command = self.ensure_tool('KiAuto')
+        if GS.ki10:
+            # KiCad 10 also needs the fp-lib-table ...
+            KiConf.check_fp_lib_table(GS.pcb_file or GS.sch_file)
         # Workaround for KiCad 7 odd behavior: it forces a file extension
         # Note: One thing is adding the extension before you enter a name, other is add something you removed on purpose
         tmp_name = GS.tmp_file(suffix='.rpt', prefix='erc_report', what='ERC report', a_logger=logger)
