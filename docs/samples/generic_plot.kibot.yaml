@@ -2490,6 +2490,8 @@ outputs:
       display_category_images: true
       # [boolean=true] If True, display the KiBot version at the bottom of each page
       display_kibot_version: true
+      # [boolean=true] Expand KiBot %X and KiCad ${VARIABLE} values in the title
+      expand_text_vars: true
       # [boolean=true] Add a header containing information for the project
       header: true
       # [boolean=true] When creating a miniature preview of a document use a white background instead of a transparent background.
@@ -2529,6 +2531,8 @@ outputs:
       display_category_images: true
       # [boolean=true] If True, display the KiBot version at the bottom of each page
       display_kibot_version: true
+      # [boolean=true] Expand KiBot %X and KiCad ${VARIABLE} values in the title
+      expand_text_vars: true
       # [boolean=true] Add a header containing information for the project
       header: true
       # [boolean=true] When creating a miniature preview of a document use a white background instead of a transparent background.

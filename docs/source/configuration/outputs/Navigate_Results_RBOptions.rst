@@ -10,6 +10,7 @@ Navigate_Results_RBOptions parameters
 -  **output** :index:`: <pair: output - navigate_results_rb - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Filename for the output (%i=html, %x=navigate). Affected by global options.
 -  ``display_category_images`` :index:`: <pair: output - navigate_results_rb - options; display_category_images>` [:ref:`boolean <boolean>`] (default: ``true``) If True, we try to display images for categories according to the category type.
 -  ``display_kibot_version`` :index:`: <pair: output - navigate_results_rb - options; display_kibot_version>` [:ref:`boolean <boolean>`] (default: ``true``) If True, display the KiBot version at the bottom of each page.
+-  ``expand_text_vars`` :index:`: <pair: output - navigate_results_rb - options; expand_text_vars>` [:ref:`boolean <boolean>`] (default: ``true``) Expand KiBot %X and KiCad ${VARIABLE} values in the title.
 -  ``header`` :index:`: <pair: output - navigate_results_rb - options; header>` [:ref:`boolean <boolean>`] (default: ``true``) Add a header containing information for the project.
 -  ``image_white_background`` :index:`: <pair: output - navigate_results_rb - options; image_white_background>` [:ref:`boolean <boolean>`] (default: ``true``) When creating a miniature preview of a document use a white background instead of a transparent background.
    This helps when using a dark mode.

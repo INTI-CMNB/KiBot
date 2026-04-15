@@ -142,6 +142,8 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             self.title_url = Optionable
             """ [string|boolean=''] Target link when clicking the title, use false to remove.
                 KiBot will try with the origin of the current git repo when empty """
+            self.expand_text_vars = True
+            """ Expand KiBot %X and KiCad ${VARIABLE} values in the title """
             self.nav_bar = True
             """ Add a side navigation bar to quickly access to the outputs """
             self.render_markdown = True
@@ -425,6 +427,8 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             base_title = GS.pro_basename or GS.sch_basename or GS.pcb_basename or 'Unknown'
         text = self.expand_filename_sch(self.title if self.title else '+')
         if text[0] == '+':
+            if self.expand_text_vars:
+                base_title = self.expand_filename_sch(base_title)
             text = base_title+text[1:]
         self._solved_title = text
         # Now the URL

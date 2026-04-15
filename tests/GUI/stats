@@ -1,5 +1,5 @@
-55 outputs types with a total of 2196 different parameters
-Single type parameters: 2008 (91 %)
+55 outputs types with a total of 2198 different parameters
+Single type parameters: 2010 (91 %)
 Multi type parameters: 188 (9 %)
 Average parameters: 40
 Maximum number of parameters: 217
@@ -46,13 +46,13 @@ Outputs sorted by parameters:
 - dxf_sch_print: 26
 - ipc2581: 26
 - kiri: 26
-- navigate_results: 26
-- navigate_results_rb: 26
 - pdf_sch_print: 26
 - ps_sch_print: 26
 - stencil_3d: 26
 - svg_sch_print: 26
 - kikit_present: 27
+- navigate_results: 27
+- navigate_results_rb: 27
 - step: 27
 - bom_labels: 28
 - hpgl_sch_print: 28
@@ -152,7 +152,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String:  951
--            Boolean:  552
+-            Boolean:  554
 -             Number:  301
 - ListStringSingular:  300
 -             Choice:  112
@@ -168,7 +168,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  785 
--            Boolean:  485 
+-            Boolean:  487 
 - ListStringSingular:  297 
 -             Number:  207 
 -             Choice:  109 
@@ -410,8 +410,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-95 totals types with a total of 2586 different parameters
-Single type parameters: 2372 (92 %)
+95 totals types with a total of 2588 different parameters
+Single type parameters: 2374 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -497,13 +497,13 @@ Totals sorted by parameters:
 - dxf_sch_print: 26
 - ipc2581: 26
 - kiri: 26
-- navigate_results: 26
-- navigate_results_rb: 26
 - pdf_sch_print: 26
 - ps_sch_print: 26
 - stencil_3d: 26
 - svg_sch_print: 26
 - kikit_present: 27
+- navigate_results: 27
+- navigate_results_rb: 27
 - step: 27
 - bom_labels: 28
 - hpgl_sch_print: 28
@@ -644,7 +644,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1115
--            Boolean:  655
+-            Boolean:  657
 -             Number:  353
 - ListStringSingular:  330
 -             Choice:  144
@@ -660,7 +660,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  931 
--            Boolean:  578 
+-            Boolean:  580 
 - ListStringSingular:  327 
 -             Number:  244 
 -             Choice:  141 

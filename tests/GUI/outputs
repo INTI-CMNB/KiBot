@@ -7313,6 +7313,13 @@
           null
         ],
         [
+          "expand_text_vars",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "nav_bar",
           [
             "DataTypeBoolean"
@@ -7496,6 +7503,13 @@
           "title_url",
           [
             "DataTypeString",
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "expand_text_vars",
+          [
             "DataTypeBoolean"
           ],
           null

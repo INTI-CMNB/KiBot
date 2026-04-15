@@ -51,6 +51,8 @@ Added
 -  DRC/ERC: Configurable logo (#889)
 -  iBoM: ``mark_when_checked`` option (#881)
 -  KiRi: Support for uninitialized submodules (#888)
+-  Navigate results: ``expand_text_vars`` to expand %X and vars in the
+   title.
 -  PcbDraw:
 
    -  Allow huge files, usually from panels.
@@ -83,6 +85,7 @@ Changed
 -  ``--fail-on-warnings`` now ignores filtered warning (as the help
    suggested) and you can get the old behavior adding
    ``--fail-on-ignored`` (#893)
+-  3D models: GitLab URL. Because the old URL is now blocked.
 
 `1.8.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5>`__ - 2025-11-26
 -----------------------------------------------------------------------------------
