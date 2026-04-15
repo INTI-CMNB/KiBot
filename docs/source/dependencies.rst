@@ -132,24 +132,28 @@
    -  Create outputs preview for `navigate_results_rb`
    -  Create PNG, PS and EPS formats for `pcb_print`
 
-`numpy <https://pypi.org/project/numpy/>`__ :index:`: <pair: dependency; numpy>`  |image47| |image48| |Auto-download|
+`Curl <https://curl.se/>`__ :index:`: <pair: dependency; Curl>`  |image47| |image48|
+
+-  Optional to download datasheets for `download_datasheets`
+
+`numpy <https://pypi.org/project/numpy/>`__ :index:`: <pair: dependency; numpy>`  |image49| |image50| |Auto-download|
 
 -  Optional to automatically adjust SVG margin for `pcbdraw`
 
-`Pandoc <https://pandoc.org/>`__ :index:`: <pair: dependency; Pandoc>`  |image49| |image50|
+`Pandoc <https://pandoc.org/>`__ :index:`: <pair: dependency; Pandoc>`  |image51| |image52|
 
 -  Optional to create PDF/ODF/DOCX files for `report`
 -  Note: In CI/CD environments: the `kicad_auto_test` docker image contains it.
 
-`RAR <https://www.rarlab.com/>`__ :index:`: <pair: dependency; RAR>`  |image51| |image52| |Auto-download|
+`RAR <https://www.rarlab.com/>`__ :index:`: <pair: dependency; RAR>`  |image53| |image54| |Auto-download|
 
 -  Optional to compress in RAR format for `compress`
 
-`ReportLab <https://pypi.org/project/ReportLab/>`__ :index:`: <pair: dependency; ReportLab>`  |image53| |image54| |Auto-download|
+`ReportLab <https://pypi.org/project/ReportLab/>`__ :index:`: <pair: dependency; ReportLab>`  |image55| |image56| |Auto-download|
 
 -  Optional to create a PDF with BoM labels for `bom_labels`
 
-`XLSXWriter <https://pypi.org/project/XLSXWriter/>`__ :index:`: <pair: dependency; XLSXWriter>`  v1.1.2 |image55| |image56| |image57| |Auto-download|
+`XLSXWriter <https://pypi.org/project/XLSXWriter/>`__ :index:`: <pair: dependency; XLSXWriter>`  v1.1.2 |image57| |image58| |image59| |Auto-download|
 
 -  Optional to create XLSX files for `bom`
 
@@ -247,26 +251,30 @@
    :target: https://www.ghostscript.com/
 .. |image46| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
    :target: https://packages.debian.org/stable/ghostscript
-.. |image47| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
-   :target: https://pypi.org/project/numpy/
+.. |image47| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/llave-inglesa-22x22.png
+   :target: https://curl.se/
 .. |image48| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
-   :target: https://packages.debian.org/stable/python3-numpy
-.. |image49| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/llave-inglesa-22x22.png
-   :target: https://pandoc.org/
+   :target: https://packages.debian.org/stable/curl
+.. |image49| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
+   :target: https://pypi.org/project/numpy/
 .. |image50| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
-   :target: https://packages.debian.org/stable/pandoc
+   :target: https://packages.debian.org/stable/python3-numpy
 .. |image51| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/llave-inglesa-22x22.png
-   :target: https://www.rarlab.com/
+   :target: https://pandoc.org/
 .. |image52| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
-   :target: https://packages.debian.org/stable/rar
-.. |image53| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
-   :target: https://pypi.org/project/ReportLab/
+   :target: https://packages.debian.org/stable/pandoc
+.. |image53| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/llave-inglesa-22x22.png
+   :target: https://www.rarlab.com/
 .. |image54| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
-   :target: https://packages.debian.org/stable/python3-reportlab
+   :target: https://packages.debian.org/stable/rar
 .. |image55| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
+   :target: https://pypi.org/project/ReportLab/
+.. |image56| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
+   :target: https://packages.debian.org/stable/python3-reportlab
+.. |image57| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/Python-logo-notext-22x22.png
    :target: https://pypi.org/project/XLSXWriter/
-.. |image56| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/PyPI_logo_simplified-22x22.png
+.. |image58| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/PyPI_logo_simplified-22x22.png
    :target: https://pypi.org/project/XLSXWriter/
-.. |image57| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
+.. |image59| image:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/images/debian-openlogo-22x22.png
    :target: https://packages.debian.org/stable/python3-xlsxwriter
 

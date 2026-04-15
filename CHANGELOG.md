@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 3D models: option to download the latest 3D models (`kicad_3d_url_version`)
   (See #899)
 - BoM: descriptive error when using `kicad` format and no options found.
+- Download Datasheets: now uses `curl` if installed.
 - DRC/ERC: Configurable logo (#889)
 - iBoM: `mark_when_checked` option (#881)
 - KiRi: Support for uninitialized submodules (#888)

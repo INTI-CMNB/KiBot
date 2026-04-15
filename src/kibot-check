@@ -146,6 +146,41 @@ deps = '{\
         "url": null,\
         "url_down": null\
     },\
+    "Curl": {\
+        "arch": "curl",\
+        "command": "curl",\
+        "comments": [],\
+        "deb_package": "curl",\
+        "downloader": null,\
+        "downloader_str": null,\
+        "extra_arch": null,\
+        "extra_checks": null,\
+        "extra_deb": null,\
+        "help_option": "--version",\
+        "importance": 1,\
+        "in_debian": true,\
+        "is_kicad_plugin": false,\
+        "is_python": false,\
+        "name": "Curl",\
+        "no_cmd_line_version": false,\
+        "no_cmd_line_version_old": false,\
+        "output": "download_datasheets",\
+        "plugin_dirs": null,\
+        "pypi_name": "Curl",\
+        "role": [\
+            {\
+                "all_versions": {},\
+                "desc": "Download datasheets",\
+                "mandatory": false,\
+                "max_version": null,\
+                "output": "download_datasheets",\
+                "version": null\
+            }\
+        ],\
+        "tests": [],\
+        "url": "https://curl.se/",\
+        "url_down": null\
+    },\
     "Ghostscript": {\
         "arch": "ghostscript",\
         "command": "gs",\

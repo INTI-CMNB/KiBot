@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2021-2025 Salvador E. Tropea
-# Copyright (c) 2021-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2021-2026 Salvador E. Tropea
+# Copyright (c) 2021-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+"""
+Dependencies:
+  - name: Curl
+    role: Download datasheets
+    url: https://curl.se/
+    debian: curl
+    arch: curl
+"""
 import os
 import re
 import requests
+from subprocess import CalledProcessError
 import urllib.request
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .fil_base import DummyFilter
 from .error import KiPlotConfigurationError
+from .kiplot import run_command
 from .misc import W_UNKFLD, W_ALRDOWN, W_FAILDL, USER_AGENT
 from .gs import GS
 from .macros import macros, document, output_class  # noqa: F401
@@ -83,32 +93,43 @@ class Download_Datasheets_Options(VariantOptions):
         elif not os.path.isfile(dest):
             # Download
             if not self._dry:
-                if 'digikey' in ds:
-                    req = urllib.request.Request(ds)
-                    req.add_header('User-Agent', USER_AGENT)
+                downloaded = False
+                if self.curl_command:
+                    # Using curl
+                    cmd = [self.curl_command, '-o', dest, ds]
                     try:
-                        data = urllib.request.urlopen(req).read()
-                    except Exception as e:
-                        return self.do_warning('Failed '+str(e), ds, c)
-                else:
-                    try:
-                        r = requests.get(ds, allow_redirects=True, headers={'User-Agent': USER_AGENT}, timeout=20)
-                    except requests.exceptions.ReadTimeout:
-                        return self.do_warning('Timeout', ds, c)
-                    except requests.exceptions.SSLError:
-                        return self.do_warning('SSL Error', ds, c)
-                    except requests.exceptions.TooManyRedirects:
-                        return self.do_warning('More than 30 redirections', ds, c)
-                    except requests.exceptions.ConnectionError:
-                        return self.do_warning('Connection', ds, c)
-                    except requests.exceptions.RequestException as e:
-                        return self.do_warning(str(e), ds, c)
-                    if r.status_code != 200:
-                        return self.do_warning('Failed with status '+str(r.status_code), ds, c)
+                        run_command(cmd, just_raise=True)
+                        downloaded = True
+                    except CalledProcessError as e:
+                        logger.warning(W_FAILDL+f'Failed to download {ds} using {self.get_command} ({e})')
+                if not downloaded:
+                    # Using Python's request
+                    if 'digikey' in ds:
+                        req = urllib.request.Request(ds)
+                        req.add_header('User-Agent', USER_AGENT)
+                        try:
+                            data = urllib.request.urlopen(req).read()
+                        except Exception as e:
+                            return self.do_warning('Failed '+str(e), ds, c)
                     else:
-                        data = r.content
-                with open(dest, 'wb') as f:
-                    f.write(data)
+                        try:
+                            r = requests.get(ds, allow_redirects=True, headers={'User-Agent': USER_AGENT}, timeout=20)
+                        except requests.exceptions.ReadTimeout:
+                            return self.do_warning('Timeout', ds, c)
+                        except requests.exceptions.SSLError:
+                            return self.do_warning('SSL Error', ds, c)
+                        except requests.exceptions.TooManyRedirects:
+                            return self.do_warning('More than 30 redirections', ds, c)
+                        except requests.exceptions.ConnectionError:
+                            return self.do_warning('Connection', ds, c)
+                        except requests.exceptions.RequestException as e:
+                            return self.do_warning(str(e), ds, c)
+                        if r.status_code != 200:
+                            return self.do_warning('Failed with status '+str(r.status_code), ds, c)
+                        else:
+                            data = r.content
+                    with open(dest, 'wb') as f:
+                        f.write(data)
             self._downloaded.add(name)
             self._created.append(os.path.relpath(dest))
         elif self._dry:
@@ -143,6 +164,7 @@ class Download_Datasheets_Options(VariantOptions):
             # Add a dummy filter to force the creation of a components list
             self.dnf_filter = DummyFilter()
         super().run(output_dir)
+        self.curl_command = self.check_tool('Curl')
         self._urls = {}
         self._downloaded = set()
         self._created = []
