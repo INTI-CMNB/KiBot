@@ -23,6 +23,7 @@ if sys.path[0] != prev_dir:
 
 import kibot.log as log
 log.set_domain('kibot')
+log.warn_all = True
 logger = log.init()
 logger.setLevel(logging.DEBUG)
 

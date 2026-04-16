@@ -258,7 +258,7 @@ def test_auto_pcb_and_cfg_4(test_dir):
     shutil.copy2(ctx.board_file, ctx.get_out_path(brd))
     yaml_file = os.path.basename(ctx.yaml_file)
     shutil.copy2(ctx.yaml_file, ctx.get_out_path(yaml_file))
-    ctx.run(extra=['-s', 'all', '-i'], no_out_dir=True, no_board_file=True, no_yaml_file=True, chdir_out=True)
+    ctx.run(extra=['-s', 'all', '-i', '--warn-all'], no_out_dir=True, no_board_file=True, no_yaml_file=True, chdir_out=True)
     ctx.search_err('Using ./'+sch)
     ctx.search_out('Using config file: '+yaml_file)
     ctx.clean_up()
