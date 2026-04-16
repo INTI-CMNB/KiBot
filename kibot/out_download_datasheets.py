@@ -62,6 +62,7 @@ class Download_Datasheets_Options(VariantOptions):
         # Used to collect the targets
         self._dry = False
         self._unknown_is_error = True
+        self._curl_command = None   # We detect it on `run`
 
     def config(self, parent):
         super().config(parent)
@@ -94,9 +95,9 @@ class Download_Datasheets_Options(VariantOptions):
             # Download
             if not self._dry:
                 downloaded = False
-                if self.curl_command:
+                if self._curl_command:
                     # Using curl
-                    cmd = [self.curl_command, '-o', dest, ds]
+                    cmd = [self._curl_command, '-o', dest, ds]
                     try:
                         run_command(cmd, just_raise=True)
                         downloaded = True
@@ -164,7 +165,7 @@ class Download_Datasheets_Options(VariantOptions):
             # Add a dummy filter to force the creation of a components list
             self.dnf_filter = DummyFilter()
         super().run(output_dir)
-        self.curl_command = self.check_tool('Curl')
+        self._curl_command = self.check_tool('Curl')
         self._urls = {}
         self._downloaded = set()
         self._created = []
