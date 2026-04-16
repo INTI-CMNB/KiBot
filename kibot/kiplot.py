@@ -312,7 +312,7 @@ def load_any_sch(file, project, fatal=True, extra_msg=None):
         except Exception as e:
             # This is not fatal
             logger.debug(f"Failed to get the top level sheets: {e}")
-        if mapped_uuid is None:
+        if mapped_uuid is None and GS.ki10:
             logger.warning(W_NOUUIDMAP+"Unable to map the SCH file to an UUID")
     # End of schematic UUID mapping
     try:
