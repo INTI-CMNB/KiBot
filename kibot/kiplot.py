@@ -378,7 +378,7 @@ def create_component_from_footprint(m, ref, env):
     f.number = 3
     c.add_field(f)
     # Other fields
-    copy_fields(c, m, env)
+    copy_fields(c, GS.get_fields(m), env)
     c._solve_fields(None)
     try:
         c.split_ref()
@@ -394,28 +394,28 @@ class PadProperty(object):
     pass
 
 
-def expand_footprint_fields(fields, env):
-    extra_env = {k.upper() if k.lower() in INTERNAL_FIELDS else k: v for k, v in fields.items()}
-    new_fields = {}
-    for k, v in fields.items():
-        new_value = v
-        depth = 1
-        used_extra = [False]
-        while depth < GS.MAXDEPTH:
-            new_value = expand_env(new_value, env, extra_env, used_extra=used_extra)
-            if not used_extra[0]:
-                break
-            depth += 1
-            if depth == GS.MAXDEPTH:
-                logger.warning(W_MAXDEPTH+'Too much nested variables replacements, possible loop ({})'.format(v))
-        # Remove extra spaces as we did with the schematic values
-        new_fields[k] = new_value.strip()
-    return new_fields
+def expand_one_footprint_field(v, env, extra_env):
+    new_value = v
+    depth = 1
+    used_extra = [False]
+    while depth < GS.MAXDEPTH:
+        new_value = expand_env(new_value, env, extra_env, used_extra=used_extra)
+        if not used_extra[0]:
+            break
+        depth += 1
+        if depth == GS.MAXDEPTH:
+            logger.warning(W_MAXDEPTH+f'Too much nested variables replacements, possible loop ({v})')
+    # Remove extra spaces as we did with the schematic values
+    return new_value.strip()
 
 
-def copy_fields(c, m, env):
-    real_fields = GS.get_fields(m)
-    expanded_fields = expand_footprint_fields(real_fields, env)
+def create_extra_env(fields):
+    return {k.upper() if k.lower() in INTERNAL_FIELDS else k: v for k, v in fields.items()}
+
+
+def copy_fields(c, real_fields, env, extra_env=None):
+    extra_env = extra_env or create_extra_env(real_fields)
+    expanded_fields = {k: expand_one_footprint_field(v, env, extra_env) for k, v in real_fields.items()}
     for name, value in real_fields.items():
         if c.is_field(name.lower()):
             # Already there
@@ -501,10 +501,21 @@ def get_board_comps_data(comps, kicad_variant=None):
                 # We already got this reference and filled the PCB info, this is another copy
                 c = c.copy()
             comps.append(c)
+        real_fields = GS.get_fields(m)
+        extra_env = create_extra_env(real_fields)
+
+        # Check the "Value", inform if different
         new_value = m.GetValue()
-        if new_value != c.value and '${' not in c.value:
-            logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` PCB: `{new_value}`)")
+        if new_value != c.value:
+            expanded_value = expand_one_footprint_field(c.value, env, extra_env)
+            if new_value != expanded_value:
+                logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` "
+                               f"(`{expanded_value}`) PCB: `{new_value}`)")
+        if 'Value' in real_fields:
+            # We already computed it
+            del real_fields['Value']
         c.value = new_value
+
         c.bottom = m.IsFlipped()
         c.footprint_rot = m.GetOrientationDegrees()
         center = GS.get_center(m)
@@ -513,7 +524,7 @@ def get_board_comps_data(comps, kicad_variant=None):
         (c.footprint_w, c.footprint_h) = GS.get_fp_size(m)
         c.pad_properties = {}
         if GS.global_use_pcb_fields:
-            copy_fields(c, m, env)
+            copy_fields(c, real_fields, env, extra_env)
         c.has_pcb_info = True
         # Net
         net_name = set()
