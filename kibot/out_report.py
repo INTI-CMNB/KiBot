@@ -677,7 +677,6 @@ class ReportOptions(VariantOptions):
                 self._drills_ec[d_ec] = self._drills_ec.get(d_ec, 0) + 1
                 self.vias_count += 1
                 via_t = via.GetViaType()
-                logger.error(via_t)
                 if via_t == GS.VIATYPE_THROUGH:
                     self.thru_vias_count += 1
                 elif not GS.ki10 and via_t == GS.VIATYPE_BLIND_BURIED:
