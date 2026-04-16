@@ -444,6 +444,7 @@ def convert_downloader(dep, system, plat):
     # Get the download page
     content = download(dep.url_down)
     if content is None:
+        logger.debug('- Failed to download web page')
         return None, None
     # Look for the URL
     res = re.search(r'href\s*=\s*"([^"]+)">magick<', content.decode())
@@ -454,6 +455,7 @@ def convert_downloader(dep, system, plat):
     # Get the binary
     content = download(url)
     if content is None:
+        logger.debug('- Failed to download binary')
         return None, None
     # Can we run the AppImage?
     dest_bin = write_executable(dep.command, content)
