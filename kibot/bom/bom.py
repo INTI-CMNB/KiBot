@@ -332,7 +332,7 @@ class ComponentGroup(object):
         self.fields[ColumnList.COL_PART_LIB_L] = comp.lib
         self.fields[ColumnList.COL_DATASHEET_L] = comp.datasheet
         self.fields[ColumnList.COL_FP_L] = comp.footprint
-        if uses_fp_info and not comp.has_pcb_info:
+        if uses_fp_info and not comp.has_pcb_info and comp.on_board:
             logger.warning(W_MISSFPINFO+'Missing footprint information for {}'.format(comp.ref))
             if not GS.pcb_file:
                 logger.warning(W_MISSFPINFO+'Please provide a PCB file')

@@ -71,6 +71,8 @@ Fixed
    currently installed KiCad version, not the one from ``master`` (#899)
 -  Blender export: problems with component values containing ``/``
    (#885)
+-  BoM: ``Missing footprint information for`` for components marked as
+   not on board.
 -  Panelize:
 
    -  Problems when using angles (#898)
