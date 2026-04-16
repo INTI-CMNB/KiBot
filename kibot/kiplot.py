@@ -28,7 +28,7 @@ from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, vers
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP)
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -1002,6 +1002,7 @@ def solve_schematic(base_dir, a_schematic=None, a_board_file=None, config=None, 
             schematic = schematics[0]
             logger.info('Using SCH file: '+os.path.relpath(schematic))
         elif len(schematics) > 1:
+            is_silly = W_SILLY
             # Look for a schematic with the same name as the config
             if config:
                 if config[0] == '.':
@@ -1035,12 +1036,13 @@ def solve_schematic(base_dir, a_schematic=None, a_board_file=None, config=None, 
                         break
                 else:
                     # No way to select one, just take the first
+                    is_silly = ''
                     if GS.ki6:
                         schematic = guess_ki6_sch(schematics)
                     if not schematic:
                         schematic = schematics[0]
             msg = ' if you want to use another use -e option' if sug_e else ''
-            logger.warning(W_VARSCH + 'More than one SCH file found in `'+base_dir+'`.\n'
+            logger.warning(is_silly+W_VARSCH+'More than one SCH file found in `'+base_dir+'`.\n'
                            '  Using '+schematic+msg+'.')
     if schematic and not os.path.isfile(schematic):
         GS.exit_with_error("Schematic file not found: "+schematic, NO_SCH_FILE)

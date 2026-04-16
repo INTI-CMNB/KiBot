@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - PCB stats (pcb_stats): The KiCad 10 PCB statistics
 - CLI:
   - --fail-on-warnings: to return error when we detected warning (See #828)
+  - --warn-all: to display some warnings that you'll find during common use
 - Schematic: Support for private text on symbols (#914)
 - generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
   KiCad (See #887)
@@ -55,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--fail-on-warnings` now ignores filtered warning (as the help suggested)
   and you can get the old behavior adding `--fail-on-ignored` (#893)
 - 3D models: GitLab URL. Because the old URL is now blocked.
+- W009 and W044 warnings promoted to "common use" warnings
 
 
 ## [1.8.5] - 2025-11-26

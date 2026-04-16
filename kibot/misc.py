@@ -165,6 +165,7 @@ ISO_CURRENCIES = {'EUR', 'USD', 'JPY', 'BGN', 'CZK', 'DKK', 'GBP', 'HUF', 'PLN',
                   'RUB', 'TRY', 'AUD', 'BRL', 'CAD', 'CNY', 'HKD', 'IDR', 'ILS', 'INR', 'KRW', 'MXN', 'MYR', 'NZD', 'PHP',
                   'SGD', 'THB', 'ZAR'}
 
+W_SILLY = '*'
 W_VARCFG = '(W001) '
 W_VARPCB = '(W002) '
 W_PYCACHE = '(W003) '

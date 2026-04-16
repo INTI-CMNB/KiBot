@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -29,7 +29,7 @@ from ..error import KiPlotConfigurationError
 from ..gs import GS
 from .. import log
 from ..misc import (W_NOCONFIG, W_NOKIENV, W_NOLIBS, W_NODEFSYMLIB, MISSING_WKS, W_MAXDEPTH, W_3DRESVER, W_LIBTVERSION,
-                    W_LIBTUNK, W_MISLIBTAB, EMBED_PREFIX)
+                    W_LIBTUNK, W_MISLIBTAB, EMBED_PREFIX, W_SILLY)
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import _check_is_symbol_list, _check_integer, _check_relaxed
 
@@ -372,7 +372,7 @@ class KiConf(object):
                     logger.debug('- KiCad var: {}="{}"'.format(k, v))
                 KiConf.kicad_env[k] = v
         else:
-            logger.warning(W_NOKIENV + 'KiCad config without environment.vars section')
+            logger.warning(W_SILLY + W_NOKIENV + 'KiCad config without environment.vars section')
 
     def _look_env_var(base_name, old, only_old, ki6_diff, no_dir):
         """ Looks for a KiCad variable definition.

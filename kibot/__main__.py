@@ -11,7 +11,7 @@ Usage:
   kibot [-b BOARD] [-e SCHEMA] [-c CONFIG] [-d OUT_DIR] [-s PRE]
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
-         [--fail-on-warnings] [-F] [--warn-ci-cd] [--banner N]
+         [--fail-on-warnings] [-F] [--warn-ci-cd] [--warn-all] [--banner N]
          [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
@@ -97,6 +97,7 @@ Options:
                                    list of variants
   -w, --no-warn LIST               Exclude the mentioned warnings (comma sep)
   -W, --stop-on-warnings           Stop on warnings
+  --warn-all                       Enables some common use warnings
   --warn-ci-cd                     Don't disable warnings expected on CI/CD
                                    environments
   -x, --example                    Create a template configuration file
@@ -535,6 +536,7 @@ def main():
     apply_warning_filter(args)
     log.stop_on_warnings = args.stop_on_warnings
     log.dont_stop = args.dont_stop
+    log.warn_all = args.warn_all
     logger.debugl(2, f'Command line options: {args}')
 
     # Now we have the debug level set we can check (and optionally inform) KiCad info

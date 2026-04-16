@@ -29,6 +29,8 @@ Added
 
    -  –fail-on-warnings: to return error when we detected warning (See
       #828)
+   -  –warn-all: to display some warnings that you’ll find during common
+      use
 
 -  Schematic: Support for private text on symbols (#914)
 -  generic filter: ``exclude_kicad_dnp`` to exclude components marked as
@@ -89,6 +91,7 @@ Changed
    suggested) and you can get the old behavior adding
    ``--fail-on-ignored`` (#893)
 -  3D models: GitLab URL. Because the old URL is now blocked.
+-  W009 and W044 warnings promoted to “common use” warnings
 
 `1.8.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5>`__ - 2025-11-26
 -----------------------------------------------------------------------------------
