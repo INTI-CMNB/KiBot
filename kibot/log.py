@@ -218,6 +218,14 @@ class MyLogger(logging.Logger):
 
     def non_critical_error(self, msg, *args, **kwargs):
         buf = str(msg)
+        global debug_level
+        if debug_level > 0:
+            current_stack = "".join(traceback.format_stack(limit=None)[:-1])
+            e_msg = f"--- Execution Stack ---\n{current_stack}\n"
+            exc_trace = traceback.format_exc()
+            if exc_trace:
+                e_msg += f"--- Exception Trace --\n{exc_trace}"
+            buf = e_msg + buf
         push_error_msg(buf)
         if sys.version_info >= (3, 8):
             super().error(buf, stacklevel=2, **kwargs)  # pragma: no cover (Py38)
