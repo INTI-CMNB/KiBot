@@ -76,6 +76,35 @@ class Download_Datasheets_Options(VariantOptions):
         logger.warning(W_FAILDL+'{} during download of `{}` [{}]'.format(msg, ds, c.ref))
         return None
 
+    def validate_downloaded(self, file):
+        if not os.path.isfile(file):
+            # Not there
+            logger.debug("- Download command succeed, but no downloaded file")
+            return False
+        if os.path.getsize(file) == 0:
+            # Empty
+            os.remove(file)
+            logger.debug("- Empty file downloaded, removing it")
+            return False
+        if os.path.splitext(file)[1].lower() != ".pdf":
+            # There, not empty and not a PDF
+            return True
+        # Test for PDF and not a web page
+        try:
+            with open(file, 'r') as f:
+                f.read
+                header = f.read(4)
+        except Exception:
+            # Failed to read it
+            logger.debug("- Downloaded file can't be read")
+            return False
+        if header != b'%PDF':
+            # Not a PDF, remove it
+            os.remove(file)
+            logger.debug("- Downloaded file isn't a PDF")
+            return False
+        return True
+
     def download(self, c, ds, dir, name, known):
         if self.classify:
             subdir = self.classify_extra.get(c.ref_prefix, SUBDIRS.get(c.ref_prefix, 'Miscellaneous'))
@@ -100,7 +129,7 @@ class Download_Datasheets_Options(VariantOptions):
                     cmd = [self._curl_command, '-o', dest, ds]
                     try:
                         run_command(cmd, just_raise=True)
-                        downloaded = True
+                        downloaded = self.validate_downloaded(dest)
                     except CalledProcessError as e:
                         logger.warning(W_FAILDL+f'Failed to download {ds} using {self.get_command} ({e})')
                 if not downloaded:
