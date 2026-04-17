@@ -132,7 +132,7 @@ class MyLogger(logging.Logger):
         # Are we showing very silly warnings?
         # global warn_all
         if not warn_all and is_silly:
-            self.debug('Silly warning: ', **kwargs)
+            self.debug('Silly warning: '+buf, **kwargs)
             return
         MyLogger.warn_cnt += 1
         MyLogger.warn_hash[buf] = 1
