@@ -1224,6 +1224,7 @@ def generate_one_example(dest_dir, types):
                {'number': 1015},  # More than one component in a search for a distributor
                {'number': 58},    # Missing project file
                {'number': 107},   # Stencil.side auto, we always use it for the example
+               {'number': 143},   # This output depends on KiCad version, use `blender_export` instead
                ]
         glb = {'filters': fil}
         yaml_dump(f, {'global': glb})
