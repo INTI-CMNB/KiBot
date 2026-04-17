@@ -350,6 +350,7 @@ W_BADGITREPO = '(W180) '
 W_NOUUIDMAP = '(W181) '
 W_UUIDSCHISSUE = '(W182) '
 W_SCHNOTIMP = '(W183) '
+W_NOUTF8 = '(W184) '
 # Somehow arbitrary, the colors are real, but can be different
 PCB_MAT_COLORS = {'fr1': "937042", 'fr2': "949d70", 'fr3': "adacb4", 'fr4': "332B16", 'fr5': "6cc290"}
 PCB_FINISH_COLORS = {'hal': "8b898c", 'hasl': "8b898c", 'imag': "8b898c", 'enig': "cfb96e", 'enepig': "cfb96e",
@@ -656,11 +657,13 @@ def try_decode_utf8(data, where, logger, cp):
     try:
         data = data.decode()
     except UnicodeDecodeError:
-        logger.non_critical_error(f'Invalid UTF-8 sequence at {where}')
+        msg = f'Invalid UTF-8 sequence at {where}'
         if cp:
+            logger.warning(W_NOUTF8 + msg + f' using `{cp}` encoding')
             data = data.decode(cp)
             logger.debug('Using: '+data.rstrip())
         else:
+            logger.non_critical_error(msg)
             nres = ''
             for c in data:
                 if c > 127:
