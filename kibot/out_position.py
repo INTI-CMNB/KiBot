@@ -323,7 +323,7 @@ class PositionOptions(VariantOptions):
                 # KiCad: PLACE_FILE_EXPORTER::GenPositionData() in export_footprints_placefile.cpp
                 pos_x = (center_x - x_origin)
                 pos_y = (center_y - y_origin)
-                if grid and round(pos_x / grid, 4) % 1 or round(pos_y / grid, 4) % 1:
+                if grid and (round(pos_x / grid, 4) % 1 or round(pos_y / grid, 4) % 1):
                     grid_error = self.grid_fail
                     logger.warning(W_POSGRID + f"{ref} is out of grid: {pos_x*conv}, {pos_y*conv} {self.units}")
                 row = []
