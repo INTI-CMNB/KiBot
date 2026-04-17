@@ -719,7 +719,7 @@ class Blender_Export(Base3D):
                 has_bottom = True
         if not has_top and not has_bottom:
             return None
-        register_xmp_import('PCB2Blender_2_1')
+        register_xmp_import('PCB2Blender_2_7')
         povs = []
         if has_top:
             povs.append({'view': 'top'})
@@ -731,7 +731,7 @@ class Blender_Export(Base3D):
         gb['comment'] = '3D view from top/30 deg/bottom (Blender)'
         gb['type'] = name
         gb['dir'] = '3D'
-        gb['options'] = {'pcb3d': '_PCB2Blender_2_1',
+        gb['options'] = {'pcb3d': '_PCB2Blender_2_7',
                          'outputs': [{'type': 'render'}, {'type': 'blender'}],
                          'point_of_view': povs}
         return [gb]
