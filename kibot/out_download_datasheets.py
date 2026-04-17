@@ -91,12 +91,11 @@ class Download_Datasheets_Options(VariantOptions):
             return True
         # Test for PDF and not a web page
         try:
-            with open(file, 'r') as f:
-                f.read
+            with open(file, 'rb') as f:
                 header = f.read(4)
-        except Exception:
+        except Exception as e:
             # Failed to read it
-            logger.debug("- Downloaded file can't be read")
+            logger.debug("- Downloaded file can't be read "+str(e))
             return False
         if header != b'%PDF':
             # Not a PDF, remove it
