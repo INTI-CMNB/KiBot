@@ -69,7 +69,8 @@ class DCMLineReader(LineReader):
         super().__init__(f, file)
 
     def readline(self):
-        return try_decode_utf8(self.f.readline(), f'line {self.line+1} of file `{self.file}`', logger)
+        return try_decode_utf8(self.f.readline(), f'line {self.line+1} of file `{self.file}`', logger,
+                               GS.global_code_page_fallback)
 
     def get_line(self):
         res = self.readline()

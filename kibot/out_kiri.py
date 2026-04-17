@@ -304,7 +304,7 @@ class KiRiOptions(AnyDiffOptions):
                         if b'No url found for submodule' in e.output:
                             # Just an uninitialized submodule, report it and continue, see #888
                             logger.warning(W_BADGITREPO+f"Broken git repo: {e}")
-                            msg = try_decode_utf8(e.output, 'output from command', logger)
+                            msg = try_decode_utf8(e.output, 'output from git command', logger, GS.global_code_page_fallback)
                             logger.warning(W_BADGITREPO+msg)
                         else:
                             raise

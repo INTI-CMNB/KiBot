@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Global options:
   - `allow_blind_vias` and `allow_buried_vias`: for KiCad 10 to replace the
     unified `allow_blind_buried_vias`
+  - `code_page_fallback`: to specify a code page for text not encoded in UTF-8
 - 3D models: option to download the latest 3D models (`kicad_3d_url_version`)
   (See #899)
 - BoM: descriptive error when using `kicad` format and no options found.

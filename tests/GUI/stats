@@ -686,4 +686,4 @@ Used as single data type:
 -                Dict,Number:    2 ['pcbdraw.options.margin', 'svg.options.margin']
 -             Boolean,Choice:    1 ['ibom.options.highlight_pin1']
 -          String,StringDict:    1 ['pcbdraw.options.remap']
-Found 4 unique warning/s (5 total)
+Found 2 unique warning/s (4 total)

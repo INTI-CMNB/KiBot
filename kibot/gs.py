@@ -158,6 +158,7 @@ class GS(object):
     global_always_warn_about_paste_pads = None
     global_cache_3d_resistors = None
     global_castellated_pads = None
+    global_code_page_fallback = None
     global_colored_tht_resistors = None
     global_copper_thickness = None
     global_cross_footprints_for_dnp = None

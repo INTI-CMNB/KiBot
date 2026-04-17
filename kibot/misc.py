@@ -652,18 +652,22 @@ def try_int(value):
     return i_val if i_val == f_val else f_val
 
 
-def try_decode_utf8(data, where, logger):
+def try_decode_utf8(data, where, logger, cp):
     try:
         data = data.decode()
     except UnicodeDecodeError:
         logger.non_critical_error(f'Invalid UTF-8 sequence at {where}')
-        nres = ''
-        for c in data:
-            if c > 127:
-                c = 32
-            nres += chr(c)
-        data = nres
-        logger.non_critical_error('Using: '+data.rstrip())
+        if cp:
+            data = data.decode(cp)
+            logger.debug('Using: '+data.rstrip())
+        else:
+            nres = ''
+            for c in data:
+                if c > 127:
+                    c = 32
+                nres += chr(c)
+            data = nres
+            logger.non_critical_error('Using: '+data.rstrip())
     return data
 
 

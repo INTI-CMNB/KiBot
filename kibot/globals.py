@@ -450,6 +450,9 @@ class Globals(FiltersOptions):
                 The width of the text box will be the width of the image.
                 The text box must contain *kibot_image_X* where X is the output name.
                 This option configures the prefix used. If this option is empty no images will be pasted """
+            self.code_page_fallback = 'latin1'
+            """ Code page to use when UTF-8 decode fails. Leave empty to just use ASCII and spaces for codes
+                outside ASCII """
         self.set_doc('filters', " [list(dict)=[]] KiBot and KiCost warnings to be ignored."
                                 " Add 1000 to KiCost warnings (WCnnn) ")
         self._filter_what = 'KiBot warnings'
