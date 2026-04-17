@@ -63,6 +63,11 @@ Added
    -  Allow huge files, usually from panels.
    -  Better performance
 
+-  Position:
+
+   -  ``grid``/``grid_fail`` options to check if components are in a
+      grid
+
 -  Report: ``buried_vias_count`` for KiCad 10
 -  SCH/PCB Variant: ``include`` option to export legacy variants to
    KiCad 10

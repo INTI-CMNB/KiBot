@@ -1,5 +1,5 @@
-55 outputs types with a total of 2198 different parameters
-Single type parameters: 2010 (91 %)
+55 outputs types with a total of 2200 different parameters
+Single type parameters: 2012 (91 %)
 Multi type parameters: 188 (9 %)
 Average parameters: 40
 Maximum number of parameters: 217
@@ -59,7 +59,7 @@ Outputs sorted by parameters:
 - stencil_for_jig: 28
 - copy_files: 31
 - pdf_pcb_print: 31
-- position: 31
+- position: 33
 - report: 33
 - svg_pcb_print: 33
 - gerb_drill: 34
@@ -152,8 +152,8 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String:  951
--            Boolean:  554
--             Number:  301
+-            Boolean:  555
+-             Number:  302
 - ListStringSingular:  300
 -             Choice:  112
 -               Dict:   90
@@ -168,9 +168,9 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  785 
--            Boolean:  487 
+-            Boolean:  488 
 - ListStringSingular:  297 
--             Number:  207 
+-             Number:  208 
 -             Choice:  109 
 -               Dict:   77 
 -           ListDict:   20 
@@ -410,8 +410,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-95 totals types with a total of 2588 different parameters
-Single type parameters: 2374 (92 %)
+95 totals types with a total of 2590 different parameters
+Single type parameters: 2376 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 217
@@ -510,7 +510,7 @@ Totals sorted by parameters:
 - stencil_for_jig: 28
 - copy_files: 31
 - pdf_pcb_print: 31
-- position: 31
+- position: 33
 - report: 33
 - svg_pcb_print: 33
 - gerb_drill: 34
@@ -644,8 +644,8 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1115
--            Boolean:  657
--             Number:  353
+-            Boolean:  658
+-             Number:  354
 - ListStringSingular:  330
 -             Choice:  144
 -               Dict:  101
@@ -660,9 +660,9 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  931 
--            Boolean:  580 
+-            Boolean:  581 
 - ListStringSingular:  327 
--             Number:  244 
+-             Number:  245 
 -             Choice:  141 
 -               Dict:   80 
 -           ListDict:   30 

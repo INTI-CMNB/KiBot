@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PcbDraw:
   - Allow huge files, usually from panels.
   - Better performance
+- Position:
+  - `grid`/`grid_fail` options to check if components are in a grid
 - Report: `buried_vias_count` for KiCad 10
 - SCH/PCB Variant: `include` option to export legacy variants to KiCad 10
 - SCH Print: specify pages to be included (#907)

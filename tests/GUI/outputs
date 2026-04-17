@@ -12628,6 +12628,20 @@
           null
         ],
         [
+          "grid",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "grid_fail",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"

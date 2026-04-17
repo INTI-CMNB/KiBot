@@ -10,7 +10,7 @@ from re import compile
 from datetime import datetime
 from .gs import GS
 from .kiplot import run_command
-from .misc import UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES
+from .misc import UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES, W_POSGRID
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .error import KiPlotConfigurationError
@@ -101,6 +101,11 @@ class PositionOptions(VariantOptions):
                 Only one character can be specified """
             self.gerber_board_edge = False
             """ Include the board edge in the gerber output """
+            self.grid = 0
+            """ Size of the grid in `units`. When different than 0 components outside the grid are
+                reported as warnings """
+            self.grid_fail = False
+            """ When enabled grid warnings makes this output to fail """
         super().__init__()
         self._expand_id = 'position'
 
@@ -264,6 +269,9 @@ class PositionOptions(VariantOptions):
         self.filter_pcb_components()
         columns = tuple(o.name for o in self._columns)
         conv = GS.unit_name_to_scale_factor(self.units)
+        # Init grid stuff
+        grid = round(self.grid / conv, 0)
+        grid_error = False
         # Format all strings
         comps_hash = self.get_refs_hash_multi()
         modules = []
@@ -313,6 +321,11 @@ class PositionOptions(VariantOptions):
             # If passed check the position options
             if (self.only_smd and is_pure_smd(m)) or (not self.only_smd and (is_not_virtual(m) or self.include_virtual)):
                 # KiCad: PLACE_FILE_EXPORTER::GenPositionData() in export_footprints_placefile.cpp
+                pos_x = (center_x - x_origin)
+                pos_y = (center_y - y_origin)
+                if grid and round(pos_x / grid, 4) % 1 or round(pos_y / grid, 4) % 1:
+                    grid_error = self.grid_fail
+                    logger.warning(W_POSGRID + f"{ref} is out of grid: {pos_x*conv}, {pos_y*conv} {self.units}")
                 row = []
                 if self.right_digits != 0:
                     float_format = "{{:.{}f}}".format(self.right_digits)
@@ -327,13 +340,11 @@ class PositionOptions(VariantOptions):
                     elif k == 'Package':
                         row.append(quote_char+footprint+quote_char)
                     elif k == 'PosX':
-                        pos_x = (center_x - x_origin) * conv
                         if self.bottom_negative_x and is_bottom:
                             pos_x = -pos_x
-                        row.append(quote_char_extra+float_format.format(pos_x, rd=self.right_digits)+quote_char_extra)
+                        row.append(quote_char_extra+float_format.format(pos_x * conv, rd=self.right_digits)+quote_char_extra)
                     elif k == 'PosY':
-                        row.append(quote_char_extra+float_format.format(-(center_y - y_origin) * conv, rd=self.right_digits) +
-                                   quote_char_extra)
+                        row.append(quote_char_extra+float_format.format(-pos_y * conv, rd=self.right_digits)+quote_char_extra)
                     elif k == 'Rot':
                         row.append(quote_char_extra+float_format.format(rotation, rd=self.right_digits)+quote_char_extra)
                     elif k == 'Side':
@@ -355,6 +366,8 @@ class PositionOptions(VariantOptions):
         else:  # if self.format == 'CSV':
             self._do_position_plot_csv(output_dir, columns, modules, modules_side)
         self.unfilter_pcb_components()
+        if grid_error:
+            raise KiPlotConfigurationError("Components out of grid")
 
 
 @output_class

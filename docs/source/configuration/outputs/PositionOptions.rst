@@ -31,6 +31,9 @@ PositionOptions parameters
    variant.
 
 -  ``gerber_board_edge`` :index:`: <pair: output - position - options; gerber_board_edge>` [:ref:`boolean <boolean>`] (default: ``false``) Include the board edge in the gerber output.
+-  ``grid`` :index:`: <pair: output - position - options; grid>` [:ref:`number <number>`] (default: ``0``) Size of the grid in `units`. When different than 0 components outside the grid are
+   reported as warnings.
+-  ``grid_fail`` :index:`: <pair: output - position - options; grid_fail>` [:ref:`boolean <boolean>`] (default: ``false``) When enabled grid warnings makes this output to fail.
 -  ``include_virtual`` :index:`: <pair: output - position - options; include_virtual>` [:ref:`boolean <boolean>`] (default: ``false``) Include virtual components. For special purposes, not pick & place.
    Note that virtual components is a KiCad 5 concept. |br|
    For KiCad 6+ we replace this concept by the option to exclude from position file.
