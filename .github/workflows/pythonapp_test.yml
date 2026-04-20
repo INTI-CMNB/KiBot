@@ -20,7 +20,7 @@ jobs:
     container: ghcr.io/inti-cmnb/kicad_auto_test:${{ matrix.ki_release }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
     - name: Test ${{ matrix.ki_release }}
@@ -150,7 +150,7 @@ jobs:
     container: ghcr.io/inti-cmnb/kicad_auto_test:ki8
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
     - name: Lint with flake8
@@ -225,7 +225,7 @@ jobs:
     #if: github.ref == 'refs/heads/dev'
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
 
