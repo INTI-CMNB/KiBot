@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         # Bulleyes backports no longer exists dev_image_k5, dev_image_k5f,
-        ki_release: [dev_image_k6, dev_image_k7, dev_image_k8, dev_image_k9, dev_image_k6f, dev_image_k7f, dev_image_k8f, dev_image_k9f]
+        ki_release: [dev_image_k6, dev_image_k7, dev_image_k8, dev_image_k9, dev_image_k10, dev_image_k6f, dev_image_k7f, dev_image_k8f, dev_image_k9f, dev_image_k10f]
 
     name: Docker ${{ matrix.ki_release }}
     runs-on: ubuntu-latest
