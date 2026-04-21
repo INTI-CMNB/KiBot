@@ -139,6 +139,7 @@ BoMOptions parameters
 -  ``sort_field`` :index:`: <pair: output - bom - options; sort_field>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'Reference'``) [:ref:`case insensitive <no_case>`]Field or fields used for the `field` `sort_style`.
 
 -  ``source_by_id`` :index:`: <pair: output - bom - options; source_by_id>` [:ref:`boolean <boolean>`] (default: ``false``) Generate the `Source BoM` column using the reference ID instead of the project name.
+-  ``tilde_is_empty`` :index:`: <pair: output - bom - options; tilde_is_empty>` [:ref:`boolean <boolean>`] (default: ``true``) Interpret fields that just contains `~` as empty fields.
 -  ``use_alt`` :index:`: <pair: output - bom - options; use_alt>` [:ref:`boolean <boolean>`] (default: ``false``) Print grouped references in the alternate compressed style eg: R1-R7,R18.
    Ignored when using the KICAD format.
 -  ``use_aux_axis_as_origin`` :index:`: <pair: output - bom - options; use_aux_axis_as_origin>` [:ref:`boolean <boolean>`] (default: ``true``) Use the auxiliary axis as origin for coordinates (KiCad default) (for XYRS).

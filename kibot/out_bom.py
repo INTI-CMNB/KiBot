@@ -650,6 +650,8 @@ class BoMOptions(BaseOptions):
                 `global` means we apply the `kicad_dnp_applied` global option.
                 `yes` means we always remove DNP components.
                 `no` means we ignore the DNP flag and let filters do its work """
+            self.tilde_is_empty = True
+            """ Interpret fields that just contains `~` as empty fields """
         super().__init__()
         self._no_conflict_example = ['Config', 'Part']
 

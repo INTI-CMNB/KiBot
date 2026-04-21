@@ -1798,6 +1798,13 @@
             "DataTypeChoice"
           ],
           null
+        ],
+        [
+          "tilde_is_empty",
+          [
+            "DataTypeBoolean"
+          ],
+          null
         ]
       ]
     ]

@@ -27,7 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `code_page_fallback`: to specify a code page for text not encoded in UTF-8
 - 3D models: option to download the latest 3D models (`kicad_3d_url_version`)
   (See #899)
-- BoM: descriptive error when using `kicad` format and no options found.
+- BoM:
+  - descriptive error when using `kicad` format and no options found.
+  - `tilde_is_empty` to interpret fields defined as `~` as empty.
 - Download Datasheets: now uses `curl` if installed.
 - DRC/ERC: Configurable logo (#889)
 - iBoM: `mark_when_checked` option (#881)

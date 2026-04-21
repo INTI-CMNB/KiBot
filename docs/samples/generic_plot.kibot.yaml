@@ -758,6 +758,8 @@ outputs:
       sort_style: 'type_value'
       # [boolean=false] Generate the `Source BoM` column using the reference ID instead of the project name
       source_by_id: false
+      # [boolean=true] Interpret fields that just contains `~` as empty fields
+      tilde_is_empty: true
       # [string='millimeters'] [millimeters,inches,mils] Units used for the positions ('Footprint X', 'Footprint Y', 'Footprint X-Size' and
       # 'Footprint Y-Size' columns).
       # Affected by global options

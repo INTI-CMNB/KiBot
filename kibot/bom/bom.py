@@ -285,6 +285,8 @@ class ComponentGroup(object):
         """ Update a given field, concatenates existing values and informs a collision """
         if not value:
             return
+        if self.cfg.tilde_is_empty and value == '~':
+            return
         field_ori = field
         field = field.lower()
         if (field not in self.fields) or (not self.fields[field]):
