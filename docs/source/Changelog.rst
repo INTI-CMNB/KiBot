@@ -104,6 +104,8 @@ Changed
    ``--fail-on-ignored`` (#893)
 -  3D models: GitLab URL. Because the old URL is now blocked.
 -  W009 and W044 warnings promoted to “common use” warnings
+-  E/DRC: we now get the big OK mark when all violations are excluded
+-  BoM: by default fields defined as ``~`` are empty.
 
 `1.8.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5>`__ - 2025-11-26
 -----------------------------------------------------------------------------------

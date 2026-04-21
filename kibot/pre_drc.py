@@ -111,17 +111,19 @@ class DRC(XRC):  # noqa: F821
         html = self.create_html_top(data)
         # Generate the content
         empty = True
+        violations_html = ''
         for section in JSON_SECTIONS:
             violations = data.get(section, [])
             if not violations:
                 continue
-            empty = False
             name = SECTION_HUMAN[section]
-            html += f'<p class="subtitle">{name}</p>\n'
-            html += self.create_html_violations(violations)
+            violations_html += f'<p class="subtitle">{name}</p>\n'
+            violations_html += self.create_html_violations(violations)
+            if any(not item['excluded'] for item in violations):
+                empty = False
         if empty:
             html += self.create_html_ok()
-        html += self.create_html_bottom()
+        html += violations_html + self.create_html_bottom()
         return html
 
     def create_txt(self, data):

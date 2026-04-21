@@ -105,20 +105,22 @@ class ERC(XRC):  # noqa: F821
         html = self.create_html_top(data)
         # Generate the content
         empty = True
+        violations_html = ''
         for sheet in data.get('sheets', []):
             violations = sheet.get('violations', [])
             if not violations:
                 continue
-            empty = False
             sheet_fname = sheet.get('file_name', '')
             name = sheet.get('path', '')
             if sheet_fname:
                 name += f' ({sheet_fname})'
-            html += f'<p class="subtitle">Sheet {name}</p>\n'
-            html += self.create_html_violations(violations)
+            violations_html += f'<p class="subtitle">Sheet {name}</p>\n'
+            violations_html += self.create_html_violations(violations)
+            if any(not item.get('excluded', False) for item in violations):
+                empty = False
         if empty:
             html += self.create_html_ok()
-        html += self.create_html_bottom()
+        html += violations_html + self.create_html_bottom()
         return html
 
     def create_txt(self, data):

@@ -63,6 +63,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and you can get the old behavior adding `--fail-on-ignored` (#893)
 - 3D models: GitLab URL. Because the old URL is now blocked.
 - W009 and W044 warnings promoted to "common use" warnings
+- E/DRC: we now get the big OK mark when all violations are excluded
+- BoM: by default fields defined as `~` are empty.
 
 
 ## [1.8.5] - 2025-11-26
