@@ -119,7 +119,7 @@ class DRC(XRC):  # noqa: F821
             name = SECTION_HUMAN[section]
             violations_html += f'<p class="subtitle">{name}</p>\n'
             violations_html += self.create_html_violations(violations)
-            if any(not item['excluded'] for item in violations):
+            if any(not item.get('excluded', False) for item in violations):
                 empty = False
         if empty:
             html += self.create_html_ok()
