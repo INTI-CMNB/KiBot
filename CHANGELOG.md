@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - iBoM: `mark_when_checked` option (#881)
 - KiRi: Support for uninitialized submodules (#888)
 - Navigate results: `expand_text_vars` to expand %X and vars in the title.
+- Panelize: `copy_lib_tables` to get a usable lib table
 - PcbDraw:
   - Allow huge files, usually from panels.
   - Better performance

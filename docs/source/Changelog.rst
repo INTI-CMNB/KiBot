@@ -58,6 +58,7 @@ Added
 -  KiRi: Support for uninitialized submodules (#888)
 -  Navigate results: ``expand_text_vars`` to expand %X and vars in the
    title.
+-  Panelize: ``copy_lib_tables`` to get a usable lib table
 -  PcbDraw:
 
    -  Allow huge files, usually from panels.

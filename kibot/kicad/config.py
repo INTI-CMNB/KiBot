@@ -596,14 +596,25 @@ class KiConf(object):
             logger.debug('Removing '+fname)
             os.remove(fname)
 
-    def save_fp_lib_aliases(fname, aliases, is_fp=True):
+    def rel_uri(uri, ref, is_fp):
+        """ Used to adapt the lib table URIs when copying to another dir """
+        if ref is None:
+            return uri
+        # Keep system values absolute
+        sym_dir = KiConf.kicad_env.get('KICAD6_FOOTPRINT_DIR' if is_fp else 'KICAD6_SYMBOL_DIR')
+        if sym_dir is None or uri.startswith(sym_dir):
+            return uri
+        # Make others relative
+        return os.path.join('${KIPRJMOD}', os.path.relpath(uri, ref))
+
+    def save_fp_lib_aliases(fname, aliases, is_fp=True, rel_ref=None):
         logger.debug(f'Writing lib table `{fname}`')
         table = [Symbol('fp_lib_table' if is_fp else 'sym_lib_table'), Sep()]
         for name in sorted(aliases.keys(), key=str.casefold):
             alias = aliases[name]
             cnt = [[Symbol('name'), alias.name],
                    [Symbol('type'), alias.type],
-                   [Symbol('uri'), alias.uri]]
+                   [Symbol('uri'), KiConf.rel_uri(alias.uri, rel_ref, is_fp)]]
             if alias.options is not None:
                 cnt.append([Symbol('options'), alias.options])
             if alias.descr is not None:

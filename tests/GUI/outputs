@@ -9429,6 +9429,13 @@
           null
         ],
         [
+          "copy_lib_tables",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"

@@ -3178,6 +3178,9 @@ outputs:
             type: 'none'
             # [number|string=0] Vertical offset from panel edges
             voffset: 0
+      # [boolean=false] If the target directory is different than the one containing the PCB copy the symbol and
+      # footprint lib tables
+      copy_lib_tables: false
       # [string='auto'] [auto,yes,no] Copy the GUI option to plot vias on the mask layers from the original PCB to
       # the panel.
       # This option is a workaround to KiCad 8 not allowing to choose to plot (or not to plot) vias

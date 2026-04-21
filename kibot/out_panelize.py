@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2024 Salvador E. Tropea
-# Copyright (c) 2022-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -16,6 +16,7 @@ import re
 import json
 from .error import KiPlotConfigurationError
 from .gs import GS
+from .kicad.config import KiConf, SYM_LIB_TABLE, FP_LIB_TABLE
 from .kiplot import run_command, config_output, register_xmp_import
 from .layer import Layer
 from .misc import W_PANELEMPTY, KIKIT_UNIT_ALIASES, W_KEEPTMP
@@ -676,6 +677,9 @@ class PanelizeOptions(VariantOptions):
                 is lost during panelization. |br|
                 Setting this option to *auto* will copy the value for faulty KiCad 8 versions, but won't
                 waste time for working KiCad versions """
+            self.copy_lib_tables = False
+            """ If the target directory is different than the one containing the PCB copy the symbol and
+                footprint lib tables """
         super().__init__()
         self._expand_id = 'panel'
         self._expand_ext = 'kicad_pcb'
@@ -861,6 +865,12 @@ class PanelizeOptions(VariantOptions):
         try:
             run_command(cmd)
             self.create_preview_file(output)
+            dirname = os.path.dirname(output)
+            if self.copy_lib_tables and not os.path.samefile(dirname, GS.pcb_dir):
+                KiConf.save_fp_lib_aliases(os.path.join(dirname, SYM_LIB_TABLE), KiConf.get_sym_lib_aliases(), is_fp=False,
+                                           rel_ref=dirname)
+                KiConf.save_fp_lib_aliases(os.path.join(dirname, FP_LIB_TABLE), KiConf.get_fp_lib_aliases(), is_fp=True,
+                                           rel_ref=dirname)
             remove_tmps = True
         finally:
             if (self.copy_vias_on_mask == 'auto' and GS.ki8) or self.copy_vias_on_mask == 'yes':
