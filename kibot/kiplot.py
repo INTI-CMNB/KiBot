@@ -505,7 +505,7 @@ def get_board_comps_data(comps, kicad_variant=None):
         extra_env = create_extra_env(real_fields)
 
         # Check the "Value", inform if different
-        new_value = m.GetValue()
+        new_value = expand_one_footprint_field(m.GetValue(), env, extra_env)
         if new_value != c.value:
             expanded_value = expand_one_footprint_field(c.value, env, extra_env)
             if new_value != expanded_value:
