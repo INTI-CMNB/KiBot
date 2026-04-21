@@ -184,7 +184,7 @@ def run_command(command, change_to=None, just_raise=False, use_x11=False, err_ms
         if old_lang:
             os.environ['LANG'] = old_lang
 
-    msg = try_decode_utf8(res.stdout, 'output from command', logger, GS.global_code_page_fallback)
+    msg = try_decode_utf8(res.stdout, f'output from `{command[0]}` command', logger, GS.global_code_page_fallback)
     debug_output(msg)
     return msg.rstrip()
 
