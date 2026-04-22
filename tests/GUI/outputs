@@ -1610,6 +1610,13 @@
           null
         ],
         [
+          "merge_values",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "no_conflict",
           [
             "DataTypeListString"

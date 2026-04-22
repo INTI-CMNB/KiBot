@@ -58,6 +58,8 @@ Added
    -  ``sep_for_merged`` to configure the separator for multiple values
       on the same field. This is when a group contains components with a
       difference in the field.
+   -  ``merge_values`` to also merge different values on grouped
+      components.
 
 -  Download Datasheets: now uses ``curl`` if installed.
 -  DRC/ERC: Configurable logo (#889)

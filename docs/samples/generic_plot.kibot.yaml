@@ -630,6 +630,8 @@ outputs:
       # information is important. You can also disable `parse_value`.
       # When using `_kicad_bom_fields` in the `columns` you should use `[]` for this value, so the fields
       # selected in KiCad are used.
+      # Note that when user defined fields are different we merge the fields using `sep_for_merged`. Also
+      # note that you can merge different `Value` fields using `merge_values`.
       # If empty: ['Part', 'Part Lib', 'Value', 'Footprint', 'Footprint Lib',
       #            'Voltage', 'Tolerance', 'Current', 'Power'] is used
       group_fields: ['part', 'part lib', 'value', 'footprint', 'footprint lib', 'voltage', 'tolerance', 'current', 'power']
@@ -710,6 +712,9 @@ outputs:
       merge_blank_fields: true
       # [boolean=true] When creating groups two components with empty/missing field will be interpreted as with the same value
       merge_both_blank: true
+      # [boolean=true] Merge the values of different components in a group.
+      # Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose
+      merge_values: true
       # [list(string)=computed for your project] {no_case} List of fields where we tolerate conflicts.
       # Use it to avoid undesired warnings.
       # By default the field indicated in `fit_field`, the field used for variants and

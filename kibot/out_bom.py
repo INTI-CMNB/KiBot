@@ -561,6 +561,8 @@ class BoMOptions(BaseOptions):
                 information is important. You can also disable `parse_value`.
                 When using `_kicad_bom_fields` in the `columns` you should use `[]` for this value, so the fields
                 selected in KiCad are used.
+                Note that when user defined fields are different we merge the fields using `sep_for_merged`. Also
+                note that you can merge different `Value` fields using `merge_values`.
                 If empty: ['Part', 'Part Lib', 'Value', 'Footprint', 'Footprint Lib',
                 .          'Voltage', 'Tolerance', 'Current', 'Power'] is used """
             self.group_fields_fallbacks = Optionable
@@ -582,6 +584,9 @@ class BoMOptions(BaseOptions):
                 Note that this implies that *1k 1%* is the same as *1k 5%*. If you really need to group using the
                 extra information split it in separated fields, add the fields to `group_fields` and disable
                 `merge_blank_fields` """
+            self.merge_values = True
+            """ Merge the values of different components in a group.
+                Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose """
             self.no_conflict = Optionable
             """ [list(string)=?] {no_case} List of fields where we tolerate conflicts.
                 Use it to avoid undesired warnings.

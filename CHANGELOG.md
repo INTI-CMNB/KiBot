@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `sep_for_merged` to configure the separator for multiple values on the
     same field. This is when a group contains components with a difference
     in the field.
+  - `merge_values` to also merge different values on grouped components.
 - Download Datasheets: now uses `curl` if installed.
 - DRC/ERC: Configurable logo (#889)
 - iBoM: `mark_when_checked` option (#881)

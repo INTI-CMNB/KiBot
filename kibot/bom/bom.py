@@ -312,6 +312,8 @@ class ComponentGroup(object):
         for c in self.components:
             for f, v in c.get_user_fields():
                 self.update_field(f, v, c.ref)
+            if self.cfg.merge_values:
+                self.update_field(ColumnList.COL_VALUE_L, c.value, c.ref)
         # Update 'global' fields
         if usealt:
             self.fields[ColumnList.COL_REFERENCE_L] = self.get_alt_refs()
@@ -331,7 +333,8 @@ class ComponentGroup(object):
         self.fields[ColumnList.COL_STATUS_L] = status
         # Component data
         comp = self.components[0]
-        self.fields[ColumnList.COL_VALUE_L] = comp.value
+        if not self.cfg.merge_values:
+            self.fields[ColumnList.COL_VALUE_L] = comp.value
         self.fields[ColumnList.COL_PART_L] = comp.name
         self.fields[ColumnList.COL_PART_LIB_L] = comp.lib
         self.fields[ColumnList.COL_DATASHEET_L] = comp.datasheet
@@ -427,9 +430,9 @@ def get_value_sort(comp, fallback_ref=False):
     return comp.value
 
 
-def normalize_value(c, decimal_point):
+def normalize_value(c, decimal_point, value):
     if c.value_sort is None:
-        return c.value.strip()
+        return value.strip()
     value = str(c.value_sort)
     if decimal_point:
         value = value.replace('.', decimal_point)
@@ -508,7 +511,8 @@ def group_components(cfg, components):
         g.update_fields(cfg.conv_units, cfg.bottom_negative_x, x_origin, y_origin, cfg.angle_positive,
                         cfg.footprint_populate_values, cfg.footprint_type_values, uses_fp_info, cfg._use_alt, cfg.right_digits)
         if cfg.normalize_values:
-            g.fields[ColumnList.COL_VALUE_L] = normalize_value(g.components[0], decimal_point)
+            g.fields[ColumnList.COL_VALUE_L] = normalize_value(g.components[0], decimal_point,
+                                                               g.fields[ColumnList.COL_VALUE_L])
     # Sort the groups
     sort_style = cfg.sort_style
     if sort_style == 'kicad_bom':
