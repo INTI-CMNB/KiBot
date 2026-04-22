@@ -194,14 +194,14 @@ def content_table(html, groups, headings, head_names, cfg, link_datasheet, link_
         html.write('  <tr id="{}">\n'.format(i))
         for n, r in enumerate(row):
             # A link to Digi-Key?
-            if link_digikey and headings[n] in link_digikey:
+            if link_digikey and headings[n] in link_digikey and r:
                 r = '<a href="https://www.digikey.com/en/products/result?keywords=' + urllib.parse.quote(r) + '">' + r + '</a>'
-            if link_mouser and headings[n] in link_mouser:
+            if link_mouser and headings[n] in link_mouser and r:
                 r = '<a href="https://www.mouser.com/ProductDetail/' + r + '">' + r + '</a>'
-            if link_lcsc and headings[n] in link_lcsc:
+            if link_lcsc and headings[n] in link_lcsc and r:
                 r = '<a href="https://www.lcsc.com/product-detail/' + r + '.html">' + r + '</a>'
             # Link this column to the datasheet?
-            if link_datasheet == n and datasheet.startswith('http'):
+            if link_datasheet == n and datasheet.startswith('http') and r:
                 r = '<a href="' + datasheet + '">' + r + '</a>'
             if col_colors:
                 # Empty cell?

@@ -95,6 +95,7 @@ Fixed
    -  ``Missing footprint information for`` for components marked as not
       on board.
    -  Digi-Key URLs, to adapt the new format
+   -  HTML: link cells not marked empty
 
 -  Panelize:
 
