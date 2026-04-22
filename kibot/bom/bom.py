@@ -430,7 +430,9 @@ def get_value_sort(comp, fallback_ref=False):
     return comp.value
 
 
-def normalize_value(c, decimal_point, value):
+def normalize_value(c, decimal_point, value=None):
+    if value is None:
+        value = c.value
     if c.value_sort is None:
         return value.strip()
     value = str(c.value_sort)
