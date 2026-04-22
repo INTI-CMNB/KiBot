@@ -102,6 +102,7 @@ BoMOptions parameters
 -  ``footprint_type_values`` :index:`: <pair: output - bom - options; footprint_type_values>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'SMD,THT,VIRTUAL'``) [:ref:`comma separated <comma_sep>`] (must contain 3 elements) Values for the `Footprint Type` column.
 
 -  ``group_connectors`` :index:`: <pair: output - bom - options; group_connectors>` [:ref:`boolean <boolean>`] (default: ``true``) Connectors with the same footprints will be grouped together, independent of the name of the connector.
+   In order to work the symbol must be from a library containing `connector` in its name.
 -  ``group_fields_fallbacks`` :index:`: <pair: output - bom - options; group_fields_fallbacks>` [:ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`case insensitive <no_case>`]List of fields to be used when the fields in `group_fields` are empty.
    The first field in this list is the fallback for the first in `group_fields`, and so on.
 

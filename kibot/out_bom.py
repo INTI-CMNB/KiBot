@@ -542,7 +542,8 @@ class BoMOptions(BaseOptions):
                 This option is for simple cases, consider using a full variant for complex cases """
             # * Grouping criteria
             self.group_connectors = True
-            """ Connectors with the same footprints will be grouped together, independent of the name of the connector """
+            """ Connectors with the same footprints will be grouped together, independent of the name of the connector.
+                In order to work the symbol must be from a library containing `connector` in its name """
             self.merge_blank_fields = True
             """ Component groups with blank fields will be merged into the most compatible group, where possible """
             self.merge_both_blank = True
