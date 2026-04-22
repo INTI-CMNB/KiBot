@@ -175,6 +175,8 @@ preflight:
   # They are expanded using `${VARIABLE}`, and stored in the project file.
   # This preflight replaces `pcb_replace` and `sch_replace` when using KiCad 6 or newer.
   # The KiCad project file is modified.
+  # You can get text variables containing the names of the schematics sheets enabling the
+  # `set_text_variables_sheet_title` global option.
   # Warning:     don't use `-s all` or this preflight will be skipped .
   # [dict|list(dict)=[]] One or more variable definition.
   set_text_variables:

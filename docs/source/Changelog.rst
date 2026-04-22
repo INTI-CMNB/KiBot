@@ -40,6 +40,11 @@ Added
 -  preflights:
 
    -  Mechanism to merge preflights from imports (``merge_pre``) (#900)
+   -  ``set_text_variables_sheet_title``,
+      ``set_text_variables_sheet_title_min`` and
+      ``set_text_variables_sheet_title_default`` global options to
+      enable the generation of KiCad variables containing the titles for
+      all the schematic sheets. The are named ``SHEET_TITLE_n``
 
 -  Global options:
 

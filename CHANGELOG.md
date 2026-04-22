@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - KiCad 9 embedded files: populate the cache if needed (See #890)
 - preflights:
   - Mechanism to merge preflights from imports (`merge_pre`) (#900)
+  - `set_text_variables_sheet_title`, `set_text_variables_sheet_title_min` and
+    `set_text_variables_sheet_title_default` global options to enable the
+    generation of KiCad variables containing the titles for all the schematic
+    sheets. The are named `SHEET_TITLE_n`
 - Global options:
   - `allow_blind_vias` and `allow_buried_vias`: for KiCad 10 to replace the
     unified `allow_blind_buried_vias`

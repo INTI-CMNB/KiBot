@@ -10,6 +10,8 @@ Defines KiCad 6+ variables.
 They are expanded using `${VARIABLE}`, and stored in the project file. |br|
 This preflight replaces `pcb_replace` and `sch_replace` when using KiCad 6 or newer. |br|
 The KiCad project file is modified. |br|
+You can get text variables containing the names of the schematics sheets enabling the
+`set_text_variables_sheet_title` global option. |br|
 
 .. warning::
        don't use `-s all` or this preflight will be skipped

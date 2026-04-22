@@ -211,6 +211,9 @@ class GS(object):
     global_restore_project = None
     global_sch_image_prefix = None
     global_set_text_variables_before_output = None
+    global_set_text_variables_sheet_title = None
+    global_set_text_variables_sheet_title_min = None
+    global_set_text_variables_sheet_title_default = None
     global_silk_screen_color = None
     global_silk_screen_color_bottom = None
     global_silk_screen_color_top = None

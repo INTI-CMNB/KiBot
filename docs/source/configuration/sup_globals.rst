@@ -214,6 +214,13 @@
          This can be used when a text variable uses the variant and you want to create more than
          one variant in the same run. Note that this could be slow because it forces a board
          reload each time you run an output that uses variants.
+      -  ``set_text_variables_sheet_title`` :index:`: <pair: global options; set_text_variables_sheet_title>` [:ref:`boolean <boolean>`] (default: ``false``) When running the `set_text_variables` preflight try to define variables containing the names
+         of the sheets. The names are stored in variables named `SHEET_TITLE_n` where `n` is the page
+         number. |br|
+         At least `set_text_variables_sheet_title_min` variables are defined.
+      -  ``set_text_variables_sheet_title_default`` :index:`: <pair: global options; set_text_variables_sheet_title_default>` [:ref:`string <string>`] (default: ``'......................................'``) Name for the missing pages defined by `set_vars_sheet_title`.
+      -  ``set_text_variables_sheet_title_min`` :index:`: <pair: global options; set_text_variables_sheet_title_min>` [:ref:`number <number>`] (default: ``40``) Minimum number of sheet titles defined when `set_vars_sheet_title` is enabled.
+         The missing titles are filled using `set_text_variables_sheet_title_defaul`.
       -  ``silk_screen_color`` :index:`: <pair: global options; silk_screen_color>` [:ref:`string <string>`] (default: ``'white'``) Color for the markings. Currently used for documentation and to choose default colors.
          KiCad 6: you should set this in the Board Setup -> Physical Stackup. |br|
          Currently known are black and white.
