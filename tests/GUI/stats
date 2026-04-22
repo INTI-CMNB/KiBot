@@ -1,5 +1,5 @@
-55 outputs types with a total of 2202 different parameters
-Single type parameters: 2014 (91 %)
+55 outputs types with a total of 2203 different parameters
+Single type parameters: 2015 (91 %)
 Multi type parameters: 188 (9 %)
 Average parameters: 40
 Maximum number of parameters: 218
@@ -81,7 +81,7 @@ Outputs sorted by parameters:
 - render_3d: 68
 - blender_export: 78
 - pcb_print: 117
-- bom: 155
+- bom: 156
 - panelize: 218
 Average depth: 2.5090909090909093
 Maximum depth: 5
@@ -151,7 +151,7 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  951
+-             String:  952
 -            Boolean:  557
 -             Number:  302
 - ListStringSingular:  300
@@ -167,7 +167,7 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  785 
+-             String:  786 
 -            Boolean:  490 
 - ListStringSingular:  297 
 -             Number:  208 
@@ -410,8 +410,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-95 totals types with a total of 2592 different parameters
-Single type parameters: 2378 (92 %)
+95 totals types with a total of 2593 different parameters
+Single type parameters: 2379 (92 %)
 Multi type parameters: 214 (8 %)
 Average parameters: 27
 Maximum number of parameters: 218
@@ -533,7 +533,7 @@ Totals sorted by parameters:
 - render_3d: 68
 - blender_export: 78
 - pcb_print: 117
-- bom: 155
+- bom: 156
 - panelize: 218
 Average depth: 2.1789473684210527
 Maximum depth: 5
@@ -643,7 +643,7 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1115
+-             String: 1116
 -            Boolean:  660
 -             Number:  354
 - ListStringSingular:  330
@@ -659,7 +659,7 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  931 
+-             String:  932 
 -            Boolean:  583 
 - ListStringSingular:  327 
 -             Number:  245 

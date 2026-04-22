@@ -305,7 +305,7 @@ class ComponentGroup(object):
                     fld=value, ref=ref))
                 if len(self.components) == 1:
                     logger.warning(W_FIELDCONF + "Most probably created by a renamed field")
-            self.fields[field] += " " + value
+            self.fields[field] += self.cfg.sep_for_merged + value
 
     def update_fields(self, conv, bottom_negative_x, x_origin, y_origin, angle_positive, footprint_populate_values,
                       footprint_type_values, uses_fp_info, usealt=False, right_digits=4):

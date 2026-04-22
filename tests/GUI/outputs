@@ -1617,6 +1617,13 @@
           null
         ],
         [
+          "sep_for_merged",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "aggregate",
           [
             "DataTypeListDict"

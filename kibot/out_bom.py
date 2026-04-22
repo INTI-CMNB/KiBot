@@ -587,6 +587,8 @@ class BoMOptions(BaseOptions):
                 Use it to avoid undesired warnings.
                 By default the field indicated in `fit_field`, the field used for variants and
                 the field `part` are excluded """
+            self.sep_for_merged = " "
+            """ Text to separate multiple field values of components merged in the same group """
             self.aggregate = Aggregate
             """ [list(dict)=[]] Add components from other projects.
                 You can use CSV files, the first row must contain the names of the fields.

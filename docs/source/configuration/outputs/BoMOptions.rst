@@ -136,6 +136,7 @@ BoMOptions parameters
 -  ``ref_separator`` :index:`: <pair: output - bom - options; ref_separator>` [:ref:`string <string>`] (default: ``' '``) Separator used for the list of references. Ignored when using the KICAD format.
 -  ``right_digits`` :index:`: <pair: output - bom - options; right_digits>` [:ref:`number <number>`] (default: ``4``) Number of digits for mantissa part of coordinates ('Footprint X', 'Footprint Y', 'Footprint X-Size',
    'Footprint Y-Size' and 'Footprint Rot' columns) (0 is auto).
+-  ``sep_for_merged`` :index:`: <pair: output - bom - options; sep_for_merged>` [:ref:`string <string>`] (default: ``' '``) Text to separate multiple field values of components merged in the same group.
 -  ``sort_ascending`` :index:`: <pair: output - bom - options; sort_ascending>` [:ref:`boolean <boolean>`] (default: ``true``) Sort in ascending order.
 -  ``sort_field`` :index:`: <pair: output - bom - options; sort_field>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'Reference'``) [:ref:`case insensitive <no_case>`]Field or fields used for the `field` `sort_style`.
 

@@ -55,6 +55,9 @@ Added
    -  descriptive error when using ``kicad`` format and no options
       found.
    -  ``tilde_is_empty`` to interpret fields defined as ``~`` as empty.
+   -  ``sep_for_merged`` to configure the separator for multiple values
+      on the same field. This is when a group contains components with a
+      difference in the field.
 
 -  Download Datasheets: now uses ``curl`` if installed.
 -  DRC/ERC: Configurable logo (#889)
