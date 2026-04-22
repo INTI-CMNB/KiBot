@@ -167,6 +167,8 @@ class ComponentGroup(object):
         self.components = []
         self.refs = {}
         self.cfg = cfg
+        # Empty on purpose
+        self.fields_with_tilde = set()
         # Columns loaded from KiCad
         self.fields = {c.lower(): None for c in ColumnList.COLUMNS_DEFAULT}
         self.field_names = deepcopy(ColumnList.COLUMNS_DEFAULT)
@@ -285,10 +287,11 @@ class ComponentGroup(object):
         """ Update a given field, concatenates existing values and informs a collision """
         if not value:
             return
-        if self.cfg.tilde_is_empty and value == '~':
-            return
         field_ori = field
         field = field.lower()
+        if self.cfg.tilde_is_empty and value == '~':
+            self.fields_with_tilde.add(field)
+            return
         if (field not in self.fields) or (not self.fields[field]):
             self.fields[field] = value
             self.field_names.append(field_ori)

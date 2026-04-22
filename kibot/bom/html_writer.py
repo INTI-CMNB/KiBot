@@ -193,19 +193,20 @@ def content_table(html, groups, headings, head_names, cfg, link_datasheet, link_
             datasheet = group.get_field(ColumnList.COL_DATASHEET_L)
         html.write('  <tr id="{}">\n'.format(i))
         for n, r in enumerate(row):
+            field = headings[n]
             # A link to Digi-Key?
-            if link_digikey and headings[n] in link_digikey and r:
+            if link_digikey and field in link_digikey and r:
                 r = '<a href="https://www.digikey.com/en/products/result?keywords=' + urllib.parse.quote(r) + '">' + r + '</a>'
-            if link_mouser and headings[n] in link_mouser and r:
+            if link_mouser and field in link_mouser and r:
                 r = '<a href="https://www.mouser.com/ProductDetail/' + r + '">' + r + '</a>'
-            if link_lcsc and headings[n] in link_lcsc and r:
+            if link_lcsc and field in link_lcsc and r:
                 r = '<a href="https://www.lcsc.com/product-detail/' + r + '.html">' + r + '</a>'
             # Link this column to the datasheet?
             if link_datasheet == n and datasheet.startswith('http') and r:
                 r = '<a href="' + datasheet + '">' + r + '</a>'
             if col_colors:
                 # Empty cell?
-                if hl_empty and (len(r) == 0 or r.strip() == "~"):
+                if hl_empty and ((len(r) == 0 and field not in group.fields_with_tilde) or r.strip() == "~"):
                     cl = 'empty'
                 else:
                     cl = cell_class(headings[n])
