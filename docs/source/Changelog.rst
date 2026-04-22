@@ -32,7 +32,11 @@ Added
    -  –warn-all: to display some warnings that you’ll find during common
       use
 
--  Schematic: Support for private text on symbols (#914)
+-  Schematic:
+
+   -  Support for private text on symbols (#914)
+   -  Some basic check for the page numbers
+
 -  generic filter: ``exclude_kicad_dnp`` to exclude components marked as
    DNP in KiCad (See #887)
 -  Variants: Experimental KiCad variants

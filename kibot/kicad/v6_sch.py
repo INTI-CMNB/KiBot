@@ -16,7 +16,8 @@ import os
 import re
 from ..gs import GS
 from .. import log
-from ..misc import W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE, W_SCHNOTIMP
+from ..misc import (W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE,
+                    W_SCHNOTIMP, W_PAGENOINT, W_PAGEDUP, W_PAGEMIS)
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -2812,6 +2813,27 @@ class SchematicV6(Schematic):
                 return cache_name
         raise SchError(f'Missing embedded file `{efile}`')
 
+    def check_pages_consistency(self):
+        defined = {}
+        min_p = 1e6
+        max_p = 0
+        for s in self.all_sheets:
+            try:
+                number = int(s.sheet)
+            except ValueError:
+                logger.warning(W_PAGENOINT+f"Schematic page number `{s.sheet}` is not integer (`{s.fname}`)")
+                continue
+            if number in defined:
+                logger.warning(W_PAGEDUP+f"Schematic page number `{number}` already defined (`{s.fname}` and "
+                               f"`{defined[number]}`)")
+                continue
+            min_p = min(min_p, number)
+            max_p = max(max_p, number)
+            defined[number] = s.fname
+        for n in range(min_p, max_p+1):
+            if n not in defined:
+                logger.warning(W_PAGEMIS+f"Schematic page number `{n}` is not defined")
+
     def load(self, fname, project, parent=None, mapped_uuid=None):  # noqa: C901
         """ Load a v6.x KiCad Schematic.
             The caller must be sure the file exists.
@@ -3003,6 +3025,8 @@ class SchematicV6(Schematic):
             if sheet:
                 sheet.sheet = i.page
                 self.all_sheets.append(sheet)
+        # Page consistency check
+        self.check_pages_consistency()
         # Debug for the expanded hierarchy
         if extra_debug:
             self.debug_instances()
