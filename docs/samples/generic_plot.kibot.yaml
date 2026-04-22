@@ -712,9 +712,9 @@ outputs:
       merge_blank_fields: true
       # [boolean=true] When creating groups two components with empty/missing field will be interpreted as with the same value
       merge_both_blank: true
-      # [boolean=true] Merge the values of different components in a group.
+      # [boolean=false] Merge the values of different components in a group.
       # Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose
-      merge_values: true
+      merge_values: false
       # [list(string)=computed for your project] {no_case} List of fields where we tolerate conflicts.
       # Use it to avoid undesired warnings.
       # By default the field indicated in `fit_field`, the field used for variants and

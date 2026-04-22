@@ -584,7 +584,7 @@ class BoMOptions(BaseOptions):
                 Note that this implies that *1k 1%* is the same as *1k 5%*. If you really need to group using the
                 extra information split it in separated fields, add the fields to `group_fields` and disable
                 `merge_blank_fields` """
-            self.merge_values = True
+            self.merge_values = False
             """ Merge the values of different components in a group.
                 Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose """
             self.no_conflict = Optionable

@@ -116,7 +116,7 @@ BoMOptions parameters
    `no` means we ignore the DNP flag and let filters do its work.
 -  ``merge_blank_fields`` :index:`: <pair: output - bom - options; merge_blank_fields>` [:ref:`boolean <boolean>`] (default: ``true``) Component groups with blank fields will be merged into the most compatible group, where possible.
 -  ``merge_both_blank`` :index:`: <pair: output - bom - options; merge_both_blank>` [:ref:`boolean <boolean>`] (default: ``true``) When creating groups two components with empty/missing field will be interpreted as with the same value.
--  ``merge_values`` :index:`: <pair: output - bom - options; merge_values>` [:ref:`boolean <boolean>`] (default: ``true``) Merge the values of different components in a group.
+-  ``merge_values`` :index:`: <pair: output - bom - options; merge_values>` [:ref:`boolean <boolean>`] (default: ``false``) Merge the values of different components in a group.
    Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose.
 -  ``no_conflict`` :index:`: <pair: output - bom - options; no_conflict>` [:ref:`list(string) <list(string)>`] (default: computed for your project) [:ref:`case insensitive <no_case>`]List of fields where we tolerate conflicts.
    Use it to avoid undesired warnings. |br|
