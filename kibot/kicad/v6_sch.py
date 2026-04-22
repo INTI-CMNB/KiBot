@@ -2817,6 +2817,7 @@ class SchematicV6(Schematic):
         defined = {}
         min_p = 1e6
         max_p = 0
+        found = False
         for s in self.all_sheets:
             try:
                 number = int(s.sheet)
@@ -2827,9 +2828,12 @@ class SchematicV6(Schematic):
                 logger.warning(W_PAGEDUP+f"Schematic page number `{number}` already defined (`{s.fname}` and "
                                f"`{defined[number]}`)")
                 continue
+            found = True
             min_p = min(min_p, number)
             max_p = max(max_p, number)
             defined[number] = s.fname
+        if not found:
+            return
         for n in range(min_p, max_p+1):
             if n not in defined:
                 logger.warning(W_PAGEMIS+f"Schematic page number `{n}` is not defined")
