@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
 
       - name: Build
         id: mdeb
@@ -56,7 +56,7 @@ jobs:
           mv *.deb output
 
       - name: Store
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: package
           path: output
@@ -66,10 +66,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v6
 
       - name: Retrieve
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: package
 
