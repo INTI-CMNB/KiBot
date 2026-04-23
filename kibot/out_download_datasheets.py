@@ -130,7 +130,7 @@ class Download_Datasheets_Options(VariantOptions):
                         run_command(cmd, just_raise=True)
                         downloaded = self.validate_downloaded(dest)
                     except CalledProcessError as e:
-                        logger.warning(W_FAILDL+f'Failed to download {ds} using {self.get_command} ({e})')
+                        logger.warning(W_FAILDL+f'Failed to download {ds} using {self._curl_command} ({e})')
                 if not downloaded:
                     # Using Python's request
                     if 'digikey' in ds:
