@@ -17,3 +17,9 @@ Resources
 - `[Livestream] KiBot For KiCad Is AMAZING!! Now I Know How To Use It! <https://www.youtube.com/watch?v=qJTVHbRei0E>`__
 - `CI/CD with KiCad and Gitlab <https://sschueller.github.io/posts/ci-cd-with-kicad-and-gitlab/>`__
 - `KiCi - An opinionated KiCad/KiBot Continuous Integration pipeline <https://gitlab.com/ci-includes/kici>`__
+- `Hugo KiCad theme <https://github.com/laenzlinger/hugo-kicad-site>`__ is a theme for Hugo, a configurable static site generator.
+  It helps to create sites using KiBot's generated resources. You can see a
+  `Live demo <https://laenzlinger.github.io/hugo-kicad-site/latest/>`__ and
+  a `Real-world project (Granit) <https://laenzlinger.github.io/granit/latest/>`__  using it.
+
+
