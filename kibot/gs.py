@@ -503,6 +503,12 @@ class GS(object):
             os.replace(fname, bkp)
 
     @staticmethod
+    def restore_bkp(fname):
+        bkp = fname+'-bak'
+        if os.path.isfile(bkp):
+            os.replace(bkp, fname)
+
+    @staticmethod
     def zones():
         return pcbnew.ZONES() if GS.ki6 else pcbnew.ZONE_CONTAINERS()
 

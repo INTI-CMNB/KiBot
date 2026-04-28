@@ -167,6 +167,10 @@ class DRC(XRC):  # noqa: F821
                 txt += f'    Check: {check_name}'
                 logf(txt)
 
+    def clean_up(self):
+        if self.need_restore_pcb:
+            GS.restore_bkp(GS.pcb_file)
+
     def get_command(self, output):
         cmd = [GS.kicad_cli, 'pcb', 'drc', '-o', output, '--format', 'json', '--severity-all', '--units',
                UNITS_2_KICAD[self._units]]
@@ -174,15 +178,13 @@ class DRC(XRC):  # noqa: F821
             cmd.append('--schematic-parity')
         if self._all_track_errors:
             cmd.append('--all-track-errors')
-        if BasePreFlight.get_option('check_zone_fills') and not BasePreFlight.get_option('fill_zones'):  # noqa: F821
+        self.need_restore_pcb = (BasePreFlight.get_option('check_zone_fills') and  # noqa: F821
+                                 not BasePreFlight.get_option('fill_zones'))  # noqa: F821
+        if self.need_restore_pcb:
             # We need to fill zones, but not change the current PCB
-            fname = GS.tmp_file(suffix='.kicad_pcb', dir=GS.pcb_dir, what='modified PCB', a_logger=logger)
-            GS.board.Save(fname)
-            GS.copy_project(fname)
-            self._files_to_remove.extend(GS.get_pcb_and_pro_names(fname))
-        else:
-            fname = GS.pcb_file
-        cmd.append(fname)
+            logger.debug('- Replacing the old PCB')
+            GS.save_pcb()
+        cmd.append(GS.pcb_file)
         return cmd
 
     @staticmethod

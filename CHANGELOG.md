@@ -63,6 +63,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Missing footprint information for` for components marked as not on board.
   - Digi-Key URLs, to adapt the new format
   - HTML: link cells not marked empty
+- DRC:
+  - No schematic parity check when using 'check_zone_fills' and not
+    'fill_zones' (#920)
 - Panelize:
   - Problems when using angles (#898)
   - Confusing error when the output wasn't generated

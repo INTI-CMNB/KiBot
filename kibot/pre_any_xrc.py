@@ -310,6 +310,9 @@ class XRC(BasePreFlight):
         """ Put a big checkmark to indicate all went ok """
         return '<div class="centered-checkmark">&#x2714;</div>\n'
 
+    def clean_up(self):
+        pass
+
     def run(self):
         # Differences between ERC and DRC
         if GS.sch_file:
@@ -343,7 +346,10 @@ class XRC(BasePreFlight):
             old_lang = os.environ.get('LANG')
             if old_lang:
                 os.environ['LANG'] = 'en'
-        run_command(cmd)
+        try:
+            run_command(cmd)
+        finally:
+            self.clean_up()
         if self._force_english and old_lang:
             os.environ['LANG'] = old_lang
         # Remove temporals

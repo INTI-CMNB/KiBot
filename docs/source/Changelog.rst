@@ -106,6 +106,11 @@ Fixed
    -  Digi-Key URLs, to adapt the new format
    -  HTML: link cells not marked empty
 
+-  DRC:
+
+   -  No schematic parity check when using ‘check_zone_fills’ and not
+      ‘fill_zones’ (#920)
+
 -  Panelize:
 
    -  Problems when using angles (#898)
