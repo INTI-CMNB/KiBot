@@ -2241,6 +2241,53 @@ outputs:
       # variants with the ';' (semicolon) character.
       # This isn't related to the KiBot concept of variants
       variant: ''
+  # Hugo KiCad Site helper:
+  # Use the `dir` option to select the place where the site is generated.
+  # Currently this output just generates the configuration for the Hugo Theme, for more information visit:
+  # [Hugo KiCad Site](https://github.com/laenzlinger/hugo-kicad-site)
+  - name: 'kicad_site_example'
+    comment: 'Used to generate web sites for your project'
+    type: 'kicad_site'
+    dir: 'Example/kicad_site_dir'
+    options:
+      # [dict|list(dict)=[]] 3D assembly models
+      assembly_models:
+        # [string=''] Name for the downloadable item
+        - name: '3D model'
+          # [string=''] Output that generates it
+          output: 'export_glb'
+      # [string=''] Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
+      # Without the version part
+      base_url: ''
+      # [string='static'] Subdirectory where the files will be copied inside the destination `dir`
+      dest_subdir: 'static'
+      # [dict|list(dict)=[]] Diff resources, usually one for the PCB and another for the schematic
+      diffs:
+        # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
+        - dir: ''
+          # [string] Name for the diff item
+          name: 'Schematic diff'
+          # [string=''] Output that generates it
+          output: 'diff_sch'
+      # [dict|list(dict)=[]] Downloadable resources for releases, not for `latest`
+      downloads:
+        # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
+        - dir: ''
+          # [string=''] Name for the downloadable item
+          name: 'Schematic (PDF)'
+          # [string=''] Output that generates it
+          output: 'schematic'
+      # [boolean=false] By default we skip the copy to the destination dir if the file is already there and newer.
+      # Enabling this option we alway do the copy
+      force_copy: false
+      # [string=''] Name of the iBoM output. Use `None` to skip
+      ibom: ''
+      # [string|list(string)=''] Name of one or more outputs providing images for the PCB
+      renders: ''
+      # [string='auto'] Version for the generated site. `auto` tries to figure out it.
+      # Currently it just uses the GITHUB_REF environment variable to detect a tag, otherwise it
+      # just assumes this is `latest`
+      version: 'auto'
   # KiCanvas:
   # Note that this tool is in alpha stage, so be ready to face some issues.
   # Also note that most browsers won't allow Java Script to read local files,

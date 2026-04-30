@@ -298,7 +298,7 @@ def load_any_sch(file, project, fatal=True, extra_msg=None):
     # Schematic UUID mapping
     # Check if we have a project
     mapped_uuid = None
-    if GS.pro_file:
+    if GS.pro_file and GS.ki10:
         # Projects can override the SCH UUID
         file_base = os.path.basename(file)
         try:
@@ -312,7 +312,7 @@ def load_any_sch(file, project, fatal=True, extra_msg=None):
         except Exception as e:
             # This is not fatal
             logger.debug(f"Failed to get the top level sheets: {e}")
-        if mapped_uuid is None and GS.ki10:
+        if mapped_uuid is None:
             logger.warning(W_NOUUIDMAP+"Unable to map the SCH file to an UUID")
     # End of schematic UUID mapping
     try:

@@ -33,6 +33,7 @@ Notes:
    outputs/ipc2581
    outputs/jobset
    outputs/kibom
+   outputs/kicad_site
    outputs/kicanvas
    outputs/kicost
    outputs/kikit_present

@@ -220,6 +220,20 @@ outputs:
   options:
     number: 20
     conf: bom.ini
+- name: output.kicad_site
+  type: kicad_site
+  comment: Used to generate web sites for your project
+  options:
+    base_url: output.kicad_site.options.dict
+    downloads:
+      name: output.kicad_site.options.dict.downloads.dict
+      output: schematic
+    diffs:
+      name: output.kicad_site.options.dict.diffs.dict
+      output: diff_sch
+    assembly_models:
+      name: output.kicad_site.options.dict.assembly_models.dict
+      output: export_glb
 - name: output.kicanvas
   type: kicanvas
   comment: Generates an interactive web page to browse the schematic and/or PCB

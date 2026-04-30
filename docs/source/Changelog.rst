@@ -24,6 +24,8 @@ Added
    -  BoM Labels (bom_labels): [Experimental] To generate a PDF
       containing labels for the BoM items. (#886)
    -  PCB stats (pcb_stats): The KiCad 10 PCB statistics
+   -  Hugo KiCad Site helper (kicad_site): [Experimental] Helper for the
+      Hugo theme for KiCad projects (#917)
 
 -  CLI:
 
