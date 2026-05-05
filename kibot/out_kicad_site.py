@@ -292,11 +292,12 @@ class KiCad_SiteOptions(BaseOptions):
         images, _ = self.solve_renderers()
         if not images:
             raise KiPlotConfigurationError("No `renders` provided, please add at least one output from {RENDERERS}")
+        cfg += '  renderDir: "."\n'
         cfg += "  renders:\n"
         for f in images:
-            base_name = os.path.basename(f)
-            cfg += f'    - "{base_name}"\n'
-            self.copy(f, "3D")
+            rel_name = os.path.relpath(f, GS.out_dir)
+            cfg += f'    - "{rel_name}"\n'
+            self.copy(f, os.path.dirname(rel_name))
 
         # Downloads
         if self.downloads:
@@ -324,13 +325,16 @@ class KiCad_SiteOptions(BaseOptions):
             cfg += f'  ibom: "{os.path.join(subdir, os.path.basename(file))}"\n'
 
         # Assembly models
+        cfg += '  assemblyDir: "."\n'
         if self.assembly_models:
             cfg += "  assemblyModels:\n"
             for o in self.assembly_models:
                 cfg += f'    - name: "{o.name}"\n'
                 file, subdir = self.solve_download(o, kind='Assembly model', with_subdir=True)
-                cfg += f'      file: "{os.path.basename(file)}"\n'
-                self.copy(file, o.dir or subdir)
+                if o.dir:
+                    subdir = o.dir
+                cfg += f'      file: "{os.path.join(subdir, os.path.basename(file))}"\n'
+                self.copy(file, subdir)
 
         fname = os.path.join(dir_name, 'config_override.yaml')
         logger.debug(f'Writing config to: {fname}\n{cfg}')
