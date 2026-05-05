@@ -16,8 +16,8 @@ import os
 import re
 from ..gs import GS
 from .. import log
-from ..misc import (W_NOLIB, W_UNKFLD, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE,
-                    W_SCHNOTIMP, W_PAGENOINT, W_PAGEDUP, W_PAGEMIS)
+from ..misc import (W_NOLIB, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE, W_SCHNOTIMP,
+                    W_PAGENOINT, W_PAGEDUP, W_PAGEMIS)
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -2043,7 +2043,8 @@ class Sheet(object):
                 elif field.name in SHEET_FILE:
                     sheet.file = field.value
                 else:
-                    logger.warning(W_UNKFLD+"Unknown sheet property `{}` ({})".format(field.name, field.value))
+                    # Most probably a user field
+                    logger.debug("Found user sheet property `{field.name}` ({field.value})")
             elif i_type == 'pin':
                 sheet.pins.append(HSPin.parse(i))
             elif i_type == 'instances':
