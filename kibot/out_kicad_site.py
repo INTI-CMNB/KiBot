@@ -100,6 +100,8 @@ class KiCad_SiteOptions(BaseOptions):
                 Enabling this option we always do the copy """
             self.dest_subdir = 'static'
             """ Subdirectory where the files will be copied inside the destination `dir` """
+            self.pcb_first = False
+            """ List the PCB first, KiCanvas will show the PCB by default, instead of the schematic """
         super().__init__()
 
     def config(self, parent):
@@ -261,6 +263,19 @@ class KiCad_SiteOptions(BaseOptions):
             self.run_output(out, fname)
         return (fname, subdir) if with_subdir else fname
 
+    def add_sch(self):
+        cfg = ''
+        for f in GS.sch.get_files():
+            rel_name = os.path.relpath(f, GS.sch_dir)
+            cfg += f'    - "{rel_name}"\n'
+            self.copy(f, os.path.join("kicad", os.path.dirname(rel_name)))
+        logger.error(cfg)
+        return cfg
+
+    def add_pcb(self):
+        self.copy(GS.pcb_file, "kicad")
+        return f'    - "{GS.pcb_fname}"\n'
+
     def run(self, dir_name):
         self.dir_name = dir_name
         cfg = ''
@@ -281,12 +296,12 @@ class KiCad_SiteOptions(BaseOptions):
 
         # PCB & Schematic
         cfg += "  kicadFiles:\n"
-        cfg += f'    - "{GS.pcb_fname}"\n'
-        self.copy(GS.pcb_file, "kicad")
-        for f in GS.sch.get_files():
-            rel_name = os.path.relpath(f, GS.sch_dir)
-            cfg += f'    - "{rel_name}"\n'
-            self.copy(f, os.path.join("kicad", os.path.dirname(rel_name)))
+        if self.pcb_first:
+            cfg += self.add_pcb()
+            cfg += self.add_sch()
+        else:
+            cfg += self.add_sch()
+            cfg += self.add_pcb()
 
         # Renders
         images, _ = self.solve_renderers()

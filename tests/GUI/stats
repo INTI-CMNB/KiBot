@@ -1,5 +1,5 @@
-56 outputs types with a total of 2233 different parameters
-Single type parameters: 2044 (92 %)
+56 outputs types with a total of 2234 different parameters
+Single type parameters: 2045 (92 %)
 Multi type parameters: 189 (8 %)
 Average parameters: 40
 Maximum number of parameters: 218
@@ -7,8 +7,8 @@ Minimum number of parameters: 14
 Histogram:
   0-  9: 
  10- 19: *****
- 20- 29: *************************
- 30- 39: *********
+ 20- 29: ************************
+ 30- 39: **********
  40- 49: *********
  50- 59: **
  60- 69: **
@@ -57,7 +57,7 @@ Outputs sorted by parameters:
 - bom_labels: 28
 - hpgl_sch_print: 28
 - stencil_for_jig: 28
-- kicad_site: 29
+- kicad_site: 30
 - copy_files: 31
 - pdf_pcb_print: 31
 - position: 33
@@ -154,7 +154,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String:  971
--            Boolean:  561
+-            Boolean:  562
 - ListStringSingular:  303
 -             Number:  303
 -             Choice:  112
@@ -170,7 +170,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  804 
--            Boolean:  493 
+-            Boolean:  494 
 - ListStringSingular:  300 
 -             Number:  209 
 -             Choice:  109 
@@ -412,8 +412,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-96 totals types with a total of 2623 different parameters
-Single type parameters: 2408 (92 %)
+96 totals types with a total of 2624 different parameters
+Single type parameters: 2409 (92 %)
 Multi type parameters: 215 (8 %)
 Average parameters: 27
 Maximum number of parameters: 218
@@ -421,8 +421,8 @@ Minimum number of parameters: 1
 Histogram:
   0-  9: *************************
  10- 19: *************
- 20- 29: *******************************
- 30- 39: **********
+ 20- 29: ******************************
+ 30- 39: ***********
  40- 49: *********
  50- 59: **
  60- 69: **
@@ -510,7 +510,7 @@ Totals sorted by parameters:
 - bom_labels: 28
 - hpgl_sch_print: 28
 - stencil_for_jig: 28
-- kicad_site: 29
+- kicad_site: 30
 - copy_files: 31
 - pdf_pcb_print: 31
 - position: 33
@@ -648,7 +648,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1135
--            Boolean:  664
+-            Boolean:  665
 -             Number:  355
 - ListStringSingular:  333
 -             Choice:  144
@@ -664,7 +664,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  950 
--            Boolean:  586 
+-            Boolean:  587 
 - ListStringSingular:  330 
 -             Number:  246 
 -             Choice:  141 

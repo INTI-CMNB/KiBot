@@ -2278,10 +2278,12 @@ outputs:
           # [string=''] Output that generates it
           output: 'schematic'
       # [boolean=false] By default we skip the copy to the destination dir if the file is already there and newer.
-      # Enabling this option we alway do the copy
+      # Enabling this option we always do the copy
       force_copy: false
       # [string=''] Name of the iBoM output. Use `None` to skip
       ibom: ''
+      # [boolean=false] List the PCB first, KiCanvas will show the PCB by default, instead of the schematic
+      pcb_first: false
       # [string|list(string)=''] Name of one or more outputs providing images for the PCB
       renders: ''
       # [string='auto'] Version for the generated site. `auto` tries to figure out it.
