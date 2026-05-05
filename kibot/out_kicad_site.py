@@ -229,7 +229,7 @@ class KiCad_SiteOptions(BaseOptions):
         else:
             # Check they are actually usable
             outs = []
-            for out_name in self.renderers:
+            for out_name in self.renders:
                 out = RegOutput.get_output(out_name)
                 if out is None:
                     raise KiPlotConfigurationError(f'Unknown output `{out_name}`')
