@@ -97,8 +97,13 @@ Added
 Fixed
 ~~~~~
 
--  3D models: download models from the repo tag corresponding to the
-   currently installed KiCad version, not the one from ``master`` (#899)
+-  3D models:
+
+   -  Download models from the repo tag corresponding to the currently
+      installed KiCad version, not the one from ``master`` (#899)
+   -  EasyEDA 3D models download issues when the specified model was an
+      STEP file using an extension different than ``.step`` (#921)
+
 -  Blender export: problems with component values containing ``/``
    (#885)
 -  BoM:
