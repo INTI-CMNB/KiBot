@@ -79,8 +79,10 @@ LCSC/JLCPCB/EasyEDA 3D models
 KiBot can download 3D models for components that has an LCSC code and
 that has a 3D model at `EasyEDA <https://easyeda.com/>`__. If the 3D
 model is used locally, but not found in the repo, KiBot will try to
-download it. Use the ``field_lcsc_part`` option if KiBot fails to detect
-the schematic field containing the LCSC code.
+download it. Use the ``field_lcsc_part`` global option if KiBot fails
+to detect the schematic field containing the LCSC code. To disable the
+download mechanism use the ``download_lcsc`` option of the particular
+output.
 
 
 .. index::
