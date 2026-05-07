@@ -1,0 +1,25 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+outputs:
+  - name: 'print_front'
+    comment: "Red holes"
+    type: pcb_print
+    options:
+      format: 'SVG'
+      scaling: 2
+      colored_vias: false
+      colored_pads: false
+      plot_sheet_reference: false
+      add_background: true
+      pages:
+        - layers:
+            - layer: F.Cu
+              color: '#FFFFFFFF'
+            - layer: Edge.Cuts
+              color: "#FF0000"
+          page_id: F_Cu_color
+          colored_holes: true
+          holes_color: '#FF0000'
+
