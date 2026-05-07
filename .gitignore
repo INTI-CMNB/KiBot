@@ -65,4 +65,13 @@ experiments/kicad/Interposition/
 experiments/kicad/Plot_Layer/
 experiments/kicad/Print_Layer/v5_print/
 experiments/pcbdraw-mask/
+experiments/heatsink/
+experiments/jobset_test/
+experiments/kicad/10.0/
+experiments/kicad/Plot_Layer_CLI/
+experiments/kicad/Plotter_code/
+experiments/kicad/Sketch_Pads/
 
+tests/.config/kicad/
+DONACIONES
+IMPORTANTE
