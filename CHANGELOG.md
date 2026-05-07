@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Schematic:
   - Support for private text on symbols (#914)
   - Some basic check for the page numbers
+- New filters:
+  - `alternatives`: Used to add alternative fields (i.e. alternative
+    manufacturers) (#913)
 - generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
   KiCad (See #887)
 - Variants: Experimental KiCad variants

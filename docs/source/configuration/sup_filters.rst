@@ -6,6 +6,7 @@ Supported filters
 .. toctree::
    :maxdepth: 1
 
+   filters/alternatives
    filters/expand_text_vars
    filters/field_modify
    filters/field_rename

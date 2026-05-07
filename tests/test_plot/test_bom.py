@@ -10,6 +10,7 @@ pytest-3 --log-cli-level debug
 
 """
 
+import pytest
 import os
 from . import context
 from kibot.misc import BOM_ERROR
@@ -82,4 +83,16 @@ def test_bom_cfg_4(test_dir):
     csv = prj+'-bom.csv'
     ctx.expect_out_file_d(csv)
     ctx.search_in_file_d(csv, ['R,100,R1', 'R,200,R2', 'C,1uF,C1'])
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki9(), reason="Testing on KiCad 9+")
+def test_bom_alternatives_1(test_dir):
+    """ Simple alternatives """
+    prj = 'alternatives'
+    ctx = context.TestContextSCH(test_dir, prj, 'alternatives_1', '')
+    ctx.run()
+    csv = prj+'-bom.csv'
+    ctx.expect_out_file_d(csv)
+    ctx.compare_txt(csv)
     ctx.clean_up()
