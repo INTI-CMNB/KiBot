@@ -2286,6 +2286,9 @@ outputs:
       pcb_first: false
       # [string|list(string)=''] Name of one or more outputs providing images for the PCB
       renders: ''
+      # [string=''] Title for the site, leave empty to use the one from `hugo.yaml`.
+      # %X and KiCad variables are expanded
+      title: ''
       # [string='auto'] Version for the generated site. `auto` tries to figure out it.
       # Currently it just uses the GITHUB_REF environment variable to detect a tag, otherwise it
       # just assumes this is `latest`

@@ -1,5 +1,5 @@
-56 outputs types with a total of 2234 different parameters
-Single type parameters: 2045 (92 %)
+56 outputs types with a total of 2235 different parameters
+Single type parameters: 2046 (92 %)
 Multi type parameters: 189 (8 %)
 Average parameters: 40
 Maximum number of parameters: 218
@@ -57,8 +57,8 @@ Outputs sorted by parameters:
 - bom_labels: 28
 - hpgl_sch_print: 28
 - stencil_for_jig: 28
-- kicad_site: 30
 - copy_files: 31
+- kicad_site: 31
 - pdf_pcb_print: 31
 - position: 33
 - report: 33
@@ -153,7 +153,7 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  971
+-             String:  972
 -            Boolean:  562
 - ListStringSingular:  303
 -             Number:  303
@@ -169,7 +169,7 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  804 
+-             String:  805 
 -            Boolean:  494 
 - ListStringSingular:  300 
 -             Number:  209 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2632 different parameters
-Single type parameters: 2417 (92 %)
+97 totals types with a total of 2633 different parameters
+Single type parameters: 2418 (92 %)
 Multi type parameters: 215 (8 %)
 Average parameters: 27
 Maximum number of parameters: 218
@@ -513,8 +513,8 @@ Totals sorted by parameters:
 - bom_labels: 28
 - hpgl_sch_print: 28
 - stencil_for_jig: 28
-- kicad_site: 30
 - copy_files: 31
+- kicad_site: 31
 - pdf_pcb_print: 31
 - position: 33
 - report: 33
@@ -651,7 +651,7 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1140
+-             String: 1141
 -            Boolean:  665
 -             Number:  356
 - ListStringSingular:  333
@@ -667,7 +667,7 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  955 
+-             String:  956 
 -            Boolean:  587 
 - ListStringSingular:  330 
 -             Number:  247 

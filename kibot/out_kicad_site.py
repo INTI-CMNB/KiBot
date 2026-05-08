@@ -81,6 +81,9 @@ class KiCad_SiteOptions(BaseOptions):
             self.base_url = ''
             """ *Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
                  Without the version part """
+            self.title = ''
+            """ *Title for the site, leave empty to use the one from `hugo.yaml`.
+                %X and KiCad variables are expanded """
             self.version = 'auto'
             """ Version for the generated site. `auto` tries to figure out it.
                 Currently it just uses the GITHUB_REF environment variable to detect a tag, otherwise it
@@ -286,6 +289,8 @@ class KiCad_SiteOptions(BaseOptions):
             tag = self.version
         url = urljoin(self.base_url+'/', tag)
         cfg += f'baseURL: "{url}"\n'
+        if self.title:
+            cfg += f'title: "{self.expand_filename_sch(self.title)}"\n'
         cfg += "params:\n"
 
         # Version

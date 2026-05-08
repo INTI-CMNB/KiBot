@@ -6464,6 +6464,13 @@
           null
         ],
         [
+          "title",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "version",
           [
             "DataTypeString"

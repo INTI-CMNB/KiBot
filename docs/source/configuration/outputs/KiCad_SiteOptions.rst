@@ -8,6 +8,8 @@ KiCad_SiteOptions parameters
 
 -  **base_url** :index:`: <pair: output - kicad_site - options; base_url>` [:ref:`string <string>`] (default: ``''``) Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
    Without the version part.
+-  **title** :index:`: <pair: output - kicad_site - options; title>` [:ref:`string <string>`] (default: ``''``) Title for the site, leave empty to use the one from `hugo.yaml`.
+   %X and KiCad variables are expanded.
 -  ``assembly_models`` :index:`: <pair: output - kicad_site - options; assembly_models>`  [:ref:`KiCad_SiteAssembly parameters <KiCad_SiteAssembly>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) 3D assembly models.
 -  ``dest_subdir`` :index:`: <pair: output - kicad_site - options; dest_subdir>` [:ref:`string <string>`] (default: ``'static'``) Subdirectory where the files will be copied inside the destination `dir`.
 -  ``diffs`` :index:`: <pair: output - kicad_site - options; diffs>`  [:ref:`KiCad_SiteDiff parameters <KiCad_SiteDiff>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) Diff resources, usually one for the PCB and another for the schematic.
