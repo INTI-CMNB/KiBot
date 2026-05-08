@@ -269,7 +269,6 @@ class KiCad_SiteOptions(BaseOptions):
             rel_name = os.path.relpath(f, GS.sch_dir)
             cfg += f'    - "{rel_name}"\n'
             self.copy(f, os.path.join("kicad", os.path.dirname(rel_name)))
-        logger.error(cfg)
         return cfg
 
     def add_pcb(self):
