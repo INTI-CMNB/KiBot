@@ -41,7 +41,7 @@ class KiCad_SiteAssembly(Optionable):
         if not self.output:
             raise KiPlotConfigurationError(f"Missing or empty `output` in {self._item_style} item ({self._tree})")
         if not hasattr(self, 'dir'):
-            self.dir = 'assembly'
+            self.dir = ''  # 'assembly'
 
     def __str__(self):
         return f"{self.name} [{self.output}] -> {self.dir}"
