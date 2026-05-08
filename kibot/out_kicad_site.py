@@ -126,24 +126,23 @@ class KiCad_SiteOptions(BaseOptions):
         # Downloads
         if self.downloads:
             for o in self.downloads:
-                file, subdir = self.solve_download(o, with_subdir=True, dry_run=True)
+                file, subdir = self.solve_download(o, dry_run=True)
                 self.add_target_name(file, o.dir or subdir)
         # Diffs
         if self.diffs:
             for o in self.diffs:
-                file, subdir = self.solve_download(o, kind='Diffs', with_subdir=True, dry_run=True)
+                file, subdir = self.solve_download(o, kind='Diffs', dry_run=True)
                 file = self.add_target_name(file, o.dir or subdir)
         # iBoM
         if self.ibom != 'None':
             out_name = self.get_ibom()
             if out_name:
-                file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM', dry_run=True,
-                                                   with_subdir=True)
+                file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM', dry_run=True)
                 self.add_target_name(file, subdir)
         # Assembly models
         if self.assembly_models:
             for o in self.assembly_models:
-                file, subdir = self.solve_download(o, kind='Assembly model', dry_run=True, with_subdir=True)
+                file, subdir = self.solve_download(o, kind='Assembly model', dry_run=True)
                 self.add_target_name(file, o.dir or subdir)
 
         return self._targets
@@ -249,7 +248,7 @@ class KiCad_SiteOptions(BaseOptions):
                 files.append(file)
         return files, outs
 
-    def solve_download(self, o, kind='Download', dry_run=False, with_subdir=False):
+    def solve_download(self, o, kind='Download', dry_run=False, with_subdir=True):
         files_list, out_dir, out = get_output_targets(o.output, self._parent)
         subdir = os.path.relpath(out_dir, GS.out_dir)
         cfiles = len(files_list)
@@ -318,7 +317,7 @@ class KiCad_SiteOptions(BaseOptions):
             cfg += "  downloads:\n"
             for o in self.downloads:
                 cfg += f'    - name: "{o.name}"\n'
-                file, subdir = self.solve_download(o, with_subdir=True)
+                file, subdir = self.solve_download(o)
                 file = self.copy(file, o.dir or subdir)
                 cfg += f'      path: "{file}"\n'
 
@@ -327,14 +326,14 @@ class KiCad_SiteOptions(BaseOptions):
             cfg += "  diffs:\n"
             for o in self.diffs:
                 cfg += f'    - name: "{o.name}"\n'
-                file, subdir = self.solve_download(o, kind='Diffs', with_subdir=True)
+                file, subdir = self.solve_download(o, kind='Diffs')
                 file = self.copy(file, o.dir or subdir)
                 cfg += f'      path: "{file}"\n'
 
         # iBoM
         if self.ibom != 'None':
             out_name = self.get_ibom(fail=True)
-            file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM', with_subdir=True)
+            file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM')
             self.copy(file, subdir)
             cfg += f'  ibom: "{os.path.join(subdir, os.path.basename(file))}"\n'
 
@@ -344,7 +343,7 @@ class KiCad_SiteOptions(BaseOptions):
             cfg += "  assemblyModels:\n"
             for o in self.assembly_models:
                 cfg += f'    - name: "{o.name}"\n'
-                file, subdir = self.solve_download(o, kind='Assembly model', with_subdir=True)
+                file, subdir = self.solve_download(o, kind='Assembly model')
                 if o.dir:
                     subdir = o.dir
                 cfg += f'      file: "{os.path.join(subdir, os.path.basename(file))}"\n'
