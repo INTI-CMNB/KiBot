@@ -69,76 +69,79 @@ The most important images are:
    pair: docker; tags
    pair: CI/CD; tags
 
-========================================= ============ =======
-Name                                      KiBot        KiCad
-========================================= ============ =======
-ghcr.io/inti-cmnb/kicad5_auto_full:latest last release 5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:latest last release 6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:latest last release 7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:latest last release 8.0.8
-ghcr.io/inti-cmnb/kicad9_auto_full:latest last release 9.x
-ghcr.io/inti-cmnb/kicad5_auto:latest      last release 5.1.9
-ghcr.io/inti-cmnb/kicad6_auto:latest      last release 6.0.11
-ghcr.io/inti-cmnb/kicad7_auto:latest      last release 7.0.11
-ghcr.io/inti-cmnb/kicad8_auto:latest      last release 8.0.8
-ghcr.io/inti-cmnb/kicad9_auto:latest      last release 9.x
-ghcr.io/inti-cmnb/kicad5_auto_full:dev    git code     5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:dev    git code     6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:dev    git code     7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:dev    git code     8.0.8
-ghcr.io/inti-cmnb/kicad9_auto_full:dev    git code     9.x
-ghcr.io/inti-cmnb/kicad6_auto_full:1.8.5  1.8.5        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.8.5  1.8.5        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.8.5  1.8.5        8.0.8
-ghcr.io/inti-cmnb/kicad9_auto_full:1.8.5  1.8.5        9.0.7
-ghcr.io/inti-cmnb/kicad6_auto_full:1.8.4  1.8.4        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.8.4  1.8.4        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.8.4  1.8.4        8.0.8
-ghcr.io/inti-cmnb/kicad9_auto_full:1.8.4  1.8.4        9.0.1
-ghcr.io/inti-cmnb/kicad5_auto_full:1.8.3  1.8.3        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.8.3  1.8.3        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.8.3  1.8.3        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.8.3  1.8.3        8.0.8
-ghcr.io/inti-cmnb/kicad9_auto_full:1.8.3  1.8.3        9.0.0
-ghcr.io/inti-cmnb/kicad5_auto_full:1.8.2  1.8.2        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.8.2  1.8.2        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.8.2  1.8.2        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.8.2  1.8.2        8.0.8
-ghcr.io/inti-cmnb/kicad5_auto_full:1.8.1  1.8.1        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.8.1  1.8.1        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.8.1  1.8.1        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.8.1  1.8.1        8.0.5
-ghcr.io/inti-cmnb/kicad5_auto_full:1.7.0  1.7.0        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.7.0  1.7.0        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.7.0  1.7.0        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.7.0  1.7.0        8.0.4
-ghcr.io/inti-cmnb/kicad5_auto_full:1.6.5  1.6.5        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.6.5  1.6.5        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.6.5  1.6.5        7.0.11
-ghcr.io/inti-cmnb/kicad8_auto_full:1.6.5  1.6.5        8.0.1
-ghcr.io/inti-cmnb/kicad5_auto_full:1.6.4  1.6.4        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.6.4  1.6.4        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.6.4  1.6.4        7.0.11
-ghcr.io/inti-cmnb/kicad5_auto_full:1.6.3  1.6.3        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.6.3  1.6.3        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.6.3  1.6.3        7.0.10
-ghcr.io/inti-cmnb/kicad5_auto_full:1.6.2  1.6.2        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.6.2  1.6.2        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.6.2  1.6.2        7.0.5.1
-ghcr.io/inti-cmnb/kicad5_auto_full:1.6.1  1.6.1        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.6.1  1.6.1        6.0.11
-ghcr.io/inti-cmnb/kicad7_auto_full:1.6.1  1.6.1        7.0.2.1
-ghcr.io/inti-cmnb/kicad5_auto_full:1.6.0  1.6.0        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.6.0  1.6.0        6.0.10
-ghcr.io/inti-cmnb/kicad5_auto_full:1.5.1  1.5.1        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.5.1  1.5.1        6.0.10
-ghcr.io/inti-cmnb/kicad5_auto_full:1.4.0  1.4.0        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.4.0  1.4.0        6.0.9
-ghcr.io/inti-cmnb/kicad5_auto_full:1.3.0  1.3.0        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto_full:1.3.0  1.3.0        6.0.7
-ghcr.io/inti-cmnb/kicad5_auto:1.2.0       1.2.0        5.1.9
-ghcr.io/inti-cmnb/kicad6_auto:1.2.0       1.2.0        6.0.5
-========================================= ============ =======
+=========================================  ============ =======
+Name                                       KiBot        KiCad
+=========================================  ============ =======
+ghcr.io/inti-cmnb/kicad10_auto_full:latest last release 10.x
+ghcr.io/inti-cmnb/kicad9_auto_full:latest  last release 9.0.7
+ghcr.io/inti-cmnb/kicad8_auto_full:latest  last release 8.0.8
+ghcr.io/inti-cmnb/kicad7_auto_full:latest  last release 7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:latest  last release 6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:latest  1.8.4        5.1.9
+ghcr.io/inti-cmnb/kicad10_auto:latest      last release 9.0.7
+ghcr.io/inti-cmnb/kicad9_auto:latest       last release 9.0.7
+ghcr.io/inti-cmnb/kicad8_auto:latest       last release 8.0.8
+ghcr.io/inti-cmnb/kicad7_auto:latest       last release 7.0.11
+ghcr.io/inti-cmnb/kicad6_auto:latest       last release 6.0.11
+ghcr.io/inti-cmnb/kicad5_auto:latest       1.8.4        5.1.9
+ghcr.io/inti-cmnb/kicad10_auto_full:dev    git code     9.x
+ghcr.io/inti-cmnb/kicad9_auto_full:dev     git code     9.0.7
+ghcr.io/inti-cmnb/kicad8_auto_full:dev     git code     8.0.8
+ghcr.io/inti-cmnb/kicad7_auto_full:dev     git code     7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:dev     git code     6.0.11
+ghcr.io/inti-cmnb/kicad9_auto_full:1.8.5   1.8.5        9.0.7
+ghcr.io/inti-cmnb/kicad8_auto_full:1.8.5   1.8.5        8.0.8
+ghcr.io/inti-cmnb/kicad7_auto_full:1.8.5   1.8.5        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.8.5   1.8.5        6.0.11
+ghcr.io/inti-cmnb/kicad9_auto_full:1.8.4   1.8.4        9.0.1
+ghcr.io/inti-cmnb/kicad8_auto_full:1.8.4   1.8.4        8.0.8
+ghcr.io/inti-cmnb/kicad7_auto_full:1.8.4   1.8.4        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.8.4   1.8.4        6.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.8.4   1.8.4        5.1.9
+ghcr.io/inti-cmnb/kicad9_auto_full:1.8.3   1.8.3        9.0.0
+ghcr.io/inti-cmnb/kicad8_auto_full:1.8.3   1.8.3        8.0.8
+ghcr.io/inti-cmnb/kicad7_auto_full:1.8.3   1.8.3        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.8.3   1.8.3        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.8.3   1.8.3        5.1.9
+ghcr.io/inti-cmnb/kicad8_auto_full:1.8.2   1.8.2        8.0.8
+ghcr.io/inti-cmnb/kicad7_auto_full:1.8.2   1.8.2        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.8.2   1.8.2        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.8.2   1.8.2        5.1.9
+ghcr.io/inti-cmnb/kicad8_auto_full:1.8.1   1.8.1        8.0.5
+ghcr.io/inti-cmnb/kicad7_auto_full:1.8.1   1.8.1        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.8.1   1.8.1        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.8.1   1.8.1        5.1.9
+ghcr.io/inti-cmnb/kicad8_auto_full:1.7.0   1.7.0        8.0.4
+ghcr.io/inti-cmnb/kicad7_auto_full:1.7.0   1.7.0        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.7.0   1.7.0        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.7.0   1.7.0        5.1.9
+ghcr.io/inti-cmnb/kicad8_auto_full:1.6.5   1.6.5        8.0.1
+ghcr.io/inti-cmnb/kicad7_auto_full:1.6.5   1.6.5        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.6.5   1.6.5        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.6.5   1.6.5        5.1.9
+ghcr.io/inti-cmnb/kicad7_auto_full:1.6.4   1.6.4        7.0.11
+ghcr.io/inti-cmnb/kicad6_auto_full:1.6.4   1.6.4        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.6.4   1.6.4        5.1.9
+ghcr.io/inti-cmnb/kicad7_auto_full:1.6.3   1.6.3        7.0.10
+ghcr.io/inti-cmnb/kicad6_auto_full:1.6.3   1.6.3        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.6.3   1.6.3        5.1.9
+ghcr.io/inti-cmnb/kicad7_auto_full:1.6.2   1.6.2        7.0.5.1
+ghcr.io/inti-cmnb/kicad6_auto_full:1.6.2   1.6.2        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.6.2   1.6.2        5.1.9
+ghcr.io/inti-cmnb/kicad7_auto_full:1.6.1   1.6.1        7.0.2.1
+ghcr.io/inti-cmnb/kicad6_auto_full:1.6.1   1.6.1        6.0.11
+ghcr.io/inti-cmnb/kicad5_auto_full:1.6.1   1.6.1        5.1.9
+ghcr.io/inti-cmnb/kicad6_auto_full:1.6.0   1.6.0        6.0.10
+ghcr.io/inti-cmnb/kicad5_auto_full:1.6.0   1.6.0        5.1.9
+ghcr.io/inti-cmnb/kicad6_auto_full:1.5.1   1.5.1        6.0.10
+ghcr.io/inti-cmnb/kicad5_auto_full:1.5.1   1.5.1        5.1.9
+ghcr.io/inti-cmnb/kicad6_auto_full:1.4.0   1.4.0        6.0.9
+ghcr.io/inti-cmnb/kicad5_auto_full:1.4.0   1.4.0        5.1.9
+ghcr.io/inti-cmnb/kicad6_auto_full:1.3.0   1.3.0        6.0.7
+ghcr.io/inti-cmnb/kicad5_auto_full:1.3.0   1.3.0        5.1.9
+ghcr.io/inti-cmnb/kicad6_auto:1.2.0        1.2.0        6.0.5
+ghcr.io/inti-cmnb/kicad5_auto:1.2.0        1.2.0        5.1.9
+=========================================  ============ =======
 
 For more information about the docker images visit
 `kicad_debian <https://github.com/INTI-CMNB/kicad_debian>`__ and
@@ -263,68 +266,68 @@ There are several tags you can choose:
 =========== === ============ =======
 Tag         API KiBot        KiCad
 =========== === ============ =======
-v1          1   1.2.0        5.1.9
-v1_k6       1   1.2.0        6.0.5
-v2_1_2_0    2   1.2.0        5.1.9
-v2_k6_1_2_0 2   1.2.0        6.0.5
-v2_1_3_0    2   1.3.0        5.1.9
-v2_k6_1_3_0 2   1.3.0        6.0.7
-v2_1_4_0    2   1.4.0        5.1.9
-v2_k6_1_4_0 2   1.4.0        6.0.9
-v2_1_5_1    2   1.5.1        5.1.9
-v2_k6_1_5_1 2   1.5.1        6.0.9
-v2_1_6_0    2   1.6.0        5.1.9
-v2_k6_1_6_0 2   1.6.0        6.0.9
-v2_1_6_2    2   1.6.2        5.1.9
-v2_k6_1_6_2 2   1.6.2        6.0.11
-v2_k7_1_6_2 2   1.6.2        7.0.5.1
-v2_1_6_3    2   1.6.3        5.1.9
-v2_k6_1_6_3 2   1.6.3        6.0.11
-v2_k7_1_6_3 2   1.6.3        7.0.10
-v2_1_6_4    2   1.6.4        5.1.9
-v2_k6_1_6_4 2   1.6.4        6.0.11
-v2_k7_1_6_4 2   1.6.4        7.0.11
-v2_1_6_5    2   1.6.5        5.1.9
-v2_k6_1_6_5 2   1.6.5        6.0.11
-v2_k7_1_6_5 2   1.6.5        7.0.11
-v2_k8_1_6_5 2   1.6.5        8.0.1
-v2_1_7_0    2   1.7.0        5.1.9
-v2_k6_1_7_0 2   1.7.0        6.0.11
-v2_k7_1_7_0 2   1.7.0        7.0.11
-v2_k8_1_7_0 2   1.7.0        8.0.4
-v2_1_8_1    2   1.8.1        5.1.9
-v2_k6_1_8_1 2   1.8.1        6.0.11
-v2_k7_1_8_1 2   1.8.1        7.0.11
-v2_k8_1_8_1 2   1.8.1        8.0.5
-v2_1_8_2    2   1.8.2        5.1.9
-v2_k6_1_8_2 2   1.8.2        6.0.11
-v2_k7_1_8_2 2   1.8.2        7.0.11
-v2_k8_1_8_2 2   1.8.2        8.0.8
-v2_1_8_3    2   1.8.3        5.1.9
-v2_k6_1_8_3 2   1.8.3        6.0.11
-v2_k7_1_8_3 2   1.8.3        7.0.11
-v2_k8_1_8_3 2   1.8.3        8.0.8
-v2_k9_1_8_3 2   1.8.3        9.0.0
-v2_k6_1_8_4 2   1.8.4        6.0.11
-v2_k7_1_8_4 2   1.8.4        7.0.11
-v2_k8_1_8_4 2   1.8.4        8.0.8
-v2_k9_1_8_4 2   1.8.4        9.0.1
-v2_k6_1_8_5 2   1.8.5        6.0.11
-v2_k7_1_8_5 2   1.8.5        7.0.11
-v2_k8_1_8_5 2   1.8.5        8.0.8
-v2_k9_1_8_5 2   1.8.5        9.0.7
-v2          2   last release 5.1.9
-v2_k6       2   last release 6.0.11
-v2_k7       2   last release 7.0.11
-v2_k8       2   last release 8.0.8
-v2_k9       2   last release 9.0.7
-v2_k10      2   last release 10.x
-v2_d        2   git code     5.1.9
-v2_dk6      2   git code     6.0.11
-v2_dk7      2   git code     7.0.11
-v2_dk8      2   git code     8.0.8
-v2_dk9      2   git code     9.0.7
 v2_dk10     2   git code     10.x
+v2_dk9      2   git code     9.0.7
+v2_dk8      2   git code     8.0.8
+v2_dk7      2   git code     7.0.11
+v2_dk6      2   git code     6.0.11
+v2_d        2   git code     5.1.9
+v2_k10      2   last release 10.x
+v2_k9       2   last release 9.0.7
+v2_k8       2   last release 8.0.8
+v2_k7       2   last release 7.0.11
+v2_k6       2   last release 6.0.11
+v2          2   last release 5.1.9
+v2_k9_1_8_5 2   1.8.5        9.0.7
+v2_k8_1_8_5 2   1.8.5        8.0.8
+v2_k7_1_8_5 2   1.8.5        7.0.11
+v2_k6_1_8_5 2   1.8.5        6.0.11
+v2_k9_1_8_4 2   1.8.4        9.0.1
+v2_k8_1_8_4 2   1.8.4        8.0.8
+v2_k7_1_8_4 2   1.8.4        7.0.11
+v2_k6_1_8_4 2   1.8.4        6.0.11
+v2_k9_1_8_3 2   1.8.3        9.0.0
+v2_k8_1_8_3 2   1.8.3        8.0.8
+v2_k7_1_8_3 2   1.8.3        7.0.11
+v2_k6_1_8_3 2   1.8.3        6.0.11
+v2_1_8_3    2   1.8.3        5.1.9
+v2_k8_1_8_2 2   1.8.2        8.0.8
+v2_k7_1_8_2 2   1.8.2        7.0.11
+v2_k6_1_8_2 2   1.8.2        6.0.11
+v2_1_8_2    2   1.8.2        5.1.9
+v2_k8_1_8_1 2   1.8.1        8.0.5
+v2_k7_1_8_1 2   1.8.1        7.0.11
+v2_k6_1_8_1 2   1.8.1        6.0.11
+v2_1_8_1    2   1.8.1        5.1.9
+v2_k8_1_7_0 2   1.7.0        8.0.4
+v2_k7_1_7_0 2   1.7.0        7.0.11
+v2_k6_1_7_0 2   1.7.0        6.0.11
+v2_1_7_0    2   1.7.0        5.1.9
+v2_k8_1_6_5 2   1.6.5        8.0.1
+v2_k7_1_6_5 2   1.6.5        7.0.11
+v2_k6_1_6_5 2   1.6.5        6.0.11
+v2_1_6_5    2   1.6.5        5.1.9
+v2_k7_1_6_4 2   1.6.4        7.0.11
+v2_k6_1_6_4 2   1.6.4        6.0.11
+v2_1_6_4    2   1.6.4        5.1.9
+v2_k7_1_6_3 2   1.6.3        7.0.10
+v2_k6_1_6_3 2   1.6.3        6.0.11
+v2_1_6_3    2   1.6.3        5.1.9
+v2_k7_1_6_2 2   1.6.2        7.0.5.1
+v2_k6_1_6_2 2   1.6.2        6.0.11
+v2_1_6_2    2   1.6.2        5.1.9
+v2_k6_1_6_0 2   1.6.0        6.0.9
+v2_1_6_0    2   1.6.0        5.1.9
+v2_k6_1_5_1 2   1.5.1        6.0.9
+v2_1_5_1    2   1.5.1        5.1.9
+v2_k6_1_4_0 2   1.4.0        6.0.9
+v2_1_4_0    2   1.4.0        5.1.9
+v2_k6_1_3_0 2   1.3.0        6.0.7
+v2_1_3_0    2   1.3.0        5.1.9
+v2_k6_1_2_0 2   1.2.0        6.0.5
+v2_1_2_0    2   1.2.0        5.1.9
+v1_k6       1   1.2.0        6.0.5
+v1          1   1.2.0        5.1.9
 =========== === ============ =======
 
 The main differences between API 1 and 2 are:
