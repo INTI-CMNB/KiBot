@@ -317,12 +317,14 @@ v2          2   last release 5.1.9
 v2_k6       2   last release 6.0.11
 v2_k7       2   last release 7.0.11
 v2_k8       2   last release 8.0.8
-v2_k9       2   last release 9.x
+v2_k9       2   last release 9.0.7
+v2_k10      2   last release 10.x
 v2_d        2   git code     5.1.9
 v2_dk6      2   git code     6.0.11
 v2_dk7      2   git code     7.0.11
 v2_dk8      2   git code     8.0.8
-v2_dk9      2   git code     9.x
+v2_dk9      2   git code     9.0.7
+v2_dk10     2   git code     10.x
 =========== === ============ =======
 
 The main differences between API 1 and 2 are:
