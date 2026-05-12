@@ -21,7 +21,7 @@ SECTION_RPT = {'schematic_parity': 'Footprint errors', 'unconnected_items': 'unc
 @pre_class
 class DRC(XRC):  # noqa: F821
     """ DRC
-        Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+        Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
         You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily install the template.
         This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer.
         GUI exclusions and schematic parity are supported """
@@ -111,17 +111,19 @@ class DRC(XRC):  # noqa: F821
         html = self.create_html_top(data)
         # Generate the content
         empty = True
+        violations_html = ''
         for section in JSON_SECTIONS:
             violations = data.get(section, [])
             if not violations:
                 continue
-            empty = False
             name = SECTION_HUMAN[section]
-            html += f'<p class="subtitle">{name}</p>\n'
-            html += self.create_html_violations(violations)
+            violations_html += f'<p class="subtitle">{name}</p>\n'
+            violations_html += self.create_html_violations(violations)
+            if any(not item.get('excluded', False) for item in violations):
+                empty = False
         if empty:
             html += self.create_html_ok()
-        html += self.create_html_bottom()
+        html += violations_html + self.create_html_bottom()
         return html
 
     def create_txt(self, data):
@@ -165,22 +167,24 @@ class DRC(XRC):  # noqa: F821
                 txt += f'    Check: {check_name}'
                 logf(txt)
 
+    def clean_up(self):
+        if self.need_restore_pcb:
+            GS.restore_bkp(GS.pcb_file)
+
     def get_command(self, output):
-        cmd = ['kicad-cli', 'pcb', 'drc', '-o', output, '--format', 'json', '--severity-all', '--units',
+        cmd = [GS.kicad_cli, 'pcb', 'drc', '-o', output, '--format', 'json', '--severity-all', '--units',
                UNITS_2_KICAD[self._units]]
         if self._schematic_parity:
             cmd.append('--schematic-parity')
         if self._all_track_errors:
             cmd.append('--all-track-errors')
-        if BasePreFlight.get_option('check_zone_fills') and not BasePreFlight.get_option('fill_zones'):  # noqa: F821
+        self.need_restore_pcb = (BasePreFlight.get_option('check_zone_fills') and  # noqa: F821
+                                 not BasePreFlight.get_option('fill_zones'))  # noqa: F821
+        if self.need_restore_pcb:
             # We need to fill zones, but not change the current PCB
-            fname = GS.tmp_file(suffix='.kicad_pcb', dir=GS.pcb_dir, what='modified PCB', a_logger=logger)
-            GS.board.Save(fname)
-            GS.copy_project(fname)
-            self._files_to_remove.extend(GS.get_pcb_and_pro_names(fname))
-        else:
-            fname = GS.pcb_file
-        cmd.append(fname)
+            logger.debug('- Replacing the old PCB')
+            GS.save_pcb()
+        cmd.append(GS.pcb_file)
         return cmd
 
     @staticmethod

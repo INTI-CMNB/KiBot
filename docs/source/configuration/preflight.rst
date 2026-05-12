@@ -22,6 +22,15 @@ Here is an example of a *preflight* section:
      drc: true
      check_zone_fills: true
 
+If you define the same preflight more than once the last definition is used.
+Some preflights takes a list of options, in this case you might want to merge
+multiple definitions, from various files. To achieve this use the `merge_pre`
+option in the `kibot` section, provide a list of the preflight types that
+will be merged. See the :ref:`header section <header>`.
+
+.. note::
+   The `merge_pre` option must be in the top-level configuration file and
+   is used for all the imported files.
 
 
 .. index::

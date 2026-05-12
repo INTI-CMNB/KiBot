@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """ Miscellaneous definitions """
 
+import collections
 from contextlib import contextmanager
 import hashlib
 import os
@@ -52,6 +53,7 @@ BLENDER_ERROR = 35
 WARN_AS_ERROR = 36
 CHECK_FIELD = 37
 IGNORED_ERRORS = 38
+GOT_WARNINGS = 39   # Not treated as errors, but using `--fail-on-warnings`
 error_level_to_name = ['NONE',
                        'INTERNAL_ERROR',
                        'WRONG_ARGUMENTS',
@@ -90,7 +92,8 @@ error_level_to_name = ['NONE',
                        'BLENDER_ERROR',
                        'WARN_AS_ERROR',
                        'CHECK_FIELD',
-                       'IGNORED_ERRORS'
+                       'IGNORED_ERRORS',
+                       'GOT_WARNINGS'
                        ]
 KICOST_SUBMODULE = '../submodules/KiCost/src/kicost'
 EXAMPLE_CFG = 'example_template.kibot.yaml'
@@ -126,10 +129,6 @@ MOD_ALLOW_SOLDERMASK_BRIDGES = 64
 MOD_ALLOW_MISSING_COURTYARD = 128
 # This is what a virtual component gets when loaded by KiCad 6
 MOD_VIRTUAL = MOD_EXCLUDE_FROM_POS_FILES | MOD_EXCLUDE_FROM_BOM
-# VIATYPE, not exported by KiCad 5 (6, 7 and 8 defines it the same way)
-VIATYPE_THROUGH = 3
-VIATYPE_BLIND_BURIED = 2
-VIATYPE_MICROVIA = 1
 
 # Supported values for "do not fit"
 DNF = {
@@ -166,6 +165,7 @@ ISO_CURRENCIES = {'EUR', 'USD', 'JPY', 'BGN', 'CZK', 'DKK', 'GBP', 'HUF', 'PLN',
                   'RUB', 'TRY', 'AUD', 'BRL', 'CAD', 'CNY', 'HKD', 'IDR', 'ILS', 'INR', 'KRW', 'MXN', 'MYR', 'NZD', 'PHP',
                   'SGD', 'THB', 'ZAR'}
 
+W_SILLY = '*'
 W_VARCFG = '(W001) '
 W_VARPCB = '(W002) '
 W_PYCACHE = '(W003) '
@@ -343,6 +343,20 @@ W_CONVPDF = '(W173) '
 W_MISSWRL = '(W174) '
 W_STACKUP = '(W175) '
 W_NOVISLA = '(W176) '
+W_IBOMNOCHK = '(W177) '
+W_PREREDEF = '(W178) '
+W_BURIEDVIAS = '(W179) '
+W_BADGITREPO = '(W180) '
+W_NOUUIDMAP = '(W181) '
+W_UUIDSCHISSUE = '(W182) '
+W_SCHNOTIMP = '(W183) '
+W_NOUTF8 = '(W184) '
+W_POSGRID = '(W185) '
+W_PAGENOINT = '(W186) '
+W_PAGEDUP = '(W187) '
+W_PAGEMIS = '(W188) '
+W_EXTRAGEN = '(W189) '
+W_NONUMBER = '(W190) '
 # Somehow arbitrary, the colors are real, but can be different
 PCB_MAT_COLORS = {'fr1': "937042", 'fr2': "949d70", 'fr3': "adacb4", 'fr4': "332B16", 'fr5': "6cc290"}
 PCB_FINISH_COLORS = {'hal': "8b898c", 'hasl': "8b898c", 'imag': "8b898c", 'enig': "cfb96e", 'enepig': "cfb96e",
@@ -645,18 +659,24 @@ def try_int(value):
     return i_val if i_val == f_val else f_val
 
 
-def try_decode_utf8(data, where, logger):
+def try_decode_utf8(data, where, logger, cp):
     try:
         data = data.decode()
     except UnicodeDecodeError:
-        logger.non_critical_error(f'Invalid UTF-8 sequence at {where}')
-        nres = ''
-        for c in data:
-            if c > 127:
-                c = 32
-            nres += chr(c)
-        data = nres
-        logger.non_critical_error('Using: '+data.rstrip())
+        msg = f'Invalid UTF-8 sequence at {where}'
+        if cp:
+            logger.warning(W_NOUTF8 + msg + f' using `{cp}` encoding')
+            data = data.decode(cp)
+            logger.debug('Using: '+data.rstrip())
+        else:
+            logger.non_critical_error(msg)
+            nres = ''
+            for c in data:
+                if c > 127:
+                    c = 32
+                nres += chr(c)
+            data = nres
+            logger.non_critical_error('Using: '+data.rstrip())
     return data
 
 
@@ -696,3 +716,16 @@ def get_file_hash(filepath, algorithm="sha256", buffer_size=65536):
             hash_obj.update(chunk)
 
     return hash_obj.hexdigest()  # Get the hexadecimal digest of the hash
+
+
+def update_dict(d, u):
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = update_dict(d.get(k, {}), v)
+        elif isinstance(v, list) and k in d:
+            d[k] = v+d[k]
+        elif isinstance(v, set) and k in d:
+            d[k] |= v
+        else:
+            d[k] = v
+    return d

@@ -1,5 +1,5 @@
 (kicad_sch
-	(version 20241209)
+	(version 20250114)
 	(generator "eeschema")
 	(generator_version "9.0")
 	(uuid "2e642b3e-a476-4c54-9a52-dcea955640cd")
@@ -659,7 +659,7 @@
 			(symbol "C-passive_0_1"
 				(polyline
 					(pts
-						(xy -0.635 0) (xy -0.381 0)
+						(xy -0.635 0) (xy -1.27 0)
 					)
 					(stroke
 						(width 0)
@@ -671,7 +671,7 @@
 				)
 				(polyline
 					(pts
-						(xy -0.635 0) (xy -1.27 0)
+						(xy -0.635 0) (xy -0.381 0)
 					)
 					(stroke
 						(width 0)
@@ -2823,7 +2823,7 @@
 	)
 	(symbol
 		(lib_id "74xx:74LS04")
-		(at 107.95 78.74 180)
+		(at 107.95 78.74 0)
 		(unit 7)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -2831,7 +2831,7 @@
 		(dnp no)
 		(uuid "c9dbf4f2-a5c0-4362-a1b5-090b86109be4")
 		(property "Reference" "U1"
-			(at 107.95 70.6882 0)
+			(at 107.95 86.7918 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2839,7 +2839,7 @@
 			)
 		)
 		(property "Value" "74LS04"
-			(at 107.95 72.9996 0)
+			(at 107.95 84.4804 0)
 			(effects
 				(font
 					(size 1.27 1.27)

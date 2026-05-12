@@ -1,6 +1,11 @@
 kibot:
   version: 1
 filters:
+- name: filter.alternatives
+  type: alternatives
+  comment: Alternatives
+  parts:
+    library_link: filter.alternatives.parts.dict
 - name: filter.expand_text_vars
   type: expand_text_vars
   comment: Expand Text Variables

@@ -188,7 +188,8 @@ class Globals(FiltersOptions):
                 Related to https://gitlab.com/kicad/code/kicad/-/issues/3792 """
             self.castellated_pads = False
             """ Has the PCB castellated pads?
-                KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads """
+                KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads
+                KiCad 10: no longer exists """
             self.copper_finish = None
             """ {pcb_finish} """
             self.copper_thickness = 35
@@ -277,6 +278,16 @@ class Globals(FiltersOptions):
                 This can be used when a text variable uses the variant and you want to create more than
                 one variant in the same run. Note that this could be slow because it forces a board
                 reload each time you run an output that uses variants """
+            self.set_text_variables_sheet_title = False
+            """ When running the `set_text_variables` preflight try to define variables containing the names
+                of the sheets. The names are stored in variables named `SHEET_TITLE_n` where `n` is the page
+                number.
+                At least `set_text_variables_sheet_title_min` variables are defined """
+            self.set_text_variables_sheet_title_min = 40
+            """ Minimum number of sheet titles defined when `set_vars_sheet_title` is enabled.
+                The missing titles are filled using `set_text_variables_sheet_title_defaul` """
+            self.set_text_variables_sheet_title_default = '......................................'
+            """ Name for the missing pages defined by `set_vars_sheet_title` """
             self.silk_screen_color = 'white'
             """ Color for the markings. Currently used for documentation and to choose default colors.
                 KiCad 6: you should set this in the Board Setup -> Physical Stackup.
@@ -335,7 +346,15 @@ class Globals(FiltersOptions):
             """ The name of the schematic field that contains the distributor.
                 You can use `_field_distributor` as field name to use it in most places """
             self.allow_blind_buried_vias = True
-            """ Allow the use of buried vias. This value is only used for KiCad 7+.
+            """ Allow the use of blind/buried vias. This value is only used for KiCad 7+.
+                For KiCad 10+ use the separated options: `allow_blind_vias` and `allow_buried_vias`,
+                and leave it in `true`.
+                For KiCad 5 and 6 use the design rules settings, stored in the project """
+            self.allow_blind_vias = True
+            """ Allow the use of blind vias. This value is only used for KiCad 10+.
+                For KiCad 5 and 6 use the design rules settings, stored in the project """
+            self.allow_buried_vias = True
+            """ Allow the use of buried vias. This value is only used for KiCad 10+.
                 For KiCad 5 and 6 use the design rules settings, stored in the project """
             self.allow_microvias = True
             """ Allow the use of micro vias. This value is only used for KiCad 7+.
@@ -350,6 +369,8 @@ class Globals(FiltersOptions):
             """ The KiCad v7 PCB flag *Do Not Populate* is applied to our fitted flag for 3D models,
                 even when no filter/variant is specified. Disabling `kicad_dnp_applied` also disables
                 this flag """
+            self.kicad_default_variant = True
+            """ For KiCad 10+ use the `Default` variant, even when no variant is specified """
             self.colored_tht_resistors = True
             """ Try to add color bands to the 3D models of KiCad THT resistors """
             self.cache_3d_resistors = False
@@ -439,6 +460,9 @@ class Globals(FiltersOptions):
                 The width of the text box will be the width of the image.
                 The text box must contain *kibot_image_X* where X is the output name.
                 This option configures the prefix used. If this option is empty no images will be pasted """
+            self.code_page_fallback = 'latin1'
+            """ Code page to use when UTF-8 decode fails. Leave empty to just use ASCII and spaces for codes
+                outside ASCII """
         self.set_doc('filters', " [list(dict)=[]] KiBot and KiCost warnings to be ignored."
                                 " Add 1000 to KiCost warnings (WCnnn) ")
         self._filter_what = 'KiBot warnings'

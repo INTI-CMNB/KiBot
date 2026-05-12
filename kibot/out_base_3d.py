@@ -14,7 +14,7 @@ from .bom.units import comp_match
 from .EasyEDA.easyeda_3d import download_easyeda_3d_model
 from .fil_base import reset_filters
 from .misc import (W_MISS3D, W_FAILDL, W_DOWN3D, DISABLE_3D_MODEL_TEXT, W_BADTOL, W_BADRES, W_RESVALISSUE, W_RES3DNAME,
-                   W_MISSWRL, EMBED_PREFIX, get_file_hash)
+                   W_MISSWRL, EMBED_PREFIX, get_file_hash, USER_AGENT)
 from .gs import GS
 from .optionable import Optionable
 from .out_base import VariantOptions, BaseOutput
@@ -153,11 +153,15 @@ class Base3DOptions(VariantOptions):
                 them from LCSC database. In order to work you'll need to provide the LCSC
                 part number. The field containing the LCSC part number is defined by the
                 `field_lcsc_part` global variable """
-            self.kicad_3d_url = 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
+            self.kicad_3d_url = 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
             """ Base URL for the KiCad 3D models """
-            self.kicad_3d_url_suffix = ''
+            self.kicad_3d_url_suffix = '/raw?ref=VERSION'
             """ Text added to the end of the download URL.
                 Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2 """
+            self.kicad_3d_url_version = True
+            """ Replace the *master* subdir in the URL by the KiCad version.
+                In this way we download the 3D model corresponding to the installed KiCad instead
+                of the last available """
         # Temporal dir used to store the downloaded files
         self._tmp_dir = None
         super().__init__()
@@ -182,7 +186,7 @@ class Base3DOptions(VariantOptions):
         logger.debug('Downloading `{}`'.format(url))
         failed = False
         try:
-            r = requests.get(url, allow_redirects=True)
+            r = requests.get(url, allow_redirects=True, headers={'User-Agent': USER_AGENT}, timeout=20)
         except Exception:
             failed = True
         if failed or r.status_code != 200:
@@ -193,30 +197,53 @@ class Base3DOptions(VariantOptions):
         logger.debug(f'- Downloaded {dest} ({os.path.getsize(dest)})')
         return dest
 
-    def wrl_name(self, name, force_wrl):
+    def wrl_name(self, name, force_wrl, force_step):
         """ Try to use the WRL version """
-        if not force_wrl:
+        if not force_wrl and not force_step:
             return name
         nm, ext = os.path.splitext(name)
-        if ext.lower() == '.wrl':
+        wanted_ext = '.wrl' if force_wrl else '.step'
+        if ext.lower() == wanted_ext:
             return name
-        nm += '.wrl'
+        nm += wanted_ext
         if os.path.isfile(nm):
-            logger.debug('- Forcing WRL '+nm)
+            logger.debug('- Forcing '+wanted_ext.upper()[1:]+' '+nm)
             return nm
         return name
 
-    def try_download_kicad(self, model, full_name, downloaded, rel_dirs, force_wrl):
+    def kicad_3d_download_url(self, fname):
+        kicad_3d_url = self.kicad_3d_url
+        kicad_3d_url_suffix = self.kicad_3d_url_suffix
+        if self.kicad_3d_url_version:
+            # *-rc? tags are created before the release, using the release will fail
+            extra = GS.kicad_version[GS.kicad_version.index("-rc"):][:4] if '-rc' in GS.kicad_version else ''
+            # This worked until around 2026/04/13
+            # branch = f'/{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}{extra}/'
+            # kicad_3d_url = kicad_3d_url.replace('/master/', branch)
+            # This is nicer as we use the API
+            branch = f'{GS.kicad_version_major}.{GS.kicad_version_minor}.{GS.kicad_version_patch}{extra}'
+            kicad_3d_url_suffix = kicad_3d_url_suffix.replace('VERSION', branch)
+        return kicad_3d_url+urllib.parse.quote_plus(fname)+kicad_3d_url_suffix
+
+    def try_download_kicad(self, model, full_name, downloaded, rel_dirs, force_wrl, force_step):
         if not (model.startswith('${KISYS3DMOD}/') or re.search(r"^\$\{KICAD\d+_3DMODEL_DIR\}\/", model)):
             return None
         # This is a model from KiCad, try to download it
+        if force_wrl:
+            full_name = os.path.splitext(full_name)[0]+'.wrl'
+            model = os.path.splitext(model)[0]+'.wrl'
+            logger.debugl(3, f"Forcing model extension to WRL {model}")
+        elif force_step:
+            full_name = os.path.splitext(full_name)[0]+'.step'
+            model = os.path.splitext(model)[0]+'.step'
+            logger.debugl(3, f"Forcing model extension to STEP {model}")
         fname = model[model.find('/')+1:]
         replace = None
         if full_name in downloaded:
             # Already downloaded
             return os.path.join(self._tmp_dir, fname)
         # Download the model
-        url = self.kicad_3d_url+urllib.parse.quote_plus(fname)+self.kicad_3d_url_suffix
+        url = self.kicad_3d_download_url(fname)
         replace = self.download_model(url, fname, rel_dirs)
         if not replace:
             return None
@@ -229,7 +256,7 @@ class Base3DOptions(VariantOptions):
         elif force_wrl:  # This should be a .step, so we download the wrl
             extra_fname = os.path.splitext(fname)[0]+'.wrl'
         if extra_fname is not None:
-            url = self.kicad_3d_url+urllib.parse.quote_plus(extra_fname)+self.kicad_3d_url_suffix
+            url = self.kicad_3d_download_url(extra_fname)
             self.download_model(url, extra_fname, rel_dirs)
         return replace
 
@@ -466,11 +493,11 @@ class Base3DOptions(VariantOptions):
         logger.debug(f' - {c.ref} {c.value} {tol}% {bars} ({status})')
         return cache_name
 
-    def replace_model(self, replace, m3d, force_wrl, is_copy_mode, rename_function, rename_data):
+    def replace_model(self, replace, m3d, force_wrl, force_step, is_copy_mode, rename_function, rename_data):
         """ Helper function to replace the 3D model in m3d using the `replace` file """
         self.source_models.add(replace)
         old_name = m3d.m_Filename
-        new_name = self.wrl_name(replace, force_wrl) if not is_copy_mode else rename_function(rename_data, replace)
+        new_name = self.wrl_name(replace, force_wrl, force_step) if not is_copy_mode else rename_function(rename_data, replace)
         self._undo_3d_models[new_name] = old_name
         if GS.debug_level > 2:
             try:
@@ -483,7 +510,8 @@ class Base3DOptions(VariantOptions):
         m3d.m_Filename = new_name
         self.models_replaced = True
 
-    def download_models(self, rename_filter=None, rename_function=None, rename_data=None, force_wrl=False, all_comps=None):
+    def download_models(self, rename_filter=None, rename_function=None, rename_data=None, force_wrl=False, force_step=False,
+                        all_comps=None):
         """ Check we have the 3D models.
             Inform missing models.
             Try to download the missing models
@@ -543,12 +571,13 @@ class Base3DOptions(VariantOptions):
                     # Missing 3D model
                     logger.debugl(2, 'Missing 3D model file {} ({})'.format(full_name, m3d.m_Filename))
                     if self.download:
-                        replace = self.try_download_kicad(m3d.m_Filename, full_name, downloaded, rel_dirs, force_wrl)
+                        replace = self.try_download_kicad(m3d.m_Filename, full_name, downloaded, rel_dirs, force_wrl,
+                                                          force_step)
                         if replace is None and self.download_lcsc:
                             replace = self.try_download_easyeda(m3d.m_Filename, full_name, downloaded, sch_comp, lcsc_field)
                         if replace:
                             replace = self.do_colored_tht_resistor(replace, sch_comp, used_extra)
-                            self.replace_model(replace, m3d, force_wrl, is_copy_mode, rename_function, rename_data)
+                            self.replace_model(replace, m3d, force_wrl, force_step, is_copy_mode, rename_function, rename_data)
                     if full_name not in downloaded:
                         logger.warning(W_MISS3D+'Missing 3D model for {}: `{}`'.format(ref, full_name))
                     else:
@@ -561,7 +590,7 @@ class Base3DOptions(VariantOptions):
                         # This is completely valid for KiCad, but kicad2step doesn't support it
                         if not self.models_replaced and extra_debug:
                             logger.debug('- Modifying models with text vars')
-                        self.replace_model(replace, m3d, force_wrl, is_copy_mode, rename_function, rename_data)
+                        self.replace_model(replace, m3d, force_wrl, force_step, is_copy_mode, rename_function, rename_data)
             # Push the models back
             for model in reversed(models_l):
                 models.append(model)
@@ -583,7 +612,7 @@ class Base3DOptions(VariantOptions):
                     models.add(full_name)
         return list(models)
 
-    def filter_components(self, highlight=None, force_wrl=False, also_sch=False):
+    def filter_components(self, highlight=None, force_wrl=False, also_sch=False, force_step=False):
         if not self._comps:
             # No filters, but we need to apply some stuff
             all_comps = None
@@ -599,7 +628,7 @@ class Base3DOptions(VariantOptions):
                     self.remove_3D_models(GS.board, all_comps_hash)
                     dnp_removed = True
             # No variant/filter to apply
-            if self.download_models(force_wrl=force_wrl, all_comps=all_comps) or dnp_removed:
+            if self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=all_comps) or dnp_removed:
                 # Some missing components found and we downloaded them
                 # Save the fixed board
                 ret = self.save_tmp_board()
@@ -615,8 +644,8 @@ class Base3DOptions(VariantOptions):
             return GS.pcb_file
         self.filter_pcb_components(do_3D=True, do_2D=True, highlight=highlight)
         if also_sch:
-            self.download_models(force_wrl=force_wrl, all_comps=self._comps, rename_function=abs_path_model,
-                                 rename_filter='*')
+            self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps,
+                                 rename_function=abs_path_model, rename_filter='*')
             fname, pcb_dir = self.save_tmp_dir_board('3D')
             replaced_images = self.sch_replace_images(GS.sch)
             GS.sch.save_variant(pcb_dir)
@@ -624,7 +653,7 @@ class Base3DOptions(VariantOptions):
                 self.sch_restore_images(GS.sch)
             self._files_to_remove.append(pcb_dir)
         else:
-            self.download_models(force_wrl=force_wrl, all_comps=self._comps)
+            self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps)
             fname = self.save_tmp_board()
         self.unfilter_pcb_components(do_3D=True, do_2D=True)
         return fname

@@ -1,5 +1,7 @@
 .. _KiBoMColumns:
 
+:orphan:
+
 
 KiBoMColumns parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

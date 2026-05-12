@@ -25,6 +25,8 @@ Generic filter
       Separators are applied.
    -  ``exclude_empty_val`` :index:`: <pair: filter - generic; exclude_empty_val>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components with empty 'Value'.
    -  ``exclude_field`` :index:`: <pair: filter - generic; exclude_field>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components if a field is named as any of the keys.
+   -  ``exclude_kicad_dnp`` :index:`: <pair: filter - generic; exclude_kicad_dnp>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked *Do not populate* in KiCad (KiCad 7+)
+      For the `bom` output also use `kicad_dnp_applied: 'no'`.
    -  ``exclude_not_in_bom`` :index:`: <pair: filter - generic; exclude_not_in_bom>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked *Exclude from bill of materials* (KiCad 6+).
    -  ``exclude_not_on_board`` :index:`: <pair: filter - generic; exclude_not_on_board>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked *Exclude from board* (KiCad 6+).
    -  ``exclude_refs`` :index:`: <pair: filter - generic; exclude_refs>` [:ref:`list(string) <list(string)>`] (default: ``[]``) List of references to be excluded.
@@ -46,7 +48,7 @@ Generic filter
       Use `dnc_list` for ['dnc', 'do not change', 'fixed', 'no change'].
 
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   BoMRegex
+- :ref:`BoMRegex parameters <BoMRegex_fi>`

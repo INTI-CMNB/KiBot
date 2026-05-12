@@ -1,5 +1,7 @@
 .. _PanelizeCopperfill:
 
+:orphan:
+
 
 PanelizeCopperfill parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

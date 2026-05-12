@@ -1,5 +1,7 @@
 .. _Export_3DOptions:
 
+:orphan:
+
 
 Export_3DOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,7 +11,7 @@ Export_3DOptions parameters
    They are downloaded to a temporal directory and discarded. |br|
    If you want to cache the downloaded files specify a directory using the
    KIBOT_3D_MODELS environment variable.
--  **format** :index:`: <pair: output - export_3d - options; format>` [:ref:`string <string>`] (default: ``'step'``) (choices: "step", "glb", "stl", "xao", "brep") 3D format used.
+-  **format** :index:`: <pair: output - export_3d - options; format>` [:ref:`string <string>`] (default: ``'step'``) (choices: "step", "glb", "stl", "xao", "brep", "ply", "u3d", "pdf") 3D format used.
 
    - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
    - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
@@ -18,7 +20,10 @@ Export_3DOptions parameters
 
    - STL: 3D printer format, from stereolithography CAD software created by 3D Systems. |br|
    - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations. |br|
-   - BRep: Part of Open CASCADE Technology (OCCT).
+   - BRep: Part of Open CASCADE Technology (OCCT)
+   - PLY: Polygon File Format or the Stanford Triangle Format (KiCad 10+). |br|
+   - U3D: Universal 3D (ECMA-363) primarily used to embed interactive 3D models into PDF documents. (KiCad 10+)
+   - PDF: Portable Document Format with the 3D model (KiCad 10+).
 -  **no_virtual** :index:`: <pair: output - export_3d - options; no_virtual>` [:ref:`boolean <boolean>`] (default: ``false``) Used to exclude 3D models for components with 'virtual' attribute.
 -  **origin** :index:`: <pair: output - export_3d - options; origin>` [:ref:`string <string>`] (default: ``'grid'``) (choices: "grid", "drill", "center") (also accepts any string) Determines the coordinates origin.
    Using `grid` the coordinates are the same as you have in the design sheet. |br|
@@ -26,7 +31,7 @@ Export_3DOptions parameters
    Using `center` you'll get the center of the board as origin. |br|
    You can define any other origin using the format 'X,Y', i.e. '3.2,-10'. Don't put units here. |br|
    The units used here are the ones specified by the `units` option.
--  **output** :index:`: <pair: output - export_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep'). Affected by global options.
+-  **output** :index:`: <pair: output - export_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options.
 -  ``board_only`` :index:`: <pair: output - export_3d - options; board_only>` [:ref:`boolean <boolean>`] (default: ``false``) Only generate a board with no components.
 -  ``cut_vias_in_body`` :index:`: <pair: output - export_3d - options; cut_vias_in_body>` [:ref:`boolean <boolean>`] (default: ``false``) Cut via holes in board body even if conductor layers are not exported.
 -  ``dnf_filter`` :index:`: <pair: output - export_3d - options; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as not fitted.
@@ -51,9 +56,12 @@ Export_3DOptions parameters
 -  ``include_soldermask`` :index:`: <pair: output - export_3d - options; include_soldermask>` [:ref:`boolean <boolean>`] (default: ``false``) Export soldermask layers as a set of flat faces.
 -  ``include_tracks`` :index:`: <pair: output - export_3d - options; include_tracks>` [:ref:`boolean <boolean>`] (default: ``false``) Export tracks and vias.
 -  ``include_zones`` :index:`: <pair: output - export_3d - options; include_zones>` [:ref:`boolean <boolean>`] (default: ``false``) Export zones.
--  ``kicad_3d_url`` :index:`: <pair: output - export_3d - options; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'``) Base URL for the KiCad 3D models.
--  ``kicad_3d_url_suffix`` :index:`: <pair: output - export_3d - options; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``''``) Text added to the end of the download URL.
+-  ``kicad_3d_url`` :index:`: <pair: output - export_3d - options; kicad_3d_url>` [:ref:`string <string>`] (default: ``'https://gitlab.com/api/v4/projects/21604637/repository/files/'``) Base URL for the KiCad 3D models.
+-  ``kicad_3d_url_suffix`` :index:`: <pair: output - export_3d - options; kicad_3d_url_suffix>` [:ref:`string <string>`] (default: ``'/raw?ref=VERSION'``) Text added to the end of the download URL.
    Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2.
+-  ``kicad_3d_url_version`` :index:`: <pair: output - export_3d - options; kicad_3d_url_version>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the *master* subdir in the URL by the KiCad version.
+   In this way we download the 3D model corresponding to the installed KiCad instead
+   of the last available.
 -  ``min_distance`` :index:`: <pair: output - export_3d - options; min_distance>` [:ref:`number <number>`] (default: ``-1``) The minimum distance between points to treat them as separate ones (-1 is KiCad default: 0.01 mm).
    The units for this option are controlled by the `units` option.
 -  ``net_filter`` :index:`: <pair: output - export_3d - options; net_filter>` [:ref:`string <string>`] (default: ``''``) Only include copper items belonging to nets matching this wildcard.

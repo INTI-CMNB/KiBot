@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
-# License: GPL-3.0
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
+# License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from pcbnew import EXCELLON_WRITER
 from .out_any_drill import AnyDrill
@@ -12,6 +12,10 @@ ZF = {'DECIMAL_FORMAT': EXCELLON_WRITER.DECIMAL_FORMAT,
       'SUPPRESS_LEADING': EXCELLON_WRITER.SUPPRESS_LEADING,
       'SUPPRESS_TRAILING': EXCELLON_WRITER.SUPPRESS_TRAILING,
       'KEEP_ZEROS': EXCELLON_WRITER.KEEP_ZEROS}
+ZF_CLI = {'DECIMAL_FORMAT': 'decimal',
+          'SUPPRESS_LEADING': 'suppressleading',
+          'SUPPRESS_TRAILING': 'suppresstrailing',
+          'KEEP_ZEROS': 'keep'}
 
 
 class ExcellonOptions(AnyDrill):
@@ -29,20 +33,38 @@ class ExcellonOptions(AnyDrill):
             self.zeros_format = 'DECIMAL_FORMAT'
             """ [DECIMAL_FORMAT,SUPPRESS_LEADING,SUPPRESS_TRAILING,KEEP_ZEROS] How to handle the zeros """
             self.left_digits = 0
-            """ number of digits for integer part of coordinates (0 is auto) """
+            """ number of digits for integer part of coordinates (0 is auto).
+                Doesn't apply to DECIMAL_FORMAT.
+                Default is 3 and currently can't be configured from the GUI, avoid using it """
             self.right_digits = 0
-            """ number of digits for mantissa part of coordinates (0 is auto) """
+            """ number of digits for mantissa part of coordinates (0 is auto).
+                Doesn't apply to DECIMAL_FORMAT.
+                Default is 3 and currently can't be configured from the GUI, avoid using it """
             self.route_mode_for_oval_holes = True
             """ Use route command for oval holes (G00), otherwise use G85 """
         self._ext = 'drl'
 
     def _configure_writer(self, board, offset):
+        self._unified_output = self.pth_and_npth_single_file
+        if GS.ki10 and self.left_digits == 0 and self.right_digits == 0:
+            options = ['--format', 'excellon',
+                       '--excellon-units', 'mm' if self.metric_units else 'in',
+                       '--excellon-zeros-format', ZF_CLI[self.zeros_format],
+                       '--excellon-oval-format', 'route' if self.route_mode_for_oval_holes else 'alternate',
+                       '--drill-origin', 'plot' if offset.x != 0 or offset.y != 0 else 'absolute']
+            if not self.pth_and_npth_single_file:
+                options.append('--excellon-separate-th')
+            if self.minimal_header:
+                options.append('--excellon-min-header')
+            if self.mirror_y_axis:
+                options.append('--excellon-mirror-y')
+            return options, True
+        # KiCad <10 or left_digits/right_digits
         drill_writer = EXCELLON_WRITER(board)
         drill_writer.SetOptions(self.mirror_y_axis, self.minimal_header, GS.p2v_k7(offset), self.pth_and_npth_single_file)
         drill_writer.SetRouteModeForOvalHoles(self.route_mode_for_oval_holes)
         drill_writer.SetFormat(self.metric_units, ZF[self.zeros_format], self.left_digits, self.right_digits)
-        self._unified_output = self.pth_and_npth_single_file
-        return drill_writer
+        return drill_writer, False
 
 
 @output_class

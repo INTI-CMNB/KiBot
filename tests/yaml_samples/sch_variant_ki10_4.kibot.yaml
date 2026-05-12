@@ -1,0 +1,20 @@
+# Example KiBot config file
+# The "default" variant becomes "Default", no more variants
+kibot:
+  version: 1
+
+variants:
+  - name: 'default'
+    comment: 'Default variant'
+    type: ibom
+    variants_blacklist: T2,T3
+
+outputs:
+  - name: 'sch_ki10_export'
+    comment: "Schematic w/all variants"
+    type: sch_variant
+    dir: default_variant
+    options:
+      variant: default
+      copy_project: true
+

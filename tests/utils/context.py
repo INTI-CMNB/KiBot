@@ -37,6 +37,7 @@ KICAD_VERSION_7_0_11 = 7000011
 KICAD_VERSION_8_0_0 = 7099000
 KICAD_VERSION_9_0_0 = 9000000
 KICAD_VERSION_9_0_5 = 9000005
+KICAD_VERSION_10_0_0 = 10000000
 MODE_SCH = 1
 MODE_PCB = 0
 # Defined as True to collect real world queries
@@ -56,10 +57,12 @@ kicad_patch = int(m.group(3))
 kicad_version = kicad_major*1000000+kicad_minor*1000+kicad_patch
 if kicad_version >= KICAD_VERSION_5_99:
     km = kicad_major+(0 if kicad_minor < 99 else 1)
-    if km > 9:
-        km = 9
+    # if km > 9:
+    #    km = 9
     BOARDS_DIR = '../board_samples/kicad_'+str(km)
-    if kicad_version >= KICAD_VERSION_9_0_5:
+    if kicad_version >= KICAD_VERSION_10_0_0:
+        REF_DIR = 'tests/reference/10_0_0'
+    elif kicad_version >= KICAD_VERSION_9_0_5:
         REF_DIR = 'tests/reference/9_0_5'
     elif kicad_version >= KICAD_VERSION_9_0_0:
         REF_DIR = 'tests/reference/9_0_1'
@@ -106,6 +109,10 @@ else:
         REF_DIR = 'tests/reference/5_1_6'
     PRO_EXT = '.pro'
 logging.debug('Detected KiCad v{}.{}.{} ({})'.format(kicad_major, kicad_minor, kicad_patch, kicad_version))
+
+
+def ki10():
+    return kicad_version >= KICAD_VERSION_10_0_0
 
 
 def ki9():

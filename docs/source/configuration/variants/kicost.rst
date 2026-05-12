@@ -42,7 +42,7 @@
    -  ``variant_field`` :index:`: <pair: variant - kicost; variant_field>` [:ref:`string <string>`] (default: ``'variant'``) Name of the field that stores board variant/s for component.
       Only supported internally, don't use it if you plan to use KiCost.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   SubPCBOptions
+- :ref:`SubPCBOptions parameters <SubPCBOptions>`

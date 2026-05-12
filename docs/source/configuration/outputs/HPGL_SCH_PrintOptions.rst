@@ -1,11 +1,13 @@
 .. _HPGL_SCH_PrintOptions:
 
+:orphan:
+
 
 HPGL_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  **frame** :index:`: <pair: output - hpgl_sch_print - options; frame>` [:ref:`boolean <boolean>`] (default: ``true``) Include the frame and title block.
--  ``all_pages`` :index:`: <pair: output - hpgl_sch_print - options; all_pages>` [:ref:`boolean <boolean>`] (default: ``true``) Generate with all hierarchical sheets.
+-  ``all_pages`` :index:`: <pair: output - hpgl_sch_print - options; all_pages>` [:ref:`boolean <boolean>`] (default: ``true``) Generate with all hierarchical sheets, unless `pages` is specified.
 -  ``background_color`` :index:`: <pair: output - hpgl_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme` (KiCad 6).
 -  ``color_theme`` :index:`: <pair: output - hpgl_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config (KiCad 6).
 -  ``default_font`` :index:`: <pair: output - hpgl_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font. Only for KiCad 9 and newer.
@@ -22,6 +24,7 @@ HPGL_SCH_PrintOptions parameters
 -  ``monochrome`` :index:`: <pair: output - hpgl_sch_print - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``false``) Generate a monochromatic output.
 -  ``origin`` :index:`: <pair: output - hpgl_sch_print - options; origin>` [:ref:`string <string>`] (default: ``'bottom_left'``) (choices: "bottom_left", "centered", "page_fit", "content_fit") Origin and scale.
 -  ``output`` :index:`: <pair: output - hpgl_sch_print - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Filename for the output HPGL (%i=schematic, %x=plt). Affected by global options.
+-  ``pages`` :index:`: <pair: output - hpgl_sch_print - options; pages>` [:ref:`string <string>`] (default: ``''``) List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`.
 -  ``pen_size`` :index:`: <pair: output - hpgl_sch_print - options; pen_size>` [:ref:`number <number>`] (default: ``0.4826``) Pen size (diameter) [mm].
 -  ``pre_transform`` :index:`: <pair: output - hpgl_sch_print - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|

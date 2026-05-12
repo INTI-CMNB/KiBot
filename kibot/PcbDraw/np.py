@@ -1,6 +1,7 @@
 # Author: Salvador E. Tropea
 # License: MIT
 # numpy replacement for PcbDraw
+import builtins
 from operator import itemgetter
 
 # A value that is not None
@@ -27,3 +28,24 @@ def matmul(A, B):
     # Ensure the number of cols in A is the same as the number of rows in B
     # assert len(A[0]) == len(B)
     return [[sum(a*b for a, b in zip(A_row, B_col)) for B_col in zip(*B)] for A_row in A]
+
+
+def ones(count, dtype=None):
+    assert dtype == bool
+    return [True] * count
+
+
+def empty(sizes):
+    return []
+
+
+def any(data):
+    return builtins.any(data)
+
+
+def argmax(data):
+    try:
+        i = data.index(True)
+    except ValueError:
+        i = 0
+    return i

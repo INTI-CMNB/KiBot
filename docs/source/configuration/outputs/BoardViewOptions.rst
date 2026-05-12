@@ -1,5 +1,7 @@
 .. _BoardViewOptions:
 
+:orphan:
+
 
 BoardViewOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

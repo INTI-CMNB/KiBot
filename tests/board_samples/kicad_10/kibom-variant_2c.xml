@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>/home/salvador/0Data/Eccosur/kibot/tests/board_samples/kicad_10/kibom-variant_2c.kicad_sch</source>
+    <date>2026-03-03T14:40:02</date>
+    <tool>Eeschema 10.0.0-rc1.1-492-ge2a9f06420</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>KiCost Test Schematic</title>
+        <company>INTI - MyNT</company>
+        <rev>A</rev>
+        <date>2021-04-06</date>
+        <source>kibom-variant_2c.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C1">
+      <value>1nF</value>
+      <fields>
+        <field name="Config">-production,+test</field>
+        <field name="manf">Samsung</field>
+        <field name="manf#">CL10B102KC8NNNC</field>
+        <field name="digikey#">1276-1131-1-ND</field>
+        <field name="tolerance">20%</field>
+        <field name="voltage">50 V</field>
+        <field name="capacitance">1000pF</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Config" value="-production,+test"/>
+      <property name="manf" value="Samsung"/>
+      <property name="manf#" value="CL10B102KC8NNNC"/>
+      <property name="digikey#" value="1276-1131-1-ND"/>
+      <property name="tolerance" value="20%"/>
+      <property name="voltage" value="50 V"/>
+      <property name="capacitance" value="1000pF"/>
+      <property name="Sheetname" value="Root"/>
+      <property name="Sheetfile" value="kibom-variant_2c.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>00000000-0000-0000-0000-00005f43bec2</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="C2">
+      <value>1000 pF</value>
+      <fields>
+        <field name="Config">+production,+test</field>
+        <field name="manf">Samsung</field>
+        <field name="manf#">CL10B102KC8NNNC</field>
+        <field name="digikey#">1276-1131-1-ND</field>
+        <field name="voltage">100 V</field>
+        <field name="capacitance">1000pF</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Config" value="+production,+test"/>
+      <property name="manf" value="Samsung"/>
+      <property name="manf#" value="CL10B102KC8NNNC"/>
+      <property name="digikey#" value="1276-1131-1-ND"/>
+      <property name="voltage" value="100 V"/>
+      <property name="capacitance" value="1000pF"/>
+      <property name="Sheetname" value="Root"/>
+      <property name="Sheetfile" value="kibom-variant_2c.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>00000000-0000-0000-0000-00005f43ce1c</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R1">
+      <value>1k</value>
+      <fields>
+        <field name="test:Value">3k3</field>
+        <field name="manf">Bourns</field>
+        <field name="manf#">CR0603-JW-102ELF</field>
+        <field name="digikey#">CR0603-JW-102ELFCT-ND</field>
+        <field name="test:manf#">CR0603-JW-332ELF</field>
+        <field name="test:digikey#">CR0603-JW-332ELFCT-ND</field>
+        <field name="tolerance">1%</field>
+        <field name="Resistance">1000</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="test:Value" value="3k3"/>
+      <property name="manf" value="Bourns"/>
+      <property name="manf#" value="CR0603-JW-102ELF"/>
+      <property name="digikey#" value="CR0603-JW-102ELFCT-ND"/>
+      <property name="test:manf#" value="CR0603-JW-332ELF"/>
+      <property name="test:digikey#" value="CR0603-JW-332ELFCT-ND"/>
+      <property name="tolerance" value="1%"/>
+      <property name="Resistance" value="1000"/>
+      <property name="Sheetname" value="Root"/>
+      <property name="Sheetfile" value="kibom-variant_2c.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>00000000-0000-0000-0000-00005f43d144</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R2">
+      <value>1000</value>
+      <fields>
+        <field name="Config">-test</field>
+        <field name="manf">Bourns</field>
+        <field name="manf#">CR0603-JW-102ELF</field>
+        <field name="digikey#">CR0603-JW-102ELFCT-ND</field>
+        <field name="tolerance">5%</field>
+        <field name="Resistance">1000</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Config" value="-test"/>
+      <property name="manf" value="Bourns"/>
+      <property name="manf#" value="CR0603-JW-102ELF"/>
+      <property name="digikey#" value="CR0603-JW-102ELFCT-ND"/>
+      <property name="tolerance" value="5%"/>
+      <property name="Resistance" value="1000"/>
+      <property name="Sheetname" value="Root"/>
+      <property name="Sheetfile" value="kibom-variant_2c.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="R_*"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>00000000-0000-0000-0000-00005f43d4bb</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Device" part="C">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Unpolarized capacitor</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+        <field name="Footprint"/>
+        <field name="Datasheet"/>
+        <field name="Description">Resistor</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Device">
+      <uri>${KICAD9_SYMBOL_DIR}/Device.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="unconnected-(C1-Pad1)" class="Default">
+      <node ref="C1" pin="1" pintype="passive"/>
+    </net>
+    <net code="2" name="unconnected-(C1-Pad2)" class="Default">
+      <node ref="C1" pin="2" pintype="passive"/>
+    </net>
+    <net code="3" name="unconnected-(C2-Pad1)" class="Default">
+      <node ref="C2" pin="1" pintype="passive"/>
+    </net>
+    <net code="4" name="unconnected-(C2-Pad2)" class="Default">
+      <node ref="C2" pin="2" pintype="passive"/>
+    </net>
+    <net code="5" name="unconnected-(R1-Pad1)" class="Default">
+      <node ref="R1" pin="1" pintype="passive"/>
+    </net>
+    <net code="6" name="unconnected-(R1-Pad2)" class="Default">
+      <node ref="R1" pin="2" pintype="passive"/>
+    </net>
+    <net code="7" name="unconnected-(R2-Pad1)" class="Default">
+      <node ref="R2" pin="1" pintype="passive"/>
+    </net>
+    <net code="8" name="unconnected-(R2-Pad2)" class="Default">
+      <node ref="R2" pin="2" pintype="passive"/>
+    </net>
+  </nets>
+</export>

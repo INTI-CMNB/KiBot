@@ -11,13 +11,13 @@ Usage:
   kibot [-b BOARD] [-e SCHEMA] [-c CONFIG] [-d OUT_DIR] [-s PRE]
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
-         [-F] [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
-         [--variant VAR] ... [TARGET...]
+         [--fail-on-warnings] [-F] [--warn-ci-cd] [--warn-all] [--banner N]
+         [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
   kibot [-v...] [-c PLOT_CONFIG] [--banner N] [-E DEF] ... [--only-names]
-        [--sub-pcbs] --list-variants
+        [--sub-pcbs] [-e SCHEMA] --list-variants
   kibot [-v...] [-b BOARD] [-d OUT_DIR] [-p | -P] [--banner N] --example
   kibot [-v...] [--start PATH] [-d OUT_DIR] [--dry] [--banner N]
          [-t, --type TYPE]... --quick-start
@@ -56,8 +56,11 @@ Options:
   -e SCHEMA, --schematic SCHEMA    The schematic file (.sch/.kicad_sch)
   -E DEF, --define DEF             Define preprocessor value (VAR=VAL)
   -F, --fail-on-ignored            Return an error code if we skipped a fail.
-                                   Used in conjunction with -D and `dont_stop`
-                                   options
+                                   Used in conjunction with -D/--dont-stop
+                                   and --fail-on-warnings options
+  --fail-on-warnings               Return an error code if we informed warnings.
+                                   If --fail-on-ignored is enabled we also
+                                   return error for filtered warnings
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks
@@ -94,6 +97,7 @@ Options:
                                    list of variants
   -w, --no-warn LIST               Exclude the mentioned warnings (comma sep)
   -W, --stop-on-warnings           Stop on warnings
+  --warn-all                       Enables some common use warnings
   --warn-ci-cd                     Don't disable warnings expected on CI/CD
                                    environments
   -x, --example                    Create a template configuration file
@@ -120,6 +124,11 @@ Help options:
   --help-variants                  List supported variants and details
 
 """
+# Avoid passing KiCad faults to the user
+import wx
+if hasattr(wx, "DisableAsserts"):
+    wx.DisableAsserts()
+
 from datetime import datetime
 from glob import glob
 import locale
@@ -150,10 +159,11 @@ if os.environ.get('KIAUS_USE_NIGHTLY'):  # pragma: no cover (nightly)
         os.environ['PYTHONPATH'] = pcbnew_path
     nightly = True
 from .banner import get_banner, BANNERS
+from .error import KiPlotConfigurationError
 from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
-                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS)
+                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -320,6 +330,21 @@ def detect_kicad():
     GS.ki7 = GS.kicad_version_major >= 7
     GS.ki8 = GS.kicad_version_major >= 8
     GS.ki9 = GS.kicad_version_major >= 9
+    GS.ki10 = GS.kicad_version_major >= 10
+    if GS.ki10:
+        # From pcbnew/pcb_track_types.h
+        # pcbnew definitions found in RC1, but not in RC2
+        if hasattr(pcbnew, 'VIATYPE_THROUGH'):
+            GS.VIATYPE_THROUGH = pcbnew.VIATYPE_THROUGH     # always a through hole vi
+            GS.VIATYPE_BLIND = pcbnew.VIATYPE_BLIND         # this via can be on internal layers
+            GS.VIATYPE_BURIED = pcbnew.VIATYPE_BURIED       # this via can be on internal layers
+            GS.VIATYPE_MICROVIA = pcbnew.VIATYPE_MICROVIA   # this via which connect from an external layer
+            # to the near neighbor internal layer
+        else:
+            GS.VIATYPE_THROUGH = 4
+            GS.VIATYPE_BLIND = 2
+            GS.VIATYPE_BURIED = 3
+            GS.VIATYPE_MICROVIA = 1
     GS.footprint_gr_type = 'MGRAPHIC' if not GS.ki8 else 'PCB_SHAPE'
     GS.board_gr_type = 'DRAWSEGMENT' if GS.ki5 else 'PCB_SHAPE'
     GS.footprint_update_local_coords = GS.dummy1 if GS.ki8 else GS.footprint_update_local_coords_ki7
@@ -339,6 +364,7 @@ def detect_kicad():
             # GS.kicad_conf_path = GS.kicad_conf_path.replace('/kicad/', '/kicadnightly/')
             GS.kicad_share_path = GS.kicad_share_path.replace('/kicad/', '/kicad-nightly/')
             GS.kicad_dir = 'kicad-nightly'
+            GS.kicad_cli = 'kicad-cli-nightly'
         GS.pro_ext = '.kicad_pro'
         # KiCad 6+ doesn't support the Rescue layer, they can save it to disk, but can't load it
     else:
@@ -510,6 +536,7 @@ def main():
     apply_warning_filter(args)
     log.stop_on_warnings = args.stop_on_warnings
     log.dont_stop = args.dont_stop
+    log.warn_all = args.warn_all
     logger.debugl(2, f'Command line options: {args}')
 
     # Now we have the debug level set we can check (and optionally inform) KiCad info
@@ -576,11 +603,12 @@ def main():
 
     # Determine the YAML file
     plot_config = solve_config(args.plot_config, args.only_names, args.gui or args.internal_check)
-    if not (args.list or args.list_variants) or args.config_outs:
+    if not args.list or args.config_outs:
         # Determine the SCH file
         GS.set_sch(solve_schematic('.', args.schematic, args.board_file, plot_config))
-        # Determine the PCB file
-        GS.set_pcb(solve_board_file('.', args.board_file))
+        if not args.list_variants:
+            # Determine the PCB file
+            GS.set_pcb(solve_board_file('.', args.board_file))
         # Determine the project file
         GS.set_pro(solve_project_file())
         check_needs_convert()
@@ -598,6 +626,13 @@ def main():
                           args.output_name_first)
         sys.exit(0)
 
+    # Import KiCad variants from the project or from the schematic
+    from .var_kicad import KiCad
+    # KiCad.add_default()
+    if not KiCad.get_from_pro():
+        if GS.sch_file:
+            KiCad.get_from_sch()
+
     if args.list_variants:
         list_variants(logger, args.only_names, args.sub_pcbs)
         sys.exit(0)
@@ -613,6 +648,10 @@ def main():
         from .GUI.analyze import analyze
         analyze()
     else:
+        if not args.variant and GS.ki10 and GS.global_kicad_default_variant and GS.sch and RegOutput.is_variant('Default'):
+            # For KiCad 10 we have a "Default" variant, needed to apply various things
+            # This is how KiCad shows in the GUI
+            args.variant = ['Default']
         if args.variant:
             # One or more variants specified at the CLI
             if 'ALL' in args.variant:
@@ -629,7 +668,10 @@ def main():
                 if variant == 'NONE':
                     solved_variants[''] = None
                 else:
-                    solved_variants[variant] = RegOutput.check_variant(variant)
+                    try:
+                        solved_variants[variant] = RegOutput.check_variant(variant)
+                    except KiPlotConfigurationError as e:
+                        GS.exit_with_error(str(e), EXIT_BAD_ARGS)
             # Now iterate all of them
             first = True
             for var_name, var_obj in solved_variants.items():
@@ -667,6 +709,9 @@ def main():
 
     if args.fail_on_ignored and (GS.errors_ignored or log.errors_ignored):
         exit(IGNORED_ERRORS)
+
+    if args.fail_on_warnings and logger.got_warnings(args.fail_on_ignored):
+        exit(GOT_WARNINGS)
 
 
 if __name__ == "__main__":

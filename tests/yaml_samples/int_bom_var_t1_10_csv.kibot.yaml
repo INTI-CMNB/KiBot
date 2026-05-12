@@ -1,0 +1,66 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+
+variants:
+  - name: 'V1'
+    comment: 'Test 1 Variant V1'
+    type: kicad
+    file_id: '_(V1)'
+
+  - name: 'V2'
+    comment: 'Test 1 Variant V2'
+    type: kicad
+    file_id: '_(V2)'
+
+  - name: 'V3'
+    comment: 'Test 1 Variant V3'
+    type: kicad
+    file_id: '_V3'
+
+
+outputs:
+  - name: 'bom_internal'
+    comment: "Bill of Materials in CSV format"
+    type: bom
+    dir: BoM
+    options:
+      variant: Default
+
+  - name: 'bom_internal_v1'
+    comment: "Bill of Materials in CSV format for variant V1"
+    type: bom
+    dir: BoM
+    options:
+      variant: V1
+
+  - name: 'bom_internal_v2'
+    comment: "Bill of Materials in CSV format for variant V2"
+    type: bom
+    dir: BoM
+    options:
+      variant: V2
+
+  - name: 'bom_internal_v3'
+    comment: "Bill of Materials in CSV format for variant V3"
+    type: bom
+    dir: BoM
+    options:
+      variant: V3
+
+  - name: 'report'
+    comment: "Report"
+    type: report
+
+  - name: 'report_v1'
+    comment: "Report for variant V1"
+    type: report
+    options:
+      variant: V1
+
+  - name: 'report_v2'
+    comment: "Report for variant V2"
+    type: report
+    options:
+      variant: V2

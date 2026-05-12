@@ -1,5 +1,7 @@
 .. _Gerb_DrillOptions:
 
+:orphan:
+
 
 Gerb_DrillOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,7 +19,8 @@ Gerb_DrillOptions parameters
 
 -  ``generate_drill_files`` :index:`: <pair: output - gerb_drill - options; generate_drill_files>` [:ref:`boolean <boolean>`] (default: ``true``) Generate drill files. Set to False and choose map format if only map is to be generated.
 -  ``map`` :index:`: <pair: output - gerb_drill - options; map>`  [:ref:`DrillMap parameters <DrillMap>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``'None'``) (choices: "hpgl", "ps", "gerber", "dxf", "svg", "pdf", "None") Format for a graphical drill map.
-   Not generated unless a format is specified.
+   Not generated unless a format is specified. |br|
+   KiCad 10 doesn't support HPGL.
 -  ``npth_id`` :index:`: <pair: output - gerb_drill - options; npth_id>` [:ref:`string <string>`] Force this replacement for %i when generating NPTH files.
 -  ``pre_transform`` :index:`: <pair: output - gerb_drill - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
@@ -31,9 +34,9 @@ Gerb_DrillOptions parameters
 -  ``variant`` :index:`: <pair: output - gerb_drill - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
    Used for sub-PCBs.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrillMap
-   DrillReport
-   DrillTable
+- :ref:`DrillMap parameters <DrillMap>`
+- :ref:`DrillReport parameters <DrillReport>`
+- :ref:`DrillTable parameters <DrillTable>`

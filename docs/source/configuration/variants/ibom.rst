@@ -39,7 +39,7 @@
    -  ``variants_whitelist`` :index:`: <pair: variant - ibom; variants_whitelist>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`comma separated <comma_sep>`] List of board variants to include in the BOM.
 
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   SubPCBOptions
+- :ref:`SubPCBOptions parameters <SubPCBOptions>`

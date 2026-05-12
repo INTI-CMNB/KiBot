@@ -108,9 +108,9 @@ Parameters:
 -  ``uppercase_extensions`` :index:`: <pair: output - pdf; uppercase_extensions>` [:ref:`boolean <boolean>`] (default: ``false``) Use uppercase names for the extensions.
 -  ``variant`` :index:`: <pair: output - pdf; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   CustomReport
-   Layer
-   PDFOptions
+- :ref:`CustomReport parameters <CustomReport>`
+- :ref:`Layer parameters <Layer>`
+- :ref:`PDFOptions parameters <PDFOptions>`

@@ -1,5 +1,7 @@
 .. _Stencil_For_Jig_Options:
 
+:orphan:
+
 
 Stencil_For_Jig_Options parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

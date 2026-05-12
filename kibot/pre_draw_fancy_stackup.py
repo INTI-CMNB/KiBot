@@ -13,7 +13,7 @@ from .kiplot import load_board, get_output_targets, look_for_output
 from .layer import Layer
 from .optionable import Optionable
 from .macros import macros, document, pre_class  # noqa: F401
-from .misc import VIATYPE_THROUGH, VIATYPE_BLIND_BURIED, VIATYPE_MICROVIA, W_NOVIAS, W_STACKUP
+from .misc import W_NOVIAS, W_STACKUP
 from . import log
 import pcbnew
 logger = log.get_logger()
@@ -26,11 +26,6 @@ TITLES = {"drawing": "",  # no title for drawing
           "layer_type": "Type",
           "gerber": "Gerber",
           }
-# Define the priority of via types for sorting
-VIA_TYPE_PRIORITY = {VIATYPE_THROUGH: 0,         # VIATYPE_THROUGH first
-                     VIATYPE_BLIND_BURIED: 1,    # VIATYPE_BLIND_BURIED second
-                     VIATYPE_MICROVIA: 2         # VIATYPE_MICROVIA third
-                     }
 
 
 class SUColumnsFancy(Optionable):
@@ -611,6 +606,8 @@ def create_stackup_matrix(stackup, via_layer_pairs, draw_vias):
             mat_row = [''] * (len(via_layer_pairs) * 2 + 1)
         else:
             mat_row = ['']*3
+        th_or_bl = ({GS.VIATYPE_THROUGH, GS.VIATYPE_BLIND, GS.VIATYPE_BURIED} if GS.ki10 else
+                    {GS.VIATYPE_THROUGH, GS.VIATYPE_BLIND_BURIED})
         if draw_vias:
             # Loop through each via layer pair
             for j, via_list in enumerate(via_layer_pairs):
@@ -623,23 +620,23 @@ def create_stackup_matrix(stackup, via_layer_pairs, draw_vias):
                     # Determine if the current layer corresponds to the top, middle, or bottom of the via
                     if i == via_top_layer:
                         # Top layer of the via
-                        if via_type in [VIATYPE_THROUGH, VIATYPE_BLIND_BURIED]:
+                        if via_type in th_or_bl:
                             mat_row[2 * j + 1] = 'T'
-                        elif via_type == VIATYPE_MICROVIA:
+                        elif via_type == GS.VIATYPE_MICROVIA:
                             mat_row[2 * j + 1] = 'MT' if before_core else 'MS'
 
                     elif i > via_top_layer and i < via_bottom_layer:
                         # Middle layer of the via
-                        if via_type in [VIATYPE_THROUGH, VIATYPE_BLIND_BURIED]:
+                        if via_type in th_or_bl:
                             mat_row[2 * j + 1] = 'M'
-                        elif via_type == VIATYPE_MICROVIA:
+                        elif via_type == GS.VIATYPE_MICROVIA:
                             mat_row[2 * j + 1] = 'MM' if la.type != 'copper' else ('MT' if before_core else 'MB')
 
                     elif i == via_bottom_layer:
                         # Bottom layer of the via
-                        if via_type in [VIATYPE_THROUGH, VIATYPE_BLIND_BURIED]:
+                        if via_type in th_or_bl:
                             mat_row[2 * j + 1] = 'B'
-                        elif via_type == VIATYPE_MICROVIA:
+                        elif via_type == GS.VIATYPE_MICROVIA:
                             mat_row[2 * j + 1] = 'MS' if before_core else 'MB'
 
         # Move to the next layer in the stackup
@@ -768,6 +765,19 @@ def compute_via_layer_pairs(ops):
     for key, remaining_via in unique_vias.items():
         if key not in paired_vias:
             via_layer_pairs.append([remaining_via])
+
+    # Define the priority of via types for sorting
+    if GS.ki10:
+        VIA_TYPE_PRIORITY = {GS.VIATYPE_THROUGH: 0,         # VIATYPE_THROUGH first
+                             GS.VIATYPE_BLIND: 1,           # VIATYPE_BLIND second
+                             GS.VIATYPE_BURIED: 2,          # VIATYPE_BURIED third
+                             GS.VIATYPE_MICROVIA: 3         # VIATYPE_MICROVIA fourth
+                             }
+    else:
+        VIA_TYPE_PRIORITY = {GS.VIATYPE_THROUGH: 0,         # VIATYPE_THROUGH first
+                             GS.VIATYPE_BLIND_BURIED: 1,    # VIATYPE_BLIND_BURIED second
+                             GS.VIATYPE_MICROVIA: 2         # VIATYPE_MICROVIA third
+                             }
 
     # Sort the list of via pairs by the via type, top layer, and bottom layer
     via_layer_pairs.sort(key=lambda pair: (VIA_TYPE_PRIORITY[pair[0].GetViaType()],  # First, by via type priority

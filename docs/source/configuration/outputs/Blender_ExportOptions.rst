@@ -1,5 +1,7 @@
 .. _Blender_ExportOptions:
 
+:orphan:
+
 
 Blender_ExportOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,13 +27,13 @@ Blender_ExportOptions parameters
 -  ``pcb_import`` :index:`: <pair: output - blender_export - options; pcb_import>`  [:ref:`PCB2BlenderOptions parameters <PCB2BlenderOptions>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options to configure how Blender imports the PCB.
    The default values are good for most cases.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   BlenderCameraOptions
-   BlenderLightOptions
-   BlenderOutputOptions
-   BlenderPointOfViewOptions
-   BlenderRenderOptions
-   PCB2BlenderOptions
-   PCB3DExportOptions
+- :ref:`BlenderCameraOptions parameters <BlenderCameraOptions>`
+- :ref:`BlenderLightOptions parameters <BlenderLightOptions>`
+- :ref:`BlenderOutputOptions parameters <BlenderOutputOptions>`
+- :ref:`BlenderPointOfViewOptions parameters <BlenderPointOfViewOptions>`
+- :ref:`BlenderRenderOptions parameters <BlenderRenderOptions>`
+- :ref:`PCB2BlenderOptions parameters <PCB2BlenderOptions>`
+- :ref:`PCB3DExportOptions parameters <PCB3DExportOptions>`

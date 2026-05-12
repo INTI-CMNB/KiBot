@@ -1,0 +1,2399 @@
+(kicad_sch
+	(version 20260101)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "e6521bef-4109-48f7-8b88-4121b0468927")
+	(paper "A4")
+	(title_block
+		(title "KiBom Test Schematic")
+		(date "2020-03-12")
+		(rev "A")
+		(company "https://github.com/SchrodingersGat/KiBom")
+	)
+	(lib_symbols
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "R_1"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "R_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "R_1_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "R_1_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+	)
+	(text "This schematic serves as a test-file for the KiBom export script.\n\nAfter making a change to the schematic, remember to re-export the BOM to generate the intermediate .xml file\n\n(The testing framework cannot perform the netlist-export step!)"
+		(exclude_from_sim no)
+		(at 13.97 24.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "43891a3c-749f-498d-ba99-685a27689b0d")
+	)
+	(text "The test tests the following \nvariants matrix:\n      V1  V2  V3 Default\nR1    X   X    X    X\nR2    X             X\nR3        X         X\nR4             X\n\nAll other components aren't \nfitted."
+		(exclude_from_sim no)
+		(at 151.13 66.04 0)
+		(effects
+			(font
+				(size 2.9972 2.9972)
+			)
+			(justify left bottom)
+		)
+		(uuid "cbc539d2-6a10-4052-9b7a-f10326dcac67")
+	)
+	(text "20 x 10K resistors in 0805 package"
+		(exclude_from_sim no)
+		(at 88.9 64.77 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d2de4093-1fc2-4bc1-94b6-4d0fe3426c6f")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 55.88 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005e6a2873")
+		(property "Reference" "R1"
+			(at 57.912 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 55.88 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 54.102 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.vishay.com/docs/28705/mcx0x0xpro.pdf"
+			(at 55.88 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "b8c149d9-d072-45f9-a134-7a8d1617624a")
+		)
+		(pin "2"
+			(uuid "07ee39c4-b0e3-48f1-ad24-1c4017c55b5e")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R102")
+					(unit 1)
+					(variant
+						(name "V3")
+						(field
+							(name "Value")
+							(value "1K")
+						)
+					)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R101")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005e6a330d")
+		(property "Reference" "R2"
+			(at 65.532 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 63.5 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 61.722 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 63.5 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "-V2,-V3,DNC"
+			(at 63.5 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "8ff31070-d896-453c-a380-6c7b08811df2")
+		)
+		(pin "2"
+			(uuid "50fefd0d-2d14-4072-83c7-f8bb2a747d97")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R25")
+					(unit 1)
+					(variant
+						(name "V2")
+						(dnp yes)
+					)
+					(variant
+						(name "V3")
+						(dnp yes)
+					)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R25")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R2")
+					(unit 1)
+					(variant
+						(name "V2")
+						(dnp yes)
+					)
+					(variant
+						(name "V3")
+						(dnp yes)
+					)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005e6a35e1")
+		(property "Reference" "R3"
+			(at 71.882 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 69.85 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 68.072 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "-V1,-V3"
+			(at 69.85 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "89c41cbf-2548-42a7-99ad-fed244e2165e")
+		)
+		(pin "2"
+			(uuid "5c5998f1-a20e-4438-bf38-f1b182e3fb15")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R30")
+					(unit 1)
+					(variant
+						(name "V1")
+						(dnp yes)
+					)
+					(variant
+						(name "V3")
+						(dnp yes)
+					)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R30")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R3")
+					(unit 1)
+					(variant
+						(name "V1")
+						(dnp yes)
+					)
+					(variant
+						(name "V3")
+						(dnp yes)
+					)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 64.77 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "00000000-0000-0000-0000-00005e6a37b2")
+		(property "Reference" "R4"
+			(at 78.232 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 76.2 64.77 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 74.422 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 76.2 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "+V3"
+			(at 76.2 64.77 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "aa01df12-b31d-4402-afd0-70aaed711377")
+		)
+		(pin "2"
+			(uuid "4436d9f3-55b5-498a-b1c7-dee5bccba009")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R35")
+					(unit 1)
+					(variant
+						(name "V3")
+						(dnp no)
+					)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R35")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R4")
+					(unit 1)
+					(variant
+						(name "V1")
+					)
+					(variant
+						(name "V2")
+					)
+					(variant
+						(name "V3")
+						(dnp no)
+					)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_name "R_1")
+		(lib_id "Device:R")
+		(at 55.88 76.2 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f7340")
+		(property "Reference" "R5"
+			(at 57.912 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 55.88 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 54.102 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.88 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "DNF"
+			(at 55.88 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "1c6d7761-6733-487a-ad6d-cb3c3fd28a16")
+		)
+		(pin "2"
+			(uuid "065b5f6b-93c2-4ef7-b300-4730cadfea3f")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R21")
+					(unit 1)
+					(variant
+						(name "Another1")
+						(exclude_from_sim yes)
+						(in_bom no)
+					)
+					(variant
+						(name "V3")
+						(dnp yes)
+						(exclude_from_sim yes)
+						(in_bom no)
+						(on_board no)
+						(in_pos_files no)
+						(field
+							(name "Description")
+							(value "Bla")
+						)
+					)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R21")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 76.2 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f734b")
+		(property "Reference" "R6"
+			(at 65.532 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 63.5 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 61.722 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 63.5 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "DNL"
+			(at 63.5 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2dd1c868-c86c-4bb2-8e97-d9b3f665d3a3")
+		)
+		(pin "2"
+			(uuid "1b5ee6fc-5847-4e61-8e21-4cefa0a8341e")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R26")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R26")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 76.2 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f7356")
+		(property "Reference" "R7"
+			(at 71.882 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 69.85 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 68.072 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "DNP"
+			(at 69.85 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "4196e7f0-8fdd-42ee-833f-a797835eebd6")
+		)
+		(pin "2"
+			(uuid "ed6cb847-1e19-4718-943d-f3d9ac12131e")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R31")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R31")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 76.2 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f7361")
+		(property "Reference" "R8"
+			(at 78.232 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 76.2 76.2 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 74.422 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 76.2 76.2 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "Do not fit"
+			(at 76.2 76.2 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "952cbcd3-28b7-453e-8882-3c2394e77c50")
+		)
+		(pin "2"
+			(uuid "c8a2f55d-6653-472a-a5f1-e2228152d5bc")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R36")
+					(unit 1)
+					(variant
+						(name "aaaa")
+						(exclude_from_sim yes)
+						(in_bom no)
+					)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R36")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 55.88 87.63 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f7fe1")
+		(property "Reference" "R9"
+			(at 57.912 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 55.88 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 54.102 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.88 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "Do not place"
+			(at 55.88 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "d333c7e6-63b8-4fb3-a20c-493356571112")
+		)
+		(pin "2"
+			(uuid "7e66521d-2754-4758-a514-b802cf553ffd")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R22")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R22")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 87.63 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f7fec")
+		(property "Reference" "R10"
+			(at 65.532 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 63.5 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 61.722 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 63.5 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "Do not load"
+			(at 63.5 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a40196b0-665e-43fc-91a1-c21f8564dc66")
+		)
+		(pin "2"
+			(uuid "fb63aae4-66bb-4dd5-b39f-f038ddbee9a6")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R27")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R27")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 87.63 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f7ff7")
+		(property "Reference" "R11"
+			(at 71.882 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 69.85 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 68.072 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "nofit"
+			(at 69.85 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "5c588ec1-521f-4641-afcd-69ecae867823")
+		)
+		(pin "2"
+			(uuid "fe3ba90c-0e84-47b2-a1f2-2815c9121bbd")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R32")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R32")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 87.63 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0f8002")
+		(property "Reference" "R12"
+			(at 78.232 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 76.2 87.63 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 74.422 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 76.2 87.63 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "nostuff"
+			(at 76.2 87.63 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "000d32ce-8e7b-426e-a964-f9c0d8b31877")
+		)
+		(pin "2"
+			(uuid "13b83093-4d6b-48a7-937e-4d522724fe1a")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R37")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R37")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 55.88 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0fa280")
+		(property "Reference" "R13"
+			(at 57.912 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 55.88 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 54.102 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.88 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "noplace"
+			(at 55.88 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e3bcb5fc-5cf3-43b9-92c4-aaa97304c348")
+		)
+		(pin "2"
+			(uuid "0f69f51a-012a-4b8c-bff6-4bf7bbfc10d7")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R23")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R23")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0fa28b")
+		(property "Reference" "R14"
+			(at 65.532 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 63.5 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 61.722 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 63.5 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "noload"
+			(at 63.5 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "2ca4e4c3-e3bb-4b4b-898a-d0aedd60449d")
+		)
+		(pin "2"
+			(uuid "8a119b8c-6b1a-4ab7-a0ce-dc27580b48eb")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R28")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R28")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0fa296")
+		(property "Reference" "R15"
+			(at 71.882 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 69.85 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 68.072 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "not fitted"
+			(at 69.85 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e7026373-afc4-49bb-9afc-50b4a96fa7b6")
+		)
+		(pin "2"
+			(uuid "9d601d8a-b392-4c46-932a-f24a33dd1962")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R33")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R33")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 99.06 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files no)
+		(dnp no)
+		(uuid "00000000-0000-0000-0000-00005f0fa2a1")
+		(property "Reference" "R16"
+			(at 78.232 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 76.2 99.06 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 74.422 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 76.2 99.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "not loaded"
+			(at 76.2 99.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "59626c26-e626-492c-865b-648c14cf6bcc")
+		)
+		(pin "2"
+			(uuid "a6937b85-1651-425b-b278-adea10051ebe")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R38")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R38")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 55.88 110.49 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "00000000-0000-0000-0000-00005f0fcaa9")
+		(property "Reference" "R17"
+			(at 57.912 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 55.88 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 54.102 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.88 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 55.88 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "not placed"
+			(at 55.88 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "16f265a0-f631-4e29-88c0-f9cca08505a4")
+		)
+		(pin "2"
+			(uuid "4aa7f805-36a5-4921-8136-4d41b5663600")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R24")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R24")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R17")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 63.5 110.49 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "00000000-0000-0000-0000-00005f0fcab4")
+		(property "Reference" "R18"
+			(at 65.532 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 63.5 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 61.722 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 63.5 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 63.5 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "no stuff"
+			(at 63.5 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "75af82c9-7acc-4d91-90a4-b05861081b1c")
+		)
+		(pin "2"
+			(uuid "046e60bc-0585-44bc-a927-93f0fe31b841")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R29")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R29")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 69.85 110.49 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "00000000-0000-0000-0000-00005f0fcabf")
+		(property "Reference" "R19"
+			(at 71.882 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 69.85 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 68.072 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 69.85 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 69.85 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "bla bla DNF ble DNC ble "
+			(at 69.85 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "637fc2ba-a605-41de-8506-46af879e891d")
+		)
+		(pin "2"
+			(uuid "8d1f7224-f704-488b-9a87-63b2516ceab1")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R34")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R34")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R19")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 110.49 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp yes)
+		(uuid "00000000-0000-0000-0000-00005f0fcaca")
+		(property "Reference" "R20"
+			(at 78.232 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10K"
+			(at 76.2 110.49 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric"
+			(at 74.422 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 76.2 110.49 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Config" "bla,bla,DNF,ble"
+			(at 76.2 110.49 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "1a355bb4-1fb9-4717-86be-79e87668d23a")
+		)
+		(pin "2"
+			(uuid "3c82d8e8-c210-4f4a-9906-f21c5f2a0236")
+		)
+		(instances
+			(project "another"
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/b5714342-6084-4edb-8dae-45786271a1fb"
+					(reference "R39")
+					(unit 1)
+				)
+				(path "/883d9621-70ab-4dc0-96f4-6e6a496f5988/c83ec20f-234a-4051-a7e5-bd48eee37346"
+					(reference "R39")
+					(unit 1)
+				)
+			)
+			(project "kicad-variante"
+				(path "/b46c2c6c-7e43-449c-85cf-14dd1c57aabb"
+					(reference "R20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

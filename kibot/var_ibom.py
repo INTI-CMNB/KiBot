@@ -54,7 +54,7 @@ class IBoM(BaseVariant):  # noqa: F821
                 return True
         return False
 
-    def filter(self, comps):
+    def filter(self, comps, call_back=None):
         GS.variant = self.variants_whitelist
         comps = super().filter(comps)
         logger.debug("Applying IBoM style variants `{}`".format(self.name))

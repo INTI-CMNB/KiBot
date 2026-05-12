@@ -1,5 +1,7 @@
 .. _DrawFancyStackupOptions_pre:
 
+:orphan:
+
 
 DrawFancyStackupOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -34,7 +36,7 @@ DrawFancyStackupOptions parameters
 -  ``width`` :index:`: <pair: preflight - draw_fancy_stackup - draw_fancy_stackup; width>` [:ref:`number <number>`] (default: ``120``) Width for the drawing. The units are defined by the global *units* variable.
    Only used when the group can't be found.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   SUColumnsFancy
+- :ref:`SUColumnsFancy parameters <SUColumnsFancy_pre>`

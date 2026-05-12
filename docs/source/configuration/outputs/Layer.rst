@@ -1,5 +1,7 @@
 .. _Layer:
 
+:orphan:
+
 
 Layer parameters
 ~~~~~~~~~~~~~~~~

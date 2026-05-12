@@ -1,5 +1,7 @@
 .. _CustomReport:
 
+:orphan:
+
 
 CustomReport parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

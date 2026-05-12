@@ -11,6 +11,8 @@ variants:
   sub_pcbs:
   - name: variant.kibom.sub_pcbs.dict
     reference: BRD1
+- name: variant.kicad
+  type: kicad
 - name: variant.kicost
   type: kicost
   sub_pcbs:

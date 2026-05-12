@@ -358,6 +358,36 @@
       null
     ]
   ],
+  "kicad": [
+    [
+      "name",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "type",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "comment",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "file_id",
+      [
+        "DataTypeString"
+      ],
+      null
+    ]
+  ],
   "kicost": [
     [
       "name",

@@ -1,5 +1,7 @@
 .. _DiffOptions:
 
+:orphan:
+
 
 DiffOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~

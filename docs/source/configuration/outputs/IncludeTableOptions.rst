@@ -1,5 +1,7 @@
 .. _IncludeTableOptions:
 
+:orphan:
+
 
 IncludeTableOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,7 +19,7 @@ IncludeTableOptions parameters
    element (10th excluded), and *kibot_table_out[2][5:8]* would include the second
    output's elements number 6 to 8 (python indexes start at 0). |br|.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   IncTableOutputOptions
+- :ref:`IncTableOutputOptions parameters <IncTableOutputOptions>`

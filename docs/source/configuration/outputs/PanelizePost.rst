@@ -1,5 +1,7 @@
 .. _PanelizePost:
 
+:orphan:
+
 
 PanelizePost parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

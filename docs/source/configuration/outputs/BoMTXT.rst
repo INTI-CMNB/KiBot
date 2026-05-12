@@ -1,5 +1,7 @@
 .. _BoMTXT:
 
+:orphan:
+
 
 BoMTXT parameters
 ~~~~~~~~~~~~~~~~~

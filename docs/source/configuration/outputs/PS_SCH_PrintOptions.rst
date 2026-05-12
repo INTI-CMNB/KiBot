@@ -1,11 +1,13 @@
 .. _PS_SCH_PrintOptions:
 
+:orphan:
+
 
 PS_SCH_PrintOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -  **frame** :index:`: <pair: output - ps_sch_print - options; frame>` [:ref:`boolean <boolean>`] (default: ``true``) Include the frame and title block.
--  ``all_pages`` :index:`: <pair: output - ps_sch_print - options; all_pages>` [:ref:`boolean <boolean>`] (default: ``true``) Generate with all hierarchical sheets.
+-  ``all_pages`` :index:`: <pair: output - ps_sch_print - options; all_pages>` [:ref:`boolean <boolean>`] (default: ``true``) Generate with all hierarchical sheets, unless `pages` is specified.
 -  ``background_color`` :index:`: <pair: output - ps_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme` (KiCad 6).
 -  ``color_theme`` :index:`: <pair: output - ps_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config (KiCad 6).
 -  ``default_font`` :index:`: <pair: output - ps_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font. Only for KiCad 9 and newer.
@@ -21,6 +23,7 @@ PS_SCH_PrintOptions parameters
 
 -  ``monochrome`` :index:`: <pair: output - ps_sch_print - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``false``) Generate a monochromatic output.
 -  ``output`` :index:`: <pair: output - ps_sch_print - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Filename for the output postscript (%i=schematic, %x=ps). Affected by global options.
+-  ``pages`` :index:`: <pair: output - ps_sch_print - options; pages>` [:ref:`string <string>`] (default: ``''``) List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`.
 -  ``pre_transform`` :index:`: <pair: output - ps_sch_print - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

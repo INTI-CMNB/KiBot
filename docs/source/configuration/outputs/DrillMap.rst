@@ -1,5 +1,7 @@
 .. _DrillMap:
 
+:orphan:
+
 
 DrillMap parameters
 ~~~~~~~~~~~~~~~~~~~

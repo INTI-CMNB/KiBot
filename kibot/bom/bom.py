@@ -167,6 +167,8 @@ class ComponentGroup(object):
         self.components = []
         self.refs = {}
         self.cfg = cfg
+        # Empty on purpose
+        self.fields_with_tilde = set()
         # Columns loaded from KiCad
         self.fields = {c.lower(): None for c in ColumnList.COLUMNS_DEFAULT}
         self.field_names = deepcopy(ColumnList.COLUMNS_DEFAULT)
@@ -287,6 +289,9 @@ class ComponentGroup(object):
             return
         field_ori = field
         field = field.lower()
+        if self.cfg.tilde_is_empty and value == '~':
+            self.fields_with_tilde.add(field)
+            return
         if (field not in self.fields) or (not self.fields[field]):
             self.fields[field] = value
             self.field_names.append(field_ori)
@@ -301,13 +306,17 @@ class ComponentGroup(object):
                     name=field,
                     flds=self.fields[field],
                     fld=value, ref=ref))
-            self.fields[field] += " " + value
+                if len(self.components) == 1:
+                    logger.warning(W_FIELDCONF + "Most probably created by a renamed field")
+            self.fields[field] += self.cfg.sep_for_merged + value
 
     def update_fields(self, conv, bottom_negative_x, x_origin, y_origin, angle_positive, footprint_populate_values,
                       footprint_type_values, uses_fp_info, usealt=False, right_digits=4):
         for c in self.components:
             for f, v in c.get_user_fields():
                 self.update_field(f, v, c.ref)
+            if self.cfg.merge_values:
+                self.update_field(ColumnList.COL_VALUE_L, c.value, c.ref)
         # Update 'global' fields
         if usealt:
             self.fields[ColumnList.COL_REFERENCE_L] = self.get_alt_refs()
@@ -327,12 +336,16 @@ class ComponentGroup(object):
         self.fields[ColumnList.COL_STATUS_L] = status
         # Component data
         comp = self.components[0]
-        self.fields[ColumnList.COL_VALUE_L] = comp.value
+        if not self.cfg.merge_values:
+            self.fields[ColumnList.COL_VALUE_L] = comp.value
         self.fields[ColumnList.COL_PART_L] = comp.name
         self.fields[ColumnList.COL_PART_LIB_L] = comp.lib
         self.fields[ColumnList.COL_DATASHEET_L] = comp.datasheet
         self.fields[ColumnList.COL_FP_L] = comp.footprint
-        if uses_fp_info and not comp.has_pcb_info:
+        if not comp.on_board:
+            # When a component is not in the board add the footprint field as one that can be empty
+            self.fields_with_tilde.add(ColumnList.COL_FP_L)
+        if uses_fp_info and not comp.has_pcb_info and comp.on_board:
             logger.warning(W_MISSFPINFO+'Missing footprint information for {}'.format(comp.ref))
             if not GS.pcb_file:
                 logger.warning(W_MISSFPINFO+'Please provide a PCB file')
@@ -423,9 +436,11 @@ def get_value_sort(comp, fallback_ref=False):
     return comp.value
 
 
-def normalize_value(c, decimal_point):
+def normalize_value(c, decimal_point, value=None):
+    if value is None:
+        value = c.value
     if c.value_sort is None:
-        return c.value.strip()
+        return value.strip()
     value = str(c.value_sort)
     if decimal_point:
         value = value.replace('.', decimal_point)
@@ -504,7 +519,8 @@ def group_components(cfg, components):
         g.update_fields(cfg.conv_units, cfg.bottom_negative_x, x_origin, y_origin, cfg.angle_positive,
                         cfg.footprint_populate_values, cfg.footprint_type_values, uses_fp_info, cfg._use_alt, cfg.right_digits)
         if cfg.normalize_values:
-            g.fields[ColumnList.COL_VALUE_L] = normalize_value(g.components[0], decimal_point)
+            g.fields[ColumnList.COL_VALUE_L] = normalize_value(g.components[0], decimal_point,
+                                                               g.fields[ColumnList.COL_VALUE_L])
     # Sort the groups
     sort_style = cfg.sort_style
     if sort_style == 'kicad_bom':

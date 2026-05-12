@@ -1,0 +1,36 @@
+# KiBot Blender export test 1
+kibot:
+  version: 1
+
+import:
+  - file: PCB2Blender_2_7
+
+outputs:
+  - name: '3d_export'
+    comment: "Exports the PCB in blender format"
+    type: blender_export
+    disable_run_by_default: _PCB2Blender_2_7
+    options:
+      pcb3d: _PCB2Blender_2_7
+#       camera:
+#         name: MyCamera
+#         pos_x: 0.3
+#         pos_y: width*2
+#         pos_z: size*3
+      render_options:
+        transparent_background: true
+        samples: 1
+        #resolution_x: 1920
+        #resolution_y: 1080
+      point_of_view:
+        rotate_x: 30
+        rotate_z: -20
+        # view: bottom
+      outputs:
+        - type: blender
+        - type: render
+
+  - name: 'navigate'
+    comment: "Browse the results"
+    type: navigate_results
+    run_by_default: false

@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "warning-project-rescue")(type "KiCad")(uri "${KIPRJMOD}/warning-project-rescue.kicad_sym")(options "")(descr ""))
+  (lib (name fail-project-rescue)(type Legacy)(uri ${KIPRJMOD}/fail-project-rescue.lib)(options "")(descr ""))
+)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from pcbnew import PLOT_FORMAT_DXF, SKETCH, FILLED
@@ -44,14 +44,18 @@ class DXFOptions(DrillMarks):
         # DXF_PLOTTER::DXF_UNITS isn't available
         # According to https://docs.kicad.org/doxygen/classDXF__PLOTTER.html 1 is mm
         po.SetDXFPlotUnits(DXF_UNITS_MILLIMETERS if self.metric_units else DXF_UNITS_INCHES)
-        po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
+        if GS.ki10:
+            po.SetDXFPlotMode(SKETCH if self.sketch_plot else FILLED)
+        else:
+            po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
         po.SetUseAuxOrigin(self.use_aux_axis_as_origin)
 
     def read_vals_from_po(self, po):
         super().read_vals_from_po(po)
         self.polygon_mode = po.GetDXFPlotPolygonMode()
         self.metric_units = po.GetDXFPlotUnits() == 1
-        self.sketch_plot = po.GetPlotMode() == SKETCH
+        plot_mode = po.GetDXFPlotMode() if GS.ki10 else po.GetPlotMode()
+        self.sketch_plot = plot_mode == SKETCH
         self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
 
 

@@ -187,6 +187,7 @@ Here is an example of a list of dicts (**list(dict)**):
        age: 32
        gender: female
 
+
 Compact notation
 ----------------
 
@@ -381,3 +382,20 @@ But the following isn't:
 
 This is because we assign a number to the `v2` key, not a string.
 String dicts are used to define pairs of strings.
+
+
+.. _list(string_dict):
+
+list(string_dict)
+.................
+
+This is just a list of :ref:`string_dict <string_dict>`
+
+.. code:: yaml
+
+   - v1: Hi!
+     v2: '3'
+   - v1: Bye!
+     v2: '4'
+
+Here you have two elements, each element is a :ref:`string_dict <string_dict>`.

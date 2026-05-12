@@ -1,5 +1,7 @@
 .. _PanelizeText:
 
+:orphan:
+
 
 PanelizeText parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

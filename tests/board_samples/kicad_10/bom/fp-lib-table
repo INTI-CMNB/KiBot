@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name Connector_JST)(type KiCad)(uri ${KICAD9_FOOTPRINT_DIR}/Connector_JST.pretty)(options "")(descr ""))
+  (lib (name Capacitor_SMD)(type KiCad)(uri ${KICAD9_FOOTPRINT_DIR}/Capacitor_SMD.pretty)(options "")(descr ""))
+  (lib (name Resistor_SMD)(type KiCad)(uri ${KICAD9_FOOTPRINT_DIR}/Resistor_SMD.pretty)(options "")(descr ""))
+)

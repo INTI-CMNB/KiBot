@@ -1,0 +1,28 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+globals:
+  cross_no_body: true
+
+filters:
+  - name: 'no_ics'
+    comment: 'ICs removed'
+    type: generic
+    exclude_refs:
+      - U*
+
+variants:
+  - name: 'no_ics'
+    comment: 'ICs removed'
+    type: kibom
+    file_id: '_(no_ics)'
+    dnf_filter: 'no_ics'
+
+outputs:
+  - name: 'no_ics'
+    comment: "ICs removed"
+    type: svg_sch_print
+    dir: no_ics
+    options:
+      variant: 'no_ics'

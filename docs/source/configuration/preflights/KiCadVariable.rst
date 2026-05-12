@@ -1,5 +1,7 @@
 .. _KiCadVariable_pre:
 
+:orphan:
+
 
 KiCadVariable parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~

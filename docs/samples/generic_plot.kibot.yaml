@@ -80,7 +80,7 @@ preflight:
   # [boolean|dict=false] Use a boolean for simple cases or fine-tune its behavior.
   draw_stackup: true
   # DRC
-  # Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+  # Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
   # You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily install the template.
   # This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer.
   # GUI exclusions and schematic parity are supported .
@@ -141,7 +141,7 @@ preflight:
         before: 'Git hash: <'
         after: '>'
   # Run DRC (**Deprecated for KiCad 8**)
-  # Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+  # Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
   # For KiCad 8 use *drc*
   # The report file name is controlled by the global output pattern (%i=drc %x=txt).
   # Note that the KiCad 6+ *Test for parity between PCB and schematic* option is not supported.
@@ -175,6 +175,8 @@ preflight:
   # They are expanded using `${VARIABLE}`, and stored in the project file.
   # This preflight replaces `pcb_replace` and `sch_replace` when using KiCad 6 or newer.
   # The KiCad project file is modified.
+  # You can get text variables containing the names of the schematics sheets enabling the
+  # `set_text_variables_sheet_title` global option.
   # Warning:     don't use `-s all` or this preflight will be skipped .
   # [dict|list(dict)=[]] One or more variable definition.
   set_text_variables:
@@ -324,11 +326,15 @@ outputs:
         highlight_on_top: false
         # [number=1.5] [0,1000] How much the highlight extends around the component [mm]
         highlight_padding: 1.5
-        # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-        kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-        # [string=''] Text added to the end of the download URL.
+        # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+        kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+        # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
         # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-        kicad_3d_url_suffix: ''
+        kicad_3d_url_suffix: '/raw?ref=VERSION'
+        # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+        # In this way we download the 3D model corresponding to the installed KiCad instead
+        # of the last available
+        kicad_3d_url_version: true
         # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
         no_virtual: false
         # [string='%f-%i%I%v.%x'] Name for the generated PCB3D file (%i='blender_export' %x='pcb3d'). Affected by global options
@@ -582,10 +588,12 @@ outputs:
       dnc_filter: '_kibom_dnc_CONFIG_FIELD'
       # [string|list(string)='_kibom_dnf_CONFIG_FIELD'] Name of the filter to mark components as 'Do Not Fit'.
       # The default filter marks components with a DNF value or DNF in the Config field.
+      # When using KiCad variants the default is '_null'.
       # This option is for simple cases, consider using a full variant for complex cases
       dnf_filter: '_kibom_dnf_CONFIG_FIELD'
       # [string|list(string)='_mechanical'] Name of the filter to exclude components from BoM processing.
       # The default filter (built-in filter '_mechanical') excludes test points, fiducial marks, mounting holes, etc.
+      # When using KiCad variants the default is '_null'.
       # Please consult the built-in filters explanation to fully understand what is excluded by default.
       # This option is for simple cases, consider using a full variant for complex cases
       exclude_filter: '_mechanical'
@@ -611,7 +619,8 @@ outputs:
       # HRTXT stands for Human Readable TeXT.
       # KICAD is used to get the options from KiCad project. In KiCad you can configure CSV like options
       format: 'Auto'
-      # [boolean=true] Connectors with the same footprints will be grouped together, independent of the name of the connector
+      # [boolean=true] Connectors with the same footprints will be grouped together, independent of the name of the connector.
+      # In order to work the symbol must be from a library containing `connector` in its name
       group_connectors: true
       # [list(string)] {no_case} List of fields used for sorting individual components into groups.
       # Components which match (comparing *all* fields) will be grouped together.
@@ -623,6 +632,8 @@ outputs:
       # information is important. You can also disable `parse_value`.
       # When using `_kicad_bom_fields` in the `columns` you should use `[]` for this value, so the fields
       # selected in KiCad are used.
+      # Note that when user defined fields are different we merge the fields using `sep_for_merged`. Also
+      # note that you can merge different `Value` fields using `merge_values`.
       # If empty: ['Part', 'Part Lib', 'Value', 'Footprint', 'Footprint Lib',
       #            'Voltage', 'Tolerance', 'Current', 'Power'] is used
       group_fields: ['part', 'part lib', 'value', 'footprint', 'footprint lib', 'voltage', 'tolerance', 'current', 'power']
@@ -703,6 +714,9 @@ outputs:
       merge_blank_fields: true
       # [boolean=true] When creating groups two components with empty/missing field will be interpreted as with the same value
       merge_both_blank: true
+      # [boolean=false] Merge the values of different components in a group.
+      # Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose
+      merge_values: false
       # [list(string)=computed for your project] {no_case} List of fields where we tolerate conflicts.
       # Use it to avoid undesired warnings.
       # By default the field indicated in `fit_field`, the field used for variants and
@@ -739,6 +753,8 @@ outputs:
       # [number=4] Number of digits for mantissa part of coordinates ('Footprint X', 'Footprint Y', 'Footprint X-Size',
       # 'Footprint Y-Size' and 'Footprint Rot' columns) (0 is auto)
       right_digits: 4
+      # [string=' '] Text to separate multiple field values of components merged in the same group
+      sep_for_merged: ' '
       # [boolean=true] Sort in ascending order
       sort_ascending: true
       # [string|list(string)='Reference'] {no_case} Field or fields used for the `field` `sort_style`
@@ -752,6 +768,9 @@ outputs:
       sort_style: 'type_value'
       # [boolean=false] Generate the `Source BoM` column using the reference ID instead of the project name
       source_by_id: false
+      # [boolean=true] Interpret fields that just contains `~` as empty fields.
+      # But don't mark them as empty in the HTML
+      tilde_is_empty: true
       # [string='millimeters'] [millimeters,inches,mils] Units used for the positions ('Footprint X', 'Footprint Y', 'Footprint X-Size' and
       # 'Footprint Y-Size' columns).
       # Affected by global options
@@ -766,7 +785,9 @@ outputs:
       # The `_kibom_simple` variant is a KiBoM variant without any filters and it provides some basic
       # compatibility with KiBoM. Note that this output has default filters that behaves like KiBoM.
       # The combination between the default for this option and the defaults for the filters provides
-      # a behavior that mimics KiBoM default behavior
+      # a behavior that mimics KiBoM default behavior.
+      # If you want to use KiCad 10 variants: use the name of the KiCad 10 variant, `Default` is the
+      # default variant
       variant: '_kibom_simple'
       # [dict={}] Options for the XLSX format
       xlsx:
@@ -865,6 +886,56 @@ outputs:
         style: 'modern-blue'
         # [string='KiBot Bill of Materials'] BoM title
         title: 'KiBot Bill of Materials'
+  # BoM Labels Printer:
+  # You can find an explanation [here](https://sschueller.github.io/posts/ci-cd-with-kicad-2025/)
+  # You need to create a BoM in CSV format containing the fields to be used.
+  # The first field will be the header, the rest are extra data.
+  - name: 'bom_labels_example'
+    comment: 'Generates a PDF to print labels for the BoM items.'
+    type: 'bom_labels'
+    dir: 'Example/bom_labels_dir'
+    options:
+      # [string=''] BoM output used for the labels
+      bom: 'bom_labels'
+      # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      dnf_filter: '_null'
+      # [string|list(string)='_null'] Name of the filter to exclude components from processing.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      exclude_filter: '_null'
+      # [string='Helvetica-Bold'] Font used for the labels
+      font: 'Helvetica-Bold'
+      # [number=6] Default size of the header font, will be reduced to fit the text
+      font_size_header: 6
+      # [number=4] Default size of the normal font, will be reduced to fit the text
+      font_size_rest: 4
+      # [number=3] Distance from header to first line in mm
+      header_sep: 3
+      # [number=10] Label height in mm
+      height: 10
+      # [number=1.5] Regular line height in mm
+      line_height: 1.5
+      # [number=3] Top margin in mm
+      margin_top: 3
+      # [number=2] X margin in mm
+      margin_x: 2
+      # [string='%f-%i%I%v.%x'] Name for the generated PDF (%i=bom_labels %x=pdf). Affected by global options
+      output: '%f-%i%I%v.%x'
+      # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      pre_transform: '_null'
+      # [number=3] How many rows we print, including the header
+      rows: 3
+      # [string=''] Board variant to apply
+      variant: ''
+      # [number=20] Label width in mm
+      width: 20
   # Archiver (files compressor):
   # This is used to generate groups of files in compressed file format.
   - name: 'compress_example'
@@ -967,11 +1038,15 @@ outputs:
           source_type: 'files'
       # [boolean=true] Store the file pointed by symlinks, not the symlink
       follow_links: true
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [boolean=false] Create symlinks instead of copying files
       link_no_copy: false
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
@@ -1225,7 +1300,7 @@ outputs:
     type: 'dxf_sch_print'
     dir: 'Example/dxf_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -1249,6 +1324,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output DXF (%i=schematic, %x=dxf). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -1284,14 +1361,18 @@ outputs:
       exclude_filter: '_null'
       # [boolean=true] Generate drill files. Set to False and choose map format if only map is to be generated
       generate_drill_files: true
-      # [number=0] number of digits for integer part of coordinates (0 is auto)
+      # [number=0] number of digits for integer part of coordinates (0 is auto).
+      # Doesn't apply to DECIMAL_FORMAT.
+      # Default is 3 and currently can't be configured from the GUI, avoid using it
       left_digits: 0
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
-      # Not generated unless a format is specified
+      # Not generated unless a format is specified.
+      # KiCad 10 doesn't support HPGL
       map:
         # [string='%f-%i%I%v.%x'] Name for the map file, KiCad defaults if empty (%i='PTH_drill_map'). Affected by global options
         output: '%f-%i%I%v.%x'
-        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map
+        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map.
+        # KiCad 10 doesn't support HPGL
         type: 'pdf'
       # [boolean=true] Use metric units instead of inches
       metric_units: true
@@ -1317,7 +1398,9 @@ outputs:
         # [string=''] Name of the drill report. Not generated unless a name is specified.
         # (%i='drill_report' %x='txt')
         filename: ''
-      # [number=0] number of digits for mantissa part of coordinates (0 is auto)
+      # [number=0] number of digits for mantissa part of coordinates (0 is auto).
+      # Doesn't apply to DECIMAL_FORMAT.
+      # Default is 3 and currently can't be configured from the GUI, avoid using it
       right_digits: 0
       # [boolean=true] Use route command for oval holes (G00), otherwise use G85
       route_mode_for_oval_holes: true
@@ -1385,13 +1468,16 @@ outputs:
       exclude_filter: '_null'
       # [boolean=false] Don't cut via holes in conductor layers
       fill_all_vias: false
-      # [string='step'] [step,glb,stl,xao,brep] 3D format used.
+      # [string='step'] [step,glb,stl,xao,brep,ply,u3d,pdf] 3D format used.
       # - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
       # - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
       # known as WebGL Transmissions Format or WebGL TF.
       # - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
       # - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
       # - BRep: Part of Open CASCADE Technology (OCCT)
+      # - PLY: Polygon File Format or the Stanford Triangle Format (KiCad 10+).
+      # - U3D: Universal 3D (ECMA-363) primarily used to embed interactive 3D models into PDF documents. (KiCad 10+)
+      # - PDF: Portable Document Format with the 3D model (KiCad 10+)
       format: 'step'
       # [boolean=false] Fuse overlapping geometry together
       fuse_shapes: false
@@ -1407,11 +1493,15 @@ outputs:
       include_tracks: false
       # [boolean=false] Export zones
       include_zones: false
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [number=-1] The minimum distance between points to treat them as separate ones (-1 is KiCad default: 0.01 mm).
       # The units for this option are controlled by the `units` option
       min_distance: -1
@@ -1432,7 +1522,7 @@ outputs:
       # You can define any other origin using the format 'X,Y', i.e. '3.2,-10'. Don't put units here.
       # The units used here are the ones specified by the `units` option
       origin: 'grid'
-      # [string='%f-%i%I%v.%x'] Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep'). Affected by global options
+      # [string='%f-%i%I%v.%x'] Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options
       output: '%f-%i%I%v.%x'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -1504,11 +1594,13 @@ outputs:
       # [boolean=true] Generate drill files. Set to False and choose map format if only map is to be generated
       generate_drill_files: true
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
-      # Not generated unless a format is specified
+      # Not generated unless a format is specified.
+      # KiCad 10 doesn't support HPGL
       map:
         # [string='%f-%i%I%v.%x'] Name for the map file, KiCad defaults if empty (%i='PTH_drill_map'). Affected by global options
         output: '%f-%i%I%v.%x'
-        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map
+        # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map.
+        # KiCad 10 doesn't support HPGL
         type: 'pdf'
       # [string] Force this replacement for %i when generating NPTH files
       npth_id: null
@@ -1642,6 +1734,7 @@ outputs:
       variant: ''
     layers: all
   # HPGL (Hewlett & Packard Graphics Language):
+  # Only available for KiCad 9 and older.
   # This output is what you get from the File/Plot menu in pcbnew.
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'hpgl_example'
@@ -1738,7 +1831,7 @@ outputs:
     type: 'hpgl_sch_print'
     dir: 'Example/hpgl_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -1764,6 +1857,8 @@ outputs:
       origin: 'bottom_left'
       # [string='%f-%i%I%v.%x'] Filename for the output HPGL (%i=schematic, %x=plt). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [number=0.4826] Pen size (diameter) [mm]
       pen_size: 0.4826
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -1845,6 +1940,11 @@ outputs:
       include_tracks: false
       # [string='FB'] [F,FB,B] Default layer view
       layer_view: 'FB'
+      # [string=''] Name of the checkbox column used to mark components when checked.
+      # When enabled components checked in this column will be displayed in green.
+      # Leave empty to disable it.
+      # Needs iBoM newer than 2.10.0.
+      mark_when_checked: ''
       # [string='ibom'] Output file name format supports substitutions:
       # %f : original pcb file name without extension.
       # %p : pcb/project title from pcb metadata.
@@ -1992,11 +2092,15 @@ outputs:
       # [string=''] Name of the KiCad jobset file you want to use. Should have `kicad_jobset` extension.
       # Leave empty to look for a jobset with the same name as the project
       jobset: ''
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
       no_virtual: false
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -2137,6 +2241,58 @@ outputs:
       # variants with the ';' (semicolon) character.
       # This isn't related to the KiBot concept of variants
       variant: ''
+  # Hugo KiCad Site helper:
+  # Use the `dir` option to select the place where the site is generated.
+  # Currently this output just generates the configuration for the Hugo Theme, for more information visit:
+  # [Hugo KiCad Site](https://github.com/laenzlinger/hugo-kicad-site)
+  - name: 'kicad_site_example'
+    comment: 'Used to generate web sites for your project'
+    type: 'kicad_site'
+    dir: 'Example/kicad_site_dir'
+    options:
+      # [dict|list(dict)=[]] 3D assembly models
+      assembly_models:
+        # [string=''] Name for the downloadable item
+        - name: '3D model'
+          # [string=''] Output that generates it
+          output: 'export_glb'
+      # [string=''] Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
+      # Without the version part
+      base_url: ''
+      # [string='static'] Subdirectory where the files will be copied inside the destination `dir`
+      dest_subdir: 'static'
+      # [dict|list(dict)=[]] Diff resources, usually one for the PCB and another for the schematic
+      diffs:
+        # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
+        - dir: ''
+          # [string] Name for the diff item
+          name: 'Schematic diff'
+          # [string=''] Output that generates it
+          output: 'diff_sch'
+      # [dict|list(dict)=[]] Downloadable resources for releases, not for `latest`
+      downloads:
+        # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
+        - dir: ''
+          # [string=''] Name for the downloadable item
+          name: 'Schematic (PDF)'
+          # [string=''] Output that generates it
+          output: 'schematic'
+      # [boolean=false] By default we skip the copy to the destination dir if the file is already there and newer.
+      # Enabling this option we always do the copy
+      force_copy: false
+      # [string=''] Name of the iBoM output. Use `None` to skip
+      ibom: ''
+      # [boolean=false] List the PCB first, KiCanvas will show the PCB by default, instead of the schematic
+      pcb_first: false
+      # [string|list(string)=''] Name of one or more outputs providing images for the PCB
+      renders: ''
+      # [string=''] Title for the site, leave empty to use the one from `hugo.yaml`.
+      # %X and KiCad variables are expanded
+      title: ''
+      # [string='auto'] Version for the generated site. `auto` tries to figure out it.
+      # Currently it just uses the GITHUB_REF environment variable to detect a tag, otherwise it
+      # just assumes this is `latest`
+      version: 'auto'
   # KiCanvas:
   # Note that this tool is in alpha stage, so be ready to face some issues.
   # Also note that most browsers won't allow Java Script to read local files,
@@ -2399,6 +2555,8 @@ outputs:
       display_category_images: true
       # [boolean=true] If True, display the KiBot version at the bottom of each page
       display_kibot_version: true
+      # [boolean=true] Expand KiBot %X and KiCad ${VARIABLE} values in the title
+      expand_text_vars: true
       # [boolean=true] Add a header containing information for the project
       header: true
       # [boolean=true] When creating a miniature preview of a document use a white background instead of a transparent background.
@@ -2438,6 +2596,8 @@ outputs:
       display_category_images: true
       # [boolean=true] If True, display the KiBot version at the bottom of each page
       display_kibot_version: true
+      # [boolean=true] Expand KiBot %X and KiCad ${VARIABLE} values in the title
+      expand_text_vars: true
       # [boolean=true] Add a header containing information for the project
       header: true
       # [boolean=true] When creating a miniature preview of a document use a white background instead of a transparent background.
@@ -3083,6 +3243,9 @@ outputs:
             type: 'none'
             # [number|string=0] Vertical offset from panel edges
             voffset: 0
+      # [boolean=false] If the target directory is different than the one containing the PCB copy the symbol and
+      # footprint lib tables
+      copy_lib_tables: false
       # [string='auto'] [auto,yes,no] Copy the GUI option to plot vias on the mask layers from the original PCB to
       # the panel.
       # This option is a workaround to KiCad 8 not allowing to choose to plot (or not to plot) vias
@@ -3210,6 +3373,8 @@ outputs:
       background_image: ''
       # [string=''] Color used for blind/buried `colored_vias`
       blind_via_color: ''
+      # [string=''] Color used for buried `colored_vias` (KiCad 10+)
+      buried_via_color: ''
       # [string='_builtin_classic'] Selects the color theme. Only applies to KiCad 6.
       # To use the KiCad 6 default colors select `_builtin_default`.
       # Usually user colors are stored as `user`, but you can give it another name
@@ -3498,9 +3663,45 @@ outputs:
       variant: ''
       # [string=''] Color used for through-hole `colored_vias`
       via_color: ''
+  # PCB statistics:
+  # Corresponds to what you get in the Inspect -> Show Board Statistics menu
+  - name: 'pcb_stats_example'
+    comment: 'Generates basic PCB statistics using KiCad 10 or newer.'
+    type: 'pcb_stats'
+    dir: 'Example/pcb_stats_dir'
+    options:
+      # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      dnf_filter: '_null'
+      # [string|list(string)='_null'] Name of the filter to exclude components from processing.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      exclude_filter: '_null'
+      # [boolean=false] Exclude footprints without pads
+      exclude_footprints_without_pads: false
+      # [string='txt'] [txt,json] Output file format
+      format: 'txt'
+      # [string='%f-%i%I%v.%x'] Name for the generated report file (%i='statistics' %x='txt/json'). Affected by global options
+      output: '%f-%i%I%v.%x'
+      # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
+      # Is a short-cut to use for simple cases where a variant is an overkill.
+      # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
+      # variant
+      pre_transform: '_null'
+      # [boolean=false] Subtract holes from the board area
+      subtract_holes_from_board: false
+      # [boolean=false] Subtract holes from copper areas
+      subtract_holes_from_copper: false
+      # [string='millimeters'] [millimeters,inches] Units used for the values. Affected by global options
+      units: 'millimeters'
+      # [string=''] Board variant to apply
+      variant: ''
   # PCB with variant generator:
-  # This copy isn't intended for development.
-  # Is just a tweaked version of the original where you can look at the results.
+  # This copy isn't intended for development without a careful review.
+  # Can be used to export legacy variants to KiCad 10 variants
   - name: 'pcb_variant_example'
     comment: 'Creates a copy of the PCB with all the filters and variants applied.'
     type: 'pcb_variant'
@@ -3521,6 +3722,10 @@ outputs:
       # [boolean=false] Hide components in the Fab layer that are marked as excluded by a variant.
       # Affected by global options
       hide_excluded: false
+      # [string|list(string)='_all_'] {comma_sep} When exporting a KiCad 10 file also include the listed variants.
+      # The `_all_` keyword means all other variants.
+      # The variant indicated by the `variant` option will be the `Default` KiCad variant
+      include: '_all_'
       # [string='%f-%i%I%v.%x'] Filename for the output (%i=variant, %x=kicad_pcb). Affected by global options
       output: '%f-%i%I%v.%x'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -3829,7 +4034,7 @@ outputs:
     type: 'pdf_sch_print'
     dir: 'Example/pdf_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -3853,6 +4058,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output PDF (%i=schematic, %x=pdf). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -3967,6 +4174,11 @@ outputs:
       format: 'ASCII'
       # [boolean=false] Include the board edge in the gerber output
       gerber_board_edge: false
+      # [number=0] Size of the grid in `units`. When different than 0 components outside the grid are
+      # reported as warnings
+      grid: 0
+      # [boolean=false] When enabled grid warnings makes this output to fail
+      grid_fail: false
       # [boolean=false] Include virtual components. For special purposes, not pick & place.
       # Note that virtual components is a KiCad 5 concept.
       # For KiCad 6+ we replace this concept by the option to exclude from position file
@@ -4080,7 +4292,7 @@ outputs:
       sketch_pad_line_width: 0.1
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
-      # [boolean=false] Don't fill objects, just draw the outline
+      # [boolean=false] Don't fill objects, just draw the outline (KiCad older than 10)
       sketch_plot: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.
       # Warning: KiCad 8 has a bug that ignores this option. Set it from KiCad GUI
@@ -4102,7 +4314,7 @@ outputs:
     type: 'ps_sch_print'
     dir: 'Example/ps_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -4126,6 +4338,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output postscript (%i=schematic, %x=ps). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4236,11 +4450,15 @@ outputs:
       highlight_on_top: false
       # [number=1.5] [0,1000] How much the highlight extends around the component [mm]
       highlight_padding: 1.5
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [number=0] Steps to move in the X axis, positive is to the right.
       # Just like pressing the right arrow in the 3D viewer
       move_x: 0
@@ -4422,8 +4640,8 @@ outputs:
       # [string=''] Board variant to apply
       variant: ''
   # Schematic with variant generator:
-  # This copy isn't intended for development.
-  # Is just a tweaked version of the original where you can look at the results.
+  # This copy isn't intended for development without a careful review.
+  # Can be used to export legacy variants to KiCad 10 variants.
   # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
   - name: 'sch_variant_example'
     comment: 'Creates a copy of the schematic with all the filters and variants applied.'
@@ -4443,6 +4661,10 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
+      # [string|list(string)='_all_'] {comma_sep} When exporting a KiCad 10 file also include the listed variants.
+      # The `_all_` keyword means all other variants.
+      # The variant indicated by the `variant` option will be the `Default` KiCad variant
+      include: '_all_'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4602,11 +4824,15 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [boolean=true] Use metric units instead of inches
       metric_units: true
       # [number=-1] The minimum distance between points to treat them as separate ones (-1 is KiCad default: 0.01 mm)
@@ -4813,7 +5039,7 @@ outputs:
     type: 'svg_sch_print'
     dir: 'Example/svg_sch_print_dir'
     options:
-      # [boolean=true] Generate with all hierarchical sheets
+      # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
       # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
       background_color: false
@@ -4837,6 +5063,8 @@ outputs:
       monochrome: false
       # [string='%f-%i%I%v.%x'] Filename for the output SVG (%i=schematic, %x=svg). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
+      pages: ''
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4891,11 +5119,15 @@ outputs:
       highlight_on_top: false
       # [number=1.5] [0,1000] How much the highlight extends around the component [mm]
       highlight_padding: 1.5
-      # [string='https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'] Base URL for the KiCad 3D models
-      kicad_3d_url: 'https://gitlab.com/kicad/libraries/kicad-packages3D/-/raw/master/'
-      # [string=''] Text added to the end of the download URL.
+      # [string='https://gitlab.com/api/v4/projects/21604637/repository/files/'] Base URL for the KiCad 3D models
+      kicad_3d_url: 'https://gitlab.com/api/v4/projects/21604637/repository/files/'
+      # [string='/raw?ref=VERSION'] Text added to the end of the download URL.
       # Can be used to pass variables to the GET request, i.e. ?VAR1=VAL1&VAR2=VAL2
-      kicad_3d_url_suffix: ''
+      kicad_3d_url_suffix: '/raw?ref=VERSION'
+      # [boolean=true] Replace the *master* subdir in the URL by the KiCad version.
+      # In this way we download the 3D model corresponding to the installed KiCad instead
+      # of the last available
+      kicad_3d_url_version: true
       # [string='millimeters'] [millimeters,meters,deciinches,inches] Units used for the VRML (1 deciinch = 0.1 inches)
       model_units: 'millimeters'
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute

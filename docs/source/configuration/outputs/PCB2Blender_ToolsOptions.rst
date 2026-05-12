@@ -1,5 +1,7 @@
 .. _PCB2Blender_ToolsOptions:
 
+:orphan:
+
 
 PCB2Blender_ToolsOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

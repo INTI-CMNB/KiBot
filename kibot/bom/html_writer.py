@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2021 Salvador E. Tropea
-# Copyright (c) 2020-2021 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2016-2020 Oliver Henry Walters (@SchrodingersGat)
 # License: MIT
 # Project: KiBot (formerly KiPlot)
@@ -8,8 +8,9 @@
 """
 HTML Writer: Generates a HTML BoM file.
 """
-import os
 from base64 import b64encode
+import os
+import urllib.parse
 from .columnlist import ColumnList, BoMError
 from .kibot_logo import KIBOT_LOGO, KIBOT_LOGO_W, KIBOT_LOGO_H
 from ..misc import (read_png, STYLE_COMMON, TABLE_MODERN, TABLE_CLASSIC, HEAD_COLOR_R, HEAD_COLOR_R_L, HEAD_COLOR_G,
@@ -192,19 +193,20 @@ def content_table(html, groups, headings, head_names, cfg, link_datasheet, link_
             datasheet = group.get_field(ColumnList.COL_DATASHEET_L)
         html.write('  <tr id="{}">\n'.format(i))
         for n, r in enumerate(row):
+            field = headings[n]
             # A link to Digi-Key?
-            if link_digikey and headings[n] in link_digikey:
-                r = '<a href="https://www.digikey.com/products/en?keywords=' + r + '">' + r + '</a>'
-            if link_mouser and headings[n] in link_mouser:
+            if link_digikey and field in link_digikey and r:
+                r = '<a href="https://www.digikey.com/en/products/result?keywords=' + urllib.parse.quote(r) + '">' + r + '</a>'
+            if link_mouser and field in link_mouser and r:
                 r = '<a href="https://www.mouser.com/ProductDetail/' + r + '">' + r + '</a>'
-            if link_lcsc and headings[n] in link_lcsc:
+            if link_lcsc and field in link_lcsc and r:
                 r = '<a href="https://www.lcsc.com/product-detail/' + r + '.html">' + r + '</a>'
             # Link this column to the datasheet?
-            if link_datasheet == n and datasheet.startswith('http'):
+            if link_datasheet == n and datasheet.startswith('http') and r:
                 r = '<a href="' + datasheet + '">' + r + '</a>'
             if col_colors:
                 # Empty cell?
-                if hl_empty and (len(r) == 0 or r.strip() == "~"):
+                if hl_empty and ((len(r) == 0 and field not in group.fields_with_tilde) or r.strip() == "~"):
                     cl = 'empty'
                 else:
                     cl = cell_class(headings[n])

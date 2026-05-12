@@ -88,6 +88,7 @@ KIBOM_STATS = [KIBOM_TEST_GROUPS+len(KIBOM_TEST_EXCLUDE),
                len(KIBOM_TEST_COMPONENTS)]
 LINKS_STATS = [3, '4 (2 SMD/ 2 THT)', '3 (1 SMD/ 2 THT)', 1, 3]
 VARIANTE_PRJ_INFO = ['kibom-variante', 'default', 'A', '2020-03-12', None]
+VARIANTE_PRJ_INFO_10 = ['kicad-variante', 'default', 'A', '2020-03-12', None]
 LINK_HEAD = ['References', 'Part', 'Value', 'Quantity Per PCB', 'digikey#', 'digikey_alt#', 'mouser#', 'mouser_alt#', 'LCSC#',
              'manf#']
 LINKS_COMPONENTS = ['J1', 'J2', 'R1']
@@ -1348,6 +1349,42 @@ def test_int_bom_variant_t1(test_dir):
     ctx.clean_up()
 
 
+@pytest.mark.skipif(not context.ki10(), reason="Target is v10+")
+def test_int_bom_variant_t1_10(test_dir):
+    # KiCad 10 native variants
+    prj = 'kicad-variante'
+    ctx = context.TestContextSCH(test_dir, prj, 'int_bom_var_t1_10_csv', BOM_DIR)
+    ctx.run()
+    extra = ['R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16']
+    # No variant
+    logging.debug("* No variant")
+    rows, header, info = ctx.load_csv(prj+'-bom.csv')
+    ref_column = header.index(REF_COLUMN_NAME)
+    check_kibom_test_netlist(rows, ref_column, 2, ['R4'], ['R1', 'R2', 'R3']+extra)
+    VARIANTE_PRJ_INFO_10[1] = 'Default'
+    check_csv_info(info, VARIANTE_PRJ_INFO_10, [4, 16, 11, 1, 11])
+    # V1
+    logging.debug("* V1 variant")
+    rows, header, info = ctx.load_csv(prj+'-bom_(V1).csv')
+    check_kibom_test_netlist(rows, ref_column, 2, ['R3', 'R4'], ['R1', 'R2']+extra)
+    ctx.search_err(r'Field Config of component (.*) contains extra spaces')
+    VARIANTE_PRJ_INFO_10[1] = 'V1'
+    check_csv_info(info, VARIANTE_PRJ_INFO_10, [4, 16, 10, 1, 10])
+    # V2
+    logging.debug("* V2 variant")
+    rows, header, info = ctx.load_csv(prj+'-bom_(V2).csv')
+    check_kibom_test_netlist(rows, ref_column, 1, ['R2', 'R4'], ['R1', 'R3']+extra)
+    VARIANTE_PRJ_INFO_10[1] = 'V2'
+    check_csv_info(info, VARIANTE_PRJ_INFO_10, [3, 16, 10, 1, 10])
+    # V3
+    logging.debug("* V3 variant")
+    rows, header, info = ctx.load_csv(prj+'-bom_V3.csv')
+    check_kibom_test_netlist(rows, ref_column, 1, ['R2', 'R3'], ['R1', 'R4']+extra)
+    VARIANTE_PRJ_INFO_10[1] = 'V3'
+    check_csv_info(info, VARIANTE_PRJ_INFO_10, [3, 16, 10, 1, 10])
+    ctx.clean_up()
+
+
 @pytest.mark.skipif(not context.ki8(), reason="Target is v8+")
 def test_int_bom_variant_t4(test_dir):
     """ Just like test_int_bom_variant_t1 but using the command line to specify all variants instead of repeating the
@@ -1575,7 +1612,7 @@ def test_int_bom_fil_1(test_dir):
 def test_int_bom_fil_2(test_dir):
     prj = 'kibom-variant_3'
     ctx = context.TestContextSCH(test_dir, prj, 'int_bom_fil_2', BOM_DIR)
-    ctx.run()
+    ctx.run(extra_debug=True)
     rows, header, info = ctx.load_csv('smd.csv')
     ref_column = header.index(REF_COLUMN_NAME)
     check_kibom_test_netlist(rows, ref_column, 3, None, ['R2', 'C2', 'FID1'])
@@ -1583,7 +1620,7 @@ def test_int_bom_fil_2(test_dir):
     check_kibom_test_netlist(rows, ref_column, 3, None, ['R1', 'C1', 'FID1'])
     rows, header, info = ctx.load_csv('virtual.csv')
     check_kibom_test_netlist(rows, ref_column, 2, None, ['R1', 'R2', 'C1', 'C2'])
-    ctx.search_err(r".?R3.? component in board, but not in schematic")
+    ctx.search_err(r"Repeated PCB R3")
     ctx.test_compress(prj+'-result.zip', ['BoM/smd.csv', 'BoM/tht.csv', 'BoM/virtual.csv'])
     ctx.clean_up(keep_project=True)
 

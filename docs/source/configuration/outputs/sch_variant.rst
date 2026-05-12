@@ -7,8 +7,8 @@ Schematic with variant generator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Creates a copy of the schematic with all the filters and variants applied.
-This copy isn't intended for development. |br|
-Is just a tweaked version of the original where you can look at the results. |br|
+This copy isn't intended for development without a careful review. |br|
+Can be used to export legacy variants to KiCad 10 variants. |br|
 Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
 
 Type: ``sch_variant``
@@ -43,7 +43,7 @@ Parameters:
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
 -  ``run_by_default`` :index:`: <pair: output - sch_variant; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Sch_Variant_Options
+- :ref:`Sch_Variant_Options parameters <Sch_Variant_Options>`

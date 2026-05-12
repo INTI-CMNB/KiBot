@@ -1,5 +1,7 @@
 .. _BlenderCameraOptions:
 
+:orphan:
+
 
 BlenderCameraOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

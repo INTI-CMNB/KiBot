@@ -91,7 +91,7 @@ def test_erc_fail_k8_2(test_dir):
 
 def test_erc_fail_2(test_dir):
     """ Using a dummy SCH """
-    prj = '3Rs'
+    prj = 'dummy' if context.ki10() else '3Rs'
     ctx = context.TestContext(test_dir, prj, 'erc', '')
     ctx.run(CORRUPTED_SCH)
     ctx.clean_up()
@@ -412,7 +412,7 @@ def test_drc_parity_1(test_dir):
         errors.extend(["C1 footprint .Capacitor_SMD:C_0805_2012Metric. doesn't match that given by symbol",
                        "Footprint R1 value .100. doesn't match symbol value .120."])
     ctx.search_err(errors)
-    ctx.clean_up()
+    ctx.clean_up(keep_project=context.ki10())
 
 
 @pytest.mark.slow
@@ -460,7 +460,7 @@ def test_update_xml_2(test_dir):
                     "Net .Net-.C1-Pad1.. not in schematic",
                     "Net .Net-.R1-Pad2.. not in PCB",
                     "Net .VCC. extra PCB connection/s: R2 pin 2"])
-    ctx.clean_up()
+    ctx.clean_up(keep_project=context.ki10())
 
 
 @pytest.mark.slow
@@ -483,6 +483,7 @@ def test_update_xml_not_in_bom(test_dir):
 
 @pytest.mark.slow
 @pytest.mark.eeschema
+@pytest.mark.skipif(context.ki10(), reason="We load it before KiCad")
 def test_update_xml_fail(test_dir):
     """ Using a dummy SCH """
     prj = '3Rs'

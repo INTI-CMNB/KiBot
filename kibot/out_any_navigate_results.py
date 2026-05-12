@@ -99,7 +99,7 @@ IMAGEABLES_GS = {'pdf', 'eps', 'ps'}
 IMAGEABLES_SVG = {'svg'}
 
 
-def _run_command(cmd):
+def _run_command(cmd, fname=None):
     logger.debug('- Executing: '+GS.pasteable_cmd(cmd))
     try:
         cmd_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
@@ -107,10 +107,13 @@ def _run_command(cmd):
         odecoded = e.output.decode() if e.output else None
         if '--unlimited' in odecoded:
             cmd.remove('--unlimited')
-            return _run_command(cmd)
+            return _run_command(cmd, fname)
         if odecoded:
             logger.debug('Output from command: '+odecoded)
-        logger.non_critical_error(f'Failed to run {cmd[0]}, error {e.returncode}')
+        msg = f'Failed to run {cmd[0]}, error {e.returncode}'
+        if fname is not None:
+            msg += ' on file: '+fname
+        logger.non_critical_error(msg)
         if odecoded and 'operation not allowed by the security policy' in odecoded:
             logger.warning(W_CONVPDF+"Your system doesn't allow PDF/PS manipulation, read the installation docs")
         return False
@@ -142,6 +145,8 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             self.title_url = Optionable
             """ [string|boolean=''] Target link when clicking the title, use false to remove.
                 KiBot will try with the origin of the current git repo when empty """
+            self.expand_text_vars = True
+            """ Expand KiBot %X and KiCad ${VARIABLE} values in the title """
             self.nav_bar = True
             """ Add a side navigation bar to quickly access to the outputs """
             self.render_markdown = True
@@ -208,7 +213,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
 
     def svg_to_png(self, svg_file, png_file, width):
         cmd = [self.rsvg_command, '-w', str(width), '-f', 'png', '--unlimited', '-o', png_file, svg_file]
-        return _run_command(cmd)
+        return _run_command(cmd, svg_file)
 
     def copy(self, img, width):
         """ Copy an SVG icon to the images/ dir.
@@ -247,6 +252,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             return False, None, None
         if self.convert_command is None:
             return False, None, None
+        file_ori = file
         # Create a unique name using the output name and the generated file name
         bfname = os.path.splitext(os.path.basename(file))[0]
         fname = os.path.join(self.out_dir, 'images', out_name+'_'+bfname+'.png')
@@ -277,7 +283,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
                         # This is a composition, not 2 images
                         '-composite'])
         cmd.append(fname)
-        res = _run_command(cmd)
+        res = _run_command(cmd, file_ori)
         if ext == 'svg':
             logger.debug('Removing temporal {}'.format(tmp_name))
             os.remove(tmp_name)
@@ -425,6 +431,8 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             base_title = GS.pro_basename or GS.sch_basename or GS.pcb_basename or 'Unknown'
         text = self.expand_filename_sch(self.title if self.title else '+')
         if text[0] == '+':
+            if self.expand_text_vars:
+                base_title = self.expand_filename_sch(base_title)
             text = base_title+text[1:]
         self._solved_title = text
         # Now the URL

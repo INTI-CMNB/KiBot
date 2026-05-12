@@ -429,6 +429,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             ext = '.toml' if self.pads_info_format == 'TOML' else ''
             for i, footprint in enumerate(GS.get_modules()):
                 value = footprint.GetValue()
+                value = value.replace('/', '_')
                 reference = footprint.GetReference()
                 for j, pad in enumerate(footprint.Pads()):
                     if not self.solder_join_on_heatsink and is_heatsink_pad(pad):

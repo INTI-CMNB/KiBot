@@ -12,7 +12,7 @@ This is a replacement for the *run_erc* preflight that needs KiCad 8 or newer
 
    -  **erc** :index:`: <pair: preflight - erc; erc>`  [:ref:`ERCOptions parameters <ERCOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   ERCOptions
+- :ref:`ERCOptions parameters <ERCOptions_pre>`

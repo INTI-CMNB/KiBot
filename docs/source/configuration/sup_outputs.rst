@@ -14,6 +14,7 @@ Notes:
    outputs/blender_export
    outputs/boardview
    outputs/bom
+   outputs/bom_labels
    outputs/compress
    outputs/copy_files
    outputs/diff
@@ -32,6 +33,7 @@ Notes:
    outputs/ipc2581
    outputs/jobset
    outputs/kibom
+   outputs/kicad_site
    outputs/kicanvas
    outputs/kicost
    outputs/kikit_present
@@ -43,6 +45,7 @@ Notes:
    outputs/panelize
    outputs/pcb2blender_tools
    outputs/pcb_print
+   outputs/pcb_stats
    outputs/pcb_variant
    outputs/pcbdraw
    outputs/pdf

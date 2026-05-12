@@ -15,6 +15,7 @@ import os
 import re
 from subprocess import run, PIPE
 from .error import KiPlotConfigurationError
+from .kiplot import load_sch
 from .misc import FAILED_EXECUTE, W_EMPTREP, pretty_list
 from .optionable import Optionable
 from .pre_base import BasePreFlight
@@ -75,6 +76,8 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         They are expanded using `${VARIABLE}`, and stored in the project file.
         This preflight replaces `pcb_replace` and `sch_replace` when using KiCad 6 or newer.
         The KiCad project file is modified.
+        You can get text variables containing the names of the schematics sheets enabling the
+        `set_text_variables_sheet_title` global option.
         Warning:     don't use `-s all` or this preflight will be skipped """
     def __init__(self):
         super().__init__()
@@ -85,7 +88,9 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         self._priority = 90
 
     def __str__(self):
-        return f'{self.type} ({pretty_list([v.name for v in self.set_text_variables])})'
+        if isinstance(self.set_text_variables, list):
+            return f'{self.type} ({pretty_list([v.name for v in self.set_text_variables])})'
+        return f'{self.type} (not configured)'
 
     @classmethod
     def get_example(cls):
@@ -110,6 +115,24 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
             pro_text = f.read()
         data = json.loads(pro_text)
         text_variables = data.get('text_variables', {})
+
+        # Sheet titles:
+        if GS.global_set_text_variables_sheet_title and GS.sch_file:
+            load_sch()
+            defined = set()
+            logger.debugl(2, "Defining sheet title variables")
+            for s in GS.sch.all_sheets:
+                vname = 'SHEET_TITLE_' + str(s.sheet)
+                logger.debugl(2, f"- {vname}={s.title}")
+                text_variables[vname] = s.title
+                defined.add(str(s.sheet))
+            for n in range(GS.global_set_text_variables_sheet_title_min):
+                n_str = str(n+1)
+                if n_str not in defined:
+                    vname = 'SHEET_TITLE_' + n_str
+                    logger.debugl(2, f"- {vname}={GS.global_set_text_variables_sheet_title_default}")
+                    text_variables[vname] = GS.global_set_text_variables_sheet_title_default
+
         GS.pro_variables = text_variables
         logger.debug("- Current variables: {}".format(text_variables))
         # Define the requested variables

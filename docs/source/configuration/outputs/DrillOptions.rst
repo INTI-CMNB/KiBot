@@ -1,5 +1,7 @@
 .. _DrillOptions:
 
+:orphan:
+
 
 DrillOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

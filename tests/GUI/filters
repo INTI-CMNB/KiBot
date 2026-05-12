@@ -1,4 +1,63 @@
 {
+  "alternatives": [
+    [
+      "name",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "type",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "comment",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "pattern",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "number_from",
+      [
+        "DataTypeNumber"
+      ],
+      null
+    ],
+    [
+      "parts",
+      [
+        "DataTypeListDictSingular"
+      ],
+      [
+        [
+          "library_link",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "fields",
+          [
+            "DataTypeListString"
+          ],
+          null
+        ]
+      ]
+    ]
+  ],
   "expand_text_vars": [
     [
       "name",
@@ -368,6 +427,13 @@
     ],
     [
       "exclude_not_on_board",
+      [
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "exclude_kicad_dnp",
       [
         "DataTypeBoolean"
       ],

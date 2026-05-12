@@ -1,5 +1,7 @@
 .. _GerberOptions:
 
+:orphan:
+
 
 GerberOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,7 +78,7 @@ GerberOptions parameters
 -  ``use_aux_axis_as_origin`` :index:`: <pair: output - gerber - options; use_aux_axis_as_origin>` [:ref:`boolean <boolean>`] (default: ``false``) Use the auxiliary axis as origin for coordinates.
 -  ``variant`` :index:`: <pair: output - gerber - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   CustomReport
+- :ref:`CustomReport parameters <CustomReport>`

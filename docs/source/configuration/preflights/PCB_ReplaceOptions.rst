@@ -1,5 +1,7 @@
 .. _PCB_ReplaceOptions_pre:
 
+:orphan:
+
 
 PCB_ReplaceOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,7 +19,7 @@ PCB_ReplaceOptions parameters
 
 -  ``replace_tags`` :index:`: <pair: preflight - pcb_replace - pcb_replace; replace_tags>`  [:ref:`TagReplacePCB parameters <TagReplacePCB_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) Tag or tags to replace.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   TagReplacePCB
+- :ref:`TagReplacePCB parameters <TagReplacePCB_pre>`

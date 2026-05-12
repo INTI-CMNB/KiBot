@@ -1,5 +1,7 @@
 .. _PanelizeOptions:
 
+:orphan:
+
 
 PanelizeOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -9,6 +11,8 @@ PanelizeOptions parameters
    You can also include a preset using `:name`, i.e. `:vcuts`. |br|
    Use a dict to specify the options using the KiBot YAML file.
 -  **output** :index:`: <pair: output - panelize - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Filename for the output (%i=panel, %x=kicad_pcb). Affected by global options.
+-  ``copy_lib_tables`` :index:`: <pair: output - panelize - options; copy_lib_tables>` [:ref:`boolean <boolean>`] (default: ``false``) If the target directory is different than the one containing the PCB copy the symbol and
+   footprint lib tables.
 -  ``copy_vias_on_mask`` :index:`: <pair: output - panelize - options; copy_vias_on_mask>` [:ref:`string <string>`] (default: ``'auto'``) (choices: "auto", "yes", "no") Copy the GUI option to plot vias on the mask layers from the original PCB to
    the panel. |br|
    This option is a workaround to KiCad 8 not allowing to choose to plot (or not to plot) vias
@@ -38,7 +42,7 @@ PanelizeOptions parameters
 -  ``units`` :index:`: <pair: output - panelize - options; units>` [:ref:`string <string>`] (default: ``'mm'``) (choices: "millimeters", "inches", "mils", "mm", "cm", "dm", "m", "mil", "inch", "in") Units used when omitted.
 -  ``variant`` :index:`: <pair: output - panelize - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PanelizeConfig
+- :ref:`PanelizeConfig parameters <PanelizeConfig>`

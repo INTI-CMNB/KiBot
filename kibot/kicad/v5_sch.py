@@ -69,7 +69,8 @@ class DCMLineReader(LineReader):
         super().__init__(f, file)
 
     def readline(self):
-        return try_decode_utf8(self.f.readline(), f'line {self.line+1} of file `{self.file}`', logger)
+        return try_decode_utf8(self.f.readline(), f'line {self.line+1} of file `{self.file}`', logger,
+                               GS.global_code_page_fallback)
 
     def get_line(self):
         res = self.readline()
@@ -912,6 +913,9 @@ class SchematicComponent(object):
         self.in_pcb_only = False    # Not in schematic
         # KiCad 7 PCB flags
         self.kicad_dnp = None       # Do Not Populate
+        # KiCad 10
+        self.in_pos_files = None
+        self.duplicate_pin_numbers_are_jumpers = None
         # Exclude from simulation is a field Sim.Enable
 
     def get_field_value(self, field, lower=False):

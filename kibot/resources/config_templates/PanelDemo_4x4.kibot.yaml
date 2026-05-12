@@ -11,6 +11,7 @@ outputs:
       title: '+ (Panel)'
       units: mm
       create_preview: true
+      copy_lib_tables: true
       configs:
         - layout:
             rows: 4

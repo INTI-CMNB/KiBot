@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2024 Salvador E. Tropea
-# Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 import os
@@ -9,7 +9,7 @@ from .gs import GS
 from .registrable import Registrable
 from .optionable import Optionable
 from .error import PlotError, KiPlotConfigurationError
-from .misc import PLOT_ERROR, EXIT_BAD_CONFIG, W_KEEPTMP
+from .misc import PLOT_ERROR, EXIT_BAD_CONFIG, W_KEEPTMP, update_dict, W_PREREDEF
 from .log import get_logger
 
 logger = get_logger(__name__)
@@ -85,8 +85,16 @@ class BasePreFlight(Optionable, Registrable):
         BasePreFlight._in_use[o_pre.type] = o_pre
 
     @staticmethod
-    def add_preflights(pre):
+    def add_preflights(pre, merge):
+        all_in_merge = merge and 'all' in merge
         for p in pre:
+            current = BasePreFlight._in_use.get(p.type)
+            if current is not None:
+                if all_in_merge or (merge and p.type in merge):
+                    logger.debug(f"Updating preflight definition of `{p.type}`")
+                    update_dict(p._tree, current._tree)
+                else:
+                    logger.warning(W_PREREDEF+f"`{p.type}` preflight redefined. Want to use `merge_pre`?")
             BasePreFlight._in_use[p.type] = p
 
     @staticmethod

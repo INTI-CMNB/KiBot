@@ -1,5 +1,7 @@
 .. _PanelizeTabs:
 
+:orphan:
+
 
 PanelizeTabs parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

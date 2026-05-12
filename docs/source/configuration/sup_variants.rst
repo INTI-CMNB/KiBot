@@ -8,4 +8,5 @@ Supported variants
 
    variants/ibom
    variants/kibom
+   variants/kicad
    variants/kicost

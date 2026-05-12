@@ -1,5 +1,7 @@
 .. _PanelizeCuts:
 
+:orphan:
+
 
 PanelizeCuts parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

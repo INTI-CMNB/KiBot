@@ -1,5 +1,7 @@
 .. _KiRiOptions:
 
+:orphan:
+
 
 KiRiOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~

@@ -4,13 +4,13 @@ Usage:
   kibot [-b BOARD] [-e SCHEMA] [-c CONFIG] [-d OUT_DIR] [-s PRE]
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
-         [-F] [--warn-ci-cd] [--banner N] [--gui | --internal-check] [-I INJECT]
-         [--variant VAR] ... [TARGET...]
+         [--fail-on-warnings] [-F] [--warn-ci-cd] [--warn-all] [--banner N]
+         [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
   kibot [-v...] [-c PLOT_CONFIG] [--banner N] [-E DEF] ... [--only-names]
-        [--sub-pcbs] --list-variants
+        [--sub-pcbs] [-e SCHEMA] --list-variants
   kibot [-v...] [-b BOARD] [-d OUT_DIR] [-p | -P] [--banner N] --example
   kibot [-v...] [--start PATH] [-d OUT_DIR] [--dry] [--banner N]
          [-t, --type TYPE]... --quick-start
@@ -49,8 +49,11 @@ Options:
   -e SCHEMA, --schematic SCHEMA    The schematic file (.sch/.kicad_sch)
   -E DEF, --define DEF             Define preprocessor value (VAR=VAL)
   -F, --fail-on-ignored            Return an error code if we skipped a fail.
-                                   Used in conjunction with -D and `dont_stop`
-                                   options
+                                   Used in conjunction with -D/--dont-stop
+                                   and --fail-on-warnings options
+  --fail-on-warnings               Return an error code if we informed warnings.
+                                   If --fail-on-ignored is enabled we also
+                                   return error for filtered warnings
   -g DEF, --global-redef DEF       Overwrite a global value (VAR=VAL)
   --gui                            Open a graphic dialog
   --internal-check                 Run some outputs internal checks
@@ -87,6 +90,7 @@ Options:
                                    list of variants
   -w, --no-warn LIST               Exclude the mentioned warnings (comma sep)
   -W, --stop-on-warnings           Stop on warnings
+  --warn-all                       Enables some common use warnings
   --warn-ci-cd                     Don't disable warnings expected on CI/CD
                                    environments
   -x, --example                    Create a template configuration file

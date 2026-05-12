@@ -1,5 +1,7 @@
 .. _PanelizeFiducials:
 
+:orphan:
+
 
 PanelizeFiducials parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

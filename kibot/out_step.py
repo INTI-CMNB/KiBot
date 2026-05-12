@@ -80,7 +80,7 @@ class STEPOptions(Base3DOptions):
         else:
             cmd.extend(['--user-origin', "{}{}".format(self.origin.replace(',', 'x'), units)])
         # The board
-        board_name = self.filter_components()
+        board_name = self.filter_components(force_step=True)
         cmd.append(board_name)
         # Execute it
         self.exec_with_retry(self.add_extra_options(cmd, os.path.dirname(output)), KICAD2STEP_ERR)

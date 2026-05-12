@@ -102,6 +102,9 @@ the ``all`` and ``none`` special names, like this:
        variants: none
        global: none
 
+.. _imported-global-has-less-priority:
+
+
 .. index::
    pair: import; globals priority
    single: imported_global_has_less_priority

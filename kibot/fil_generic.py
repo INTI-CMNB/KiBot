@@ -73,6 +73,9 @@ class Generic(BaseFilter):  # noqa: F821
             """ Exclude components marked *Exclude from bill of materials* (KiCad 6+) """
             self.exclude_not_on_board = False
             """ Exclude components marked *Exclude from board* (KiCad 6+)  """
+            self.exclude_kicad_dnp = False
+            """ Exclude components marked *Do not populate* in KiCad (KiCad 7+)
+                For the `bom` output also use `kicad_dnp_applied: 'no'` """
         self.add_to_doc('keys', 'Use `dnf_list` for '+str(sorted(DNF)))
         self.add_to_doc('keys', 'Use `dnc_list` for '+str(sorted(DNC)))
 
@@ -179,6 +182,8 @@ class Generic(BaseFilter):  # noqa: F821
         if self.exclude_not_in_bom and not (comp.in_bom and comp.in_bom_pcb):
             return exclude
         if self.exclude_not_on_board and not comp.on_board:
+            return exclude
+        if self.exclude_kicad_dnp and comp.kicad_dnp:
             return exclude
         # List of references to be excluded
         if self.exclude_refs and (comp.ref in self.exclude_refs or comp.ref_prefix+'*' in self.exclude_refs):

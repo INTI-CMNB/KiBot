@@ -6,14 +6,14 @@
 DRC
 ~~~
 
-Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
 You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily install the template. |br|
 This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer. |br|
 GUI exclusions and schematic parity are supported
 
    -  **drc** :index:`: <pair: preflight - drc; drc>`  [:ref:`DRCOptions parameters <DRCOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DRCOptions
+- :ref:`DRCOptions parameters <DRCOptions_pre>`

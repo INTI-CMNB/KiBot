@@ -44,7 +44,7 @@
    -  ``variant`` :index:`: <pair: variant - kibom; variant>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`comma separated <comma_sep>`] Board variant(s).
 
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   SubPCBOptions
+- :ref:`SubPCBOptions parameters <SubPCBOptions>`

@@ -258,7 +258,7 @@ def test_auto_pcb_and_cfg_4(test_dir):
     shutil.copy2(ctx.board_file, ctx.get_out_path(brd))
     yaml_file = os.path.basename(ctx.yaml_file)
     shutil.copy2(ctx.yaml_file, ctx.get_out_path(yaml_file))
-    ctx.run(extra=['-s', 'all', '-i'], no_out_dir=True, no_board_file=True, no_yaml_file=True, chdir_out=True)
+    ctx.run(extra=['-s', 'all', '-i', '--warn-all'], no_out_dir=True, no_board_file=True, no_yaml_file=True, chdir_out=True)
     ctx.search_err('Using ./'+sch)
     ctx.search_out('Using config file: '+yaml_file)
     ctx.clean_up()
@@ -497,7 +497,11 @@ def test_example_4(test_dir):
     ctx = context.TestContext(test_dir, 'good-project', 'pre_and_position')
     ctx.run(extra=['--example', '-P'], no_verbose=True, no_yaml_file=True)
     assert ctx.expect_out_file(EXAMPLE_CFG)
-    ctx.search_in_file(EXAMPLE_CFG, ['GND.Cu', 'pen_width: 35.0'])
+    to_search = ['GND.Cu']
+    if not context.ki10():
+        # No more HPGL ik KiCad 10
+        to_search.append('pen_width: 35.0')
+    ctx.search_in_file(EXAMPLE_CFG, to_search)
     ctx.search_not_in_file(EXAMPLE_CFG, ["layer: 'F.Adhes"])
     ctx.clean_up()
 
@@ -509,7 +513,11 @@ def test_example_5(test_dir):
     ctx.run(extra=['--example', '-p', '-d', output_dir], no_verbose=True, no_yaml_file=True, no_out_dir=True)
     file = os.path.join('pp', EXAMPLE_CFG)
     assert ctx.expect_out_file(file)
-    ctx.search_in_file(file, ['layers: selected', 'pen_width: 35.0'])
+    to_search = ['layers: selected']
+    if not context.ki10():
+        # No more HPGL ik KiCad 10
+        to_search.append('pen_width: 35.0')
+    ctx.search_in_file(file, to_search)
     ctx.clean_up()
 
 
@@ -1164,6 +1172,22 @@ def test_report_simple_1(test_dir):
     ctx.expect_out_file(prj+'-report_simple.txt')
     ctx.compare_txt(prj+'-report.txt')
     ctx.compare_txt(prj+'-report_simple.txt')
+    ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Needs KiCad 10")
+def test_pcb_stats_simple_1(test_dir):
+    prj = 'light_control'
+    ctx = context.TestContext(test_dir, prj, 'pcb_stats_simple_1', POS_DIR)
+    ctx.run()
+    name = prj+'-statistics.txt'
+    fname = ctx.expect_out_file(name)
+    with open(fname) as f:
+        data = f.read()
+    data = re.sub(r'- Date: (.*)', '', data)
+    with open(fname, "w") as f:
+        f.write(data)
+    ctx.compare_txt(name)
     ctx.clean_up(keep_project=True)
 
 
@@ -2099,6 +2123,7 @@ def test_ipc2581_xml(test_dir):
     ctx.clean_up(keep_project=True)
 
 
+@pytest.mark.slow
 def test_vrml_1(test_dir):
     prj = 'light_control'
     ctx = context.TestContext(test_dir, prj, 'vrml_1')

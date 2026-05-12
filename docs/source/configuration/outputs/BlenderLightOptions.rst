@@ -1,5 +1,7 @@
 .. _BlenderLightOptions:
 
+:orphan:
+
 
 BlenderLightOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

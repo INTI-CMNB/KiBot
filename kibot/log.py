@@ -15,7 +15,7 @@ import re
 import sys
 import traceback
 import logging
-from .misc import WARN_AS_ERROR
+from .misc import WARN_AS_ERROR, W_SILLY
 no_colorama = False
 try:
     from colorama import init as colorama_init, Fore, Back, Style
@@ -39,6 +39,7 @@ record_error_msgs = False
 recorded_error_msgs = []
 re_dk_client_id = re.compile("DIGIKEY_CLIENT_ID=([^']+)")
 re_dk_client_secret = re.compile("DIGIKEY_CLIENT_SECRET=([^']+)")
+warn_all = False
 
 
 def get_logger(name=None, indent=None):
@@ -105,6 +106,10 @@ class MyLogger(logging.Logger):
         #     buf = buf.getvalue()
         # else:
         buf = str(msg)
+        is_silly = False
+        if buf.startswith(W_SILLY):
+            buf = buf[len(W_SILLY):]
+            is_silly = True
         # Avoid repeated warnings
         if buf in MyLogger.warn_hash:
             MyLogger.warn_hash[buf] += 1
@@ -124,6 +129,11 @@ class MyLogger(logging.Logger):
                         MyLogger.n_filtered += 1
                         self.debug('Filtered warning: '+buf, **kwargs)
                         return
+        # Are we showing very silly warnings?
+        # global warn_all
+        if not warn_all and is_silly:
+            self.debug('Silly warning: '+buf, **kwargs)
+            return
         MyLogger.warn_cnt += 1
         MyLogger.warn_hash[buf] = 1
         if sys.version_info >= (3, 8):
@@ -200,11 +210,22 @@ class MyLogger(logging.Logger):
         if MyLogger.warn_cnt or MyLogger.warn_tcnt:
             filt_msg = ''
             if MyLogger.n_filtered:
-                filt_msg = ', {} filtered'.format(MyLogger.n_filtered)
-            self.info('Found {} unique warning/s ({} total{})'.format(MyLogger.warn_cnt, MyLogger.warn_tcnt, filt_msg))
+                filt_msg = f', {MyLogger.n_filtered} filtered'
+            self.info(f'Found {MyLogger.warn_cnt} unique warning/s ({MyLogger.warn_tcnt} total{filt_msg})')
+
+    def got_warnings(self, fail_on_ignored=False):
+        return MyLogger.warn_tcnt if fail_on_ignored else MyLogger.warn_cnt
 
     def non_critical_error(self, msg, *args, **kwargs):
         buf = str(msg)
+        global debug_level
+        if debug_level > 0:
+            current_stack = "".join(traceback.format_stack(limit=None)[:-1])
+            e_msg = f"--- Execution Stack ---\n{current_stack}\n"
+            exc_trace = traceback.format_exc()
+            if exc_trace:
+                e_msg += f"--- Exception Trace --\n{exc_trace}"
+            buf = e_msg + buf
         push_error_msg(buf)
         if sys.version_info >= (3, 8):
             super().error(buf, stacklevel=2, **kwargs)  # pragma: no cover (Py38)

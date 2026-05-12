@@ -19,7 +19,13 @@
             -  ``value`` :index:`: <pair: global options - aliases_for_3d_models; value>` [:ref:`string <string>`] (default: ``''``) Path to the 3D model.
             -  *variable* :index:`: <pair: global options - aliases_for_3d_models; variable>` Alias for name.
 
-      -  ``allow_blind_buried_vias`` :index:`: <pair: global options; allow_blind_buried_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of buried vias. This value is only used for KiCad 7+.
+      -  ``allow_blind_buried_vias`` :index:`: <pair: global options; allow_blind_buried_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of blind/buried vias. This value is only used for KiCad 7+.
+         For KiCad 10+ use the separated options: `allow_blind_vias` and `allow_buried_vias`,
+         and leave it in `true`. |br|
+         For KiCad 5 and 6 use the design rules settings, stored in the project.
+      -  ``allow_blind_vias`` :index:`: <pair: global options; allow_blind_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of blind vias. This value is only used for KiCad 10+.
+         For KiCad 5 and 6 use the design rules settings, stored in the project.
+      -  ``allow_buried_vias`` :index:`: <pair: global options; allow_buried_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Allow the use of buried vias. This value is only used for KiCad 10+.
          For KiCad 5 and 6 use the design rules settings, stored in the project.
       -  ``allow_component_ranges`` :index:`: <pair: global options; allow_component_ranges>` [:ref:`boolean <boolean>`] (default: ``true``) Allow using ranges like *R5-R20* in the `show_components` and `highlight` options.
          If you have references that looks like a range you should disable this option.
@@ -29,7 +35,10 @@
       -  ``cache_3d_resistors`` :index:`: <pair: global options; cache_3d_resistors>` [:ref:`boolean <boolean>`] (default: ``false``) Use a cache for the generated 3D models of colored resistors.
          Will save time, but you could need to remove the cache if you need to regenerate them.
       -  ``castellated_pads`` :index:`: <pair: global options; castellated_pads>` [:ref:`boolean <boolean>`] (default: ``false``) Has the PCB castellated pads?
-         KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads.
+         KiCad 6: you should set this in the Board Setup -> Board Finish -> Has castellated pads
+         KiCad 10: no longer exists.
+      -  ``code_page_fallback`` :index:`: <pair: global options; code_page_fallback>` [:ref:`string <string>`] (default: ``'latin1'``) Code page to use when UTF-8 decode fails. Leave empty to just use ASCII and spaces for codes
+         outside ASCII.
       -  ``colored_tht_resistors`` :index:`: <pair: global options; colored_tht_resistors>` [:ref:`boolean <boolean>`] (default: ``true``) Try to add color bands to the 3D models of KiCad THT resistors.
       -  *copper_finish* :index:`: <pair: global options; copper_finish>` Alias for pcb_finish.
       -  ``copper_thickness`` :index:`: <pair: global options; copper_thickness>` [:ref:`number <number>` | :ref:`string <string>`] Copper thickness in micrometers (1 Oz is 35 micrometers).
@@ -158,6 +167,7 @@
          to 'no', otherwise an error is produced. |br|.
       -  ``kiauto_time_out_scale`` :index:`: <pair: global options; kiauto_time_out_scale>` [:ref:`number <number>`] (default: ``0.0``) Time-out multiplier for KiAuto operations.
       -  ``kiauto_wait_start`` :index:`: <pair: global options; kiauto_wait_start>` [:ref:`number <number>`] (default: ``0``) Time to wait for KiCad in KiAuto operations.
+      -  ``kicad_default_variant`` :index:`: <pair: global options; kicad_default_variant>` [:ref:`boolean <boolean>`] (default: ``true``) For KiCad 10+ use the `Default` variant, even when no variant is specified.
       -  ``kicad_dnp_applied`` :index:`: <pair: global options; kicad_dnp_applied>` [:ref:`boolean <boolean>`] (default: ``true``) The KiCad v7 PCB flag *Do Not Populate* is applied to our fitted flag before running any filter.
       -  ``kicad_dnp_applies_to_3D`` :index:`: <pair: global options; kicad_dnp_applies_to_3D>` [:ref:`boolean <boolean>`] (default: ``true``) The KiCad v7 PCB flag *Do Not Populate* is applied to our fitted flag for 3D models,
          even when no filter/variant is specified. Disabling `kicad_dnp_applied` also disables
@@ -204,6 +214,13 @@
          This can be used when a text variable uses the variant and you want to create more than
          one variant in the same run. Note that this could be slow because it forces a board
          reload each time you run an output that uses variants.
+      -  ``set_text_variables_sheet_title`` :index:`: <pair: global options; set_text_variables_sheet_title>` [:ref:`boolean <boolean>`] (default: ``false``) When running the `set_text_variables` preflight try to define variables containing the names
+         of the sheets. The names are stored in variables named `SHEET_TITLE_n` where `n` is the page
+         number. |br|
+         At least `set_text_variables_sheet_title_min` variables are defined.
+      -  ``set_text_variables_sheet_title_default`` :index:`: <pair: global options; set_text_variables_sheet_title_default>` [:ref:`string <string>`] (default: ``'......................................'``) Name for the missing pages defined by `set_vars_sheet_title`.
+      -  ``set_text_variables_sheet_title_min`` :index:`: <pair: global options; set_text_variables_sheet_title_min>` [:ref:`number <number>`] (default: ``40``) Minimum number of sheet titles defined when `set_vars_sheet_title` is enabled.
+         The missing titles are filled using `set_text_variables_sheet_title_defaul`.
       -  ``silk_screen_color`` :index:`: <pair: global options; silk_screen_color>` [:ref:`string <string>`] (default: ``'white'``) Color for the markings. Currently used for documentation and to choose default colors.
          KiCad 6: you should set this in the Board Setup -> Physical Stackup. |br|
          Currently known are black and white.

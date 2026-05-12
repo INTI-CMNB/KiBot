@@ -89,7 +89,7 @@ def test_wrong_version_3(test_dir):
 
 @pytest.mark.indep
 def test_drill_map_no_type_1(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_map_no_type')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_no_type')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Empty option .?map.?")
     ctx.clean_up()
@@ -97,7 +97,7 @@ def test_drill_map_no_type_1(test_dir):
 
 @pytest.mark.indep
 def test_drill_map_no_type_2(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_map_no_type_2')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_no_type_2')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Unknown option .?types.?")
     ctx.clean_up()
@@ -105,7 +105,7 @@ def test_drill_map_no_type_2(test_dir):
 
 @pytest.mark.indep
 def test_drill_map_wrong_type_1(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_map_wrong_type')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_wrong_type')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Option .?type.? must be any of")
     ctx.clean_up()
@@ -113,7 +113,7 @@ def test_drill_map_wrong_type_1(test_dir):
 
 @pytest.mark.indep
 def test_drill_map_wrong_type_2(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_map_wrong_type_2')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_wrong_type_2')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Option .?type.? must be a string")
     ctx.clean_up()
@@ -121,15 +121,23 @@ def test_drill_map_wrong_type_2(test_dir):
 
 @pytest.mark.indep
 def test_drill_map_wrong_type_3(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_map_wrong_type_3')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_wrong_type_3')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Option .?map.? must be any of")
     ctx.clean_up()
 
 
+@pytest.mark.skipif(not context.ki10(), reason="No HPGL in v10+")
+def test_drill_map_wrong_type_4(test_dir):
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_map_wrong_type_4')
+    ctx.run(EXIT_BAD_CONFIG)
+    assert ctx.search_err("support HPGL")
+    ctx.clean_up()
+
+
 @pytest.mark.indep
 def test_drill_report_no_type_1(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_report_no_type')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_report_no_type')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Empty option .?report.?")
     ctx.clean_up()
@@ -137,7 +145,7 @@ def test_drill_report_no_type_1(test_dir):
 
 @pytest.mark.indep
 def test_drill_report_no_type_2(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_report_no_type_2')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_report_no_type_2')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Unknown option .?filenames.?")
     ctx.clean_up()
@@ -145,7 +153,7 @@ def test_drill_report_no_type_2(test_dir):
 
 @pytest.mark.indep
 def test_drill_report_wrong_type_2(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_report_wrong_type_2')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_report_wrong_type_2')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Option .?filename.? must be a string")
     ctx.clean_up()
@@ -153,7 +161,7 @@ def test_drill_report_wrong_type_2(test_dir):
 
 @pytest.mark.indep
 def test_drill_report_wrong_type_3(test_dir):
-    ctx = context.TestContext(test_dir, '3Rs', 'error_drill_report_wrong_type_3')
+    ctx = context.TestContext(test_dir, 'bom', 'error_drill_report_wrong_type_3')
     ctx.run(EXIT_BAD_CONFIG)
     assert ctx.search_err("Option .?report.? must be any of")
     ctx.clean_up()

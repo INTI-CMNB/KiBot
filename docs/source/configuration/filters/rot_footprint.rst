@@ -51,7 +51,7 @@ Footprint Rotator
    -  ``skip_bottom`` :index:`: <pair: filter - rot_footprint; skip_bottom>` [:ref:`boolean <boolean>`] (default: ``false``) Do not rotate components on the bottom.
    -  ``skip_top`` :index:`: <pair: filter - rot_footprint; skip_top>` [:ref:`boolean <boolean>`] (default: ``false``) Do not rotate components on the top.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Regex
+- :ref:`Regex parameters <Regex_fi>`

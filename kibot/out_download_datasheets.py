@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2021-2025 Salvador E. Tropea
-# Copyright (c) 2021-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2021-2026 Salvador E. Tropea
+# Copyright (c) 2021-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+"""
+Dependencies:
+  - name: Curl
+    role: Download datasheets
+    url: https://curl.se/
+    debian: curl
+    arch: curl
+"""
 import os
 import re
 import requests
+from subprocess import CalledProcessError
 import urllib.request
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .fil_base import DummyFilter
 from .error import KiPlotConfigurationError
+from .kiplot import run_command
 from .misc import W_UNKFLD, W_ALRDOWN, W_FAILDL, USER_AGENT
 from .gs import GS
 from .macros import macros, document, output_class  # noqa: F401
@@ -52,6 +62,7 @@ class Download_Datasheets_Options(VariantOptions):
         # Used to collect the targets
         self._dry = False
         self._unknown_is_error = True
+        self._curl_command = None   # We detect it on `run`
 
     def config(self, parent):
         super().config(parent)
@@ -64,6 +75,34 @@ class Download_Datasheets_Options(VariantOptions):
     def do_warning(self, msg, ds, c):
         logger.warning(W_FAILDL+'{} during download of `{}` [{}]'.format(msg, ds, c.ref))
         return None
+
+    def validate_downloaded(self, file):
+        if not os.path.isfile(file):
+            # Not there
+            logger.debug("- Download command succeed, but no downloaded file")
+            return False
+        if os.path.getsize(file) == 0:
+            # Empty
+            os.remove(file)
+            logger.debug("- Empty file downloaded, removing it")
+            return False
+        if os.path.splitext(file)[1].lower() != ".pdf":
+            # There, not empty and not a PDF
+            return True
+        # Test for PDF and not a web page
+        try:
+            with open(file, 'rb') as f:
+                header = f.read(4)
+        except Exception as e:
+            # Failed to read it
+            logger.debug("- Downloaded file can't be read "+str(e))
+            return False
+        if header != b'%PDF':
+            # Not a PDF, remove it
+            os.remove(file)
+            logger.debug("- Downloaded file isn't a PDF")
+            return False
+        return True
 
     def download(self, c, ds, dir, name, known):
         if self.classify:
@@ -83,32 +122,43 @@ class Download_Datasheets_Options(VariantOptions):
         elif not os.path.isfile(dest):
             # Download
             if not self._dry:
-                if 'digikey' in ds:
-                    req = urllib.request.Request(ds)
-                    req.add_header('User-Agent', USER_AGENT)
+                downloaded = False
+                if self._curl_command:
+                    # Using curl
+                    cmd = [self._curl_command, '-o', dest, ds]
                     try:
-                        data = urllib.request.urlopen(req).read()
-                    except Exception as e:
-                        return self.do_warning('Failed '+str(e), ds, c)
-                else:
-                    try:
-                        r = requests.get(ds, allow_redirects=True, headers={'User-Agent': USER_AGENT}, timeout=20)
-                    except requests.exceptions.ReadTimeout:
-                        return self.do_warning('Timeout', ds, c)
-                    except requests.exceptions.SSLError:
-                        return self.do_warning('SSL Error', ds, c)
-                    except requests.exceptions.TooManyRedirects:
-                        return self.do_warning('More than 30 redirections', ds, c)
-                    except requests.exceptions.ConnectionError:
-                        return self.do_warning('Connection', ds, c)
-                    except requests.exceptions.RequestException as e:
-                        return self.do_warning(str(e), ds, c)
-                    if r.status_code != 200:
-                        return self.do_warning('Failed with status '+str(r.status_code), ds, c)
+                        run_command(cmd, just_raise=True)
+                        downloaded = self.validate_downloaded(dest)
+                    except CalledProcessError as e:
+                        logger.warning(W_FAILDL+f'Failed to download {ds} using {self._curl_command} ({e})')
+                if not downloaded:
+                    # Using Python's request
+                    if 'digikey' in ds:
+                        req = urllib.request.Request(ds)
+                        req.add_header('User-Agent', USER_AGENT)
+                        try:
+                            data = urllib.request.urlopen(req).read()
+                        except Exception as e:
+                            return self.do_warning('Failed '+str(e), ds, c)
                     else:
-                        data = r.content
-                with open(dest, 'wb') as f:
-                    f.write(data)
+                        try:
+                            r = requests.get(ds, allow_redirects=True, headers={'User-Agent': USER_AGENT}, timeout=20)
+                        except requests.exceptions.ReadTimeout:
+                            return self.do_warning('Timeout', ds, c)
+                        except requests.exceptions.SSLError:
+                            return self.do_warning('SSL Error', ds, c)
+                        except requests.exceptions.TooManyRedirects:
+                            return self.do_warning('More than 30 redirections', ds, c)
+                        except requests.exceptions.ConnectionError:
+                            return self.do_warning('Connection', ds, c)
+                        except requests.exceptions.RequestException as e:
+                            return self.do_warning(str(e), ds, c)
+                        if r.status_code != 200:
+                            return self.do_warning('Failed with status '+str(r.status_code), ds, c)
+                        else:
+                            data = r.content
+                    with open(dest, 'wb') as f:
+                        f.write(data)
             self._downloaded.add(name)
             self._created.append(os.path.relpath(dest))
         elif self._dry:
@@ -143,6 +193,7 @@ class Download_Datasheets_Options(VariantOptions):
             # Add a dummy filter to force the creation of a components list
             self.dnf_filter = DummyFilter()
         super().run(output_dir)
+        self._curl_command = self.check_tool('Curl')
         self._urls = {}
         self._downloaded = set()
         self._created = []

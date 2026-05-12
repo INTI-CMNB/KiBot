@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+from collections import defaultdict
 from copy import deepcopy
 import json
 import math
@@ -13,13 +14,19 @@ import sysconfig
 import tempfile
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Callable, Dict, List, Optional, Tuple, TypeVar, Union, Any
+from typing import Callable, Dict, List, Optional, Set, Tuple, TypeVar, Union, Any
 
-from . import np
 from .unit import read_resistance
 from lxml import etree, objectify # type: ignore
-from .pcbnew_transition import isV6, isV7, isV8, isV9, pcbnew # type: ignore
+from .pcbnew_transition import isV5, isV6, isV7, pcbnew # type: ignore
 from ..gs import GS
+
+try:
+    import numpy as np
+    WITH_NUMPY = True
+except ImportError:
+    from . import np
+    WITH_NUMPY = False
 
 T = TypeVar("T")
 Numeric = Union[int, float]
@@ -32,7 +39,7 @@ PKG_BASE = os.path.dirname(__file__)
 
 etree.register_namespace("xlink", "http://www.w3.org/1999/xlink")
 
-LEGACY_KICAD = not isV6() and not isV7() and not isV8() and not isV9()
+LEGACY_KICAD = isV5()
 
 default_style = {
     "copper": "#417e5a",
@@ -104,9 +111,9 @@ class SvgPathItem:
         dx = p1[0] - p2[0]
         dy = p1[1] - p2[1]
         pseudo_distance = dx*dx + dy*dy
-        if isV7() or isV8() or isV9():
-            return pseudo_distance < 0.01 ** 2
-        return pseudo_distance < 100 ** 2
+        if isV5() or isV6():
+            return pseudo_distance < 100 ** 2
+        return pseudo_distance < 0.01 ** 2
 
     def format(self, first: bool) -> str:
         ret = ""
@@ -130,19 +137,103 @@ class SvgPathItem:
 def matrix(data: List[List[Numeric]]) -> Matrix:
     return np.array(data, dtype=np.float32)
 
-# def distance(a: Point, b: Point) -> Numeric:
-#     return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
 
-def pseudo_distance(a: Point, b: Point) -> Numeric:
-    a0 = a[0] - b[0]
-    a1 = a[1] - b[1]
-    return a0*a0 + a1*a1
+# Pure Python implementation is slightly slower (i.e. 12.5 vs 11 s or 6.8 vs 5.2 s)
+class PointIndex:
+    """Spatial index for fast endpoint matching during contour building."""
 
-def get_closest(reference: Point, elems: List[Point]) -> int:
-    try:
-        return elems.index(reference)
-    except ValueError:
-        return int(np.argmin([pseudo_distance(reference, x) for x in elems]))
+    def __init__(self, elements: List[SvgPathItem]) -> None:
+        self._elements = elements
+        n = len(elements)
+        self._active = np.ones(n, dtype=bool)
+        self._starts = np.array([(e.start[0], e.start[1]) for e in elements]) if n > 0 else np.empty((0, 2))
+        self._ends = np.array([(e.end[0], e.end[1]) for e in elements]) if n > 0 else np.empty((0, 2))
+        self._start_index: Dict[Point, Set[int]] = defaultdict(set)
+        self._end_index: Dict[Point, Set[int]] = defaultdict(set)
+        for i, e in enumerate(elements):
+            self._start_index[e.start].add(i)
+            self._end_index[e.end].add(i)
+
+    def has_active(self) -> bool:
+        return bool(np.any(self._active))
+
+    def pop_first_active(self) -> SvgPathItem:
+        """Remove and return the first active element (seed for new contour)."""
+        i = int(np.argmax(self._active))
+        self._mark_used(i)
+        return self._elements[i]
+
+    def find_by_end(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._ends, self._end_index, flip=False)
+
+    def find_by_start(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._starts, self._start_index, flip=False)
+
+    def find_by_start_flipped(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._starts, self._start_index, flip=True)
+
+    def find_by_end_flipped(self, ref: Point) -> Optional[SvgPathItem]:
+        return self._take(ref, self._ends, self._end_index, flip=True)
+
+    def _take(self, ref: Point, points: np.ndarray,
+              index: Dict[Point, Set[int]], flip: bool) -> Optional[SvgPathItem]:
+        """Find an active element matching ref, mark it used, optionally flip."""
+        i = self._find(ref, points, index)
+        if i is None:
+            return None
+        self._mark_used(i)
+        if flip:
+            self._elements[i].flip()
+        return self._elements[i]
+
+    def _find(self, ref: Point, points: np.ndarray,
+              index: Dict[Point, Set[int]]) -> Optional[int]:
+        # Fast path: exact dict lookup
+        candidates = index.get(ref)
+        if candidates:
+            for idx in candidates:
+                if self._active[idx]:
+                    return idx
+
+        # Slow path: Standard Python distance on active elements
+        if WITH_NUMPY:
+            active_idx = np.where(self._active)[0]
+            if len(active_idx) == 0:
+                return None
+            diffs = points[active_idx] - np.array(ref)
+            sq_dists = diffs[:, 0]**2 + diffs[:, 1]**2
+            best = np.argmin(sq_dists)
+            if sq_dists[best] < 0.0001:  # 0.01^2, matches SvgPathItem.is_same
+                return int(active_idx[best])
+        else:
+            best_idx = None
+            min_sq_dist = float('inf')
+            ref_x, ref_y = ref[0], ref[1]
+
+            for i, is_active in enumerate(self._active):
+                if not is_active:
+                    continue
+
+                p = points[i]
+                dx = p[0] - ref_x
+                dy = p[1] - ref_y
+
+                sq_dist = dx*dx + dy*dy
+
+                if sq_dist < min_sq_dist:
+                    min_sq_dist = sq_dist
+                    best_idx = i
+
+            if best_idx is not None and min_sq_dist < 0.0001:  # 0.01^2
+                return best_idx
+
+        return None
+
+    def _mark_used(self, i: int) -> None:
+        self._active[i] = False
+        self._start_index[self._elements[i].start].discard(i)
+        self._end_index[self._elements[i].end].discard(i)
+
 
 def extract_arg(args: List[Any], index: int, default: Any=None) -> Any:
     """
@@ -353,7 +444,9 @@ def read_svg_unique2(filename: str, prefix: str) -> etree.Element:
         content = f.read()
     for i in ids:
         content = content.replace("#"+i, "#" + prefix + i)
-    root = etree.fromstring(str.encode(content))
+    # Create a parser that allows huge files
+    parser = etree.XMLParser(huge_tree=True)
+    root = etree.fromstring(str.encode(content), parser=parser)
     for el in root.getiterator():
         if "id" in el.attrib and el.attrib["id"] != "origin":
             el.attrib["id"] = prefix + el.attrib["id"]
@@ -389,7 +482,7 @@ def strip_style_svg(root: etree.Element, keys: List[str], forbidden_colors: List
             for key, val in styles.items():
                 if key not in keys or val == 'none':
                     new_styles[key] = val
-                elif isV8() or isV9():
+                elif not (isV5() or isV6() or isV7()):
                     new_styles[key] = new_val
             el.attrib["style"] = ";" \
                 .join([f"{key}: {val}" for key, val in new_styles.items()]) \
@@ -414,38 +507,51 @@ def empty_svg(**attrs: str) -> etree.ElementTree:
         root.attrib[key] = value
     return document
 
-def get_board_polygon(svg_elements: etree.Element) -> etree.Element:
-    """
-    Try to connect independents segments on Edge.Cuts and form a polygon
-    return SVG path element with the polygon
-    """
-    elements = []
-    path = ""
-    for group in svg_elements:
-        for svg_element in group:
-            if svg_element.tag == "path":
-                p = svg_element.attrib["d"]
-                # Check if this is a closed polygon (KiCad 7.0.1+)
-                polygon = re.fullmatch(r"M ((\d+\.\d+),(\d+\.\d+) )+Z", p)
-                if polygon:
-                    # Yes, decompose it in lines
-                    polygon = re.findall(r"(\d+\.\d+),(\d+\.\d+) ", p)
-                    start = polygon[0]
-                    # Close it
-                    polygon.append(polygon[0])
-                    # Add the lines
-                    for end in polygon[1:]:
-                        path = 'M'+start[0]+' '+start[1]+' L'+end[0]+' '+end[1]
-                        elements.append(SvgPathItem(path))
-                        start = end
-                else:
-                    elements.append(SvgPathItem(p))
-            elif svg_element.tag == "circle":
-                # Convert circle to path
-                att = svg_element.attrib
-                s = " M {0} {1} m-{2} 0 a {2} {2} 0 1 0 {3} 0 a {2} {2} 0 1 0 -{3} 0 ".format(
-                    att["cx"], att["cy"], att["r"], 2 * float(att["r"]))
-                path += s
+def get_best_path_new(elements, path):
+    index = PointIndex(elements)
+    while index.has_active():
+        outline = [index.pop_first_active()]
+        size = 0
+        while size != len(outline) and index.has_active():
+            size = len(outline)
+
+            e = index.find_by_end(outline[0].start)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+            e = index.find_by_start_flipped(outline[0].start)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+            e = index.find_by_start(outline[-1].end)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+            e = index.find_by_end_flipped(outline[-1].end)
+            if e is not None:
+                outline.insert(0, e)
+                continue
+
+        for i, x in enumerate(outline):
+            path += x.format(first=(i == 0))
+
+    return path
+
+def pseudo_distance(a: Point, b: Point) -> Numeric:
+    a0 = a[0] - b[0]
+    a1 = a[1] - b[1]
+    return a0*a0 + a1*a1
+
+def get_closest(reference: Point, elems: List[Point]) -> int:
+    try:
+        return elems.index(reference)
+    except ValueError:
+        return int(np.argmin([pseudo_distance(reference, x) for x in elems]))
+
+def get_best_path(elements, path):
     while len(elements) > 0:
         # Initiate seed for the outline
         outline = [elements[0]]
@@ -487,6 +593,41 @@ def get_board_polygon(svg_elements: etree.Element) -> etree.Element:
         for x in outline:
             path += x.format(first)
             first = False
+    return path
+
+def get_board_polygon(svg_elements: etree.Element) -> etree.Element:
+    """
+    Try to connect independents segments on Edge.Cuts and form a polygon
+    return SVG path element with the polygon
+    """
+    elements = []
+    path = ""
+    for group in svg_elements:
+        for svg_element in group:
+            if svg_element.tag == "path":
+                p = svg_element.attrib["d"]
+                # Check if this is a closed polygon (KiCad 7.0.1+)
+                polygon = re.fullmatch(r"M ((\d+\.\d+),(\d+\.\d+) )+Z", p)
+                if polygon:
+                    # Yes, decompose it in lines
+                    polygon = re.findall(r"(\d+\.\d+),(\d+\.\d+) ", p)
+                    start = polygon[0]
+                    # Close it
+                    polygon.append(polygon[0])
+                    # Add the lines
+                    for end in polygon[1:]:
+                        path = 'M'+start[0]+' '+start[1]+' L'+end[0]+' '+end[1]
+                        elements.append(SvgPathItem(path))
+                        start = end
+                else:
+                    elements.append(SvgPathItem(p))
+            elif svg_element.tag == "circle":
+                # Convert circle to path
+                att = svg_element.attrib
+                s = " M {0} {1} m-{2} 0 a {2} {2} 0 1 0 {3} 0 a {2} {2} 0 1 0 -{3} 0 ".format(
+                    att["cx"], att["cy"], att["r"], 2 * float(att["r"]))
+                path += s
+    path = get_best_path_new(elements, path) if GS.ki7 else get_best_path(elements, path)
     e = etree.Element("path", d=path, style="fill-rule: evenodd;")
     return e
 
@@ -1066,15 +1207,15 @@ class PcbPlotter():
 
         self.yield_warning: Callable[[str, str], None] = lambda tag, msg: None # Handle warnings
 
-        if isV7() or isV8() or isV9():
-            self.ki2svg = self._ki2svg_v7
-            self.svg2ki = self._svg2ki_v7
+        if isV5():
+            self.ki2svg = self._ki2svg_v5
+            self.svg2ki = self._svg2ki_v5
         elif isV6():
             self.ki2svg = self._ki2svg_v6
             self.svg2ki = self._svg2ki_v6
         else:
-            self.ki2svg = self._ki2svg_v5
-            self.svg2ki = self._svg2ki_v5
+            self.ki2svg = self._ki2svg_v7
+            self.svg2ki = self._svg2ki_v7
 
     @property
     def svg_precision(self) -> int:
@@ -1262,7 +1403,7 @@ class PcbPlotter():
             popt.SetTextMode(pcbnew.PLOT_TEXT_MODE_STROKE)
             if isV6():
                 popt.SetSvgPrecision(self.svg_precision, False)
-            elif isV7() or isV8() or isV9():
+            elif not isV5():
                 popt.SetSvgPrecision(self.svg_precision)
             for action in to_plot:
                 if len(action.layers) == 0:

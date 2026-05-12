@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
@@ -11,6 +11,7 @@ Main KiBot code
 from copy import deepcopy
 from collections import OrderedDict
 import gzip
+import json
 import os
 import re
 from sys import path as sys_path
@@ -27,7 +28,7 @@ from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, vers
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1)
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -155,10 +156,16 @@ def _run_command(command, change_to):
     return run(command, check=True, stdout=PIPE, stderr=STDOUT, cwd=change_to)
 
 
-def run_command(command, change_to=None, just_raise=False, use_x11=False, err_msg=None, err_lvl=FAILED_EXECUTE):
+def run_command(command, change_to=None, just_raise=False, use_x11=False, err_msg=None, err_lvl=FAILED_EXECUTE,
+                force_en=False):
     logger.debug('- Executing: '+GS.pasteable_cmd(command))
     if change_to is not None:
         logger.debug('- CWD: '+change_to)
+    old_lang = None
+    if force_en:
+        old_lang = os.environ.get('LANG')
+        if old_lang:
+            os.environ['LANG'] = 'en'
     try:
         if use_x11 and not GS.on_windows:
             logger.debug('Using Xvfb to run the command')
@@ -173,7 +180,11 @@ def run_command(command, change_to=None, just_raise=False, use_x11=False, err_ms
         if err_msg is not None:
             err_msg = err_msg.format(ret=e.returncode)
         GS.exit_with_error(err_msg, err_lvl, e)
-    msg = try_decode_utf8(res.stdout, 'output from command', logger)
+    finally:
+        if old_lang:
+            os.environ['LANG'] = old_lang
+
+    msg = try_decode_utf8(res.stdout, f'output from `{command[0]}` command', logger, GS.global_code_page_fallback)
     debug_output(msg)
     return msg.rstrip()
 
@@ -216,6 +227,7 @@ def load_board(pcb_file=None, forced=False):
             board = pcbnew.LoadBoard(pcb_file)
         if board is None:
             # KiCad 9 doesn't stop and returns None
+            GS.exit_with_error(f'Error loading PCB file ({pcb_file}). Corrupted?', CORRUPTED_PCB)
             raise OSError
         if GS.global_work_layer and board.GetLayerID(GS.global_work_layer) < 0:
             raise KiPlotConfigurationError(f"Unknown layer used for the global `work_layer` option"
@@ -283,8 +295,28 @@ def load_any_sch(file, project, fatal=True, extra_msg=None):
     else:
         sch = Schematic()
         load_libs = True
+    # Schematic UUID mapping
+    # Check if we have a project
+    mapped_uuid = None
+    if GS.pro_file and GS.ki10:
+        # Projects can override the SCH UUID
+        file_base = os.path.basename(file)
+        try:
+            with open(GS.pro_file, 'rt') as f:
+                data = json.load(f)
+            for mentry in data["schematic"]["top_level_sheets"]:
+                if mentry["filename"] == file_base:
+                    mapped_uuid = mentry["uuid"]
+                    logger.debug(f"Mapping schematic `{file_base}` to UUID `{mapped_uuid}` found in `{GS.pro_file}`")
+                    break
+        except Exception as e:
+            # This is not fatal
+            logger.debug(f"Failed to get the top level sheets: {e}")
+        if mapped_uuid is None:
+            logger.warning(W_NOUUIDMAP+"Unable to map the SCH file to an UUID")
+    # End of schematic UUID mapping
     try:
-        sch.load(file, project)
+        sch.load(file, project, mapped_uuid=mapped_uuid)
         if load_libs:
             sch.load_libs(file)
         if GS.debug_level > 1:
@@ -346,7 +378,7 @@ def create_component_from_footprint(m, ref, env):
     f.number = 3
     c.add_field(f)
     # Other fields
-    copy_fields(c, m, env)
+    copy_fields(c, GS.get_fields(m), env)
     c._solve_fields(None)
     try:
         c.split_ref()
@@ -362,28 +394,28 @@ class PadProperty(object):
     pass
 
 
-def expand_footprint_fields(fields, env):
-    extra_env = {k.upper() if k.lower() in INTERNAL_FIELDS else k: v for k, v in fields.items()}
-    new_fields = {}
-    for k, v in fields.items():
-        new_value = v
-        depth = 1
-        used_extra = [False]
-        while depth < GS.MAXDEPTH:
-            new_value = expand_env(new_value, env, extra_env, used_extra=used_extra)
-            if not used_extra[0]:
-                break
-            depth += 1
-            if depth == GS.MAXDEPTH:
-                logger.warning(W_MAXDEPTH+'Too much nested variables replacements, possible loop ({})'.format(v))
-        # Remove extra spaces as we did with the schematic values
-        new_fields[k] = new_value.strip()
-    return new_fields
+def expand_one_footprint_field(v, env, extra_env):
+    new_value = v
+    depth = 1
+    used_extra = [False]
+    while depth < GS.MAXDEPTH:
+        new_value = expand_env(new_value, env, extra_env, used_extra=used_extra)
+        if not used_extra[0]:
+            break
+        depth += 1
+        if depth == GS.MAXDEPTH:
+            logger.warning(W_MAXDEPTH+f'Too much nested variables replacements, possible loop ({v})')
+    # Remove extra spaces as we did with the schematic values
+    return new_value.strip()
 
 
-def copy_fields(c, m, env):
-    real_fields = GS.get_fields(m)
-    expanded_fields = expand_footprint_fields(real_fields, env)
+def create_extra_env(fields):
+    return {k.upper() if k.lower() in INTERNAL_FIELDS else k: v for k, v in fields.items()}
+
+
+def copy_fields(c, real_fields, env, extra_env=None):
+    extra_env = extra_env or create_extra_env(real_fields)
+    expanded_fields = {k: expand_one_footprint_field(v, env, extra_env) for k, v in real_fields.items()}
     for name, value in real_fields.items():
         if c.is_field(name.lower()):
             # Already there
@@ -404,50 +436,96 @@ def get_all_components(collapse=True):
     return comps
 
 
-def get_board_comps_data(comps):
+def get_board_comps_data(comps, kicad_variant=None):
     """ Add information from the PCB to the list of components from the schematic.
         Note that we do it every time the function is called to reset transformation filters like rot_footprint. """
     if not GS.pcb_file:
         return
     load_board()
-    comps_hash = {c.ref: c for c in comps}
+    if GS.ki6:
+        comps_hash = {c.sheet_full_path: c for c in comps}
+        comps_hash_ref = {c.ref: c for c in comps}
+    else:
+        comps_hash = {c.ref: c for c in comps}
     # Get the KiCad variables for fields
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
     env.update(GS.load_pro_variables())
+    if kicad_variant is not None:
+        old_variant = GS.board.GetCurrentVariant()
+        GS.board.SetCurrentVariant(kicad_variant)
     for m in GS.get_modules():
         ref = m.GetReference()
+        # logger.error(f'{ref} {m.m_Uuid.AsString()} -> {m.GetPath().AsString()}')
         attrs = m.GetAttributes()
-        c = comps_hash.get(ref)
+        if GS.ki6:
+            # By full sheet path
+            c = comps_hash.get(m.GetPath().AsString())
+            if c is None:
+                # Check if we have a component with the same reference in the schematic
+                c = comps_hash_ref.get(ref)
+                if c is not None:
+                    logger.warning(W_PCBNOSCH+f"{ref} not linked to an existing schematic component, "
+                                   f"but {ref} found in schematic, assuming this is the same")
+        else:
+            # By reference
+            c = comps_hash.get(ref)
         if c is None:
             if not (attrs & MOD_BOARD_ONLY) and not ref.startswith('KiKit_'):
                 logger.warning(W_PCBNOSCH+f'`{ref}` component in board, but not in schematic')
             if not GS.global_include_components_from_pcb:
                 # v1.6.3 behavior
+                logger.debugl(3, f"Not including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
                 continue
             # Create a component for this so we can include/exclude it using filters
             c = create_component_from_footprint(m, ref, env)
             if c is None:
                 continue
+            if GS.ki6:
+                logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
             comps.append(c)
         if c.has_pcb_info:
-            # We already got this reference and filled the PCB info, this is another copy
-            c = c.copy()
+            if GS.ki6:
+                if c.ref != ref:
+                    # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
+                    logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
+                                  " unrelated, making a new one")
+                    c = create_component_from_footprint(m, ref, env)
+                    if c is None:
+                        continue
+                else:
+                    logger.debugl(3, f"Repeated {c.ref}/{ref}")
+                    continue
+            else:
+                # When using references they can be repeated
+                # We already got this reference and filled the PCB info, this is another copy
+                c = c.copy()
             comps.append(c)
-        new_value = m.GetValue()
-        if new_value != c.value and '${' not in c.value:
-            logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` PCB: `{new_value}`)")
+        real_fields = GS.get_fields(m)
+        extra_env = create_extra_env(real_fields)
+
+        # Check the "Value", inform if different
+        new_value = expand_one_footprint_field(m.GetValue(), env, extra_env)
+        if new_value != c.value:
+            expanded_value = expand_one_footprint_field(c.value, env, extra_env)
+            if new_value != expanded_value:
+                logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` "
+                               f"(`{expanded_value}`) PCB: `{new_value}`)")
+        if 'Value' in real_fields:
+            # We already computed it
+            del real_fields['Value']
         c.value = new_value
+
         c.bottom = m.IsFlipped()
         c.footprint_rot = m.GetOrientationDegrees()
         center = GS.get_center(m)
         c.footprint_x = center.x
         c.footprint_y = center.y
         (c.footprint_w, c.footprint_h) = GS.get_fp_size(m)
-        c.has_pcb_info = True
         c.pad_properties = {}
         if GS.global_use_pcb_fields:
-            copy_fields(c, m, env)
+            copy_fields(c, real_fields, env, extra_env)
+        c.has_pcb_info = True
         # Net
         net_name = set()
         net_class = set()
@@ -480,6 +558,7 @@ def get_board_comps_data(comps):
                 c.in_bom_pcb = False
             if attrs & MOD_BOARD_ONLY:
                 c.in_pcb_only = True
+            c.pcb_id = m.m_Uuid.AsString()
             look_for_type = (not c.smd) and (not c.tht)
             for pad in m.Pads():
                 p = PadProperty()
@@ -501,6 +580,8 @@ def get_board_comps_data(comps):
                     elif name:
                         # We have pad a valid pad, assume this is all SMD and keep looking
                         c.smd = True
+    if kicad_variant is not None:
+        GS.board.SetCurrentVariant(old_variant)
 
 
 def expand_comp_fields(c, env):
@@ -921,6 +1002,7 @@ def solve_schematic(base_dir, a_schematic=None, a_board_file=None, config=None, 
             schematic = schematics[0]
             logger.info('Using SCH file: '+os.path.relpath(schematic))
         elif len(schematics) > 1:
+            is_silly = W_SILLY
             # Look for a schematic with the same name as the config
             if config:
                 if config[0] == '.':
@@ -954,12 +1036,13 @@ def solve_schematic(base_dir, a_schematic=None, a_board_file=None, config=None, 
                         break
                 else:
                     # No way to select one, just take the first
+                    is_silly = ''
                     if GS.ki6:
                         schematic = guess_ki6_sch(schematics)
                     if not schematic:
                         schematic = schematics[0]
             msg = ' if you want to use another use -e option' if sug_e else ''
-            logger.warning(W_VARSCH + 'More than one SCH file found in `'+base_dir+'`.\n'
+            logger.warning(is_silly+W_VARSCH+'More than one SCH file found in `'+base_dir+'`.\n'
                            '  Using '+schematic+msg+'.')
     if schematic and not os.path.isfile(schematic):
         GS.exit_with_error("Schematic file not found: "+schematic, NO_SCH_FILE)
@@ -1141,6 +1224,7 @@ def generate_one_example(dest_dir, types):
                {'number': 1015},  # More than one component in a search for a distributor
                {'number': 58},    # Missing project file
                {'number': 107},   # Stencil.side auto, we always use it for the example
+               {'number': 143},   # This output depends on KiCad version, use `blender_export` instead
                ]
         glb = {'filters': fil}
         yaml_dump(f, {'global': glb})

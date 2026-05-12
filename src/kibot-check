@@ -146,6 +146,41 @@ deps = '{\
         "url": null,\
         "url_down": null\
     },\
+    "Curl": {\
+        "arch": "curl",\
+        "command": "curl",\
+        "comments": [],\
+        "deb_package": "curl",\
+        "downloader": null,\
+        "downloader_str": null,\
+        "extra_arch": null,\
+        "extra_checks": null,\
+        "extra_deb": null,\
+        "help_option": "--version",\
+        "importance": 1,\
+        "in_debian": true,\
+        "is_kicad_plugin": false,\
+        "is_python": false,\
+        "name": "Curl",\
+        "no_cmd_line_version": false,\
+        "no_cmd_line_version_old": false,\
+        "output": "download_datasheets",\
+        "plugin_dirs": null,\
+        "pypi_name": "Curl",\
+        "role": [\
+            {\
+                "all_versions": {},\
+                "desc": "Download datasheets",\
+                "mandatory": false,\
+                "max_version": null,\
+                "output": "download_datasheets",\
+                "version": null\
+            }\
+        ],\
+        "tests": [],\
+        "url": "https://curl.se/",\
+        "url_down": null\
+    },\
     "Ghostscript": {\
         "arch": "ghostscript",\
         "command": "gs",\
@@ -493,7 +528,7 @@ deps = '{\
                 "version": [\
                     2,\
                     3,\
-                    4\
+                    6\
                 ]\
             },\
             {\
@@ -517,7 +552,7 @@ deps = '{\
                 "version": [\
                     2,\
                     3,\
-                    4\
+                    6\
                 ]\
             },\
             {\
@@ -589,7 +624,7 @@ deps = '{\
                 "version": [\
                     2,\
                     3,\
-                    4\
+                    6\
                 ]\
             },\
             {\
@@ -601,7 +636,7 @@ deps = '{\
                 "version": [\
                     2,\
                     3,\
-                    4\
+                    6\
                 ]\
             },\
             {\
@@ -649,7 +684,7 @@ deps = '{\
                 "version": [\
                     2,\
                     3,\
-                    4\
+                    6\
                 ]\
             },\
             {\
@@ -1276,6 +1311,42 @@ deps = '{\
         "url": "https://gitlab.gnome.org/GNOME/librsvg",\
         "url_down": null\
     },\
+    "ReportLab": {\
+        "arch": "python-reportlab",\
+        "command": "reportlab",\
+        "comments": [],\
+        "deb_package": "python3-reportlab",\
+        "downloader": {},\
+        "downloader_str": "python",\
+        "extra_arch": null,\
+        "extra_checks": null,\
+        "extra_deb": null,\
+        "help_option": "--version",\
+        "importance": 1,\
+        "in_debian": true,\
+        "is_kicad_plugin": false,\
+        "is_python": true,\
+        "module_name": "reportlab",\
+        "name": "ReportLab",\
+        "no_cmd_line_version": false,\
+        "no_cmd_line_version_old": false,\
+        "output": "bom_labels",\
+        "plugin_dirs": null,\
+        "pypi_name": "ReportLab",\
+        "role": [\
+            {\
+                "all_versions": {},\
+                "desc": "Create a PDF with BoM labels",\
+                "mandatory": false,\
+                "max_version": null,\
+                "output": "bom_labels",\
+                "version": null\
+            }\
+        ],\
+        "tests": [],\
+        "url": null,\
+        "url_down": null\
+    },\
     "Requests": {\
         "arch": "python-requests",\
         "command": "requests",\
@@ -1432,6 +1503,42 @@ deps = '{\
                 "mandatory": true,\
                 "max_version": null,\
                 "output": "stencil_for_jig",\
+                "version": null\
+            }\
+        ],\
+        "tests": [],\
+        "url": null,\
+        "url_down": null\
+    },\
+    "ZStd": {\
+        "arch": "python-zstd",\
+        "command": "zstd",\
+        "comments": [],\
+        "deb_package": "python3-zstd",\
+        "downloader": {},\
+        "downloader_str": "python",\
+        "extra_arch": null,\
+        "extra_checks": null,\
+        "extra_deb": null,\
+        "help_option": "--version",\
+        "importance": 100,\
+        "in_debian": true,\
+        "is_kicad_plugin": false,\
+        "is_python": true,\
+        "module_name": "zstd",\
+        "name": "ZStd",\
+        "no_cmd_line_version": false,\
+        "no_cmd_line_version_old": false,\
+        "output": "global",\
+        "plugin_dirs": null,\
+        "pypi_name": "ZStd",\
+        "role": [\
+            {\
+                "all_versions": {},\
+                "desc": "Copy embedded files from the schematic to the KiCad cache",\
+                "mandatory": false,\
+                "max_version": null,\
+                "output": "global",\
                 "version": null\
             }\
         ],\

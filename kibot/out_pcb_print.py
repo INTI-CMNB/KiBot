@@ -54,9 +54,9 @@ from .kicad.patch_svg import patch_svg_file
 from .kicad.config import KiConf
 from .kicad.v5_sch import SchError
 from .kicad.pcb import PCB
-from .misc import (PDF_PCB_PRINT, W_PDMASKFAIL, W_MISSTOOL, PCBDRAW_ERR, W_PCBDRAW, VIATYPE_THROUGH, VIATYPE_BLIND_BURIED,
-                   VIATYPE_MICROVIA, FONT_HELP_TEXT, W_BUG16418, pretty_list, try_int, W_NOPAGES, W_NOLAYERS, W_NOTHREPE,
-                   RENDERERS, read_png, EMBED_PREFIX, KICAD_VERSION_9_0_1, W_NOVISLA)
+from .misc import (PDF_PCB_PRINT, W_PDMASKFAIL, W_MISSTOOL, PCBDRAW_ERR, W_PCBDRAW, FONT_HELP_TEXT, W_BUG16418, pretty_list,
+                   try_int, W_NOPAGES, W_NOLAYERS, W_NOTHREPE, RENDERERS, read_png, EMBED_PREFIX, KICAD_VERSION_9_0_1,
+                   W_NOVISLA)
 from .create_pdf import create_pdf_from_pages
 from .macros import macros, document, output_class  # noqa: F401
 from .drill_marks import DRILL_MARKS_MAP, add_drill_marks
@@ -377,7 +377,8 @@ class PCB_PrintOptions(VariantOptions):
     _pad_colors = {'pad_color': 'pad_through_hole',
                    'via_color': 'via_through',
                    'micro_via_color': 'via_micro',
-                   'blind_via_color': 'via_blind_buried'}
+                   'blind_via_color': 'via_blind_buried',
+                   'buried_via_color': 'via_blind_buried'}
 
     def __init__(self):
         with document:
@@ -436,6 +437,8 @@ class PCB_PrintOptions(VariantOptions):
             """ Color used for micro `colored_vias` """
             self.blind_via_color = ''
             """ Color used for blind/buried `colored_vias` """
+            self.buried_via_color = ''
+            """ Color used for buried `colored_vias` (KiCad 10+)"""
             self.keep_temporal_files = False
             """ Store the temporal page and layer files in the output dir and don't delete them """
             self.force_edge_cuts = False
@@ -733,7 +736,7 @@ class PCB_PrintOptions(VariantOptions):
         # Expand the variables in the copied worksheet
         tb_vars = self.fill_kicad_vars(page, pages, p)
         ws.expand(tb_vars, remove_images=True)
-        ws.save(wks)
+        ws.save(wks, page)
         # Plot the frame using a helper script
         # kicad-cli fails: https://gitlab.com/kicad/code/kicad/-/issues/18928
         script = os.path.join(GS.get_resource_path('tools'), 'frame_plotter')
@@ -1169,9 +1172,13 @@ class PCB_PrintOptions(VariantOptions):
             if self.colored_pads:
                 re_filled_zones |= self.plot_pads(la, pc, p, filelist)
             if self.colored_vias:
-                re_filled_zones |= self.plot_vias(la, pc, p, filelist, VIATYPE_THROUGH, self.via_color)
-                re_filled_zones |= self.plot_vias(la, pc, p, filelist, VIATYPE_BLIND_BURIED, self.blind_via_color)
-                re_filled_zones |= self.plot_vias(la, pc, p, filelist, VIATYPE_MICROVIA, self.micro_via_color)
+                re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_THROUGH, self.via_color)
+                if GS.ki10:
+                    re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_BLIND, self.blind_via_color)
+                    re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_BURIED, self.buried_via_color)
+                else:
+                    re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_BLIND_BURIED, self.blind_via_color)
+                re_filled_zones |= self.plot_vias(la, pc, p, filelist, GS.VIATYPE_MICROVIA, self.micro_via_color)
 
             GS.board.Remove(track1)
             GS.board.Remove(track2)
@@ -1474,6 +1481,35 @@ class PCB_PrintOptions(VariantOptions):
             c.included = v
         self.restore_graphics_from_layer(GS.board, self._comps_hash_for_fab_ex, self._layer_id_ex, self._graphs_ex)
 
+    def apply_ki10_holes_workaround(self):
+        """ KiCad holes are pads with a drill of the same size.
+            KiCad 10.0.0 plots holes and pads in the same way, black, so you can't tell if the object is a hole or a pad.
+            KiCad 9- draws a small copper border in black and the drill in white.
+            Here we create a small difference between the drill and the pad to get the same result.
+            Will most probably fail for complex drills """
+        self.ki10_holes = []
+        if not GS.ki10:
+            return
+        for m in GS.get_modules():
+            for pad in m.Pads():
+                dr = pad.GetDrillSize()
+                if dr.x < 100:
+                    continue
+                drx = dr.x
+                dry = dr.y
+                pdx = pad.GetSizeX()
+                pdy = pad.GetSizeY()
+                if drx == pdx and dry == pdy:
+                    logger.debug(f"Applying KiCad 10 workaround: drill size {dr} pad size {pad.GetSizeX()} {pad.GetSizeY()}")
+                    self.ki10_holes.append((pad, drx, dry))
+                    pad.SetDrillSizeX(drx - 100)
+                    pad.SetDrillSizeY(dry - 100)
+
+    def undo_ki10_holes_workaround(self):
+        for (pad, drx, dry) in self.ki10_holes:
+            pad.SetDrillSizeX(drx)
+            pad.SetDrillSizeY(dry)
+
     def generate_output(self, output):
         self.check_tools()
         if not self._pages:
@@ -1572,6 +1608,9 @@ class PCB_PrintOptions(VariantOptions):
             if p.layers == ['all'] and not p.get_user_defined('layers'):
                 logger.warning(W_NOLAYERS+f'No layers specified for `{p}` (`{self._parent.name}`), including `all`')
             re_filled_zones = False
+            # Workaround for KiCad 10.0.0 bug that plots pads and holes in an ambiguous way
+            # https://gitlab.com/kicad/code/kicad/-/issues/23275
+            self.apply_ki10_holes_workaround()
             for pos, la in enumerate(p._layers):
                 id = la._id
                 logger.debug('- Plotting layer {} ({})'.format(la.layer, id))
@@ -1609,6 +1648,7 @@ class PCB_PrintOptions(VariantOptions):
                     for item in items:
                         if isinstance(item, PCB_SHAPE):
                             GS.board.Delete(item)
+            self.undo_ki10_holes_workaround()
             # 2) Plot the frame using an empty layer and 1.0 scale
             po.SetMirror(False)
             if self.plot_sheet_reference:

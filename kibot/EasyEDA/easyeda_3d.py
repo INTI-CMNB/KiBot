@@ -335,6 +335,8 @@ class Exporter3dModelKicad:
             name_wrl = fname
             if name_wrl is None:
                 name_wrl = self.output.name+'.wrl'
+            else:
+                name_wrl = os.path.splitext(name_wrl)[0]+'.wrl'
             name_wrl = os.path.join(lib_path, name_wrl)
             with open(name_wrl, "w", encoding="utf-8") as my_lib:
                 my_lib.write(self.output.raw_wrl)

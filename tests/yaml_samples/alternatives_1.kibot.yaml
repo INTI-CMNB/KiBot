@@ -1,0 +1,47 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+filters:
+  - name: do_alternatives
+    comment: "Add alternative fields"
+    type: alternatives
+    parts:
+      - library_link: 74xx:74LS240
+        fields:
+          - MNF: Fairchild Semiconductor
+            MPN: DM74LS240SJ
+            DK: 2156-DM74LS240SJ-ND
+          - MNF: onsemi
+            MPN: SN74LS240ML1
+            DK: 2156-SN74LS240ML1-ND
+      - library_link: 74xx:74LS373
+        fields:
+          - MNF: Motorola
+            MPN: SN74LS373MR1
+            DK: 2156-SN74LS373MR1-ND
+          - MNF: onsemi
+            MPN: SN74LS373ML1
+            DK: 2156-SN74LS373ML1-ND
+
+outputs:
+  - name: 'bom_csv'
+    comment: "Bill of Materials in CSV format"
+    type: bom
+    options:
+      csv:
+        hide_pcb_info: true
+        hide_stats_info: true
+      pre_transform: do_alternatives
+      columns:
+        - Reference
+        - Value
+        - MNF
+        - MPN
+        - DK
+        - MNF2
+        - MPN2
+        - DK2
+        - MNF3
+        - MPN3
+        - DK3

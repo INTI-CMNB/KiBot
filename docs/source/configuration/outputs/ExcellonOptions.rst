@@ -1,5 +1,7 @@
 .. _ExcellonOptions:
 
+:orphan:
+
 
 ExcellonOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,8 +22,11 @@ ExcellonOptions parameters
 
 -  ``generate_drill_files`` :index:`: <pair: output - excellon - options; generate_drill_files>` [:ref:`boolean <boolean>`] (default: ``true``) Generate drill files. Set to False and choose map format if only map is to be generated.
 -  ``left_digits`` :index:`: <pair: output - excellon - options; left_digits>` [:ref:`number <number>`] (default: ``0``) number of digits for integer part of coordinates (0 is auto).
+   Doesn't apply to DECIMAL_FORMAT. |br|
+   Default is 3 and currently can't be configured from the GUI, avoid using it.
 -  ``map`` :index:`: <pair: output - excellon - options; map>`  [:ref:`DrillMap parameters <DrillMap>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``'None'``) (choices: "hpgl", "ps", "gerber", "dxf", "svg", "pdf", "None") Format for a graphical drill map.
-   Not generated unless a format is specified.
+   Not generated unless a format is specified. |br|
+   KiCad 10 doesn't support HPGL.
 -  ``minimal_header`` :index:`: <pair: output - excellon - options; minimal_header>` [:ref:`boolean <boolean>`] (default: ``false``) Use a minimal header in the file.
 -  ``npth_id`` :index:`: <pair: output - excellon - options; npth_id>` [:ref:`string <string>`] Force this replacement for %i when generating NPTH files.
 -  ``pre_transform`` :index:`: <pair: output - excellon - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
@@ -32,6 +37,8 @@ ExcellonOptions parameters
 -  ``pth_id`` :index:`: <pair: output - excellon - options; pth_id>` [:ref:`string <string>`] Force this replacement for %i when generating PTH and unified files.
 -  ``report`` :index:`: <pair: output - excellon - options; report>`  [:ref:`DrillReport parameters <DrillReport>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``''``) Name of the drill report. Not generated unless a name is specified.
 -  ``right_digits`` :index:`: <pair: output - excellon - options; right_digits>` [:ref:`number <number>`] (default: ``0``) number of digits for mantissa part of coordinates (0 is auto).
+   Doesn't apply to DECIMAL_FORMAT. |br|
+   Default is 3 and currently can't be configured from the GUI, avoid using it.
 -  ``route_mode_for_oval_holes`` :index:`: <pair: output - excellon - options; route_mode_for_oval_holes>` [:ref:`boolean <boolean>`] (default: ``true``) Use route command for oval holes (G00), otherwise use G85.
 -  ``table`` :index:`: <pair: output - excellon - options; table>`  [:ref:`DrillTable parameters <DrillTable>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``''``) Name of the drill table. Not generated unless a name is specified.
 -  ``use_aux_axis_as_origin`` :index:`: <pair: output - excellon - options; use_aux_axis_as_origin>` [:ref:`boolean <boolean>`] (default: ``false``) Use the auxiliary axis as origin for coordinates.
@@ -39,9 +46,9 @@ ExcellonOptions parameters
    Used for sub-PCBs.
 -  ``zeros_format`` :index:`: <pair: output - excellon - options; zeros_format>` [:ref:`string <string>`] (default: ``'DECIMAL_FORMAT'``) (choices: "DECIMAL_FORMAT", "SUPPRESS_LEADING", "SUPPRESS_TRAILING", "KEEP_ZEROS") How to handle the zeros.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   DrillMap
-   DrillReport
-   DrillTable
+- :ref:`DrillMap parameters <DrillMap>`
+- :ref:`DrillReport parameters <DrillReport>`
+- :ref:`DrillTable parameters <DrillTable>`

@@ -103,6 +103,12 @@ Dependencies:
     role: mandatory
     debian: python3-lark
     arch: python-lark
+  - name: ZStd
+    python_module: true
+    debian: python3-zstd
+    arch: python-zstd
+    downloader: python
+    role: Copy embedded files from the schematic to the KiCad cache
 """
 from copy import deepcopy
 import fnmatch
@@ -438,6 +444,7 @@ def convert_downloader(dep, system, plat):
     # Get the download page
     content = download(dep.url_down)
     if content is None:
+        logger.debug('- Failed to download web page')
         return None, None
     # Look for the URL
     res = re.search(r'href\s*=\s*"([^"]+)">magick<', content.decode())
@@ -448,6 +455,7 @@ def convert_downloader(dep, system, plat):
     # Get the binary
     content = download(url)
     if content is None:
+        logger.debug('- Failed to download binary')
         return None, None
     # Can we run the AppImage?
     dest_bin = write_executable(dep.command, content)

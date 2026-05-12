@@ -155,6 +155,13 @@
               null
             ],
             [
+              "kicad_3d_url_version",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
               "variant",
               [
                 "DataTypeString"
@@ -1603,9 +1610,23 @@
           null
         ],
         [
+          "merge_values",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "no_conflict",
           [
             "DataTypeListString"
+          ],
+          null
+        ],
+        [
+          "sep_for_merged",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -1789,6 +1810,213 @@
           "kicad_dnp_applied",
           [
             "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "tilde_is_empty",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ]
+      ]
+    ]
+  ],
+  "bom_labels": [
+    [
+      "name",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "type",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "dir",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "comment",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "extends",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "run_by_default",
+      [
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "disable_run_by_default",
+      [
+        "DataTypeString",
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "output_id",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "category",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
+    ],
+    [
+      "priority",
+      [
+        "DataTypeNumber"
+      ],
+      null
+    ],
+    [
+      "groups",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
+    ],
+    [
+      "options",
+      [
+        "DataTypeDict"
+      ],
+      [
+        [
+          "variant",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "pre_transform",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "exclude_filter",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "dnf_filter",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "output",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "bom",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "width",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "height",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "margin_x",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "margin_top",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "header_sep",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "line_height",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "font",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "font_size_header",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "font_size_rest",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "rows",
+          [
+            "DataTypeNumber"
           ],
           null
         ]
@@ -2163,6 +2391,13 @@
           "kicad_3d_url_suffix",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "kicad_3d_url_version",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -3077,6 +3312,13 @@
           null
         ],
         [
+          "pages",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "color_theme",
           [
             "DataTypeString"
@@ -3704,6 +3946,13 @@
           "kicad_3d_url_suffix",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "kicad_3d_url_version",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -4917,6 +5166,13 @@
           null
         ],
         [
+          "pages",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "color_theme",
           [
             "DataTypeString"
@@ -5133,6 +5389,13 @@
         ],
         [
           "checkboxes",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "mark_when_checked",
           [
             "DataTypeString"
           ],
@@ -5746,6 +6009,13 @@
           null
         ],
         [
+          "kicad_3d_url_version",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"
@@ -6095,6 +6365,230 @@
           "format",
           [
             "DataTypeChoice"
+          ],
+          null
+        ]
+      ]
+    ]
+  ],
+  "kicad_site": [
+    [
+      "name",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "type",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "dir",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "comment",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "extends",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "run_by_default",
+      [
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "disable_run_by_default",
+      [
+        "DataTypeString",
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "output_id",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "category",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
+    ],
+    [
+      "priority",
+      [
+        "DataTypeNumber"
+      ],
+      null
+    ],
+    [
+      "groups",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
+    ],
+    [
+      "options",
+      [
+        "DataTypeDict"
+      ],
+      [
+        [
+          "base_url",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "title",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "version",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "renders",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "downloads",
+          [
+            "DataTypeListDictSingular"
+          ],
+          [
+            [
+              "name",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "output",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "dir",
+              [
+                "DataTypeString"
+              ],
+              null
+            ]
+          ]
+        ],
+        [
+          "diffs",
+          [
+            "DataTypeListDictSingular"
+          ],
+          [
+            [
+              "name",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "output",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "dir",
+              [
+                "DataTypeString"
+              ],
+              null
+            ]
+          ]
+        ],
+        [
+          "ibom",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "assembly_models",
+          [
+            "DataTypeListDictSingular"
+          ],
+          [
+            [
+              "name",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "output",
+              [
+                "DataTypeString"
+              ],
+              null
+            ]
+          ]
+        ],
+        [
+          "force_copy",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "dest_subdir",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "pcb_first",
+          [
+            "DataTypeBoolean"
           ],
           null
         ]
@@ -7064,6 +7558,13 @@
           null
         ],
         [
+          "expand_text_vars",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "nav_bar",
           [
             "DataTypeBoolean"
@@ -7247,6 +7748,13 @@
           "title_url",
           [
             "DataTypeString",
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "expand_text_vars",
+          [
             "DataTypeBoolean"
           ],
           null
@@ -9166,6 +9674,13 @@
           null
         ],
         [
+          "copy_lib_tables",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"
@@ -9970,6 +10485,13 @@
           null
         ],
         [
+          "buried_via_color",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "keep_temporal_files",
           [
             "DataTypeBoolean"
@@ -10265,6 +10787,164 @@
       ]
     ]
   ],
+  "pcb_stats": [
+    [
+      "name",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "type",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "dir",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "comment",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "extends",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "run_by_default",
+      [
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "disable_run_by_default",
+      [
+        "DataTypeString",
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
+      "output_id",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
+      "category",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
+    ],
+    [
+      "priority",
+      [
+        "DataTypeNumber"
+      ],
+      null
+    ],
+    [
+      "groups",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
+    ],
+    [
+      "options",
+      [
+        "DataTypeDict"
+      ],
+      [
+        [
+          "output",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "format",
+          [
+            "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "units",
+          [
+            "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "exclude_footprints_without_pads",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "subtract_holes_from_board",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "subtract_holes_from_copper",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "variant",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "pre_transform",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "exclude_filter",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "dnf_filter",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ]
+      ]
+    ]
+  ],
   "pcb_variant": [
     [
       "name",
@@ -10375,6 +11055,13 @@
           "title",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "include",
+          [
+            "DataTypeListStringSingular"
           ],
           null
         ],
@@ -11633,6 +12320,13 @@
           null
         ],
         [
+          "pages",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "color_theme",
           [
             "DataTypeString"
@@ -12186,6 +12880,20 @@
           null
         ],
         [
+          "grid",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "grid_fail",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"
@@ -12662,6 +13370,13 @@
           "all_pages",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "pages",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -13354,6 +14069,13 @@
           null
         ],
         [
+          "kicad_3d_url_version",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"
@@ -13715,6 +14437,13 @@
           "title",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "include",
+          [
+            "DataTypeListStringSingular"
           ],
           null
         ],
@@ -14287,6 +15016,13 @@
           "kicad_3d_url_suffix",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "kicad_3d_url_version",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -15038,6 +15774,13 @@
           null
         ],
         [
+          "pages",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "color_theme",
           [
             "DataTypeString"
@@ -15304,6 +16047,13 @@
           "kicad_3d_url_suffix",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "kicad_3d_url_version",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],

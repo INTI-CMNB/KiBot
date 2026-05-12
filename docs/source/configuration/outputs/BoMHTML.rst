@@ -1,5 +1,7 @@
 .. _BoMHTML:
 
+:orphan:
+
 
 BoMHTML parameters
 ~~~~~~~~~~~~~~~~~~
@@ -29,7 +31,7 @@ BoMHTML parameters
 -  ``style`` :index:`: <pair: output - bom - options - html; style>` [:ref:`string <string>`] (default: ``'modern-blue'``) Page style. Internal styles: modern-blue, modern-green, modern-red and classic.
    Or you can provide a CSS file name. Please use .css as file extension. |br|.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   RowColors
+- :ref:`RowColors parameters <RowColors>`

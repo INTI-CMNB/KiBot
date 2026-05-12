@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
-# License: GPL-3.0
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
+# License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from pcbnew import GERBER_WRITER
 from .gs import GS
@@ -15,11 +15,16 @@ class Gerb_DrillOptions(AnyDrill):
         self._ext = 'gbr'
 
     def _configure_writer(self, board, offset):
+        if GS.ki10:
+            options = ['--format', 'gerber',
+                       '--drill-origin', 'plot' if offset.x != 0 or offset.y != 0 else 'absolute',
+                       '--gerber-precision', '6']  # Currently is always 4.6
+            return options, True
         drill_writer = GERBER_WRITER(board)
         # hard coded in UI?
         drill_writer.SetFormat(5)
         drill_writer.SetOptions(GS.p2v_k7(offset))
-        return drill_writer
+        return drill_writer, False
 
 
 @output_class

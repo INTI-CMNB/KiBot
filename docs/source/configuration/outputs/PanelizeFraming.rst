@@ -1,5 +1,7 @@
 .. _PanelizeFraming:
 
+:orphan:
+
 
 PanelizeFraming parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,5 +1,7 @@
 .. _KiCanvasOptions:
 
+:orphan:
+
 
 KiCanvasOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

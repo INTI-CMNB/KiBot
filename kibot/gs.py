@@ -96,6 +96,7 @@ class GS(object):
     kicad_conf_path = None
     kicad_share_path = None
     kicad_dir = 'kicad'
+    kicad_cli = 'kicad-cli'
     kicad_plugins_dirs = []
     # KiCad version: major*1e6+minor*1e3+patch
     kicad_version_n = 0
@@ -133,6 +134,11 @@ class GS(object):
     errors_ignored = False    # We ignored at least one error
     # Maximum recursive replace
     MAXDEPTH = 20
+    # VIATYPE, not exported by KiCad 5 (6, 7, 8 and 9 defines it the same way)
+    # For KiCad 10 we adjust it
+    VIATYPE_THROUGH = 3
+    VIATYPE_BLIND_BURIED = 2
+    VIATYPE_MICROVIA = 1
     #
     # Global defaults
     #
@@ -152,6 +158,7 @@ class GS(object):
     global_always_warn_about_paste_pads = None
     global_cache_3d_resistors = None
     global_castellated_pads = None
+    global_code_page_fallback = None
     global_colored_tht_resistors = None
     global_copper_thickness = None
     global_cross_footprints_for_dnp = None
@@ -204,6 +211,9 @@ class GS(object):
     global_restore_project = None
     global_sch_image_prefix = None
     global_set_text_variables_before_output = None
+    global_set_text_variables_sheet_title = None
+    global_set_text_variables_sheet_title_min = None
+    global_set_text_variables_sheet_title_default = None
     global_silk_screen_color = None
     global_silk_screen_color_bottom = None
     global_silk_screen_color_top = None
@@ -225,10 +235,14 @@ class GS(object):
     global_erc_grid = None
     global_kicad_dnp_applied = None
     global_kicad_dnp_applies_to_3D = None
+    global_kicad_default_variant = None
     global_cross_using_kicad = None
     global_work_layer = None
     # Only for KiCad 9+
     global_disable_kicad_cross_on_fab = None
+    # Only for KiCad 10+
+    global_allow_blind_vias = None
+    global_allow_buried_vias = None
     pasteable_cmd = shlex.join if hasattr(shlex, 'join') else lambda x: str(x)   # novermin
 
     @staticmethod
@@ -487,6 +501,12 @@ class GS(object):
         bkp = fname+'-bak'
         if os.path.isfile(fname):
             os.replace(fname, bkp)
+
+    @staticmethod
+    def restore_bkp(fname):
+        bkp = fname+'-bak'
+        if os.path.isfile(bkp):
+            os.replace(bkp, fname)
 
     @staticmethod
     def zones():
@@ -965,8 +985,12 @@ class GS(object):
             new_fields = [fld for fld in flds.keys() if not footprint.HasField(fld)]
             footprint.SetFields(flds)
             # New fields are added as visible, so we must hide them (OMG!)
-            for fld in new_fields:
-                footprint.GetFieldByName(fld).SetVisible(False)
+            if GS.ki10:
+                for fld in new_fields:
+                    footprint.GetField(fld).SetVisible(False)
+            else:
+                for fld in new_fields:
+                    footprint.GetFieldByName(fld).SetVisible(False)
         elif GS.ki6:
             footprint.SetProperties(flds)
 
@@ -1066,6 +1090,7 @@ class GS(object):
         # But KiCad doesn't read the exclusions, so they get lost
         # As a workaround we restore the project, there is no need to change it
         prj = GS.read_pro()
+        logger.debugl(2, f"Saving PCB file to `{pcb_file}`")
         board.Save(pcb_file)
         GS.write_pro(prj)
 

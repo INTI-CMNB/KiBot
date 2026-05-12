@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2024 Salvador E. Tropea
-# Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: MIT
 # Project: KiBot (formerly KiPlot)
 """
@@ -34,6 +34,7 @@ from .kicad.v5_sch import SchematicComponent, SchematicField
 from .bom.columnlist import ColumnList, BoMError
 from .bom.bom import do_bom
 from .var_kibom import KiBoM
+from .var_kicad import KiCad
 from .fil_base import (BaseFilter, apply_exclude_filter, apply_fitted_filter, apply_fixed_filter, reset_filters,
                        KICOST_NAME_TRANSLATIONS, apply_pre_transform)
 from .macros import macros, document, output_class  # noqa: F401
@@ -472,7 +473,9 @@ class BoMOptions(BaseOptions):
                 The `_kibom_simple` variant is a KiBoM variant without any filters and it provides some basic
                 compatibility with KiBoM. Note that this output has default filters that behaves like KiBoM.
                 The combination between the default for this option and the defaults for the filters provides
-                a behavior that mimics KiBoM default behavior """
+                a behavior that mimics KiBoM default behavior.
+                If you want to use KiCad 10 variants: use the name of the KiCad 10 variant, `Default` is the
+                default variant """
             self.output = GS.def_global_output
             """ *filename for the output (%i=bom). The extension depends on the selected format.
                 In the case of the **KICAD** format the extension comes from the name you selected in KiCad's
@@ -525,11 +528,13 @@ class BoMOptions(BaseOptions):
             self.exclude_filter = Optionable
             """ [string|list(string)='_mechanical'] Name of the filter to exclude components from BoM processing.
                 The default filter (built-in filter '_mechanical') excludes test points, fiducial marks, mounting holes, etc.
+                When using KiCad variants the default is '_null'.
                 Please consult the built-in filters explanation to fully understand what is excluded by default.
                 This option is for simple cases, consider using a full variant for complex cases """
             self.dnf_filter = Optionable
             """ [string|list(string)='_kibom_dnf_CONFIG_FIELD'] Name of the filter to mark components as 'Do Not Fit'.
                 The default filter marks components with a DNF value or DNF in the Config field.
+                When using KiCad variants the default is '_null'.
                 This option is for simple cases, consider using a full variant for complex cases """
             self.dnc_filter = Optionable
             """ [string|list(string)='_kibom_dnc_CONFIG_FIELD'] Name of the filter to mark components as 'Do Not Change'.
@@ -537,7 +542,8 @@ class BoMOptions(BaseOptions):
                 This option is for simple cases, consider using a full variant for complex cases """
             # * Grouping criteria
             self.group_connectors = True
-            """ Connectors with the same footprints will be grouped together, independent of the name of the connector """
+            """ Connectors with the same footprints will be grouped together, independent of the name of the connector.
+                In order to work the symbol must be from a library containing `connector` in its name """
             self.merge_blank_fields = True
             """ Component groups with blank fields will be merged into the most compatible group, where possible """
             self.merge_both_blank = True
@@ -555,6 +561,8 @@ class BoMOptions(BaseOptions):
                 information is important. You can also disable `parse_value`.
                 When using `_kicad_bom_fields` in the `columns` you should use `[]` for this value, so the fields
                 selected in KiCad are used.
+                Note that when user defined fields are different we merge the fields using `sep_for_merged`. Also
+                note that you can merge different `Value` fields using `merge_values`.
                 If empty: ['Part', 'Part Lib', 'Value', 'Footprint', 'Footprint Lib',
                 .          'Voltage', 'Tolerance', 'Current', 'Power'] is used """
             self.group_fields_fallbacks = Optionable
@@ -576,11 +584,16 @@ class BoMOptions(BaseOptions):
                 Note that this implies that *1k 1%* is the same as *1k 5%*. If you really need to group using the
                 extra information split it in separated fields, add the fields to `group_fields` and disable
                 `merge_blank_fields` """
+            self.merge_values = False
+            """ Merge the values of different components in a group.
+                Used when you abuse the value field, i.e. for connectors where the Value is the connector purpose """
             self.no_conflict = Optionable
             """ [list(string)=?] {no_case} List of fields where we tolerate conflicts.
                 Use it to avoid undesired warnings.
                 By default the field indicated in `fit_field`, the field used for variants and
                 the field `part` are excluded """
+            self.sep_for_merged = " "
+            """ Text to separate multiple field values of components merged in the same group """
             self.aggregate = Aggregate
             """ [list(dict)=[]] Add components from other projects.
                 You can use CSV files, the first row must contain the names of the fields.
@@ -645,6 +658,9 @@ class BoMOptions(BaseOptions):
                 `global` means we apply the `kicad_dnp_applied` global option.
                 `yes` means we always remove DNP components.
                 `no` means we ignore the DNP flag and let filters do its work """
+            self.tilde_is_empty = True
+            """ Interpret fields that just contains `~` as empty fields.
+                But don't mark them as empty in the HTML """
         super().__init__()
         self._no_conflict_example = ['Config', 'Part']
 
@@ -682,6 +698,9 @@ class BoMOptions(BaseOptions):
             # If the user didn't specify them they have equivalent defaults to the ones we are removing
             self.variant.clear_filters()
             return
+        if GS.ki10 and self.variant == 'Default' and not RegOutput.is_variant('Default'):
+            # When using KiCad 10 and specifying the name of the default KiCad variant, but it isn't defined, create it
+            KiCad.add_default()
         self.variant = RegOutput.check_variant(self.variant)
 
     def process_columns_config(self, cols, valid_columns, extra_columns, group_fields=None):
@@ -773,6 +792,8 @@ class BoMOptions(BaseOptions):
         self._expand_id = 'bom'
         if self._format == 'kicad':
             kops = GS.load_pro_bom_fmt_settings()
+            if kops is None:
+                raise KiPlotConfigurationError("No KiCad BoM options found")
             self._expand_ext = os.path.splitext(GS.pro_bom_export_filename)[1]
             # Default to CSV, KiCad always saves some setting, if the user never used them the file name is empty and the
             # format is just CSV
@@ -797,9 +818,18 @@ class BoMOptions(BaseOptions):
             self.xlsx.extra_info = [self.expand_filename_both(t, make_safe=False) for t in self.xlsx.extra_info]
         # Filters
         self.pre_transform = BaseFilter.solve_filter(self.pre_transform, 'pre_transform', is_transform=True)
-        self.exclude_filter = BaseFilter.solve_filter(self.exclude_filter, 'exclude_filter')
-        self.dnf_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(self.dnf_filter, self.fit_field), 'dnf_filter')
-        self.dnc_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(self.dnc_filter, self.fit_field), 'dnc_filter')
+        exclude_filter = self.exclude_filter
+        dnf_filter = self.dnf_filter
+        dnc_filter = self.dnc_filter
+        if self.variant and self.variant.type == 'kicad':
+            # If we are using KiCad variants remove the defaults
+            if not self.get_user_defined('exclude_filter'):
+                exclude_filter = '_null'
+            if not self.get_user_defined('dnf_filter'):
+                dnf_filter = '_null'
+        self.exclude_filter = BaseFilter.solve_filter(exclude_filter, 'exclude_filter')
+        self.dnf_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(dnf_filter, self.fit_field), 'dnf_filter')
+        self.dnc_filter = BaseFilter.solve_filter(KiBoM.fix_dnx_filter(dnc_filter, self.fit_field), 'dnc_filter')
         # Fields excluded from conflict warnings
         if isinstance(self.no_conflict, type):
             no_conflict = set()
@@ -975,6 +1005,40 @@ class BoMOptions(BaseOptions):
             self.xlsx.logo = png
         return png
 
+    def kicad_var_cb(self, c):
+        """ KiCad variants implementation specific for BoM.
+            `no in BoM` -> not included
+            `DNP` -> not fitted """
+        vname = 'Default'
+        v = None
+        if self.variant:
+            v = c.variants.get(self.variant.name)
+            if v:
+                logger.debugl(4, f"- Found variant {self.variant.name} for {c.ref}")
+                vname = self.variant.name
+        # Included
+        if self.exclude_marked_in_sch:
+            in_bom = v.in_bom if v is not None and v.in_bom is not None else c.in_bom
+            if c.included and not in_bom:
+                c.included = in_bom
+                logger.debugl(3, f'- {c.ref} excluded by `{vname}` from schematic')
+        if self.exclude_marked_in_pcb:
+            # The variant was applied by "get_board_comps_data"
+            if c.included and not c.in_bom_pcb:
+                c.included = c.in_bom_pcb
+                logger.debugl(3, f'- {c.ref} excluded from PCB')
+        # DNP (aka DNF)
+        if self._kicad_dnp_applied_solved:
+            dnp = v.dnp if v is not None and v.dnp is not None else c.kicad_dnp
+            if dnp:
+                c.set_fitted(False)
+                logger.debugl(3, f'- {c.ref} DNP by `{vname}`')
+        # Fields
+        if v is not None:
+            for name, value in v.fields.items():
+                c.set_field(name, value)
+                logger.debugl(3, f'- {c.ref} field `{name}` set to `{value}` by `{vname}`')
+
     def run(self, output):
         format = self._format
         if format == 'xlsx':
@@ -1000,7 +1064,8 @@ class BoMOptions(BaseOptions):
             self.variant._sub_pcb.apply(comps_hash)
             comps = [c for c in comps_hash.values() if c.included]
             must_revert_sub_pcb = True
-        get_board_comps_data(comps)
+        kicad_variant = self.variant.name if self.variant and self.variant.type == 'kicad' and GS.ki10 else None
+        get_board_comps_data(comps, kicad_variant=kicad_variant)
         if self.count_smd_tht and not GS.pcb_file:
             logger.warning(W_NEEDSPCB+"`count_smd_tht` is enabled, but no PCB provided")
             self.count_smd_tht = False
@@ -1011,26 +1076,43 @@ class BoMOptions(BaseOptions):
         # Aggregate components from other projects
         self.aggregate_comps(comps)
         # Apply all the filters
-        reset_filters(comps, kicad_dnp_applied=self.kicad_dnp_applied)
-        if self.exclude_marked_in_sch:
-            logger.debug('Transfer "Exclude from bill of materials" from schematic')
-            for c in comps:
-                if c.included and not c.in_bom:
-                    c.included = c.in_bom
-                    logger.debugl(3, f'- {c.ref} excluded')
-        if self.exclude_marked_in_pcb:
-            logger.debug('Transfer "Exclude from bill of materials" from PCB')
-            for c in comps:
-                if c.included and not c.in_bom_pcb:
-                    c.included = c.in_bom_pcb
-                    logger.debugl(3, f'- {c.ref} excluded')
-        comps = apply_pre_transform(comps, self.pre_transform)
-        apply_exclude_filter(comps, self.exclude_filter)
-        apply_fitted_filter(comps, self.dnf_filter)
-        apply_fixed_filter(comps, self.dnc_filter)
-        # Apply the variant
-        if self.variant:
-            comps = self.variant.filter(comps)
+        if kicad_variant is not None:
+            # For KiCad variants we handle things in a different way
+            # We reset the filter and DON'T apply DNP flag from KiCad
+            reset_filters(comps, kicad_dnp_applied='no')
+            # All the work is done by variant
+            if self.kicad_dnp_applied == 'global':
+                self._kicad_dnp_applied_solved = GS.global_kicad_dnp_applied
+            else:
+                self._kicad_dnp_applied_solved = self.kicad_dnp_applied == 'yes'
+            comps = self.variant.filter(comps, self.kicad_var_cb)
+            # Now we apply the extra user stuff
+            comps = apply_pre_transform(comps, self.pre_transform)
+            apply_exclude_filter(comps, self.exclude_filter)
+            apply_fitted_filter(comps, self.dnf_filter)
+            apply_fixed_filter(comps, self.dnc_filter)
+        else:
+            # Legacy variants
+            reset_filters(comps, kicad_dnp_applied=self.kicad_dnp_applied)
+            if self.exclude_marked_in_sch:
+                logger.debug('Transfer "Exclude from bill of materials" from schematic')
+                for c in comps:
+                    if c.included and not c.in_bom:
+                        c.included = c.in_bom
+                        logger.debugl(3, f'- {c.ref} excluded')
+            if self.exclude_marked_in_pcb:
+                logger.debug('Transfer "Exclude from bill of materials" from PCB')
+                for c in comps:
+                    if c.included and not c.in_bom_pcb:
+                        c.included = c.in_bom_pcb
+                        logger.debugl(3, f'- {c.ref} excluded')
+            comps = apply_pre_transform(comps, self.pre_transform)
+            apply_exclude_filter(comps, self.exclude_filter)
+            apply_fitted_filter(comps, self.dnf_filter)
+            apply_fixed_filter(comps, self.dnc_filter)
+            # Apply the variant
+            if self.variant:
+                comps = self.variant.filter(comps)
         # Now expand the text variables, the user can disable it and insert a customized filter
         # in the variant or even before.
         if self.expand_text_vars:

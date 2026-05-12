@@ -1,5 +1,7 @@
 .. _PanelizeLayout:
 
+:orphan:
+
 
 PanelizeLayout parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2022 Salvador E. Tropea
-# Copyright (c) 2020-2022 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2016-2020 Oliver Henry Walters (@SchrodingersGat)
 # License: MIT
 # Project: KiBot (formerly KiPlot)
@@ -15,6 +15,7 @@ import sys
 import logging
 import html
 from textwrap import wrap
+import urllib.parse
 from base64 import b64decode
 from .columnlist import ColumnList
 from .kibot_logo import KIBOT_LOGO
@@ -840,7 +841,7 @@ def write_xlsx(filename, groups, col_fields, head_names, cfg):
                     worksheet.write_url(row_count, i, datasheet, fmt, cell)
                 # A link to Digi-Key?
                 elif link_digikey and col_fields[i] in link_digikey:
-                    url = 'https://www.digikey.com/products/en?keywords=' + cell
+                    url = 'https://www.digikey.com/en/products/result?keywords=' + urllib.parse.quote(cell)
                     worksheet.write_url(row_count, i, url, fmt, cell)
                 # A link to Mouser?
                 elif link_mouser and col_fields[i] in link_mouser:

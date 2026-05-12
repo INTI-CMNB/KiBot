@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from pcbnew import PLOT_FORMAT_HPGL, SKETCH, FILLED
+from .gs import GS
 from .out_any_layer import AnyLayer
 from .drill_marks import DrillMarks
 from .misc import FONT_HELP_TEXT
@@ -30,6 +31,8 @@ class HPGLOptions(DrillMarks):
 
     def _configure_plot_ctrl(self, po, output_dir):
         super()._configure_plot_ctrl(po, output_dir)
+        if GS.ki10:
+            return
         po.SetHPGLPenDiameter(self.pen_width)
         po.SetHPGLPenNum(self.pen_number)
         po.SetHPGLPenSpeed(self.pen_speed)
@@ -38,6 +41,8 @@ class HPGLOptions(DrillMarks):
 
     def read_vals_from_po(self, po):
         super().read_vals_from_po(po)
+        if GS.ki10:
+            return
         self.pen_width = po.GetHPGLPenDiameter()
         self.pen_number = po.GetHPGLPenNum()
         self.pen_speed = po.GetHPGLPenSpeed()
@@ -49,6 +54,7 @@ class HPGLOptions(DrillMarks):
 class HPGL(AnyLayer):
     """ HPGL (Hewlett & Packard Graphics Language)
         Exports the PCB for plotters and laser printers.
+        Only available for KiCad 9 and older.
         This output is what you get from the File/Plot menu in pcbnew. """
     __doc__ += FONT_HELP_TEXT
 

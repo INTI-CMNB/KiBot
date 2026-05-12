@@ -45,7 +45,7 @@ Parameters:
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
 -  ``run_by_default`` :index:`: <pair: output - populate; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   PopulateOptions
+- :ref:`PopulateOptions parameters <PopulateOptions>`

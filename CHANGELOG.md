@@ -5,6 +5,91 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.9.0] - 2026-05-12
+### Added
+- New outputs:
+  - BoM Labels (bom_labels): [Experimental] To generate a PDF containing
+    labels for the BoM items. (#886)
+  - PCB stats (pcb_stats): The KiCad 10 PCB statistics
+  - Hugo KiCad Site helper (kicad_site): [Experimental] Helper for the
+    Hugo theme for KiCad projects (#917)
+- CLI:
+  - --fail-on-warnings: to return error when we detected warning (See #828)
+  - --warn-all: to display some warnings that you'll find during common use
+- Schematic:
+  - Support for private text on symbols (#914)
+  - Some basic check for the page numbers
+- New filters:
+  - `alternatives`: Used to add alternative fields (i.e. alternative
+    manufacturers) (#913)
+- generic filter: `exclude_kicad_dnp` to exclude components marked as DNP in
+  KiCad (See #887)
+- Variants: Experimental KiCad variants
+- KiCad 9 embedded files: populate the cache if needed (See #890)
+- preflights:
+  - Mechanism to merge preflights from imports (`merge_pre`) (#900)
+  - `set_text_variables_sheet_title`, `set_text_variables_sheet_title_min` and
+    `set_text_variables_sheet_title_default` global options to enable the
+    generation of KiCad variables containing the titles for all the schematic
+    sheets. The are named `SHEET_TITLE_n`
+- Global options:
+  - `allow_blind_vias` and `allow_buried_vias`: for KiCad 10 to replace the
+    unified `allow_blind_buried_vias`
+  - `code_page_fallback`: to specify a code page for text not encoded in UTF-8
+- 3D models: option to download the latest 3D models (`kicad_3d_url_version`)
+  (See #899)
+- BoM:
+  - descriptive error when using `kicad` format and no options found.
+  - `tilde_is_empty` to interpret fields defined as `~` as empty.
+  - `sep_for_merged` to configure the separator for multiple values on the
+    same field. This is when a group contains components with a difference
+    in the field.
+  - `merge_values` to also merge different values on grouped components.
+- Download Datasheets: now uses `curl` if installed.
+- DRC/ERC: Configurable logo (#889)
+- iBoM: `mark_when_checked` option (#881)
+- KiRi: Support for uninitialized submodules (#888)
+- Navigate results: `expand_text_vars` to expand %X and vars in the title.
+- Panelize: `copy_lib_tables` to get a usable lib table
+- PcbDraw:
+  - Allow huge files, usually from panels.
+  - Better performance
+- Position:
+  - `grid`/`grid_fail` options to check if components are in a grid
+- Report: `buried_vias_count` for KiCad 10
+- SCH/PCB Variant: `include` option to export legacy variants to KiCad 10
+- SCH Print: specify pages to be included (#907)
+
+### Fixed
+- 3D models:
+  - Download models from the repo tag corresponding to the currently
+    installed KiCad version, not the one from `master` (#899)
+  - EasyEDA 3D models download issues when the specified model was an
+    STEP file using an extension different than `.step` (#921)
+- Blender export: problems with component values containing `/ ` (#885)
+- BoM:
+  - `Missing footprint information for` for components marked as not on board.
+  - Digi-Key URLs, to adapt the new format
+  - HTML: link cells not marked empty
+- DRC:
+  - No schematic parity check when using 'check_zone_fills' and not
+    'fill_zones' (#920)
+- Panelize:
+  - Problems when using angles (#898)
+  - Confusing error when the output wasn't generated
+- PCB Print: worksheet page 1 vs other pages look when using the internal
+  mechanism (#903)
+- Allow empty `dir` option
+
+### Changed
+- `--fail-on-warnings` now ignores filtered warning (as the help suggested)
+  and you can get the old behavior adding `--fail-on-ignored` (#893)
+- 3D models: GitLab URL. Because the old URL is now blocked.
+- W009 and W044 warnings promoted to "common use" warnings
+- E/DRC: we now get the big OK mark when all violations are excluded
+- BoM: by default fields defined as `~` are empty.
+
+
 ## [1.8.5] - 2025-11-26
 ### Added
 - CLI:
@@ -1641,3 +1726,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pick & place position
 - Debian package
 - Gerber job generation
+
+
+[Unreleased]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...dev
+[1.8.5]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5
+[1.8.4]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.3...v1.8.4
+[1.8.3]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.2...v1.8.3
+[1.8.2]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.1...v1.8.2
+[1.8.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.0...v1.8.1
+[1.8.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.7.0...v1.8.0
+[1.7.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.5...v1.7.0
+[1.6.5]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.4...v1.6.5
+[1.6.4]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.3...v1.6.4
+[1.6.3]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.2...v1.6.3
+[1.6.2]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.1...v1.6.2
+[1.6.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.6.0...v1.6.1
+[1.6.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.5.1...v1.6.0
+[1.5.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.5.0...v1.5.1
+[1.5.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.11.0...v1.0.0
+[0.11.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.10.1...v0.11.0
+[0.10.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.10.0...v0.10.1
+[0.10.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.9.0...v0.10.0
+[0.9.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.8.1...v0.9.0
+[0.8.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.6.2...v0.7.0
+[0.6.2]: https://github.com/INTI-CMNB/KiBot/compare/v0.6.1...v0.6.2
+[0.6.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.5...v0.3.0
+[0.2.5]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/INTI-CMNB/KiBot/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/INTI-CMNB/KiBot/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/INTI-CMNB/KiBot/releases/tag/v0.1.1

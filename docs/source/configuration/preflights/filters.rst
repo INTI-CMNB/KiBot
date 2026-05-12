@@ -13,7 +13,7 @@ To farther ignore these warnings use the `filters` option in the `global` sectio
 
    -  **filters** :index:`: <pair: preflight - filters; filters>`  [:ref:`FilterOptions parameters <FilterOptions_pre>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) One or more filters.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FilterOptions
+- :ref:`FilterOptions parameters <FilterOptions_pre>`

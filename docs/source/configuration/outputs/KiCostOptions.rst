@@ -1,5 +1,7 @@
 .. _KiCostOptions:
 
+:orphan:
+
 
 KiCostOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,8 +54,8 @@ KiCostOptions parameters
 -  ``variant`` :index:`: <pair: output - kicost - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
    Don't use the `kicost_variant` when using internal variants/filters.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Aggregate
-   FieldRename
+- :ref:`Aggregate parameters <Aggregate>`
+- :ref:`FieldRename parameters <FieldRename>`

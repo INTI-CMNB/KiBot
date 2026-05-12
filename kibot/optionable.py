@@ -202,7 +202,18 @@ class Optionable(object):
         for key, value in v.items():
             if not isinstance(value, str):
                 raise KiPlotConfigurationError(f"Key `{key}` of option `{k}` must be a string, not"
-                                               f" `{typeof(value,Optionable)}`")
+                                               f" `{typeof(value, Optionable)}`")
+        return True
+
+    def check_list_string_dict(self, v_type, valid, k, v):
+        if v_type != 'list(dict)' or 'list(string_dict)' not in valid:
+            return False
+        # A particular case for list(dict)
+        for item in v:
+            for key, value in item.items():
+                if not isinstance(value, str):
+                    raise KiPlotConfigurationError(f"Key `{key}` of option `{k}` must be a string, not"
+                                                   f" `{typeof(value, Optionable)}`")
         return True
 
     def _perform_config_mapping(self):
@@ -234,7 +245,8 @@ class Optionable(object):
             cur_val = getattr(self, alias)
             # Get the type used by the user as a string
             v_type = typeof(v, Optionable, valid)
-            if v_type not in valid and not self.check_string_dict(v_type, valid, k, v):
+            if (v_type not in valid and not self.check_string_dict(v_type, valid, k, v) and
+               not self.check_list_string_dict(v_type, valid, k, v)):
                 # Not a valid type for this key
                 if v_type == 'None':
                     raise KiPlotConfigurationError("Empty option `{}`".format(k))
@@ -274,12 +286,15 @@ class Optionable(object):
                         new_val = []
                         filtered_valid = [t[5:-1] for t in valid if t.startswith('list(')]
                         no_case = '{no_case}' in cur_doc
+                        is_string_dict = 'string_dict' in filtered_valid
+                        if is_string_dict:
+                            filtered_valid.append('dict')
                         for element in v:
                             e_type = typeof(element, Optionable)
                             if e_type not in filtered_valid:
                                 raise KiPlotConfigurationError("Option `{}` must be any of {} not `{}`".
                                                                format(element, filtered_valid, e_type))
-                            if isinstance(element, dict):
+                            if isinstance(element, dict) and not is_string_dict:
                                 nv = cur_val()
                                 nv.set_tree(element)
                                 nv.config(self)
@@ -787,7 +802,7 @@ class PanelOptions(BaseOptions):
 
     def add_angle(self, ops, def_units=None):
         if def_units is None:
-            def_units = self._parent._parent.units
+            def_units = self._parent._parent.default_angles
         for op in ops:
             val = getattr(self, op)
             if isinstance(val, (int, float)):

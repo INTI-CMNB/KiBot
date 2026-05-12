@@ -1,0 +1,13 @@
+print_err.pro
+test_v5/
+zone-refill.pro
+fp-info-cache
+*-bak
+*-backups
+pcb_parity.xml
+batteryPack.kicad_prl
+parity_not_in_bom.xml
+board_characteristics*.kicad_pcb
+draw_stackup.kicad_pcb
+.history
+~*.lck

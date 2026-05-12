@@ -1,5 +1,7 @@
 .. _PcbDrawStyle:
 
+:orphan:
+
 
 PcbDrawStyle parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

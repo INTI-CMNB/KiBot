@@ -1,5 +1,7 @@
 .. _CompressOptions:
 
+:orphan:
+
 
 CompressOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -14,7 +16,7 @@ CompressOptions parameters
 -  *remove_files* :index:`: <pair: output - compress - options; remove_files>` Alias for move_files.
 -  ``skip_not_run`` :index:`: <pair: output - compress - options; skip_not_run>` [:ref:`boolean <boolean>`] (default: ``false``) Skip outputs with `run_by_default: false`.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FilesListCompress
+- :ref:`FilesListCompress parameters <FilesListCompress>`

@@ -46,15 +46,20 @@ def natural_sort_key(s):
 
 def convert_brd(pcb, brd, do_sort):
     # Board outline
+    # <-- This code can't be a function or we crash pcbnew API
     outlines = SHAPE_POLY_SET()
     if GS.ki5:
         pcb.GetBoardPolygonOutlines(outlines, "")
         outline = outlines.Outline(0)
         outline_points = [outline.Point(n) for n in range(outline.PointCount())]
     else:
-        pcb.GetBoardPolygonOutlines(outlines)
+        if GS.ki10:
+            pcb.GetBoardPolygonOutlines(outlines, True)
+        else:
+            pcb.GetBoardPolygonOutlines(outlines)
         outline = outlines.Outline(0)
         outline_points = [outline.GetPoint(n) for n in range(outline.GetPointCount())]
+    # <-- End
     outline_maxx = max((p.x for p in outline_points))
     outline_maxy = max((p.y for p in outline_points))
 
@@ -168,15 +173,20 @@ def get_type_name(m):
 def convert_bvr(pcb, bvr):
     bvr.write("BVRAW_FORMAT_3\n")
 
+    # <-- This code can't be a function or we crash pcbnew API
     outlines = SHAPE_POLY_SET()
     if GS.ki5:
         pcb.GetBoardPolygonOutlines(outlines, "")
         outline = outlines.Outline(0)
         outline_points = [outline.Point(n) for n in range(outline.PointCount())]
     else:
-        pcb.GetBoardPolygonOutlines(outlines)
+        if GS.ki10:
+            pcb.GetBoardPolygonOutlines(outlines, True)
+        else:
+            pcb.GetBoardPolygonOutlines(outlines)
         outline = outlines.Outline(0)
         outline_points = [outline.GetPoint(n) for n in range(outline.GetPointCount())]
+    # <-- End
     max((p.x for p in outline_points))
     outline_maxy = max((p.y for p in outline_points))
 

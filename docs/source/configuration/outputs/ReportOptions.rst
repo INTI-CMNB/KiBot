@@ -1,5 +1,7 @@
 .. _ReportOptions:
 
+:orphan:
+
 
 ReportOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~

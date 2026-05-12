@@ -1,5 +1,7 @@
 .. _PanelizePage:
 
+:orphan:
+
 
 PanelizePage parameters
 ~~~~~~~~~~~~~~~~~~~~~~~

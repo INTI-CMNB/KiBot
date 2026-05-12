@@ -6,7 +6,7 @@
 Run DRC (**Deprecated for KiCad 8**)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Runs the DRC (Distance Rules Check) to ensure we have a valid PCB.
+Runs the DRC (Design Rules Check) to ensure we have a valid PCB.
 For KiCad 8 use *drc*
 The report file name is controlled by the global output pattern (%i=drc %x=txt). |br|
 Note that the KiCad 6+ *Test for parity between PCB and schematic* option is not supported. |br|
@@ -17,7 +17,7 @@ If you use DRC exclusions please consult the `drc_exclusions_workaround` global 
 
    -  **run_drc** :index:`: <pair: preflight - run_drc; run_drc>`  [:ref:`Run_DRCOptions parameters <Run_DRCOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   Run_DRCOptions
+- :ref:`Run_DRCOptions parameters <Run_DRCOptions_pre>`

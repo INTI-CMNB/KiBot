@@ -9,7 +9,6 @@
 # https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/exporters/gendrill_file_writer_base.cpp
 from ..gs import GS
 import pcbnew
-from kibot.misc import VIATYPE_THROUGH
 from kibot import log
 
 logger = log.get_logger()
@@ -50,7 +49,7 @@ def get_unique_layer_pairs():
         via_type = via.GetViaType()
 
         # Only note blind or buried vias (not through-hole vias)
-        if via_type != VIATYPE_THROUGH:
+        if via_type != GS.VIATYPE_THROUGH:
             unique_layer_pairs.add(layer_pair)
 
     # Start the returned list with the default through-hole layer pair

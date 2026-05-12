@@ -171,7 +171,7 @@ class BaseOutput(RegOutput):
             out = RegOutput.get_output(to_dis)
             if out is None:
                 raise KiPlotConfigurationError('Unknown output `{}` in `disable_run_by_default`'.format(to_dis))
-        if self.dir[0] == '+':
+        if self.dir and self.dir[0] == '+':
             self.dir = (GS.global_dir if GS.global_dir is not None else './') + self.dir[1:]
         if not self.category:
             self.category = self.force_list(self._category)
@@ -1143,10 +1143,10 @@ class VariantOptions(BaseOptions):
         if self._files_to_remove:
             self.remove_temporals()
 
-    def load_list_components(self):
+    def load_list_components(self, forced=False):
         """ Makes the list of components available """
         self._files_to_remove = []
-        if not self.dnf_filter and not self.variant and not self.pre_transform and not self.exclude_filter:
+        if not self.dnf_filter and not self.variant and not self.pre_transform and not self.exclude_filter and not forced:
             return
         # Get the components list from the schematic
         comps = get_all_components(collapse=self._collapse_components)

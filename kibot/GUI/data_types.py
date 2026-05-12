@@ -24,13 +24,15 @@ from ..misc import typeof, try_int, RE_LEN, BASE_HELP_CFG
 from ..optionable import Optionable
 from .. import log
 logger = log.get_logger()
-TYPE_PRIORITY = {'list(dict|string)': 110, 'list(dict)': 100, 'dict_s': 100, 'list(list(string))': 90, 'list(string)': 80,
-                 'string_s': 80, 'dict': 60, 'string_dict': 55, 'string': 50, 'number': 20, 'boolean': 10}
-TYPE_ABREV = {'list(dict|string)': 'LDS', 'list(dict)': 'LD', 'dict_s': 'LD1', 'list(list(string))': 'LLS',
-              'list(string)': 'LS', 'string_s': 'LS1', 'dict': 'D', 'string_dict': 'SD', 'string': 'S', 'number': 'N',
-              'boolean': 'B'}
-TYPE_EMPTY = {'list(dict|string)': [], 'list(dict)': [], 'list(list(string))': [], 'list(string)': [],
-              'string_s': '', 'string_dict': {}, 'string': '', 'number': '', 'boolean': False, 'dict': {}, 'dict_s': {}}
+TYPE_PRIORITY = {'list(string_dict)': 120, 'list(dict|string)': 110, 'list(dict)': 100, 'dict_s': 100,
+                 'list(list(string))': 90, 'list(string)': 80, 'string_s': 80, 'dict': 60, 'string_dict': 55,
+                 'string': 50, 'number': 20, 'boolean': 10}
+TYPE_ABREV = {'list(string_dict)': 'LSD', 'list(dict|string)': 'LDS', 'list(dict)': 'LD', 'dict_s': 'LD1',
+              'list(list(string))': 'LLS', 'list(string)': 'LS', 'string_s': 'LS1', 'dict': 'D', 'string_dict': 'SD',
+              'string': 'S', 'number': 'N', 'boolean': 'B'}
+TYPE_EMPTY = {'list(string_dict)': [], 'list(dict|string)': [], 'list(dict)': [], 'list(list(string))': [],
+              'list(string)': [], 'string_s': '', 'string_dict': {}, 'string': '', 'number': '', 'boolean': False,
+              'dict': {}, 'dict_s': {}}
 max_label = 200
 def_text = 200
 BMP_CLEAR = wx.ART_DELETE
@@ -1031,6 +1033,9 @@ def get_class_for(kind, rest):
         return DataTypeListDictOrString
     elif kind == 'list(list(string))':
         return DataTypeListListString
+    elif kind == 'list(string_dict)':
+        # return DataTypeListStringDict
+        return DataTypeListString  # This is fake, but nobody seems to be using the GUI
     logger.error(f'Not implemented: {kind}')
     raise AssertionError()
 

@@ -1,5 +1,7 @@
 .. _DrawStackupOptions_pre:
 
+:orphan:
+
 
 DrawStackupOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -25,7 +27,7 @@ DrawStackupOptions parameters
 -  ``width`` :index:`: <pair: preflight - draw_stackup - draw_stackup; width>` [:ref:`number <number>`] (default: ``120``) Width for the drawing. The units are defined by the global *units* variable.
    Only used when the group can't be found.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   SUColumns
+- :ref:`SUColumns parameters <SUColumns_pre>`

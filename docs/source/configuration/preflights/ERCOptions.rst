@@ -1,5 +1,7 @@
 .. _ERCOptions_pre:
 
+:orphan:
+
 
 ERCOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~
@@ -19,10 +21,15 @@ ERCOptions parameters
 -  ``format`` :index:`: <pair: preflight - erc - erc; format>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'HTML'``) (choices: "RPT", "HTML", "CSV", "JSON") [:ref:`comma separated <comma_sep>`] Format/s used for the report.
    You can specify multiple formats.
 
+-  ``logo`` :index:`: <pair: preflight - erc - erc; logo>` [:ref:`string <string>` | :ref:`boolean <boolean>`] (default: ``''``) PNG file to use as logo, use false to remove.
+   The KiBot logo is used by default.
+
+-  ``logo_force_height`` :index:`: <pair: preflight - erc - erc; logo_force_height>` [:ref:`number <number>`] (default: ``-1``) Force logo height in px. Useful to get consistent heights across different logos..
+-  ``logo_url`` :index:`: <pair: preflight - erc - erc; logo_url>` [:ref:`string <string>`] (default: ``'https://github.com/INTI-CMNB/KiBot/'``) Target link when clicking the logo.
 -  ``units`` :index:`: <pair: preflight - erc - erc; units>` [:ref:`string <string>`] (default: ``'millimeters'``) (choices: "millimeters", "inches", "mils") Units used for the positions. Affected by global options.
 -  ``warnings_as_errors`` :index:`: <pair: preflight - erc - erc; warnings_as_errors>` [:ref:`boolean <boolean>`] (default: ``false``) Warnings are considered errors, they still reported as warnings.
 
-.. toctree::
-   :caption: Used dicts
+Used dicts
+----------
 
-   FilterOptionsXRC
+- :ref:`FilterOptionsXRC parameters <FilterOptionsXRC_pre>`

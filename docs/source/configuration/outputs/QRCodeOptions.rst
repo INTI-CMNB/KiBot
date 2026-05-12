@@ -1,5 +1,7 @@
 .. _QRCodeOptions:
 
+:orphan:
+
 
 QRCodeOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~

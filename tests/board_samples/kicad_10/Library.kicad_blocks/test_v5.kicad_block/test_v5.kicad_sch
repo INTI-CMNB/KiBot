@@ -1,0 +1,250 @@
+(kicad_sch
+	(version 20260101)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "108a3693-2748-4ac3-9429-99a8388575a0")
+	(paper "A4")
+	(lib_symbols)
+	(wire
+		(pts
+			(xy 99.06 92.71) (xy 99.06 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0088d107-13d8-496c-8da6-7bbeb9d096b0")
+	)
+	(wire
+		(pts
+			(xy 129.54 114.3) (xy 96.52 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "128e34ce-eee7-477d-b905-a493e98db783")
+	)
+	(wire
+		(pts
+			(xy 96.52 82.55) (xy 101.6 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3172f2e2-18d2-4a80-ae30-5707b3409798")
+	)
+	(wire
+		(pts
+			(xy 129.54 82.55) (xy 129.54 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "417f13e4-c121-485a-a6b5-8b55e70350b8")
+	)
+	(wire
+		(pts
+			(xy 129.54 102.87) (xy 129.54 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "67621f9e-0a6a-4778-ad69-04dcf300659c")
+	)
+	(wire
+		(pts
+			(xy 127 102.87) (xy 129.54 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "68e09be7-3bbc-4443-a838-209ce20b2bef")
+	)
+	(wire
+		(pts
+			(xy 99.06 102.87) (xy 101.6 102.87)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6a780180-586a-4241-a52d-dc7a5ffcc966")
+	)
+	(wire
+		(pts
+			(xy 127 82.55) (xy 129.54 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9dab0cb7-2557-4419-963b-5ae736517f62")
+	)
+	(wire
+		(pts
+			(xy 129.54 92.71) (xy 99.06 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c201e1b2-fc01-4110-bdaa-a33290468c83")
+	)
+	(wire
+		(pts
+			(xy 96.52 114.3) (xy 96.52 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c801d42e-dd94-493e-bd2f-6c3ddad43f55")
+	)
+	(group ""
+		(uuid "df6e18b8-ccd0-4c1e-900a-b2a90cf8d87a")
+		(members "00000000-0000-0000-0000-00005f342deb" "00000000-0000-0000-0000-00005f34e267"
+			"0088d107-13d8-496c-8da6-7bbeb9d096b0" "128e34ce-eee7-477d-b905-a493e98db783"
+			"3172f2e2-18d2-4a80-ae30-5707b3409798" "417f13e4-c121-485a-a6b5-8b55e70350b8"
+			"67621f9e-0a6a-4778-ad69-04dcf300659c" "68e09be7-3bbc-4443-a838-209ce20b2bef"
+			"6a780180-586a-4241-a52d-dc7a5ffcc966" "9dab0cb7-2557-4419-963b-5ae736517f62"
+			"c201e1b2-fc01-4110-bdaa-a33290468c83" "c801d42e-dd94-493e-bd2f-6c3ddad43f55"
+		)
+	)
+	(sheet
+		(at 101.6 76.2)
+		(size 25.4 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f342deb")
+		(property "Sheetname" "Sub Sheet"
+			(at 101.6 75.4884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sub-sheet.kicad_sch"
+			(at 101.6 89.4846 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "OUT" output
+			(at 127 82.55 0)
+			(uuid "0f41a909-27c4-4be2-9d5e-9ae2108c8ff5")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "IN" input
+			(at 101.6 82.55 180)
+			(uuid "632acde9-b7fd-4f04-8cb4-d2cbb06b3595")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "test_v5"
+				(path "/e6521bef-4109-48f7-8b88-4121b0468927"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 101.6 96.52)
+		(size 25.4 12.7)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "00000000-0000-0000-0000-00005f34e267")
+		(property "Sheetname" "Sub Sheet 2"
+			(at 101.6 95.8084 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "sub-sheet.kicad_sch"
+			(at 101.6 109.8046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "OUT" output
+			(at 127 102.87 0)
+			(uuid "dabe541b-b164-4180-97a4-5ca761b86800")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "IN" input
+			(at 101.6 102.87 180)
+			(uuid "e12e827e-36be-4503-8eef-6fc7e8bc5d49")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "test_v5"
+				(path "/e6521bef-4109-48f7-8b88-4121b0468927"
+					(page "5")
+				)
+			)
+		)
+	)
+)
