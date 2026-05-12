@@ -1,8 +1,85 @@
-kibot (1.8.6-1) UNRELEASED; urgency=medium
+kibot (1.9.0-1) stable; urgency=medium
 
-  * Next release
+  * Added support for 10.0.1
+  * New outputs:
+    - BoM Labels (bom_labels): [Experimental] To generate a PDF containing
+      labels for the BoM items.
+    - PCB stats (pcb_stats): The KiCad 10 PCB statistics
+    - Hugo KiCad Site helper (kicad_site): [Experimental] Helper for the
+      Hugo theme for KiCad projects
+  * CLI:
+    - --fail-on-warnings: to return error when we detected warning
+    - --warn-all: to display some warnings that you'll find during common use
+  * Schematic:
+    - Support for private text on symbols
+    - Some basic check for the page numbers
+  * New filters:
+    - `alternatives`: Used to add alternative fields (i.e. alternative
+      manufacturers)
+  * Added in the generic filter: `exclude_kicad_dnp` to exclude components
+    marked as DNP in KiCad
+  * Variants: Experimental KiCad variants
+  * KiCad 9 embedded files: populate the cache if needed
+  * preflights:
+    - Mechanism to merge preflights from imports (`merge_pre`)
+    - `set_text_variables_sheet_title`, `set_text_variables_sheet_title_min`
+      and `set_text_variables_sheet_title_default` global options to enable
+      the generation of KiCad variables containing the titles for all the
+      schematic sheets. The are named `SHEET_TITLE_n`
+  * Global options:
+    - `allow_blind_vias` and `allow_buried_vias`: for KiCad 10 to replace the
+      unified `allow_blind_buried_vias`
+    - `code_page_fallback`: to specify a code page for text not encoded in
+      UTF-8
+  * 3D models: option to download the latest 3D models (`kicad_3d_url_version`)
+  * BoM:
+    - descriptive error when using `kicad` format and no options found.
+    - `tilde_is_empty` to interpret fields defined as `~` as empty.
+    - `sep_for_merged` to configure the separator for multiple values on the
+      same field. This is when a group contains components with a difference
+      in the field.
+    - `merge_values` to also merge different values on grouped components.
+  * Download Datasheets: now uses `curl` if installed.
+  * DRC/ERC: Configurable logo
+  * iBoM: `mark_when_checked` option
+  * KiRi: Support for uninitialized submodules
+  * Navigate results: `expand_text_vars` to expand %X and vars in the title.
+  * Panelize: `copy_lib_tables` to get a usable lib table
+  * PcbDraw:
+    - Allow huge files, usually from panels.
+    - Better performance
+  * Position:
+    - `grid`/`grid_fail` options to check if components are in a grid
+  * Report: `buried_vias_count` for KiCad 10
+  * SCH/PCB Variant: `include` option to export legacy variants to KiCad 10
+  * SCH Print: specify pages to be included
+  * Fixed in 3D models:
+    - Download models from the repo tag corresponding to the currently
+      installed KiCad version, not the one from `master`
+    - EasyEDA 3D models download issues when the specified model was an
+      STEP file using an extension different than `.step`
+  * Fixed in Blender export: problems with component values containing `/ `
+  * Fixed in BoM:
+    - `Missing footprint information for` for components marked as not on board
+    - Digi-Key URLs, to adapt the new format
+    - HTML: link cells not marked empty
+  * Fixed in DRC:
+    - No schematic parity check when using 'check_zone_fills' and not
+      'fill_zones'
+  * Fixed in Panelize:
+    - Problems when using angles
+    - Confusing error when the output wasn't generated
+  * Fixed in PCB Print: worksheet page 1 vs other pages look when using the
+    internal mechanism
+  * Allow empty `dir` option
+  * Changed in `--fail-on-warnings` now ignores filtered warning (as the help
+    suggested) and you can get the old behavior adding `--fail-on-ignored`
+  * Fixed in 3D models: GitLab URL. Because the old URL is now blocked.
+  * W009 and W044 warnings promoted to "common use" warnings
+  * Fixed in E/DRC: we now get the big OK mark when all violations are excluded
+  * Fixed in BoM: by default fields defined as `~` are empty.
 
- -- Salvador Eduardo Tropea <salvador@inti.gob.ar>  Wed, 03 Dec 2025 08:30:40 -0300
+ -- Salvador Eduardo Tropea <salvador@inti.gob.ar>  Tue, 12 May 2026 06:31:05 -0300
 
 kibot (1.8.5-1) stable; urgency=medium
 
