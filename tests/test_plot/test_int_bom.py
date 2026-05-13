@@ -1382,7 +1382,7 @@ def test_int_bom_variant_t1_10(test_dir):
     check_kibom_test_netlist(rows, ref_column, 1, ['R2', 'R3'], ['R1', 'R4']+extra)
     VARIANTE_PRJ_INFO_10[1] = 'V3'
     check_csv_info(info, VARIANTE_PRJ_INFO_10, [3, 16, 10, 1, 10])
-    ctx.clean_up()
+    ctx.clean_up(keep_project=True)
 
 
 @pytest.mark.skipif(not context.ki8(), reason="Target is v8+")
