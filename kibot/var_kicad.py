@@ -26,6 +26,8 @@ class KiCad(BasicVariant):
         # Applies this variant to the components
         logger.debug(f'Applying KiCad variant `{self.name}`')
         if call_back is None:
+            if GS.debug_level:
+                GS.trace_dump()
             logger.warning("Filter without callback")
             return comps
         for c in comps:
