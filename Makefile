@@ -268,63 +268,63 @@ py_clean:
 # /Dockerfile.* must be updated
 update_gha:
 	cp Dockerfile_k5 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 5 latest" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 5 latest [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2 -m "GitHub Action v2 for KiCad 5"
 	git push origin -f --tags
 	cp Dockerfile_dk5 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 5 development" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 5 development [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_d -m "GitHub Action v2 for KiCad 5 (development)"
 	git tag -f -a v2_dk5 -m "GitHub Action v2 for KiCad 5 (development)"
 	git push origin -f --tags
 	cp Dockerfile_dk6 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 6 development" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 6 development [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_dk6 -m "GitHub Action v2 for KiCad 6 (development)"
 	git push origin -f --tags
 	cp Dockerfile_k6 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 6 latest" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 6 latest [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_k6 -m "GitHub Action v2 for KiCad 6"
 	git push origin -f --tags
 	cp Dockerfile_dk7 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 7 development" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 7 development [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_dk7 -m "GitHub Action v2 for KiCad 7 (development)"
 	git push origin -f --tags
 	cp Dockerfile_k7 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 7 latest" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 7 latest [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_k7 -m "GitHub Action v2 for KiCad 7"
 	git push origin -f --tags
 	cp Dockerfile_dk8 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 8 development" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 8 development [skip ci]" Dockerfile
 	git push
-	git tag -f -a v2_dk8 -m "GitHub Action v2 for KiCad 8 (development)"
+	git tag -f -a v2_dk8 -m "GitHub Action v2 for KiCad 8 (development) [skip ci]"
 	git push origin -f --tags
 	cp Dockerfile_k8 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 8 latest" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 8 latest [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_k8 -m "GitHub Action v2 for KiCad 8"
 	git push origin -f --tags
 	cp Dockerfile_dk9 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 9 development" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 9 development [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_dk9 -m "GitHub Action v2 for KiCad 9 (development)"
 	git push origin -f --tags
 	cp Dockerfile_k9 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 9 latest" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 9 latest [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_k9 -m "GitHub Action v2 for KiCad 9"
 	git push origin -f --tags
 	cp Dockerfile_dk10 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 10 development" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 10 development [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_dk10 -m "GitHub Action v2 for KiCad 10 (development)"
 	git push origin -f --tags
 	cp Dockerfile_k10 Dockerfile
-	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 10 latest" Dockerfile
+	git commit -m "[CI/CD] Updating Github Action v2 for KiCad 10 latest [skip ci]" Dockerfile
 	git push
 	git tag -f -a v2_k10 -m "GitHub Action v2 for KiCad 10"
 	git push origin -f --tags
