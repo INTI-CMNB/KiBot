@@ -1,3 +1,9 @@
+kibot (1.9.1-1) UNRELEASED; urgency=medium
+
+  * Next release
+
+ -- Salvador Eduardo Tropea <salvador@inti.gob.ar>  Wed, 13 May 2026 09:25:23 -0300
+
 kibot (1.9.0-1) stable; urgency=medium
 
   * Added support for 10.0.1
