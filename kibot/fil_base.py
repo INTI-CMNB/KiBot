@@ -207,6 +207,8 @@ def reset_filters(comps, kicad_dnp_applied='global'):
         c.set_fitted(fitted)
         c.set_fixed(False)
         c.back_up_fields()
+        c.in_bom = c.in_bom_sch
+        c.kicad_dnp = c.kicad_dnp_sch
 
 
 def apply_fitted_filter(comps, filter):

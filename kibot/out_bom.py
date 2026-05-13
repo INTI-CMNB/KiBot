@@ -1009,18 +1009,11 @@ class BoMOptions(BaseOptions):
         """ KiCad variants implementation specific for BoM.
             `no in BoM` -> not included
             `DNP` -> not fitted """
-        vname = 'Default'
-        v = None
-        if self.variant:
-            v = c.variants.get(self.variant.name)
-            if v:
-                logger.debugl(4, f"- Found variant {self.variant.name} for {c.ref}")
-                vname = self.variant.name
+        v, vname = super().kicad_var_cb(c)
         # Included
         if self.exclude_marked_in_sch:
-            in_bom = v.in_bom if v is not None and v.in_bom is not None else c.in_bom
-            if c.included and not in_bom:
-                c.included = in_bom
+            if c.included and not c.in_bom:
+                c.included = c.in_bom
                 logger.debugl(3, f'- {c.ref} excluded by `{vname}` from schematic')
         if self.exclude_marked_in_pcb:
             # The variant was applied by "get_board_comps_data"
@@ -1029,15 +1022,11 @@ class BoMOptions(BaseOptions):
                 logger.debugl(3, f'- {c.ref} excluded from PCB')
         # DNP (aka DNF)
         if self._kicad_dnp_applied_solved:
-            dnp = v.dnp if v is not None and v.dnp is not None else c.kicad_dnp
+            # dnp = v.dnp if v is not None and v.dnp is not None else c.kicad_dnp
+            dnp = c.kicad_dnp
             if dnp:
                 c.set_fitted(False)
                 logger.debugl(3, f'- {c.ref} DNP by `{vname}`')
-        # Fields
-        if v is not None:
-            for name, value in v.fields.items():
-                c.set_field(name, value)
-                logger.debugl(3, f'- {c.ref} field `{name}` set to `{value}` by `{vname}`')
 
     def run(self, output):
         format = self._format

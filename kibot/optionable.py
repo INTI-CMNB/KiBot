@@ -729,6 +729,33 @@ class Optionable(object):
             return GS.global_field_distributor[0] if GS.global_field_distributor else field_or_empty
         return field
 
+    def get_kicad_variant(self, c):
+        """ Look for the currently selected variant in the component """
+        vname = 'Default'
+        v = None
+        if self.variant:
+            v = c.variants.get(self.variant.name)
+            if v:
+                logger.debugl(4, f"- Found variant {self.variant.name} for {c.ref}")
+                vname = self.variant.name
+        return v, vname
+
+    def kicad_var_cb(self, c):
+        """ Generic KiCad variants implementation """
+        v, vname = self.get_kicad_variant(c)
+        if v is None:
+            return v, vname
+        # Flags
+        if v.in_bom is not None:
+            c.in_bom = v.in_bom
+        if v.dnp is not None:
+            c.kicad_dnp = v.dnp
+        # Fields
+        for name, value in v.fields.items():
+            c.set_field(name, value)
+            logger.debugl(3, f'- {c.ref} field `{name}` set to `{value}` by `{vname}`')
+        return v, vname
+
 
 class BaseOptions(Optionable):
     """ A class to validate and hold output options.

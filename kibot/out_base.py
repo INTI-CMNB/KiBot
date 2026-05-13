@@ -1161,7 +1161,7 @@ class VariantOptions(BaseOptions):
         # Apply the variant
         if self.variant:
             # Apply the variant
-            comps = self.variant.filter(comps)
+            comps = self.variant.filter(comps, self.kicad_var_cb)
             self._sub_pcb = self.variant._sub_pcb
         self._comps = comps
 

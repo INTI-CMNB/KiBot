@@ -1397,7 +1397,7 @@ class SchematicComponentV6(SchematicComponent):
             elif i_type == 'exclude_from_sim':
                 comp.exclude_from_sim = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_bom':
-                comp.in_bom = _get_yes_no(i, 1, i_type)
+                comp.in_bom_sch = comp.in_bom = _get_yes_no(i, 1, i_type)
             elif i_type == 'on_board':
                 comp.on_board = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_pos_files':
@@ -1405,7 +1405,7 @@ class SchematicComponentV6(SchematicComponent):
             elif i_type == 'duplicate_pin_numbers_are_jumpers':
                 comp.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
-                comp.kicad_dnp = _get_yes_no(i, 1, i_type)
+                comp.kicad_dnp_sch = comp.kicad_dnp = _get_yes_no(i, 1, i_type)
             elif i_type == 'fields_autoplaced':
                 # Not documented
                 comp.fields_autoplaced = True

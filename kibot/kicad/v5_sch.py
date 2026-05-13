@@ -906,6 +906,7 @@ class SchematicComponent(object):
         self.tht = False
         # KiCad 6 SCH flags
         self.in_bom = True          # not Exclude from bill of materials
+        self.in_bom_sch = True      # back-up copy
         self.on_board = True        # not Exclude from BoM
         # KiCad 6 PCB flags
         self.in_bom_pcb = True      # not Exclude from bill of materials
@@ -913,6 +914,7 @@ class SchematicComponent(object):
         self.in_pcb_only = False    # Not in schematic
         # KiCad 7 PCB flags
         self.kicad_dnp = None       # Do Not Populate
+        self.kicad_dnp_sch = None   # back-up copy
         # KiCad 10
         self.in_pos_files = None
         self.duplicate_pin_numbers_are_jumpers = None
