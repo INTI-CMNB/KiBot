@@ -1,1 +1,0 @@
-../5_1_7/light_control-report_output_path_1.txt
