@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
@@ -12,7 +12,8 @@ Usage:
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
          [--fail-on-warnings] [-F] [--warn-ci-cd] [--warn-all] [--banner N]
-         [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
+         [--gui | --internal-check] [--keep-temporals] [-I INJECT]
+         [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
@@ -66,6 +67,7 @@ Options:
   --internal-check                 Run some outputs internal checks
   -i, --invert-sel                 Generate the outputs not listed as targets
   -I, --gui-inject INJECT          Inject events to the GUI from INJECT file
+  --keep-temporals                 Keep temporal files (most of them)
   -l, --list                       List available outputs, preflights and
                                    groups (in the config file).
                                    You don't need to specify an SCH/PCB unless
@@ -554,6 +556,8 @@ def main():
         except ValueError:
             GS.exit_with_error(f'The banner option needs an integer ({id})', EXIT_BAD_ARGS)
         logger.info(get_banner(id))
+
+    GS.keep_temporals = args.keep_temporals
 
     if args.help_outputs or args.help_list_outputs:
         print_outputs_help(args.rst, details=args.help_outputs)

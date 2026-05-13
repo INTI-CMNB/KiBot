@@ -1113,14 +1113,17 @@ class VariantOptions(BaseOptions):
         return new_list
 
     def remove_temporals(self):
-        logger.debug('Removing temporal files')
+        action = 'Keeping' if GS.keep_temporals else 'Removing'
+        logger.debug(f'{action} temporal files')
         for f in self._files_to_remove:
             if os.path.isfile(f):
                 logger.debug('- File `{}`'.format(f))
-                os.remove(f)
+                if not GS.keep_temporals:
+                    os.remove(f)
             elif os.path.isdir(f):
                 logger.debug('- Dir `{}`'.format(f))
-                rmtree(f)
+                if not GS.keep_temporals:
+                    rmtree(f)
         self._files_to_remove = []
         self._highlight_3D_file = None
 

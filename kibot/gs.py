@@ -132,6 +132,7 @@ class GS(object):
     ci_cd_detected = False
     stop_flag = False
     errors_ignored = False    # We ignored at least one error
+    keep_temporals = False    # Selected from command line
     # Maximum recursive replace
     MAXDEPTH = 20
     # VIATYPE, not exported by KiCad 5 (6, 7, 8 and 9 defines it the same way)
