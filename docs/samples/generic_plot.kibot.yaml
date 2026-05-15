@@ -1126,6 +1126,7 @@ outputs:
       # changes in the history you want to go back. A 0 is the same as `HEAD`,
       # a 1 means the last time the PCB/SCH was changed, etc.
       # Use `KIBOT_TAG-n` to search for the last tag skipping `n` tags.
+      # The tags can be filtered using `tag_filter` option.
       # Important: when using the `checkout` GitHub action you just get the
       # last commit. To clone the full repo use `fetch-depth: '0'`
       old: 'HEAD'
@@ -1148,6 +1149,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
+      # [string=''] A regular expression used to match the used tags for `KIBOT_TAG`
+      tag_filter: ''
       # [number=0] [0,1000000] Error threshold for the `stats` mode, 0 is no error. When specified a
       # difference bigger than the indicated value will make the diff fail.
       # KiBot will return error level 29 and the diff generation will be aborted

@@ -2658,6 +2658,13 @@
           null
         ],
         [
+          "tag_filter",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "zones",
           [
             "DataTypeChoice"

@@ -56,6 +56,7 @@ DiffOptions parameters
    changes in the history you want to go back. A 0 is the same as `HEAD`,
    a 1 means the last time the PCB/SCH was changed, etc. |br|
    Use `KIBOT_TAG-n` to search for the last tag skipping `n` tags. |br|
+   The tags can be filtered using `tag_filter` option. |br|
 
 .. note::
       when using the `checkout` GitHub action you just get the
@@ -79,6 +80,7 @@ DiffOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+-  ``tag_filter`` :index:`: <pair: output - diff - options; tag_filter>` [:ref:`string <string>`] (default: ``''``) A regular expression used to match the used tags for `KIBOT_TAG`.
 -  ``threshold`` :index:`: <pair: output - diff - options; threshold>` [:ref:`number <number>`] (default: ``0``) (range: 0 to 1000000) Error threshold for the `stats` mode, 0 is no error. When specified a
    difference bigger than the indicated value will make the diff fail. |br|
    KiBot will return error level 29 and the diff generation will be aborted.

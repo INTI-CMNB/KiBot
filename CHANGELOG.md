@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CLI:
   - --keep-temporals: to keep temporal files
+- Diff:
+  - `tag_filter`: to select which tags are used for KIBOT_TAG
 
 
 ## [1.9.0] - 2026-05-12

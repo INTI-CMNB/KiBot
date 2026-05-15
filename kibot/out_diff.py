@@ -54,6 +54,7 @@ class DiffOptions(AnyDiffOptions):
                 changes in the history you want to go back. A 0 is the same as `HEAD`,
                 a 1 means the last time the PCB/SCH was changed, etc.
                 Use `KIBOT_TAG-n` to search for the last tag skipping `n` tags.
+                The tags can be filtered using `tag_filter` option.
                 Important: when using the `checkout` GitHub action you just get the
                 last commit. To clone the full repo use `fetch-depth: '0'` """
             self.old_type = 'git'
@@ -117,6 +118,8 @@ class DiffOptions(AnyDiffOptions):
             """ Color used for the added stuff in the '2color' mode """
             self.color_removed = '#FF0000'
             """ Color used for the removed stuff in the '2color' mode """
+            self.tag_filter = ''
+            """ A regular expression used to match the used tags for `KIBOT_TAG` """
         super().__init__()
         self.add_to_doc("zones", "Be careful with the cache when changing this setting")
 
@@ -133,6 +136,10 @@ class DiffOptions(AnyDiffOptions):
         if self.old_type == 'multivar' and self.new_type != 'multivar':
             raise KiPlotConfigurationError("`old_type` can't be `multivar` when `new_type` isn't (`{}`)".format(self.new_type))
         self.validate_colors(['color_added', 'color_removed'])
+        try:
+            self._tag_filter = re.compile(self.tag_filter)
+        except Exception as e:
+            raise KiPlotConfigurationError('Invalid regular expression '+str(e))
 
     def get_targets(self, out_dir):
         return [self._parent.expand_filename(out_dir, self.output)]
@@ -235,8 +242,11 @@ class DiffOptions(AnyDiffOptions):
         skipped = 0
         for v in res:
             try:
-                tag = v[v.index('tag: '):].split(',')[0][4:]
-                logger.debugl(2, '- {}/{} tag: {} -> {}'.format(skipped, num, tag, commit))
+                tag = v[v.index('tag: '):].split(',')[0][5:]
+                matches = self._tag_filter.search(tag) is not None if self.tag_filter else True
+                logger.debugl(2, f'- {skipped}/{num} / matches filter: {matches} - tag: `{tag}` -> {commit}')
+                if not matches:
+                    continue
                 if skipped == num:
                     return commit
                 skipped += 1
