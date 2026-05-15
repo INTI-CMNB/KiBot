@@ -570,6 +570,7 @@ class Base3DOptions(VariantOptions):
                 if not os.path.isfile(full_name):
                     # Missing 3D model
                     logger.debugl(2, 'Missing 3D model file {} ({})'.format(full_name, m3d.m_Filename))
+                    replace = None
                     if self.download:
                         replace = self.try_download_kicad(m3d.m_Filename, full_name, downloaded, rel_dirs, force_wrl,
                                                           force_step)
@@ -579,8 +580,11 @@ class Base3DOptions(VariantOptions):
                             replace = self.do_colored_tht_resistor(replace, sch_comp, used_extra)
                             self.replace_model(replace, m3d, force_wrl, force_step, is_copy_mode, rename_function, rename_data)
                     if full_name not in downloaded:
-                        logger.warning(W_MISS3D+'Missing 3D model for {}: `{}`'.format(ref, full_name))
-                    else:
+                        msg = W_MISS3D+f'Missing 3D model for {ref}: `{full_name}`'
+                        if replace is not None:
+                            msg += f' replaced by `{replace}`'
+                        logger.warning(msg)
+                    if replace is not None:
                         self.used_3d_models[os.path.basename(replace)] = replace
                 else:  # File was found
                     replace = self.do_colored_tht_resistor(full_name, sch_comp, used_extra)
