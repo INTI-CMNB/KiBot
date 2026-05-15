@@ -96,6 +96,8 @@ class KiCad_SiteOptions(BaseOptions):
             """ [dict|list(dict)=[]] Diff resources, usually one for the PCB and another for the schematic """
             self.ibom = ''
             """ Name of the iBoM output. Use `None` to skip """
+            self.bom = ''
+            """ Name of the BoM output to use as embedded HTML. Use `None` to skip """
             self.assembly_models = KiCad_SiteAssembly
             """ [dict|list(dict)=[]] 3D assembly models """
             self.force_copy = False
@@ -142,6 +144,12 @@ class KiCad_SiteOptions(BaseOptions):
             if out_name:
                 file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM', dry_run=True)
                 self.add_target_name(file, subdir)
+        # BoM
+        if self.bom != 'None':
+            out_name = self.get_bom()
+            if out_name:
+                file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='BoM', dry_run=True)
+                self.add_target_name(file, subdir)
         # Assembly models
         if self.assembly_models:
             for o in self.assembly_models:
@@ -164,6 +172,14 @@ class KiCad_SiteOptions(BaseOptions):
             return out.name if out else None
         return self.ibom
 
+    def get_bom(self, fail=False):
+        if not self.bom:
+            out = next(filter(lambda x: x.type == 'bom' and x.options._format == 'html', RegOutput.get_outputs()), None)
+            if not out:
+                raise KiPlotConfigurationError("No BoM output specified and I can't find it, use `None`")
+            return out.name if out else None
+        return self.bom
+
     def get_dependencies(self):
         # PCB & Schematic
         deps = {GS.pcb_file}
@@ -181,6 +197,11 @@ class KiCad_SiteOptions(BaseOptions):
         # iBoM
         if self.ibom != 'None':
             out_name = self.get_ibom()
+            if out_name:
+                deps.add(out_name)
+        # BoM
+        if self.bom != 'None':
+            out_name = self.get_bom()
             if out_name:
                 deps.add(out_name)
         # Assembly models
@@ -341,6 +362,13 @@ class KiCad_SiteOptions(BaseOptions):
             file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM')
             self.copy(file, subdir)
             cfg += f'  ibom: "{os.path.join(subdir, os.path.basename(file))}"\n'
+
+        # BoM
+        if self.bom != 'None':
+            out_name = self.get_bom(fail=True)
+            file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='BoM')
+            self.copy(file, subdir)
+            cfg += f'  bom: "{os.path.join(subdir, os.path.basename(file))}"\n'
 
         # Assembly models
         cfg += '  assemblyDir: "."\n'
