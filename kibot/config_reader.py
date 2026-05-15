@@ -628,7 +628,10 @@ class CfgYamlReader(object):
         # We support some sort of defaults for the -E definitions
         # To implement it we use a separated "document" inside the same file
         # Load the file to memory so we can preprocess it
-        content = fstream.read()
+        try:
+            content = fstream.read()
+        except UnicodeDecodeError as e:
+            raise KiPlotConfigurationError(f"Encoding error loading YAML ({file_name}): {e}")
         docs = re.split(r"^\.\.\.$", content, flags=re.M)
         local_defs = None
         n_docs = len(docs)
