@@ -1755,7 +1755,7 @@ class Schematic(object):
                 # Adjust details using a copy
                 c = deepcopy(c)
                 c.qty = qty
-                logger.debug(c.qty)
+                # logger.debug(c.qty)
                 if c.qty > 1:
                     logger.warning(W_MULTIREF+f'multiple `{c.ref}` components, not all operations will work')
                 c.unit = min(units.keys())
