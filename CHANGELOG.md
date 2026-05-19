@@ -9,8 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CLI:
   - --keep-temporals: to keep temporal files
+- BoM:
+  - JSON output format. As a helper for external renderers (See #917)
 - Diff:
   - `tag_filter`: to select which tags are used for KIBOT_TAG
+- KiCad Site:
+  - `bom` configuration
 
 
 ## [1.9.0] - 2026-05-12

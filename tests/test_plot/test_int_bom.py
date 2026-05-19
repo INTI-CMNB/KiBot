@@ -466,6 +466,11 @@ def test_int_bom_simple_xml(test_dir):
     ctx.clean_up()
 
 
+def test_int_bom_simple_json(test_dir):
+    ctx, out = kibom_setup(test_dir, 'int_bom_simple_json', 'json')
+    ctx.clean_up()
+
+
 def simple_xlsx_verify(ctx, prj, dnf=True, title=DEF_TITLE, extra_info=None):
     ext = 'xlsx'
     ctx.run()

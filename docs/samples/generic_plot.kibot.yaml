@@ -614,7 +614,7 @@ outputs:
       footprint_populate_values: 'no,yes'
       # [string|list(string)='SMD,THT,VIRTUAL'] {comma_sep} {L:3} Values for the `Footprint Type` column
       footprint_type_values: 'SMD,THT,VIRTUAL'
-      # [string='Auto'] [HTML,CSV,TXT,TSV,XML,XLSX,HRTXT,KICAD,Auto] format for the BoM.
+      # [string='Auto'] [HTML,CSV,TXT,TSV,XML,XLSX,HRTXT,KICAD,JSON,Auto] format for the BoM.
       # `Auto` defaults to CSV or a guess according to the options.
       # HRTXT stands for Human Readable TeXT.
       # KICAD is used to get the options from KiCad project. In KiCad you can configure CSV like options
@@ -642,7 +642,7 @@ outputs:
       group_fields_fallbacks: []
       # [boolean=false] Enable it to group fitted and not fitted components together. This is how KiCad's internal BoM behaves
       group_not_fitted: false
-      # [dict={}] Options for the HRTXT formats
+      # [dict={}] Options for the HRTXT format
       hrtxt:
         # [string='-'] Separator between the header and the data
         header_sep: '-'
@@ -705,6 +705,30 @@ outputs:
       ignore_dnf: true
       # [boolean=true] Component quantities are always expressed as integers. Using the ceil() function
       int_qtys: true
+      # [dict={}] Options for the JSON format
+      json:
+        # [string=''] {no_case} Column with links to the datasheet
+        datasheet_as_link: ''
+        # [string|list(string)=''] {no_case} Column/s containing Digi-Key part numbers, will be linked to web page
+        digikey_link: ''
+        # [string|list(string)=''] Information to put after the title and before the pcb and stats info
+        extra_info: ''
+        # [boolean=true] Generate a separated section for DNF (Do Not Fit) components
+        generate_dnf: true
+        # [boolean=true] Use a color for empty cells. Applies only when `col_colors` is `true`
+        highlight_empty: true
+        # [boolean|string|list(string)=''] {no_case} Column/s containing LCSC part numbers, will be linked to web page.
+        # Use **true** to copy the value indicated by the `field_lcsc_part` global option
+        lcsc_link: ''
+        # [string|boolean=''] PNG/SVG file to use as logo, use false to remove.
+        # Note that when using an SVG this is first converted to a PNG using `logo_width`
+        logo: ''
+        # [number=370] Used when the logo is an SVG image. This width is used to render the SVG image
+        logo_width: 370
+        # [string|list(string)=''] {no_case} Column/s containing Mouser part numbers, will be linked to web page
+        mouser_link: ''
+        # [string='KiBot Bill of Materials'] BoM title
+        title: 'KiBot Bill of Materials'
       # [string='global'] [global,yes,no] What we do with the KiCad DNP flag.
       # `global` means we apply the `kicad_dnp_applied` global option.
       # `yes` means we always remove DNP components.
@@ -2262,6 +2286,8 @@ outputs:
       # [string=''] Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
       # Without the version part
       base_url: ''
+      # [string=''] Name of the BoM output to use as embedded HTML. Use `None` to skip
+      bom: ''
       # [string='static'] Subdirectory where the files will be copied inside the destination `dir`
       dest_subdir: 'static'
       # [dict|list(dict)=[]] Diff resources, usually one for the PCB and another for the schematic

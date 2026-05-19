@@ -1015,13 +1015,6 @@
           ],
           [
             [
-              "col_colors",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
               "datasheet_as_link",
               [
                 "DataTypeString"
@@ -1058,27 +1051,6 @@
               null
             ],
             [
-              "hide_pcb_info",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
-              "hide_stats_info",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
-              "highlight_empty",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
               "logo",
               [
                 "DataTypeString",
@@ -1104,6 +1076,34 @@
               "extra_info",
               [
                 "DataTypeListStringSingular"
+              ],
+              null
+            ],
+            [
+              "highlight_empty",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "col_colors",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "hide_pcb_info",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "hide_stats_info",
+              [
+                "DataTypeBoolean"
               ],
               null
             ],
@@ -1152,13 +1152,6 @@
           ],
           [
             [
-              "col_colors",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
               "datasheet_as_link",
               [
                 "DataTypeString"
@@ -1195,27 +1188,6 @@
               null
             ],
             [
-              "hide_pcb_info",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
-              "hide_stats_info",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
-              "highlight_empty",
-              [
-                "DataTypeBoolean"
-              ],
-              null
-            ],
-            [
               "logo",
               [
                 "DataTypeString",
@@ -1241,6 +1213,34 @@
               "extra_info",
               [
                 "DataTypeListStringSingular"
+              ],
+              null
+            ],
+            [
+              "highlight_empty",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "col_colors",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "hide_pcb_info",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "hide_stats_info",
+              [
+                "DataTypeBoolean"
               ],
               null
             ],
@@ -1518,6 +1518,86 @@
             ],
             [
               "hide_stats_info",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ]
+          ]
+        ],
+        [
+          "json",
+          [
+            "DataTypeDict"
+          ],
+          [
+            [
+              "datasheet_as_link",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "digikey_link",
+              [
+                "DataTypeListStringSingular"
+              ],
+              null
+            ],
+            [
+              "mouser_link",
+              [
+                "DataTypeListStringSingular"
+              ],
+              null
+            ],
+            [
+              "lcsc_link",
+              [
+                "DataTypeListStringSingular",
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "generate_dnf",
+              [
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "logo",
+              [
+                "DataTypeString",
+                "DataTypeBoolean"
+              ],
+              null
+            ],
+            [
+              "logo_width",
+              [
+                "DataTypeNumber"
+              ],
+              null
+            ],
+            [
+              "title",
+              [
+                "DataTypeString"
+              ],
+              null
+            ],
+            [
+              "extra_info",
+              [
+                "DataTypeListStringSingular"
+              ],
+              null
+            ],
+            [
+              "highlight_empty",
               [
                 "DataTypeBoolean"
               ],
@@ -6551,6 +6631,13 @@
         ],
         [
           "ibom",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "bom",
           [
             "DataTypeString"
           ],

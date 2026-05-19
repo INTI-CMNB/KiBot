@@ -206,13 +206,11 @@ class RowColors(Optionable):
         return f'`{desc}` ({self.color}) {self.filter}'
 
 
-class BoMLinkable(Optionable):
-    """ Base class for HTML and XLSX formats """
+class BoMLinkableSimple(Optionable):
+    """ JSON format """
     def __init__(self):
         super().__init__()
         with document:
-            self.col_colors = True
-            """ Use colors to show the field type """
             self.datasheet_as_link = ''
             """ *{no_case} Column with links to the datasheet """
             self.digikey_link = Optionable
@@ -224,12 +222,6 @@ class BoMLinkable(Optionable):
                 Use **true** to copy the value indicated by the `field_lcsc_part` global option """
             self.generate_dnf = True
             """ *Generate a separated section for DNF (Do Not Fit) components """
-            self.hide_pcb_info = False
-            """ Hide project information """
-            self.hide_stats_info = False
-            """ Hide statistics information """
-            self.highlight_empty = True
-            """ Use a color for empty cells. Applies only when `col_colors` is `true` """
             self.logo = Optionable
             """ *[string|boolean=''] PNG/SVG file to use as logo, use false to remove.
                 Note that when using an SVG this is first converted to a PNG using `logo_width` """
@@ -239,9 +231,8 @@ class BoMLinkable(Optionable):
             """ *BoM title """
             self.extra_info = Optionable
             """ [string|list(string)=''] Information to put after the title and before the pcb and stats info """
-            self.row_colors = RowColors
-            """ [list(dict)=[]] Used to highlight rows using filters. Rows that match a filter can be colored.
-                Note that these rows won't have colored columns """
+            self.highlight_empty = True
+            """ Use a color for empty cells. Applies only when `col_colors` is `true` """
 
     def config(self, parent):
         super().config(parent)
@@ -255,6 +246,25 @@ class BoMLinkable(Optionable):
                 self.logo = os.path.abspath(os.path.expandvars(os.path.expanduser(self.logo)))
             if not os.path.isfile(self.logo):
                 raise KiPlotConfigurationError('Missing logo file `{}`'.format(self.logo))
+
+
+BoMJSON = BoMLinkableSimple
+
+
+class BoMLinkable(BoMLinkableSimple):
+    """ Base class for HTML and XLSX formats """
+    def __init__(self):
+        super().__init__()
+        with document:
+            self.col_colors = True
+            """ Use colors to show the field type """
+            self.hide_pcb_info = False
+            """ Hide project information """
+            self.hide_stats_info = False
+            """ Hide statistics information """
+            self.row_colors = RowColors
+            """ [list(dict)=[]] Used to highlight rows using filters. Rows that match a filter can be colored.
+                Note that these rows won't have colored columns """
 
 
 class BoMHTML(BoMLinkable):
@@ -481,7 +491,7 @@ class BoMOptions(BaseOptions):
                 In the case of the **KICAD** format the extension comes from the name you selected in KiCad's
                 internal BoM """
             self.format = 'Auto'
-            """ *[HTML,CSV,TXT,TSV,XML,XLSX,HRTXT,KICAD,Auto] format for the BoM.
+            """ *[HTML,CSV,TXT,TSV,XML,XLSX,HRTXT,KICAD,JSON,Auto] format for the BoM.
                 `Auto` defaults to CSV or a guess according to the options.
                 HRTXT stands for Human Readable TeXT.
                 KICAD is used to get the options from KiCad project. In KiCad you can configure CSV like options """
@@ -520,7 +530,9 @@ class BoMOptions(BaseOptions):
             self.csv = BoMCSV
             """ *[dict={}] Options for the CSV, TXT and TSV formats """
             self.hrtxt = BoMTXT
-            """ *[dict={}] Options for the HRTXT formats """
+            """ *[dict={}] Options for the HRTXT format """
+            self.json = BoMJSON
+            """ *[dict={}] Options for the JSON format """
             # * Filters
             self.pre_transform = Optionable
             """ [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
@@ -679,6 +691,9 @@ class BoMOptions(BaseOptions):
             # Same for HRTXT
             if self.get_user_defined('hrtxt'):
                 return 'hrtxt'
+            # Same for JSON
+            if self.get_user_defined('json'):
+                return 'json'
             # Default to a simple and common format: CSV
             return 'csv'
         # Explicit selection

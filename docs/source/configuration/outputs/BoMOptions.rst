@@ -12,7 +12,7 @@ BoMOptions parameters
    this will be replaced by the list from KiCad. |br|
    In addition to all user defined fields you have various special columns, consult :ref:`bom_columns`.
 -  **csv** :index:`: <pair: output - bom - options; csv>`  [:ref:`BoMCSV parameters <BoMCSV>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the CSV, TXT and TSV formats.
--  **format** :index:`: <pair: output - bom - options; format>` [:ref:`string <string>`] (default: ``'Auto'``) (choices: "HTML", "CSV", "TXT", "TSV", "XML", "XLSX", "HRTXT", "KICAD", "Auto") format for the BoM.
+-  **format** :index:`: <pair: output - bom - options; format>` [:ref:`string <string>`] (default: ``'Auto'``) (choices: "HTML", "CSV", "TXT", "TSV", "XML", "XLSX", "HRTXT", "KICAD", "JSON", "Auto") format for the BoM.
    `Auto` defaults to CSV or a guess according to the options. |br|
    HRTXT stands for Human Readable TeXT. |br|
    KICAD is used to get the options from KiCad project. In KiCad you can configure CSV like options.
@@ -31,9 +31,10 @@ BoMOptions parameters
    If empty: ['Part', 'Part Lib', 'Value', 'Footprint', 'Footprint Lib',
    'Voltage', 'Tolerance', 'Current', 'Power'] is used.
 
--  **hrtxt** :index:`: <pair: output - bom - options; hrtxt>`  [:ref:`BoMTXT parameters <BoMTXT>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the HRTXT formats.
+-  **hrtxt** :index:`: <pair: output - bom - options; hrtxt>`  [:ref:`BoMTXT parameters <BoMTXT>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the HRTXT format.
 -  **html** :index:`: <pair: output - bom - options; html>`  [:ref:`BoMHTML parameters <BoMHTML>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the HTML format.
 -  **ignore_dnf** :index:`: <pair: output - bom - options; ignore_dnf>` [:ref:`boolean <boolean>`] (default: ``true``) Exclude DNF (Do Not Fit) components.
+-  **json** :index:`: <pair: output - bom - options; json>`  [:ref:`BoMLinkableSimple parameters <BoMLinkableSimple>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the JSON format.
 -  **normalize_values** :index:`: <pair: output - bom - options; normalize_values>` [:ref:`boolean <boolean>`] (default: ``false``) Try to normalize the R, L and C values, producing uniform units and prefixes.
 -  **number** :index:`: <pair: output - bom - options; number>` [:ref:`number <number>`] (default: ``1``) Number of boards to build (components multiplier).
 -  **output** :index:`: <pair: output - bom - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) filename for the output (%i=bom). The extension depends on the selected format.
@@ -166,5 +167,6 @@ Used dicts
 - :ref:`BoMCSV parameters <BoMCSV>`
 - :ref:`BoMColumns parameters <BoMColumns>`
 - :ref:`BoMHTML parameters <BoMHTML>`
+- :ref:`BoMLinkableSimple parameters <BoMLinkableSimple>`
 - :ref:`BoMTXT parameters <BoMTXT>`
 - :ref:`BoMXLSX parameters <BoMXLSX>`
