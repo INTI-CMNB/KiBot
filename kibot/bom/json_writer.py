@@ -6,11 +6,15 @@
 """
 JSON Writer: Generates a JSON BoM file.
 """
+import base64
 import json
+import os
+from shutil import copy2
 import urllib.parse
 
 from .columnlist import ColumnList
 from .html_writer import cell_class
+from .kibot_logo import KIBOT_LOGO
 from .. import log
 logger = log.get_logger()
 
@@ -55,8 +59,6 @@ def write_json(filename, groups, headings, head_names, cfg):
     head_names = [list of headings to display in the BoM file]
     cfg = BoMOptions object with all the configuration
     """
-    # TODO: Copiar el logo si es que no esta dentro del "output_dir"
-    #       Si esta vacio generar el nuestro y ponerle ese nombre
     link_datasheet = -1
     if cfg.json.datasheet_as_link and cfg.json.datasheet_as_link in headings:
         link_datasheet = headings.index(cfg.json.datasheet_as_link)
@@ -65,8 +67,24 @@ def write_json(filename, groups, headings, head_names, cfg):
     link_lcsc = cfg.json.lcsc_link
     hl_empty = cfg.json.highlight_empty
 
-    data = {'title': cfg.json.title, 'logo': cfg.json.logo, 'logo_width': cfg.json.logo_width}
+    data = {'title': cfg.json.title}
     write_stats(data, cfg)
+
+    # Solve the logo
+    if cfg.json.logo is not None:
+        if cfg.json.logo:
+            logo = os.path.basename(cfg.json.logo)
+            dest = os.path.join(os.path.dirname(filename), logo)
+            logger.debug(f"Copying logo `{cfg.json.logo}` -> `{dest}`")
+            copy2(cfg.json.logo, dest)
+        else:
+            logo = 'kibot_logo.png'
+            dest = os.path.join(os.path.dirname(filename), logo)
+            logger.debug(f"Creating logo `{dest}`")
+            with open(dest, "wb") as img:
+                img.write(base64.b64decode(KIBOT_LOGO))
+        data['logo'] = logo
+        data['logo_width'] = cfg.json.logo_width
 
     # Headings and where the data came from
     data['headings'] = [{'name': h, 'class': cell_class(f)} for h, f in zip(head_names, headings)]
