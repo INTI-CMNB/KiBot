@@ -75,11 +75,11 @@ outputs:
       join:
       - field: Voltage
     html:
-      col_colors: false
+      datasheet_as_link: output.bom.options.dict.html.dict
       row_colors:
       - description: output.bom.options.dict.html.dict.row_colors.dict
     xlsx:
-      col_colors: false
+      datasheet_as_link: output.bom.options.dict.xlsx.dict
       row_colors:
       - description: output.bom.options.dict.xlsx.dict.row_colors.dict
       specs_columns:
@@ -89,6 +89,8 @@ outputs:
         - field: Voltage
     hrtxt:
       separator: ','
+    json:
+      datasheet_as_link: output.bom.options.dict.json.dict
     aggregate:
     - file: output.bom.options.dict.aggregate.dict
 - name: output.bom_labels
