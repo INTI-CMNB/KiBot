@@ -89,7 +89,7 @@ class KiRiOptions(AnyDiffOptions):
             return []
         if only_index:
             return [os.path.join(self.cache_dir, 'index.html')]
-        files = [os.path.join(self.cache_dir, f) for f in ['blank.svg', 'commits', 'index.html', 'kiri-server', 'project']]
+        files = [os.path.join(self.cache_dir, f) for f in ['index.html', 'blank.svg', 'commits', 'kiri-server', 'project']]
         for h in hashes:
             files.append(os.path.join(self.cache_dir, h[0][:7]))
         if sch_dirty or pcb_dirty:
