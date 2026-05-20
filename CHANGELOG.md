@@ -9,12 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - CLI:
   - --keep-temporals: to keep temporal files
+- E/DRC:
+  - Dark mode support and icon to select it.
 - BoM:
   - JSON output format. As a helper for external renderers (See #917)
+  - Dark mode support and icon to select it.
 - Diff:
   - `tag_filter`: to select which tags are used for KIBOT_TAG
 - KiCad Site:
   - `bom` configuration
+
+## Changed
+- E/DRC and BoM: As we now have dark mode support the CSS is more complex and
+  user defined CSSs might need some adjusts
 
 
 ## [1.9.0] - 2026-05-12

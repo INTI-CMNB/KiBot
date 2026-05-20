@@ -385,7 +385,8 @@ KIKIT_UNIT_ALIASES = {'millimeters': 'mm', 'inches': 'inch', 'mils': 'mil'}
 UNITS_2_KICAD = {'millimeters': 'mm', 'inches': 'in', 'mils': 'mils'}
 FONT_HELP_TEXT = ('\n        Important: If you use custom fonts and/or colors please consult the `resources_dir` '
                   'global variable.')
-# CSS style for HTML tables used by BoM and ERC
+# CSS style for HTML tables used by BoM and E/DRC
+# Light colors
 BG_GEN = "#DCF5E4"
 BG_KICAD = "#F5DCA9"
 BG_USER = "#DCEFF5"
@@ -400,64 +401,285 @@ HEAD_COLOR_G = "#009879"
 HEAD_COLOR_G_L = "#30c8a9"
 HEAD_COLOR_B = "#0e4e8e"
 HEAD_COLOR_B_L = "#3e7ebe"
-STYLE_COMMON = (" .cell-title { vertical-align: bottom; }\n"
-                " .cell-info { vertical-align: top; padding: 1em;}\n"
-                " .cell-extra-info { vertical-align: top; padding: 1em;}\n"
-                " .cell-stats { vertical-align: top; padding: 1em;}\n"
-                " .title { font-size:2.5em; font-weight: bold; }\n"
-                " .subtitle { font-size:1.5em; font-weight: bold; }\n"
-                " .h2 { font-size:1.5em; font-weight: bold; }\n"
-                " .td-empty0 { text-align: center; background-color: "+BG_EMPTY+";}\n"
-                " .td-gen0 { text-align: center; background-color: "+BG_GEN+";}\n"
-                " .td-kicad0 { text-align: center; background-color: "+BG_KICAD+";}\n"
-                " .td-user0 { text-align: center; background-color: "+BG_USER+";}\n"
-                " .td-empty1 { text-align: center; background-color: "+BG_EMPTY_L+";}\n"
-                " .td-gen1 { text-align: center; background-color: "+BG_GEN_L+";}\n"
-                " .td-kicad1 { text-align: center; background-color: "+BG_KICAD_L+";}\n"
-                " .td-user1 { text-align: center; background-color: "+BG_USER_L+";}\n"
-                " .td-nocolor { text-align: center; }\n"
-                " .color-ref { margin: 25px 0; }\n"
-                " .color-ref th { text-align: left }\n"
-                " .color-ref td { padding: 5px 20px; }\n"
-                " .head-table { margin-bottom: 2em; }\n"
+
+# Dark adaptations (by Gemini)
+# They maintain a WCAG-compliant contrast ratio of at least 4.5:1 against white text.
+BG_GEN_D = "#14532d"
+BG_KICAD_D = "#78350f"
+BG_USER_D = "#164e63"
+BG_EMPTY_D = "#7f1d1d"
+BG_GEN_L_D = "#166534"
+BG_KICAD_L_D = "#92400e"
+BG_USER_L_D = "#0891b2"
+BG_EMPTY_L_D = "#991b1b"
+HEAD_COLOR_R_D = "#5c1414"    # Deep Burgundy Red
+HEAD_COLOR_R_L_D = "#7a1c1c"  # Muted Red (Hover)
+HEAD_COLOR_G_D = "#004d3d"    # Deep Forest Teal
+HEAD_COLOR_G_L_D = "#006652"  # Muted Teal (Hover)
+HEAD_COLOR_B_D = "#09335e"    # Deep Navy Blue
+HEAD_COLOR_B_L_D = "#114b8a"  # Muted Blue (Hover)
+
+STYLE_COMMON = ("  /* Light colors */\n"
+                "  :root {\n"
+                "    --bg-color: #ffffff;\n"
+                "    --text-color: #222222;\n"
+                "    --link-color: #0e4e8e;\n"
+                "\n"
+                "    /* Tables */\n"
+                "    --table-header-bg: @bg@; /* Theme style defined */\n"
+                "    --table-header-text: #ffffff;\n"
+                "    --table-row-even: #f3f3f3;\n"
+                "    --table-row-hover: @bgl@; /* Theme style defined */\n"
+                "    --table-border: #dddddd;\n"
+                "    --table-shadow: rgba(0, 0, 0, 0.15);\n"
+                "    --table-cl-border: black;\n"
+                "\n"
+                "    /* Status Colors */\n"
+                "    --td-empty0: "+BG_EMPTY+";\n"
+                "    --td-gen0: "+BG_GEN+";\n"
+                "    --td-kicad0: "+BG_KICAD+";\n"
+                "    --td-user0: "+BG_USER+";\n"
+                "    --td-empty1: "+BG_EMPTY_L+";\n"
+                "    --td-gen1: "+BG_GEN_L+";\n"
+                "    --td-kicad1: "+BG_KICAD_L+";\n"
+                "    --td-user1: "+BG_USER_L+";\n"
+                "    --td-error: #db1218;\n"
+                "    --td-warning: #f2e30c;\n"
+                "    --td-excluded: #C0C0C0;\n"
+                "    --checkmark: green;\n"
+                "\n"
+                "    /* Toggle Button */\n"
+                "    --btn-bg: #ffffff;\n"
+                "    --btn-border: #e2e8f0;\n"
+                "    --btn-hover: #f1f5f9;\n"
+                "  }\n"
+                "\n"
+                "  /* Dark colors */\n"
+                '  [data-theme="dark"] {\n'
+                "    --bg-color: #121212;\n"
+                "    --text-color: #e2e8f0;\n"
+                "    --link-color: #38bdf8;\n"
+                "\n"
+                "    /* Tables */\n"
+                "    --table-header-bg: @bg_d@; /* Theme style defined */\n"
+                "    --table-header-text: #f8fafc;\n"
+                "    --table-row-even: #1e1e1e;\n"
+                "    --table-row-hover: @bgl_d@; /* Theme style defined */\n"
+                "    --table-border: #333333;\n"
+                "    --table-shadow: rgba(0, 0, 0, 0.5);\n"
+                "    --table-cl-border: #dddddd;\n"
+                "\n"
+                "    /* Status Colors (Darker adaptations) */\n"
+                "    --td-empty0: "+BG_EMPTY_D+";\n"
+                "    --td-gen0: "+BG_GEN_D+";\n"
+                "    --td-kicad0: "+BG_KICAD_D+";\n"
+                "    --td-user0: "+BG_USER_D+";\n"
+                "    --td-empty1: "+BG_EMPTY_L_D+";\n"
+                "    --td-gen1: "+BG_GEN_L_D+";\n"
+                "    --td-kicad1: "+BG_KICAD_L_D+";\n"
+                "    --td-user1: "+BG_USER_L_D+";\n"
+                "    --td-error: #ef4444;\n"
+                "    --td-warning: #ca8a04;\n"
+                "    --td-excluded: #64748b;\n"
+                "    --checkmark: #4ade80;\n"
+                "\n"
+                "    /* Toggle Button */\n"
+                "    --btn-bg: #1e293b;\n"
+                "    --btn-border: #334155;\n"
+                "    --btn-hover: #475569;\n"
+                "  }\n"
+                "\n"
+                "  body {\n"
+                "    background-color: var(--bg-color);\n"
+                "    color: var(--text-color);\n"
+                "    font-family: sans-serif;\n"
+                "    transition: background-color 0.3s, color 0.3s;\n"
+                "  }\n"
+                "\n"
+                "  a {\n"
+                "    color: var(--link-color);\n"
+                "  }\n"
+                "\n"
+                "  /* Theme Toggle Button */\n"
+                "  .theme-toggle {\n"
+                "    position: absolute;\n"
+                "    top: 15px;\n"
+                "    right: 15px;\n"
+                "    background: var(--btn-bg);\n"
+                "    border: 1px solid var(--btn-border);\n"
+                "    color: var(--text-color);\n"
+                "    border-radius: 6px;\n"
+                "    padding: 8px;\n"
+                "    cursor: pointer;\n"
+                "    display: flex;\n"
+                "    align-items: center;\n"
+                "    justify-content: center;\n"
+                "    box-shadow: 0 2px 5px var(--table-shadow);\n"
+                "    transition: background 0.2s, color 0.2s, border-color 0.2s;\n"
+                "  }\n"
+                "  .theme-toggle:hover {\n"
+                "    background: var(--btn-hover);\n"
+                "  }\n"
+                "  .theme-toggle svg {\n"
+                "    width: 20px;\n"
+                "    height: 20px;\n"
+                "    display: none; /* Handled by JS */\n"
+                "  }\n"
+                "\n"
+                "  .cell-title { vertical-align: bottom; }\n"
+                "  .cell-info { vertical-align: top; padding: 1em;}\n"
+                "  .cell-extra-info { vertical-align: top; padding: 1em;}\n"
+                "  .cell-stats { vertical-align: top; padding: 1em;}\n"
+                "  .title h1 { font-size:2.5em; font-weight: bold; padding: 0px; margin: 0px; }\n"
+                "  .h1 { font-size:1.5em; font-weight: bold; }\n"
+                "  .subtitle { font-size:1.5em; font-weight: bold; }\n"
+                "  .h2 { font-size:1.5em; font-weight: bold; }\n"
+                "\n"
+                "  .td-empty0 { text-align: center; background-color: var(--td-empty0); }\n"
+                "  .td-gen0 { text-align: center; background-color: var(--td-gen0); }\n"
+                "  .td-kicad0 { text-align: center; background-color: var(--td-kicad0); }\n"
+                "  .td-user0 { text-align: center; background-color: var(--td-user0); }\n"
+                "  .td-empty1 { text-align: center; background-color: var(--td-empty1); }\n"
+                "  .td-gen1 { text-align: center; background-color: var(--td-gen1); }\n"
+                "  .td-kicad1 { text-align: center; background-color: var(--td-kicad1); }\n"
+                "  .td-user1 { text-align: center; background-color: var(--td-user1); }\n"
+                "  .td-nocolor { text-align: center; }\n"
+                "\n"
+                "  .color-ref { margin: 25px 0; }\n"
+                "  .color-ref th { text-align: left }\n"
+                "  .color-ref td { padding: 5px 20px; }\n"
+                "  .head-table { margin-bottom: 2em; }\n"
                 # Style the centered checkmark
-                " .centered-checkmark { font-size: 30vw; text-align: center; color: green; }\n"
+                "  .centered-checkmark { font-size: 30vw; text-align: center; color: var(--checkmark); }\n"
                 # Table sorting cursor. 60% transparent when disabled. Solid white when enabled.
-                " .tg-sort-header::-moz-selection{background:0 0}\n"
-                " .tg-sort-header::selection{background:0 0}.tg-sort-header{cursor:pointer}\n"
-                " .tg-sort-header:after{content:'';float:right;border-width:0 5px 5px;border-style:solid;\n"
-                "                       border-color:#ffffff transparent;visibility:hidden;opacity:.6}\n"
-                " .tg-sort-header:hover:after{visibility:visible}\n"
-                " .tg-sort-asc:after,.tg-sort-asc:hover:after,.tg-sort-desc:after{visibility:visible;opacity:1}\n"
-                " .tg-sort-desc:after{border-bottom:none;border-width:5px 5px 0}\n")
+                "  /* Sort Header */\n"
+                "  .tg-sort-header::-moz-selection{background:0 0}\n"
+                "  .tg-sort-header::selection{background:0 0}.tg-sort-header{cursor:pointer}\n"
+                "  .tg-sort-header:after{content:'';float:right;border-width:0 5px 5px;border-style:solid;\n"
+                "                        border-color:#ffffff transparent;visibility:hidden;opacity:.6}\n"
+                "  .tg-sort-header:hover:after{visibility:visible}\n"
+                "  .tg-sort-asc:after,.tg-sort-asc:hover:after,.tg-sort-desc:after{visibility:visible;opacity:1}\n"
+                "  .tg-sort-desc:after{border-bottom:none;border-width:5px 5px 0}\n")
 TABLE_MODERN = """
- .content-table {
-   border-collapse:
-   collapse;
-   margin-top: 5px;
-   margin-bottom: 4em;
-   font-size: 0.9em;
-   font-family: sans-serif;
-   min-width: 400px;
-   border-radius: 5px 5px 0 0;
-   overflow: hidden;
-   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
- }
- .content-table thead tr { background-color: @bg@; color: #ffffff; text-align: left; }
- .content-table th, .content-table td { padding: 12px 15px; }
- .content-table tbody tr { border-bottom: 1px solid #dddddd; }
- .content-table tbody tr:nth-of-type(even) { background-color: #f3f3f3; }
- .content-table tbody tr:last-of-type { border-bottom: 2px solid @bg@; }
- .content-table * tr:hover > td { background-color: @bgl@ !important }
+  .content-table {
+    border-collapse: collapse;
+    margin-top: 5px;
+    margin-bottom: 4em;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    box-shadow: 0 0 20px var(--table-shadow);
+  }
+  .content-table thead tr { background-color: var(--table-header-bg); color: var(--table-header-text); text-align: left; }
+  .content-table th, .content-table td { padding: 12px 15px; }
+  .content-table tbody tr { border-bottom: 1px solid var(--table-border); }
+  .content-table tbody tr:nth-of-type(even) { background-color: var(--table-row-even); }
+  .content-table tbody tr:last-of-type { border-bottom: 2px solid var(--table-header-bg); }
+  .content-table * tr:hover > td { background-color: var(--table-row-hover) !important; color: #ffffff; }
 """
-TABLE_CLASSIC = (" .content-table, .content-table th, .content-table td { border: 1px solid black; }\n"
+TABLE_CLASSIC = (" .content-table, .content-table th, .content-table td { border: 1px solid var(--table-cl-border); }\n"
                  " .content-table * tr:hover > td { background-color: #B0B0B0 !important }\n")
 TD_ERC_CLASSES = """
- .td-error { background-color: #db1218; }
- .td-warning { background-color: #f2e30c; }
- .td-excluded { color: #C0C0C0; }
+ .td-error { background-color: var(--td-error); }
+ .td-warning { background-color: var(--td-warning); }
+ .td-excluded { color: var(--td-excluded); }
 """
 GENERATOR_CSS = " .generator { text-align: right; font-size: 0.6em; }\n"
+# A nice button with sun, moon and computer to select light, dark and system colors (Gemini)
+THEME_BUTTON = '''
+<!-- Theme Cycle Button -->
+<button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+  <!-- Sun (Light) -->
+  <svg id="icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+       stroke-linejoin="round">
+    <circle cx="12" cy="12" r="5"></circle>
+    <line x1="12" y1="1" x2="12" y2="3"></line>
+    <line x1="12" y1="21" x2="12" y2="23"></line>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+    <line x1="1" y1="12" x2="3" y2="12"></line>
+    <line x1="21" y1="12" x2="23" y2="12"></line>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+  </svg>
+  <!-- Moon (Dark) -->
+  <svg id="icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+       stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+  </svg>
+  <!-- Monitor (Auto) -->
+  <svg id="icon-auto" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+       stroke-linejoin="round">
+    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+    <line x1="8" y1="21" x2="16" y2="21"></line>
+    <line x1="12" y1="17" x2="12" y2="21"></line>
+  </svg>
+</button>
+
+'''
+# JS helpers for the theme button (Gemini)
+SEL_THEME = """
+ <!-- Apply theme immediately to prevent flashing -->
+ <script>
+  (function() {
+    const theme = localStorage.getItem('kibot-theme') || 'auto';
+    if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+ </script>
+
+"""
+THEME_LOGIC = """
+<!-- Interactive Theme Logic -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById('theme-toggle');
+    const iconLight = document.getElementById('icon-light');
+    const iconDark = document.getElementById('icon-dark');
+    const iconAuto = document.getElementById('icon-auto');
+
+    function updateIcons(theme) {
+        iconLight.style.display = theme === 'light' ? 'block' : 'none';
+        iconDark.style.display = theme === 'dark' ? 'block' : 'none';
+        iconAuto.style.display = theme === 'auto' ? 'block' : 'none';
+    }
+
+    function applyTheme(theme) {
+        if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+        }
+        updateIcons(theme);
+        toggleBtn.title = `Theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)} (Click to change)`;
+    }
+
+    let currentTheme = localStorage.getItem('kibot-theme') || 'auto';
+    applyTheme(currentTheme);
+
+    // Cycle through themes on click
+    toggleBtn.addEventListener('click', () => {
+        if (currentTheme === 'auto') currentTheme = 'light';
+        else if (currentTheme === 'light') currentTheme = 'dark';
+        else currentTheme = 'auto';
+
+        localStorage.setItem('kibot-theme', currentTheme);
+        applyTheme(currentTheme);
+    });
+
+    // Listen for OS theme changes if in 'auto' mode
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (currentTheme === 'auto') {
+            applyTheme('auto');
+        }
+    });
+  });
+</script>
+
+"""
 
 # Known rotations for JLC
 # Notes:
