@@ -786,7 +786,7 @@ class TestContext(object):
                 if m:
                     sh_head['logo'] = m.group(1)
                 # Extract title
-                m = re.search(r'<div class="title">(.*?)</div>', body)
+                m = re.search(r'<div class="title">(?:<h1>)?(.*?)(?:</h1>)?</div>', body)
                 if m:
                     sh_head['title'] = m.group(1)
                 # Extract PCB info
