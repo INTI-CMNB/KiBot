@@ -2311,6 +2311,8 @@ outputs:
       force_copy: false
       # [string=''] Name of the iBoM output. Use `None` to skip
       ibom: ''
+      # [string=''] Name of the KiRi output to use as embedded HTML. Use `None` to skip
+      kiri: ''
       # [boolean=false] List the PCB first, KiCanvas will show the PCB by default, instead of the schematic
       pcb_first: false
       # [string|list(string)=''] Name of one or more outputs providing images for the PCB

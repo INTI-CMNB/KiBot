@@ -6644,6 +6644,13 @@
           null
         ],
         [
+          "kiri",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "assembly_models",
           [
             "DataTypeListDictSingular"

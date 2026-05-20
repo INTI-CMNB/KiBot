@@ -18,6 +18,7 @@ KiCad_SiteOptions parameters
 -  ``force_copy`` :index:`: <pair: output - kicad_site - options; force_copy>` [:ref:`boolean <boolean>`] (default: ``false``) By default we skip the copy to the destination dir if the file is already there and newer.
    Enabling this option we always do the copy.
 -  ``ibom`` :index:`: <pair: output - kicad_site - options; ibom>` [:ref:`string <string>`] (default: ``''``) Name of the iBoM output. Use `None` to skip.
+-  ``kiri`` :index:`: <pair: output - kicad_site - options; kiri>` [:ref:`string <string>`] (default: ``''``) Name of the KiRi output to use as embedded HTML. Use `None` to skip.
 -  ``pcb_first`` :index:`: <pair: output - kicad_site - options; pcb_first>` [:ref:`boolean <boolean>`] (default: ``false``) List the PCB first, KiCanvas will show the PCB by default, instead of the schematic.
 -  ``renders`` :index:`: <pair: output - kicad_site - options; renders>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) Name of one or more outputs providing images for the PCB.
 

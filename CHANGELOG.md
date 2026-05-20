@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `tag_filter`: to select which tags are used for KIBOT_TAG
 - KiCad Site:
   - `bom` configuration
+  - `kiri` configuration
+
+## Fixed
+- KiRi:
+  - `kiri_server` path to the HTML
 
 ## Changed
 - E/DRC and BoM: As we now have dark mode support the CSS is more complex and

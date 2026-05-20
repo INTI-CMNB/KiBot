@@ -98,6 +98,8 @@ class KiCad_SiteOptions(BaseOptions):
             """ Name of the iBoM output. Use `None` to skip """
             self.bom = ''
             """ Name of the BoM output to use as embedded HTML. Use `None` to skip """
+            self.kiri = ''
+            """ Name of the KiRi output to use as embedded HTML. Use `None` to skip """
             self.assembly_models = KiCad_SiteAssembly
             """ [dict|list(dict)=[]] 3D assembly models """
             self.force_copy = False
@@ -164,21 +166,21 @@ class KiCad_SiteOptions(BaseOptions):
     def get_navigate_targets(self, out_dir):
         return self._get_targets(out_dir, True)
 
-    def get_ibom(self, fail=False):
-        if not self.ibom:
-            out = next(filter(lambda x: x.type == 'ibom', RegOutput.get_outputs()), None)
-            if not out:
-                raise KiPlotConfigurationError("No iBoM output specified and I can't find it, use `None`")
-            return out.name if out else None
-        return self.ibom
+    def get_simple(self, user_value, check, name, fail=False):
+        if user_value:
+            return user_value
+        out = next(filter(check, RegOutput.get_outputs()), None)
+        if out:
+            return out.name
+        if fail:
+            raise KiPlotConfigurationError(f"No {name} output specified and I can't find it, use `None`")
 
-    def get_bom(self, fail=False):
-        if not self.bom:
-            out = next(filter(lambda x: x.type == 'bom' and x.options._format == 'html', RegOutput.get_outputs()), None)
-            if not out:
-                raise KiPlotConfigurationError("No BoM output specified and I can't find it, use `None`")
-            return out.name if out else None
-        return self.bom
+    def add_simple_dep(self, deps, user_value, check, name):
+        if user_value == 'None':
+            return
+        out_name = self.get_simple(user_value, check, name)
+        if out_name:
+            deps.add(out_name)
 
     def get_dependencies(self):
         # PCB & Schematic
@@ -195,15 +197,11 @@ class KiCad_SiteOptions(BaseOptions):
         # Diffs
         deps.update([o.output for o in self.diffs])
         # iBoM
-        if self.ibom != 'None':
-            out_name = self.get_ibom()
-            if out_name:
-                deps.add(out_name)
+        self.add_simple_dep(deps, self.ibom, lambda x: x.type == 'ibom', 'iBoM')
         # BoM
-        if self.bom != 'None':
-            out_name = self.get_bom()
-            if out_name:
-                deps.add(out_name)
+        self.add_simple_dep(deps, self.bom, lambda x: x.type == 'bom' and x.options._format == 'html', 'BoM')
+        # KiRi
+        self.add_simple_dep(deps, self.kiri, lambda x: x.type == 'kiri', 'KiRi')
         # Assembly models
         deps.update([o.output for o in self.assembly_models])
         return sorted(deps)
@@ -279,7 +277,7 @@ class KiCad_SiteOptions(BaseOptions):
         if cfiles == 0:
             raise KiPlotConfigurationError(f"Output `{out}` doesn't generate files")
         fname = files_list[0]
-        if cfiles > 1:
+        if cfiles > 1 and kind != 'KiRi':
             logger.warning(W_EXTRAGEN+f"Output `{out}` generates more than one file, using {os.path.basename(fname)}")
         logger.debug(f"- {kind}: `{out}` -> {fname}")
         if not dry_run:
@@ -297,6 +295,16 @@ class KiCad_SiteOptions(BaseOptions):
     def add_pcb(self):
         self.copy(GS.pcb_file, "kicad")
         return f'    - "{GS.pcb_fname}"\n'
+
+    def add_simple_cfg(self, user_value, check, name, skip=False):
+        if user_value == 'None':
+            return ''
+        out_name = self.get_simple(user_value, check, name, fail=not skip)
+        if out_name is None:
+            return ''
+        file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind=name)
+        self.copy(file, subdir)
+        return f'  {name.lower()}: "{os.path.join(subdir, os.path.basename(file))}"\n'
 
     def run(self, dir_name):
         self.dir_name = dir_name
@@ -357,18 +365,13 @@ class KiCad_SiteOptions(BaseOptions):
                 cfg += f'      path: "{file}"\n'
 
         # iBoM
-        if self.ibom != 'None':
-            out_name = self.get_ibom(fail=True)
-            file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='iBoM')
-            self.copy(file, subdir)
-            cfg += f'  ibom: "{os.path.join(subdir, os.path.basename(file))}"\n'
+        cfg += self.add_simple_cfg(self.ibom, lambda x: x.type == 'ibom', 'iBoM')
 
         # BoM
-        if self.bom != 'None':
-            out_name = self.get_bom(fail=True)
-            file, subdir = self.solve_download(KiCad_SiteDownload(output=out_name), kind='BoM')
-            self.copy(file, subdir)
-            cfg += f'  bom: "{os.path.join(subdir, os.path.basename(file))}"\n'
+        cfg += self.add_simple_cfg(self.bom, lambda x: x.type == 'bom' and x.options._format == 'html', 'BoM')
+
+        # KiRi
+        cfg += self.add_simple_cfg(self.kiri, lambda x: x.type == 'kiri', 'KiRi', skip=True)
 
         # Assembly models
         cfg += '  assemblyDir: "."\n'

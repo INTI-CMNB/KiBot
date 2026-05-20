@@ -1,5 +1,5 @@
-56 outputs types with a total of 2248 different parameters
-Single type parameters: 2057 (92 %)
+56 outputs types with a total of 2249 different parameters
+Single type parameters: 2058 (92 %)
 Multi type parameters: 191 (8 %)
 Average parameters: 40
 Maximum number of parameters: 218
@@ -59,7 +59,7 @@ Outputs sorted by parameters:
 - stencil_for_jig: 28
 - copy_files: 31
 - pdf_pcb_print: 31
-- kicad_site: 32
+- kicad_site: 33
 - position: 33
 - report: 33
 - svg_pcb_print: 33
@@ -153,7 +153,7 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  977
+-             String:  978
 -            Boolean:  566
 - ListStringSingular:  307
 -             Number:  304
@@ -169,7 +169,7 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  809 
+-             String:  810 
 -            Boolean:  496 
 - ListStringSingular:  303 
 -             Number:  210 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2646 different parameters
-Single type parameters: 2429 (92 %)
+97 totals types with a total of 2647 different parameters
+Single type parameters: 2430 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 27
 Maximum number of parameters: 218
@@ -515,7 +515,7 @@ Totals sorted by parameters:
 - stencil_for_jig: 28
 - copy_files: 31
 - pdf_pcb_print: 31
-- kicad_site: 32
+- kicad_site: 33
 - position: 33
 - report: 33
 - svg_pcb_print: 33
@@ -651,7 +651,7 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1146
+-             String: 1147
 -            Boolean:  669
 -             Number:  357
 - ListStringSingular:  337
@@ -667,7 +667,7 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  960 
+-             String:  961 
 -            Boolean:  589 
 - ListStringSingular:  333 
 -             Number:  248 
