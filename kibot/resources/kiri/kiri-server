@@ -98,7 +98,7 @@ def parse_cli_args():
         "-i", "--ip", type=str, help="Override default IP address", default="127.0.0.1",
     )
     parser.add_argument(
-        "www_dir", metavar="WWW_DIR", help="A folder with web/index.html inside"
+        "www_dir", metavar="WWW_DIR", help="A folder with index.html inside"
     )
 
     args = parser.parse_args()
@@ -118,13 +118,13 @@ def launch_webserver(ip, request_handler, port, kicad_project, server_only):
 
     with httpd:
         if args.nested:
-            url = "{ip}:{port}/{nested_project}/web/index.html".format(
+            url = "{ip}:{port}/{nested_project}/index.html".format(
                 ip=ip,
                 port=str(port),
                 nested_project=kicad_project
             )
         else:
-            url = "http://{ip}:{port}/web/index.html".format(
+            url = "http://{ip}:{port}/index.html".format(
                 ip=ip,
                 port=str(port)
             )
@@ -166,7 +166,7 @@ if __name__ == "__main__":
         kicad_project = ".."
 
         # Assume it is running outside of the webserver the folder
-        index_html = os.path.realpath(os.path.join(www_dir_path, "web", "index.html"))
+        index_html = os.path.realpath(os.path.join(www_dir_path, "index.html"))
         if not os.path.exists(index_html):
             print("Could not find index.html")
             exit(1)
