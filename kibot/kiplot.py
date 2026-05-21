@@ -693,6 +693,8 @@ def run_output(out, dont_stop=False):
             pre.apply()
             load_board()
     GS.current_output = out.name
+    logger.info('  '*run_output.depth+'- '+str(out))
+    run_output.depth += 1
     try:
         out.run(get_output_dir(out.dir, out))
         out._done = True
@@ -712,6 +714,11 @@ def run_output(out, dont_stop=False):
         if not dont_stop:
             raise
         GS.errors_ignored = True
+    run_output.depth -= 1
+
+
+# run_output local and persistent depth
+run_output.depth = 0
 
 
 def configure_and_run(tree, out_dir, msg):
@@ -794,7 +801,6 @@ def _generate_outputs(targets, invert, skip_pre, cli_order, no_priority, dont_st
         if GS.get_stop_flag():
             break
         if config_output(out, dont_stop=dont_stop):
-            logger.info('- '+str(out))
             run_output(out, dont_stop)
 
 

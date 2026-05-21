@@ -53,6 +53,8 @@ Changed
 
 -  E/DRC and BoM: As we now have dark mode support the CSS is more
    complex and user defined CSSs might need some adjusts
+-  Now when an output runs another outputs as dependencies the name of
+   the created output is displayed.
 
 [1.9.0] - 2026-05-12
 --------------------
