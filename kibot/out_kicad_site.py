@@ -9,7 +9,7 @@ from urllib.parse import urljoin
 from .error import KiPlotConfigurationError
 from .misc import RENDERERS, INTERNAL_ERROR, W_EXTRAGEN
 from .gs import GS
-from .kiplot import run_output, get_output_targets
+from .kiplot import run_output, get_output_targets, config_output
 from .optionable import BaseOptions, Optionable
 from .out_base import BaseOutput
 from .registrable import RegOutput
@@ -199,7 +199,8 @@ class KiCad_SiteOptions(BaseOptions):
         # iBoM
         self.add_simple_dep(deps, self.ibom, lambda x: x.type == 'ibom', 'iBoM')
         # BoM
-        self.add_simple_dep(deps, self.bom, lambda x: x.type == 'bom' and x.options._format == 'html', 'BoM')
+        self.add_simple_dep(deps, self.bom, lambda x: x.type == 'bom' and config_output(x, dry=True, dont_stop=True) and
+                            x.options._format == 'html', 'BoM')
         # KiRi
         self.add_simple_dep(deps, self.kiri, lambda x: x.type == 'kiri', 'KiRi')
         # Assembly models
@@ -368,7 +369,8 @@ class KiCad_SiteOptions(BaseOptions):
         cfg += self.add_simple_cfg(self.ibom, lambda x: x.type == 'ibom', 'iBoM')
 
         # BoM
-        cfg += self.add_simple_cfg(self.bom, lambda x: x.type == 'bom' and x.options._format == 'html', 'BoM')
+        cfg += self.add_simple_cfg(self.bom, lambda x: x.type == 'bom' and config_output(x, dry=True, dont_stop=True) and
+                                   x.options._format == 'html', 'BoM')
 
         # KiRi
         cfg += self.add_simple_cfg(self.kiri, lambda x: x.type == 'kiri', 'KiRi', skip=True)
