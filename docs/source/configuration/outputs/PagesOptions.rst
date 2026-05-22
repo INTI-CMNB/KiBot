@@ -37,6 +37,9 @@ PagesOptions parameters
    You can also use it to generate pages with drill maps, in this case use `drill_pairs` here. |br|
    Note that in this case the `repeat_for_layer` should be some drawing layer, which might contain
    a group used to insert the drill table (like in the `include_table` preflight). |br|
+   Note that the drill table needs an output that generates one or more CSV files and the group in the
+   PCB must be named `kibot_table_OUTPUT_FOR_CSV_DRILLS`. See the `print_drill_table.kibot.yaml` example
+   in the repo. |br|
    The drill map needs KiCad 7 or newer.
 -  ``sheet`` :index:`: <pair: output - pcb_print - options - pages; sheet>` [:ref:`string <string>`] (default: ``'Assembly'``) Text to use for the `SHEET` in the title block.
    Pattern (%*) and text variables are expanded. |br|

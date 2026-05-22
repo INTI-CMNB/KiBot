@@ -3609,6 +3609,9 @@ outputs:
           # You can also use it to generate pages with drill maps, in this case use `drill_pairs` here.
           # Note that in this case the `repeat_for_layer` should be some drawing layer, which might contain
           # a group used to insert the drill table (like in the `include_table` preflight).
+          # Note that the drill table needs an output that generates one or more CSV files and the group in the
+          # PCB must be named `kibot_table_OUTPUT_FOR_CSV_DRILLS`. See the `print_drill_table.kibot.yaml` example
+          # in the repo.
           # The drill map needs KiCad 7 or newer
           repeat_layers:
             # [string=''] Color used for this layer.

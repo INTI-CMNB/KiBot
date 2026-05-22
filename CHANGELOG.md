@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   user defined CSSs might need some adjusts
 - Now when an output runs another outputs as dependencies the name of the
   created output is displayed.
+- When using `pcb_print` and including tables you no longer need to run the
+  output that generates the CSV first, it gets generated on-the-fly
 
 
 ## [1.9.0] - 2026-05-12

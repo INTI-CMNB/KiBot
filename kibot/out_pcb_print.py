@@ -289,6 +289,9 @@ class PagesOptions(Optionable):
                 You can also use it to generate pages with drill maps, in this case use `drill_pairs` here.
                 Note that in this case the `repeat_for_layer` should be some drawing layer, which might contain
                 a group used to insert the drill table (like in the `include_table` preflight).
+                Note that the drill table needs an output that generates one or more CSV files and the group in the
+                PCB must be named `kibot_table_OUTPUT_FOR_CSV_DRILLS`. See the `print_drill_table.kibot.yaml` example
+                in the repo.
                 The drill map needs KiCad 7 or newer """
             self.repeat_inherit = True
             """ If we will inherit the options of the layer we are replacing.
@@ -1556,7 +1559,7 @@ class PCB_PrintOptions(VariantOptions):
 
         # Update all tables
         if GS.ki7 and self._include_table_output:
-            update_table(self._include_table, self)
+            update_table(self._include_table, self, allow_run=True)
 
         # Generate the output, page by page
         pages = []
@@ -1566,7 +1569,7 @@ class PCB_PrintOptions(VariantOptions):
                     g_drill_map = PCB_GROUP(GS.board)
                     self.add_drill_map_drawing(p, g_drill_map)
                     if GS.ki7 and self._include_table_output:
-                        update_table(self._include_table, self, p._drill_pair_index, True)
+                        update_table(self._include_table, self, p._drill_pair_index, True, allow_run=True)
             # Make visible only the layers we need
             # This is very important when scaling, otherwise the results are controlled by the .kicad_prl (See #407)
             if self.individual_page_scaling:
