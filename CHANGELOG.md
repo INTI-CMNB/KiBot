@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - KiCad Site:
   - `bom` configuration
   - `kiri` configuration
+- Report:
+  - All PDF pages are included, not just the first
+  - The full report now works with SVGs and PDFs for both (SCH and PCB),
+    SVGs have priority
+  - `remove_split_pdfs`: To control if we remove split PDFs
 
 ## Fixed
 - KiRi:
@@ -26,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - *SCH Print:
   - The list of targets now includes all schematic pages
 - Report:
-  - Now all schematic pages are included, not just the first
+  - Now all SVG schematic pages are included, not just the first
 
 ## Changed
 - E/DRC and BoM: As we now have dark mode support the CSS is more complex and
@@ -35,8 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   created output is displayed.
 - When using `pcb_print` and including tables you no longer need to run the
   output that generates the CSV first, it gets generated on-the-fly
-- When using `report` the outputs that generates images no longer needs to be
-  already executed, KiBot will run them
+- Report: the outputs that generates images no longer needs to be already
+  executed, KiBot will run them
 
 
 ## [1.9.0] - 2026-05-12

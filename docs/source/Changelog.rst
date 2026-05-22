@@ -41,6 +41,13 @@ Added
    -  ``bom`` configuration
    -  ``kiri`` configuration
 
+-  Report:
+
+   -  All PDF pages are included, not just the first
+   -  The full report now works with SVGs and PDFs for both (SCH and
+      PCB), SVGs have priority
+   -  ``remove_split_pdfs``: To control if we remove split PDFs
+
 Fixed
 -----
 
@@ -54,7 +61,7 @@ Fixed
 
 -  Report:
 
-   -  Now all schematic pages are included, not just the first
+   -  Now all SVG schematic pages are included, not just the first
 
 Changed
 -------
@@ -66,8 +73,8 @@ Changed
 -  When using ``pcb_print`` and including tables you no longer need to
    run the output that generates the CSV first, it gets generated
    on-the-fly
--  When using ``report`` the outputs that generates images no longer
-   needs to be already executed, KiBot will run them
+-  Report: the outputs that generates images no longer needs to be
+   already executed, KiBot will run them
 
 [1.9.0] - 2026-05-12
 --------------------

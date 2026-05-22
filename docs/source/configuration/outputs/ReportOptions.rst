@@ -51,6 +51,9 @@ ReportOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+-  ``remove_split_pdfs`` :index:`: <pair: output - report - options; remove_split_pdfs>` [:ref:`string <string>`] (default: ``'auto'``) (choices: "auto", "yes", "no") When we use PDF files they are split because `pandoc` can't deal with more than
+   one page. You can delete them after converting the output. The `auto` value will do it when
+   `do_convert` is enabled.
 -  ``solder_paste_metal_amount`` :index:`: <pair: output - report - options; solder_paste_metal_amount>` [:ref:`number <number>`] (default: ``87.75``) (range: 0 to 100) Amount of metal in the solder paste (percentage). Used to compute solder paste usage.
 -  ``stencil_thickness`` :index:`: <pair: output - report - options; stencil_thickness>` [:ref:`number <number>`] (default: ``0.12``) Stencil thickness in mm. Used to compute solder paste usage.
 -  ``variant`` :index:`: <pair: output - report - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.

@@ -14412,6 +14412,13 @@
           null
         ],
         [
+          "remove_split_pdfs",
+          [
+            "DataTypeChoice"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"

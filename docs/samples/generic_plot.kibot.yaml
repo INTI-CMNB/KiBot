@@ -4659,6 +4659,10 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
+      # [string='auto'] [auto,yes,no] When we use PDF files they are split because `pandoc` can't deal with more than
+      # one page. You can delete them after converting the output. The `auto` value will do it when
+      # `do_convert` is enabled
+      remove_split_pdfs: 'auto'
       # [number=87.75] [0,100] Amount of metal in the solder paste (percentage). Used to compute solder paste usage
       solder_paste_metal_amount: 87.75
       # [number=0.12] Stencil thickness in mm. Used to compute solder paste usage

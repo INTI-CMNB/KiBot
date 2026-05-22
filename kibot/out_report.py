@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2024 Salvador E. Tropea
-# Copyright (c) 2022-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -20,6 +20,7 @@ import os
 import re
 import pcbnew
 
+from .create_pdf import split_pdf
 from .gs import GS
 from .misc import (UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES, W_WRONGEXT, W_UNKPADSH,
                    W_WRONGOAR, W_ECCLASST, W_BLINDVIAS, W_MICROVIAS, W_BURIEDVIAS)
@@ -238,6 +239,10 @@ class ReportOptions(VariantOptions):
             self.csv_remove_leading_spaces = False
             """ Remove any leading spaces/tabs at the end of each separator.
                 Used por templates that generates CSV files where elements are aligned for easier reading """
+            self.remove_split_pdfs = 'auto'
+            """ [auto,yes,no] When we use PDF files they are split because `pandoc` can't deal with more than
+                one page. You can delete them after converting the output. The `auto` value will do it when
+                `do_convert` is enabled """
         super().__init__()
         self._expand_id = 'report'
         self._expand_ext = 'txt'
@@ -1137,7 +1142,7 @@ class ReportOptions(VariantOptions):
     def get_targets(self, out_dir):
         files = [self._parent.expand_filename(out_dir, self.output)]
         if self.do_convert:
-            files.append(self.expand_converted_output(out_dir))
+            files.insert(0, self.expand_converted_output(out_dir))
         return files
 
     def convert(self, fname):
@@ -1183,6 +1188,7 @@ class ReportOptions(VariantOptions):
         self._layer_svgs = []
         self._schematic_pdfs = []
         self._schematic_svgs = []
+        split_pdfs = []
         for o in RegOutput.get_outputs():
             dest = None
             if o.type == 'pdf_pcb_print' or o.type == 'pcb_print':
@@ -1210,6 +1216,14 @@ class ReportOptions(VariantOptions):
                     comment = o.comment
                     if is_pcb_print_svg and o.options.pages[n].sheet:
                         comment += ' '+o.options.pages[n].sheet
+                    # Split PDFs, otherwise we get the first page
+                    if of.endswith('.pdf'):
+                        split = split_pdf(of)
+                        split_pdfs.extend(split)
+                        if len(split) > 1:
+                            for pdf_page, pdf_name in enumerate(split):
+                                dest.append((os.path.relpath(pdf_name, base_dir), comment+f" page {pdf_page+1}", o.name))
+                            continue
                     dest.append((rel_path, comment, o.name))
         self.layer_pdfs = len(self._layer_pdfs) > 0
         self.layer_svgs = len(self._layer_svgs) > 0
@@ -1217,6 +1231,9 @@ class ReportOptions(VariantOptions):
         self.schematic_svgs = len(self._schematic_svgs) > 0
         self.do_template(self.template, fname)
         self.convert(fname)
+        if self.remove_split_pdfs == 'yes' or (self.remove_split_pdfs == 'auto' and self.do_convert):
+            for pdf_name in split_pdfs:
+                os.remove(pdf_name)
 
 
 @output_class
