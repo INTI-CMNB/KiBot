@@ -33,6 +33,7 @@ import re
 import shutil
 import logging
 import pytest
+import shlex
 import subprocess
 import json
 from . import context
@@ -722,14 +723,14 @@ def check_makefile(ctx, mkfile, prj, dbg, txt):
     assert yaml in deps
     logging.debug('- Target `drill` OK')
     # svg_sch_def
-    deps = targets['svg_sch_def'].split(' ')
-    assert len(deps) == 1, deps
+    deps = shlex.split(targets['svg_sch_def'])
+    assert len(deps) == 5, deps
     assert ctx.get_out_path(prj+'.svg') in deps
     check_test_v5_sch_deps(ctx, targets[targets['svg_sch_def']].split(' '))
     logging.debug('- Target `svg_sch_def` OK')
     # svg_sch_int
-    deps = targets['svg_sch_int'].split(' ')
-    assert len(deps) == 1, deps
+    deps = shlex.split(targets['svg_sch_int'])
+    assert len(deps) == 5, deps
     assert ctx.get_out_path(prj+'-schematic.svg') in deps
     check_test_v5_sch_deps(ctx, targets[targets['svg_sch_int']].split(' '))
     logging.debug('- Target `svg_sch_int` OK')

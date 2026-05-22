@@ -147,12 +147,12 @@ class Any_SCH_PrintOptions(VariantOptions):
         if self._pages:
             valid = {int(i) for i in self._pages.split(',')}
             valid.discard(1)
-            extra_used = [get_base(s.fname) for s in GS.sch.all_sheets if int0(s.sheet) in valid]
+            extra_used = [s.sheet_path_h.replace('/', '-') for s in GS.sch.all_sheets if int0(s.sheet) in valid]
         else:
-            extra_used = [get_base(s.fname) for s in GS.sch.all_sheets if int0(s.sheet) != 1]
+            extra_used = [s.sheet_path_h.replace('/', '-') for s in GS.sch.all_sheets if int0(s.sheet) != 1]
 
         for f in extra_used:
-            used.append(os.path.join(out_dir, GS.sch_basename+'-'+f+'.'+self._expand_ext))
+            used.append(os.path.join(out_dir, GS.sch_basename+f+'.'+self._expand_ext))
 
         return used
 
