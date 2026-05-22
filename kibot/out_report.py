@@ -26,7 +26,7 @@ from .misc import (UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FR
 from .registrable import RegOutput
 from .out_base import VariantOptions
 from .error import KiPlotConfigurationError
-from .kiplot import config_output, run_command, get_output_targets
+from .kiplot import config_output, run_command, get_output_targets, run_output
 from .dep_downloader import get_dep_data
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
@@ -1203,6 +1203,8 @@ class ReportOptions(VariantOptions):
                         continue
                 out_files = o.get_targets(o.expand_dirname(os.path.join(GS.out_dir, o.dir)))
                 is_pcb_print_svg = o.type == 'pcb_print' and o.options.format == 'SVG'
+                if any(not os.path.isfile(f) for f in out_files):
+                    run_output(o)
                 for n, of in enumerate(out_files):
                     rel_path = os.path.relpath(of, base_dir)
                     comment = o.comment

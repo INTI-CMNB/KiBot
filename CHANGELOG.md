@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   created output is displayed.
 - When using `pcb_print` and including tables you no longer need to run the
   output that generates the CSV first, it gets generated on-the-fly
+- When using `report` the outputs that generates images no longer needs to be
+  already executed, KiBot will run them
 
 
 ## [1.9.0] - 2026-05-12
