@@ -167,6 +167,8 @@ class Any_SCH_PrintOptions(VariantOptions):
             raise KiPlotConfigurationError('Error parsing list of pages: '+str(e))
 
     def run(self, name):
+        if not self.output:
+            name = os.path.join(name, GS.sch_basename+'.'+self._expand_ext)
         super().run(name)
         command = self.ensure_tool('KiAuto')
 

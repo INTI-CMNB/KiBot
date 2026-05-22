@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `kiri_server` path to the HTML
 - *SCH Print:
   - The list of targets now includes all schematic pages
+  - Output when the `output` option was empty
 - Report:
   - Now all SVG schematic pages are included, not just the first
 

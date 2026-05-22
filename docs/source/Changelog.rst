@@ -58,6 +58,7 @@ Fixed
 -  \*SCH Print:
 
    -  The list of targets now includes all schematic pages
+   -  Output when the ``output`` option was empty
 
 -  Report:
 
