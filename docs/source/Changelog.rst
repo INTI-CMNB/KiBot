@@ -48,6 +48,14 @@ Fixed
 
    -  ``kiri_server`` path to the HTML
 
+-  \*SCH Print:
+
+   -  The list of targets now includes all schematic pages
+
+-  Report:
+
+   -  Now all schematic pages are included, not just the first
+
 Changed
 -------
 

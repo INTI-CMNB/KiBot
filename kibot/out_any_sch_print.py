@@ -14,6 +14,17 @@ from . import log
 logger = log.get_logger()
 
 
+def int0(val):
+    try:
+        return int(val)
+    except ValueError:
+        return 0
+
+
+def get_base(name):
+    return os.path.splitext(os.path.basename(name))[0]
+
+
 # Validator created using Gemini 3.1 Pro
 def parse_and_validate_pages(input_string, valid_pages):
     """
@@ -118,13 +129,32 @@ class Any_SCH_PrintOptions(VariantOptions):
         super().__init__()
         self.add_to_doc('variant', "Not fitted components are crossed")
         self._expand_id = 'schematic'
+        self._unified_pages = False  # Only PDFs do it
         # We need the list from the schematic to control the real components
         self._collapse_components = False
 
     def get_targets(self, out_dir):
         if self.output:
-            return [self._parent.expand_filename(out_dir, self.output)]
-        return [self._parent.expand_filename(out_dir, '%f.%x')]
+            first_page = self._parent.expand_filename(out_dir, self.output)
+        else:
+            first_page = self._parent.expand_filename(out_dir, '%f.%x')
+
+        used = [first_page]
+        if self._unified_pages:
+            return used
+
+        # More than one page, try to figure out the names
+        if self._pages:
+            valid = {int(i) for i in self._pages.split(',')}
+            valid.discard(1)
+            extra_used = [get_base(s.fname) for s in GS.sch.all_sheets if int0(s.sheet) in valid]
+        else:
+            extra_used = [get_base(s.fname) for s in GS.sch.all_sheets if int0(s.sheet) != 1]
+
+        for f in extra_used:
+            used.append(os.path.join(out_dir, GS.sch_basename+'-'+f+'.'+self._expand_ext))
+
+        return used
 
     def desc_box(self, box):
         return f"SCH text box @{box.pos_x},{box.pos_y}"

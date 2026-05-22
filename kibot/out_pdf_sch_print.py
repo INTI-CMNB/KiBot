@@ -27,6 +27,7 @@ class PDF_SCH_PrintOptions(Any_SCH_PrintOptions):
         super().__init__()
         self._expand_ext = 'pdf'
         self._exit_error = PDF_SCH_PRINT
+        self._unified_pages = True
 
 
 @output_class

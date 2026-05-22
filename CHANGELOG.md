@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Fixed
 - KiRi:
   - `kiri_server` path to the HTML
+- *SCH Print:
+  - The list of targets now includes all schematic pages
+- Report:
+  - Now all schematic pages are included, not just the first
 
 ## Changed
 - E/DRC and BoM: As we now have dark mode support the CSS is more complex and
