@@ -9,6 +9,9 @@ Dependencies:
   - from: KiAuto
     role: mandatory
     version: 2.3.1
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.8
   - from: ImageMagick
     role: Automatically crop images
 """

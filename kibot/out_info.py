@@ -8,6 +8,10 @@ Dependencies:
   - from: KiAuto
     role: Show KiAuto installation information
     version: 2.0.0
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.7
 """
 import os
 import sys

@@ -18,6 +18,10 @@ Dependencies:
   - from: KiAuto
     role: Compare schematics
     version: 2.2.0
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.7
 """
 from hashlib import sha1
 from itertools import combinations

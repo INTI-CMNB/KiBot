@@ -22,7 +22,7 @@
    -  Compare schematics for `kiri` (v2.2.0)
    -  Print the page frame in GUI mode for `pcb_print` (v1.6.7)
 
-`KiKit <https://github.com/INTI-CMNB/KiKit>`__ :index:`: <pair: dependency; KiKit>`  v1.7.0 |image11| |Auto-download|
+`KiKit <https://github.com/INTI-CMNB/KiKit>`__ :index:`: <pair: dependency; KiKit>`  v1.5.1 |image11| |Auto-download|
 
 -  Mandatory for: `panelize`, `stencil_3d`, `stencil_for_jig`
 -  Optional to separate multiboard projects for general use

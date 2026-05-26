@@ -1585,8 +1585,8 @@ def print_dependencies(markdown=True, jsn=False, rst=False):
                 needed.append(global2human(r.output))
             else:
                 optional.append(r)
-            if r.version and (version is None or r.version > version):
-                version = r.version
+            if r.min_version and (version is None or r.min_version > version):
+                version = r.min_version
             if r.max_version and (max_version is None or r.max_version < max_version):
                 max_version = r.max_version
         ver = compose_version(version, max_version)
@@ -1610,8 +1610,8 @@ def print_dependencies(markdown=True, jsn=False, rst=False):
                     print()
                 for o in optional:
                     ver = ''
-                    if o.version:
-                        ver = ' (v'+'.'.join(map(str, o.version))+')'
+                    if o.min_version:
+                        ver = ' (v'+'.'.join(map(str, o.min_version))+')'
                     print(f'{ind}- {extra}{o.desc} for {global2human(o.output)}{ver}')
         print_dep_comments(dep, extra, ind)
         print()

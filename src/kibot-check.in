@@ -132,7 +132,7 @@ def run_command(cmd, only_first_line=False, pre_ver_text=None, no_err_2=False, n
 
 def simple_run_command(cmd):
     res = run_command(cmd)
-    sev, ver = check_version(res, [{'mandatory': True, 'output': 'global', 'version': None}], no_ver=True)
+    sev, ver = check_version(res, [{'mandatory': True, 'output': 'global', 'version': None, 'min_version': None}], no_ver=True)
     return do_color(res, sev, version=ver)
 
 
@@ -197,7 +197,7 @@ def check_tests(tests):
 
 
 def get_version(r):
-    single = r['version']
+    single = r['min_version']
     if not single:
         return single
     all = r['all_versions']
