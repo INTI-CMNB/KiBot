@@ -1612,6 +1612,9 @@ def print_dependencies(markdown=True, jsn=False, rst=False):
                     ver = ''
                     if o.min_version:
                         ver = ' (v'+'.'.join(map(str, o.min_version))+')'
+                    if o.all_versions:
+                        vers = [f'KiCad {k}: {v}' for k, v in o.all_versions.items()]
+                        ver += ' ('+', '.join(vers)+')'
                     print(f'{ind}- {extra}{o.desc} for {global2human(o.output)}{ver}')
         print_dep_comments(dep, extra, ind)
         print()
