@@ -21,7 +21,9 @@ ReportOptions parameters
    in your PCB. Take a look at the `docs/samples/Component_Count_Table/` in the repo. |br|
    Note: when converting to PDF PanDoc can fail on some Unicode values (use `simple_ASCII`). |br|
    Note: the testpoint variables uses the `testpoint` fabrication attribute of pads.
--  ``alloy_specific_gravity`` :index:`: <pair: output - report - options; alloy_specific_gravity>` [:ref:`number <number>`] (default: ``7.4``) Specific gravity of the alloy used for the solder paste, in g/cm3. Used to compute solder paste usage.
+-  ``alloy_specific_gravity`` :index:`: <pair: output - report - options; alloy_specific_gravity>` [:ref:`number <number>`] (default: ``7.4``) Specific gravity of the alloy used for the solder paste, in g/cm3.
+   The 7.4 is the standard for lead-free (i.e. SAC305) for 63 Sn/37 Pb 8.4 is standard. |br|
+   Used to compute solder paste usage.
 -  ``convert_from`` :index:`: <pair: output - report - options; convert_from>` [:ref:`string <string>`] (default: ``'markdown'``) Original format for the report conversion. Current templates are `markdown`. See `do_convert`.
 -  ``converted_output`` :index:`: <pair: output - report - options; converted_output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Converted output file name (%i='report', %x=`convert_to`).
    Note that the extension should match the `convert_to` value. Affected by global options.
@@ -42,7 +44,9 @@ ReportOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
--  ``flux_specific_gravity`` :index:`: <pair: output - report - options; flux_specific_gravity>` [:ref:`number <number>`] (default: ``1.0``) Specific gravity of the flux used for the solder paste, in g/cm3. Used to compute solder paste usage.
+-  ``flux_specific_gravity`` :index:`: <pair: output - report - options; flux_specific_gravity>` [:ref:`number <number>`] (default: ``1.0``) Specific gravity of the flux used for the solder paste, in g/cm3.
+   Usually between 1 and 1.1, the 1.0 is the most common case. |br|
+   Used to compute solder paste usage.
 -  ``in_digits`` :index:`: <pair: output - report - options; in_digits>` [:ref:`number <number>`] (default: ``2``) Number of digits for values expressed in inches.
 -  ``mils_digits`` :index:`: <pair: output - report - options; mils_digits>` [:ref:`number <number>`] (default: ``0``) Number of digits for values expressed in mils.
 -  ``mm_digits`` :index:`: <pair: output - report - options; mm_digits>` [:ref:`number <number>`] (default: ``2``) Number of digits for values expressed in mm.
@@ -54,7 +58,9 @@ ReportOptions parameters
 -  ``remove_split_pdfs`` :index:`: <pair: output - report - options; remove_split_pdfs>` [:ref:`string <string>`] (default: ``'auto'``) (choices: "auto", "yes", "no") When we use PDF files they are split because `pandoc` can't deal with more than
    one page. You can delete them after converting the output. The `auto` value will do it when
    `do_convert` is enabled.
--  ``solder_paste_metal_amount`` :index:`: <pair: output - report - options; solder_paste_metal_amount>` [:ref:`number <number>`] (default: ``87.75``) (range: 0 to 100) Amount of metal in the solder paste (percentage). Used to compute solder paste usage.
+-  ``solder_paste_metal_amount`` :index:`: <pair: output - report - options; solder_paste_metal_amount>` [:ref:`number <number>`] (default: ``87.75``) (range: 0 to 100) Amount of metal in the solder paste (percentage).
+   For tin-lead 90 is more common. |br|
+   Used to compute solder paste usage.
 -  ``stencil_thickness`` :index:`: <pair: output - report - options; stencil_thickness>` [:ref:`number <number>`] (default: ``0.12``) Stencil thickness in mm. Used to compute solder paste usage.
 -  ``variant`` :index:`: <pair: output - report - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 

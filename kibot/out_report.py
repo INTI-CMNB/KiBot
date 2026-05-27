@@ -221,11 +221,17 @@ class ReportOptions(VariantOptions):
                 diameter can be reduced to accommodate the correct annular ring values.
                 Use 0 to disable it """
             self.alloy_specific_gravity = 7.4
-            """ Specific gravity of the alloy used for the solder paste, in g/cm3. Used to compute solder paste usage """
+            """ Specific gravity of the alloy used for the solder paste, in g/cm3.
+                The 7.4 is the standard for lead-free (i.e. SAC305) for 63 Sn/37 Pb 8.4 is standard.
+                Used to compute solder paste usage """
             self.flux_specific_gravity = 1.0
-            """ Specific gravity of the flux used for the solder paste, in g/cm3. Used to compute solder paste usage """
+            """ Specific gravity of the flux used for the solder paste, in g/cm3.
+                Usually between 1 and 1.1, the 1.0 is the most common case.
+                Used to compute solder paste usage """
             self.solder_paste_metal_amount = 87.75
-            """ [0,100] Amount of metal in the solder paste (percentage). Used to compute solder paste usage """
+            """ [0,100] Amount of metal in the solder paste (percentage).
+                For tin-lead 90 is more common.
+                Used to compute solder paste usage """
             self.stencil_thickness = 0.12
             """ Stencil thickness in mm. Used to compute solder paste usage """
             self.mm_digits = 2

@@ -4607,7 +4607,9 @@ outputs:
     type: 'report'
     dir: 'Example/report_dir'
     options:
-      # [number=7.4] Specific gravity of the alloy used for the solder paste, in g/cm3. Used to compute solder paste usage
+      # [number=7.4] Specific gravity of the alloy used for the solder paste, in g/cm3.
+      # The 7.4 is the standard for lead-free (i.e. SAC305) for 63 Sn/37 Pb 8.4 is standard.
+      # Used to compute solder paste usage
       alloy_specific_gravity: 7.4
       # [string='markdown'] Original format for the report conversion. Current templates are `markdown`. See `do_convert`
       convert_from: 'markdown'
@@ -4644,7 +4646,9 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [number=1.0] Specific gravity of the flux used for the solder paste, in g/cm3. Used to compute solder paste usage
+      # [number=1.0] Specific gravity of the flux used for the solder paste, in g/cm3.
+      # Usually between 1 and 1.1, the 1.0 is the most common case.
+      # Used to compute solder paste usage
       flux_specific_gravity: 1.0
       # [number=2] Number of digits for values expressed in inches
       in_digits: 2
@@ -4663,7 +4667,9 @@ outputs:
       # one page. You can delete them after converting the output. The `auto` value will do it when
       # `do_convert` is enabled
       remove_split_pdfs: 'auto'
-      # [number=87.75] [0,100] Amount of metal in the solder paste (percentage). Used to compute solder paste usage
+      # [number=87.75] [0,100] Amount of metal in the solder paste (percentage).
+      # For tin-lead 90 is more common.
+      # Used to compute solder paste usage
       solder_paste_metal_amount: 87.75
       # [number=0.12] Stencil thickness in mm. Used to compute solder paste usage
       stencil_thickness: 0.12
