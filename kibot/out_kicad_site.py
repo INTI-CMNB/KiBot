@@ -7,7 +7,7 @@ import os
 import shutil
 from urllib.parse import urljoin
 from .error import KiPlotConfigurationError
-from .misc import RENDERERS, INTERNAL_ERROR, W_EXTRAGEN
+from .misc import INTERNAL_ERROR, RENDERERS
 from .gs import GS
 from .kiplot import run_output, get_output_targets, config_output
 from .optionable import BaseOptions, Optionable
@@ -30,6 +30,11 @@ class KiCad_SiteAssembly(Optionable):
             """ *Name for the downloadable item """
             self.output = ''
             """ Output that generates it """
+            self.index = 0
+            """ Used when the output generates more than one file.
+                Here you can select which one, 0 is the first.
+                Note that negative indexes are counted from the end of the list.
+                Using an out of range value will generate an error and show all available files """
         self._item_style = 'assembly model'
         self._name_example = '3D model'
         self._output_example = 'export_glb'
@@ -278,8 +283,10 @@ class KiCad_SiteOptions(BaseOptions):
         if cfiles == 0:
             raise KiPlotConfigurationError(f"Output `{out}` doesn't generate files")
         fname = files_list[0]
-        if cfiles > 1 and kind != 'KiRi':
-            logger.warning(W_EXTRAGEN+f"Output `{out}` generates more than one file, using {os.path.basename(fname)}")
+        if cfiles > 1 and o.index:
+            if o.index >= cfiles:
+                raise KiPlotConfigurationError(f"The `{out}` generates only {cfiles}, so {o.index} is invalid. {files_list}")
+            fname = files_list[o.index]
         logger.debug(f"- {kind}: `{out}` -> {fname}")
         if not dry_run:
             self.run_output(out, fname)

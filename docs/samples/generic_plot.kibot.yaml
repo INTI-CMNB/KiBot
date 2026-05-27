@@ -2279,8 +2279,13 @@ outputs:
     options:
       # [dict|list(dict)=[]] 3D assembly models
       assembly_models:
-        # [string=''] Name for the downloadable item
-        - name: '3D model'
+        # [number=0] Used when the output generates more than one file.
+        # Here you can select which one, 0 is the first.
+        # Note that negative indexes are counted from the end of the list.
+        # Using an out of range value will generate an error and show all available files
+        - index: 0
+          # [string=''] Name for the downloadable item
+          name: '3D model'
           # [string=''] Output that generates it
           output: 'export_glb'
       # [string=''] Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
@@ -2294,6 +2299,11 @@ outputs:
       diffs:
         # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
         - dir: ''
+          # [number=0] Used when the output generates more than one file.
+          # Here you can select which one, 0 is the first.
+          # Note that negative indexes are counted from the end of the list.
+          # Using an out of range value will generate an error and show all available files
+          index: 0
           # [string] Name for the diff item
           name: 'Schematic diff'
           # [string=''] Output that generates it
@@ -2302,6 +2312,11 @@ outputs:
       downloads:
         # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
         - dir: ''
+          # [number=0] Used when the output generates more than one file.
+          # Here you can select which one, 0 is the first.
+          # Note that negative indexes are counted from the end of the list.
+          # Using an out of range value will generate an error and show all available files
+          index: 0
           # [string=''] Name for the downloadable item
           name: 'Schematic (PDF)'
           # [string=''] Output that generates it
