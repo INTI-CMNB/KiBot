@@ -116,13 +116,17 @@ Note: this is just an approximation to the theoretical value. Margins of the sol
 
 # Schematic
 
-![Schematic](../Schematic.svg){ width=16.5cm height=11.7cm }
+\ ![Schematic](../Schematic.svg){ width=16.5cm height=11.7cm }
+
+
+
+
 
 
 
 # PCB Layers
 
-![Top copper and silkscreen](../Layers/light_control-assembly-front.pdf){ width=16.5cm height=11.7cm }
+\ ![Top copper and silkscreen](../Layers/light_control-assembly-front.pdf){ width=16.5cm height=11.7cm }
 
-![Bottom copper and silkscreen](../Layers/light_control-assembly-bottom.pdf){ width=16.5cm height=11.7cm }
+\ ![Bottom copper and silkscreen](../Layers/light_control-assembly-bottom.pdf){ width=16.5cm height=11.7cm }
 
