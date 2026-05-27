@@ -54,7 +54,6 @@ def split_pdf(input_pdf):
 
             output_filepath = f"{base_name}-{i+1}.pdf"
 
-            logger.error(output_filepath)
             created.append(output_filepath)
             with open(output_filepath, "wb") as outfile:
                 writer.write(outfile)
