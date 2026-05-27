@@ -1148,7 +1148,7 @@ class ReportOptions(VariantOptions):
     def get_targets(self, out_dir):
         files = [self._parent.expand_filename(out_dir, self.output)]
         if self.do_convert:
-            files.insert(0, self.expand_converted_output(out_dir))
+            files.append(self.expand_converted_output(out_dir))
         return files
 
     def convert(self, fname):
