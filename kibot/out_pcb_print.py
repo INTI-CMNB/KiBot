@@ -660,7 +660,14 @@ class PCB_PrintOptions(VariantOptions):
         vars['SHEETPATH'] = ''  # Only relevant for an schematic
         vars['LAYER'] = p.layer_var
         vars['PAPER'] = self.pcb.paper
-        return vars
+        if self.variant:
+            vars['VARIANT'] = self.variant.name
+            vars['VARIANT_DESC'] = self.variant.comment
+            logger.debug(f"Defining the VARIANT* text variable using {self.variant}")
+        else:
+            vars['VARIANT'] = vars['VARIANT_DESC'] = ''
+        # Solve the dynamic ${VARIANT}
+        return {k: GS.expand_text_variables(v, vars) for k, v in vars.items()}
 
     def plot_frame_internal(self, pc, po, p, page, pages):
         """ Here we plot the frame manually """

@@ -581,6 +581,7 @@ def get_board_comps_data(comps, kicad_variant=None):
                         # We have pad a valid pad, assume this is all SMD and keep looking
                         c.smd = True
     if kicad_variant is not None:
+        logger.debug(f"Switching the PCB to {old_variant}")
         GS.board.SetCurrentVariant(old_variant)
 
 

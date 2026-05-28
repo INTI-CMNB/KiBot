@@ -546,7 +546,8 @@ class GS(object):
                 value = os.environ.get(vname, None)
             if value is None:
                 value = '${'+vname+'}'
-                logger.warning(W_UNKVAR+"Unknown text variable `{}`".format(vname))
+                if vname not in {'VARIANT', 'VARIANT_DESC'}:  # These are dynamic
+                    logger.warning(W_UNKVAR+"Unknown text variable `{}`".format(vname))
             if match.start():
                 new_text += text[last:match.start()]
             new_text += value

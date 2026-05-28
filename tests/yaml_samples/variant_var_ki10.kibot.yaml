@@ -1,0 +1,18 @@
+# This example is used with tests/board_samples/kicad_10/variant_var.kicad_pcb
+# The variants are KiCad 10 native variants, so we don't need to define them
+kiplot:
+  version: 1
+
+outputs:
+  - name: PNG
+    comment: Top copper and silkscreen
+    type: pcb_print
+    dir: PNG
+    options:
+      plot_sheet_reference: true
+      format: PNG
+      scaling: 4
+      pages:
+        - layers:
+            - layer: F.Cu
+            - layer: F.SilkS
