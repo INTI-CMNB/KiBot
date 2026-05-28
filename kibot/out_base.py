@@ -1169,14 +1169,20 @@ class VariantOptions(BaseOptions):
         self.load_list_components()
         variant = self.variant or GS.solved_global_variant
         if variant:
-            GS.pro_variables['VARIANT'] = variant.name
-            GS.pro_variables['VARIANT_DESC'] = variant.comment
+            if GS.pro_variables:
+                GS.pro_variables['VARIANT'] = variant.name
+                GS.pro_variables['VARIANT_DESC'] = variant.comment
+            else:
+                logger.debug("Not setting VARIANT*")
             if GS.ki10 and variant.type == 'kicad' and GS.board:
                 logger.debug(f"Switching the PCB to {variant.name}")
                 GS.board.SetCurrentVariant(variant.name)
         else:
             # KiCad 10 behavior when "Default" variant is selected
-            GS.pro_variables['VARIANT'] = GS.pro_variables['VARIANT_DESC'] = ""
+            if GS.pro_variables:
+                GS.pro_variables['VARIANT'] = GS.pro_variables['VARIANT_DESC'] = ""
+            else:
+                logger.debug("Not setting VARIANT*")
             if GS.ki10 and GS.board:
                 logger.debug("Switching the PCB to 'Default' variant")
                 GS.board.SetCurrentVariant('')
