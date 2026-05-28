@@ -256,7 +256,7 @@ def test_print_pcb_variant_var_ki10(test_dir):
         This test uses KiCad 10 native variants and the internal print mechanism """
     prj = 'variant_var'
     ctx = context.TestContext(test_dir, prj, 'variant_var_ki10', 'PNG')
-    ctx.run(extra=['--variant', 'production', '--variant', 'development', '--variant', 'NONE'])
+    ctx.run(extra=['--variant', 'production', '--variant', 'development', '--variant', 'NONE', 'PNG'])
     ctx.compare_image(prj+'-assembly_page_01_production.png', tol=DIFF_TOL, sub=True)
     ctx.compare_image(prj+'-assembly_page_01_development.png', tol=DIFF_TOL, sub=True)
     ctx.compare_image(prj+'-assembly_page_01.png', tol=DIFF_TOL, sub=True)

@@ -16,3 +16,11 @@ outputs:
         - layers:
             - layer: F.Cu
             - layer: F.SilkS
+
+  - name: 'svg_layers'
+    comment: "SVGs for layers"
+    type: svg
+    layers: ['F.Cu', 'F.SilkS']
+    options:
+      scaling: 0
+      # plot_sheet_reference: true

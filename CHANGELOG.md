@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `remove_split_pdfs`: To control if we remove split PDFs
 
 ## Fixed
+- CLI:
+  - When using a --variant and an specific target, it was generated for the
+    first variant in the list, not the rest
 - KiRi:
   - `kiri_server` path to the HTML
 - *SCH Print:

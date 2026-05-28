@@ -51,6 +51,11 @@ Added
 Fixed
 -----
 
+-  CLI:
+
+   -  When using a –variant and an specific target, it was generated for
+      the first variant in the list, not the rest
+
 -  KiRi:
 
    -  ``kiri_server`` path to the HTML

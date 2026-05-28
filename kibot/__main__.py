@@ -690,6 +690,8 @@ def main():
                         old_tree = o._tree
                         o.__init__()
                         o.set_tree(old_tree)
+                        o.name = old_tree.get('name')
+                        o.type = old_tree.get('type')
                     # Preflights aren't "variantic", so skip all of them for the rest of variants
                     args.skip_pre = 'all'
                 generate_outputs(args.target, args.invert_sel, args.skip_pre, args.cli_order, args.no_priority,
