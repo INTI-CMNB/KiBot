@@ -63,6 +63,7 @@ class AnyDiffOptions(VariantOptions):
             cmd.append('--all_pages')
         if GS.debug_enabled:
             cmd.insert(1, '-'+'v'*GS.debug_level)
+        self.add_kicad_cli_variant(cmd)
         cmd.extend([name, name])
         self.name_used_for_cache = name
         run_command(cmd)

@@ -1128,7 +1128,7 @@ class VariantOptions(BaseOptions):
         self._highlight_3D_file = None
 
     def add_extra_options(self, cmd, dir=None):
-        cmd, video_remove = GS.add_extra_options(cmd)
+        cmd, video_remove = GS.add_extra_options(cmd, self.kicad_variant_name())
         if video_remove:
             self._files_to_remove.append(os.path.join(dir or cmd[-1], GS.get_kiauto_video_name(cmd)))
         return cmd

@@ -877,7 +877,7 @@ class GS(object):
         return command+'_screencast.ogv'
 
     @staticmethod
-    def add_extra_options(cmd):
+    def add_extra_options(cmd, variant=None):
         is_gitlab_ci = 'GITLAB_CI' in os.environ
         video_remove = (not GS.debug_enabled) and is_gitlab_ci
         if GS.debug_enabled:
@@ -891,6 +891,9 @@ class GS(object):
         if GS.global_kiauto_wait_start:
             cmd.insert(1, str(GS.global_kiauto_wait_start))
             cmd.insert(1, '--wait_start')
+        if variant:
+            cmd.insert(1, variant)
+            cmd.insert(1, '--variant')
         return cmd, video_remove
 
     @staticmethod

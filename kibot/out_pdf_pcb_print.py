@@ -11,7 +11,7 @@ Dependencies:
     version_k7: 2.2.8
     version_k8: 2.3.2
     version_k9: 2.3.5
-    version_k10: 2.3.7
+    version_k10: 2.3.9
 """
 from .gs import GS
 from .out_any_pcb_print import Any_PCB_PrintOptions

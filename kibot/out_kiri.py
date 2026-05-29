@@ -7,6 +7,7 @@
 Dependencies:
   - name: KiCad PCB/SCH Diff
     version: 2.5.1
+    version_k10: 2.6.0
     role: mandatory
     github: INTI-CMNB/KiDiff
     command: kicad-diff.py
@@ -21,7 +22,7 @@ Dependencies:
     version_k7: 2.2.8
     version_k8: 2.3.2
     version_k9: 2.3.5
-    version_k10: 2.3.7
+    version_k10: 2.3.9
 """
 import datetime
 import glob

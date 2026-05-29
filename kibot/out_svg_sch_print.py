@@ -10,7 +10,7 @@ Dependencies:
     role: mandatory
     command: eeschema_do
     version: 2.3.6
-    version_k10: 2.3.7
+    version_k10: 2.3.9
 """
 from .gs import GS
 from .out_any_sch_print import Any_SCH_PrintOptions

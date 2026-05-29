@@ -7,6 +7,7 @@
 Dependencies:
   - name: KiCad PCB/SCH Diff
     version: 2.5.3
+    version_k10: 2.6.0
     role: mandatory
     github: INTI-CMNB/KiDiff
     command: kicad-diff.py
@@ -21,7 +22,7 @@ Dependencies:
     version_k7: 2.2.8
     version_k8: 2.3.2
     version_k9: 2.3.5
-    version_k10: 2.3.7
+    version_k10: 2.3.9
 """
 from hashlib import sha1
 from itertools import combinations
@@ -493,6 +494,7 @@ class DiffOptions(AnyDiffOptions):
             cmd.append('--only_different')
         if not self.only_first_sch_page:
             cmd.append('--all_pages')
+        self.add_kicad_cli_variant(cmd)
         cmd.extend([name_used_for_old, name_used_for_new])
         if GS.debug_enabled:
             cmd.insert(1, '-'+'v'*GS.debug_level)

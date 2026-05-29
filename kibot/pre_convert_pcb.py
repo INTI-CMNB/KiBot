@@ -9,5 +9,5 @@ Dependencies:
     role: mandatory
     version: 2.3.2
     version_k9: 2.3.5
-    version_k10: 2.3.7
+    version_k10: 2.3.9
 """
