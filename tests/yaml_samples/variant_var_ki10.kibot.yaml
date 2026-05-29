@@ -34,3 +34,21 @@ outputs:
     options:
       include_tracks: true
       include_silkscreen: true
+
+  - name: 'ipc2581'
+    comment: "IPC 2581 export"
+    type: ipc2581
+
+  - name: 'netlist'
+    comment: "Netlist export"
+    type: netlist
+
+  - name: 'odb'
+    comment: "ODB export"
+    type: odb
+
+  - name: 'position'
+    comment: "GBR position"
+    type: position
+    options:
+      format: GBR

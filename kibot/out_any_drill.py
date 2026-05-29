@@ -332,6 +332,7 @@ class AnyDrill(VariantOptions):
             # Using kicad-cli
             fname = self.save_tmp_board() if self.will_filter_pcb_components() else GS.pcb_file
             odir = output_dir  # if self.generate_drill_files else tempfile.gettempdir()
+            # No variant here
             cmd = [GS.kicad_cli, 'pcb', 'export', 'drill', '--output', odir] + drill_writer
             if gen_map:
                 logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))

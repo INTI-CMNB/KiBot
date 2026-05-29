@@ -252,6 +252,7 @@ class PositionOptions(VariantOptions):
             cmd_base.append('--use-drill-file-origin')
         if self.gerber_board_edge:
             cmd_base.append('--gerber-board-edge')
+        self.add_kicad_cli_variant(cmd_base)
         cmd_base.append('--side')
 
         fname = self.expand_filename(output_dir, self.output, 'top_pos', self._expand_ext)

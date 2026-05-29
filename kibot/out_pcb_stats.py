@@ -44,7 +44,7 @@ class PCB_StatsOptions(VariantOptions):
             GS.exit_with_error("`pcb_stats` needs KiCad 10+", MISSING_TOOL)
         super().run(output)
         # Make units explicit
-        # Base command
+        # Base command, no variants here
         cmd = [GS.kicad_cli, 'pcb', 'export', 'stats', '-o', output]
         if self.format != 'txt':
             cmd.extend(['--format', self.format])

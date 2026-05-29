@@ -72,7 +72,9 @@ class NetlistOptions(VariantOptions):
     def run_cli(self, name, format):
         super().run(name)
         sch_file = self.save_tmp_sch_if_variant()
-        cmd = [GS.kicad_cli, 'sch', 'export', 'netlist', '--format', format, '--output', name, sch_file]
+        cmd = [GS.kicad_cli, 'sch', 'export', 'netlist', '--format', format, '--output', name]
+        self.add_kicad_cli_variant(cmd)
+        cmd.append(sch_file)
         run_command(cmd)
 
     def run(self, name):

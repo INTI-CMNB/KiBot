@@ -89,6 +89,7 @@ class IPC2581Options(VariantOptions):
             cmd.extend(['--bom-col-dist', self._field_distributor])
         if self._field_internal_id:
             cmd.extend(['--bom-col-int-id', self._field_internal_id])
+        self.add_kicad_cli_variant(cmd)
         cmd.append(board_name)
         run_command(cmd)
 

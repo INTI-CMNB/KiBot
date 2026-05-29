@@ -759,6 +759,11 @@ class Optionable(object):
     def kicad_variant_name(self):
         return GS.kicad_variant_name(self.variant or GS.solved_global_variant)
 
+    def add_kicad_cli_variant(self, cmd):
+        kicad_variant = self.kicad_variant_name()
+        if kicad_variant:
+            cmd.extend(['--variant', kicad_variant])
+
 
 class BaseOptions(Optionable):
     """ A class to validate and hold output options.
