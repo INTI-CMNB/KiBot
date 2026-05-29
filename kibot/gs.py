@@ -1201,3 +1201,7 @@ class GS(object):
             # Wonderful! before the other, no default, etc.
             return obj.GetTextBox(None, a_line)
         return obj.GetTextBox(a_line)
+
+    @staticmethod
+    def kicad_variant_name(variant):
+        return variant.name if variant and variant.type == 'kicad' and GS.ki10 else None

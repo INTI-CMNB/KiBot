@@ -1174,7 +1174,7 @@ class VariantOptions(BaseOptions):
                 GS.pro_variables['VARIANT_DESC'] = variant.comment
             else:
                 logger.debug("Not setting VARIANT*")
-            if GS.ki10 and variant.type == 'kicad' and GS.board:
+            if GS.board and GS.kicad_variant_name(variant):
                 logger.debug(f"Switching the PCB to {variant.name}")
                 GS.board.SetCurrentVariant(variant.name)
         else:

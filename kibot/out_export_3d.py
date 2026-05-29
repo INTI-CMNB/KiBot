@@ -138,6 +138,9 @@ class Export_3DOptions(Base3DOptions):
         if self.no_virtual:
             # Is this correct?
             cmd.append('--no-unspecified')
+        kicad_variant = self.kicad_variant_name()
+        if kicad_variant:
+            cmd.extend(['--variant', kicad_variant])
         # The board
         board_name = self.filter_components()
         cmd.append(board_name)

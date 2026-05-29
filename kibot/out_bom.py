@@ -836,7 +836,7 @@ class BoMOptions(BaseOptions):
         exclude_filter = self.exclude_filter
         dnf_filter = self.dnf_filter
         dnc_filter = self.dnc_filter
-        if self.variant and self.variant.type == 'kicad':
+        if GS.kicad_variant_name(self.variant):
             # If we are using KiCad variants remove the defaults
             if not self.get_user_defined('exclude_filter'):
                 exclude_filter = '_null'
@@ -1068,7 +1068,7 @@ class BoMOptions(BaseOptions):
             self.variant._sub_pcb.apply(comps_hash)
             comps = [c for c in comps_hash.values() if c.included]
             must_revert_sub_pcb = True
-        kicad_variant = self.variant.name if self.variant and self.variant.type == 'kicad' and GS.ki10 else None
+        kicad_variant = GS.kicad_variant_name(self.variant)
         get_board_comps_data(comps, kicad_variant=kicad_variant)
         if self.count_smd_tht and not GS.pcb_file:
             logger.warning(W_NEEDSPCB+"`count_smd_tht` is enabled, but no PCB provided")

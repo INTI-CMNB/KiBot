@@ -756,6 +756,9 @@ class Optionable(object):
             logger.debugl(3, f'- {c.ref} field `{name}` set to `{value}` by `{vname}`')
         return v, vname
 
+    def kicad_variant_name(self):
+        return GS.kicad_variant_name(self.variant or GS.solved_global_variant)
+
 
 class BaseOptions(Optionable):
     """ A class to validate and hold output options.

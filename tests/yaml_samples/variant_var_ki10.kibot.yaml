@@ -1,5 +1,8 @@
 # This example is used with tests/board_samples/kicad_10/variant_var.kicad_pcb
 # The variants are KiCad 10 native variants, so we don't need to define them
+#
+# kibot -L log -b tests/board_samples/kicad_10/variant_var.kicad_pcb -c tests/yaml_samples/variant_var_ki10.kibot.yaml -d pp10/print_pcb_variant_var --variant production --variant development --variant NONE 3d_model
+#
 kiplot:
   version: 1
 
@@ -24,3 +27,10 @@ outputs:
     options:
       scaling: 0
       # plot_sheet_reference: true
+
+  - name: '3d_model'
+    comment: "3D model"
+    type: export_3d
+    options:
+      include_tracks: true
+      include_silkscreen: true
