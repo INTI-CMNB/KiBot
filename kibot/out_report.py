@@ -1217,6 +1217,9 @@ class ReportOptions(VariantOptions):
                 is_pcb_print_svg = o.type == 'pcb_print' and o.options.format == 'SVG'
                 if any(not os.path.isfile(f) for f in out_files):
                     run_output(o)
+                if any(not os.path.isfile(f) for f in out_files):
+                    missing = [f for f in out_files if not os.path.isfile(f)]
+                    raise KiPlotConfigurationError(f'Output `{o}` failed to generate: {missing}')
                 for n, of in enumerate(out_files):
                     rel_path = os.path.relpath(of, base_dir)
                     comment = o.comment
