@@ -764,6 +764,9 @@ class Optionable(object):
         if kicad_variant:
             cmd.extend(['--variant', kicad_variant])
 
+    def _get_targets(self, out_dir):
+        return [self._parent.expand_filename(out_dir, self.output)]
+
 
 class BaseOptions(Optionable):
     """ A class to validate and hold output options.

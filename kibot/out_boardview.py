@@ -309,6 +309,7 @@ class BoardViewOptions(VariantOptions):
         self._expand_id = 'boardview'
         self._expand_ext = 'brd'
         self.help_only_sub_pcbs()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -334,9 +335,6 @@ class BoardViewOptions(VariantOptions):
             else:
                 convert_bvr(GS.board, f)
         self.unfilter_pcb_components()
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
 
 @output_class

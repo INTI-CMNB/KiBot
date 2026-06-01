@@ -58,6 +58,7 @@ class BoMLabelsOptions(VariantOptions):
         self._expand_ext = 'pdf'
         self._expand_id = 'bom_labels'
         self._bom_example = 'bom_labels'
+        self.get_targets = self._get_targets
 
     def run(self, dir_name):
         if not self.bom:
@@ -145,9 +146,6 @@ class BoMLabelsOptions(VariantOptions):
                     break
 
         c.save()
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def __str__(self):
         txt = f'{self.width}x{self.height} mm, {self.rows} rows, {self.bom}'

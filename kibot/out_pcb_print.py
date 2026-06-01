@@ -604,7 +604,7 @@ class PCB_PrintOptions(VariantOptions):
                 id, ext = self.get_id_and_ext(n, p.page_id)
                 files.append(self.expand_filename(out_dir, self.output, id, ext))
             return files
-        return [self._parent.expand_filename(out_dir, self.output)]
+        return self._get_targets(out_dir)
 
     def clear_layer(self, layer):
         tmp_layer = GS.board.GetLayerID(GS.global_work_layer)

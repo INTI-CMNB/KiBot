@@ -166,6 +166,7 @@ class Base3DOptions(VariantOptions):
         self._tmp_dir = None
         super().__init__()
         self._expand_id = '3D'
+        self.get_targets = self._get_targets
 
     def copy_options(self, ref):
         super().copy_options(ref)
@@ -661,9 +662,6 @@ class Base3DOptions(VariantOptions):
             fname = self.save_tmp_board()
         self.unfilter_pcb_components(do_3D=True, do_2D=True)
         return fname
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def remove_temporals(self):
         super().remove_temporals()

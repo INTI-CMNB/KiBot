@@ -46,6 +46,7 @@ class IPC2581Options(VariantOptions):
                 Leave empty to create unique IDs """
         super().__init__()
         self._expand_id = 'IPC-2581'
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -66,9 +67,6 @@ class IPC2581Options(VariantOptions):
             val = getattr(self, '_'+fld)
             if val and val not in valid:
                 logger.warning(W_BADFIELD+f'Invalid column name `{val}` for `{fld}`. Valid columns are {sorted(valid)}.')
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def run(self, name):
         if not GS.ki9:

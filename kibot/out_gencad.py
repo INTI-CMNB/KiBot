@@ -42,9 +42,7 @@ class GenCADOptions(VariantOptions):
         self._expand_id = 'gencad'
         self._expand_ext = 'cad'
         self.help_only_sub_pcbs()
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
+        self.get_targets = self._get_targets
 
     def run(self, name):
         command = self.ensure_tool('KiAuto')

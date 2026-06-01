@@ -94,6 +94,7 @@ class CompressOptions(BaseOptions):
             self.expand_dest = True
             """ Also expand the `dest` file name (using % patterns) """
         super().__init__()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -231,9 +232,6 @@ class CompressOptions(BaseOptions):
                     dest = os.path.relpath(dest, out_dir)
                 files[fname_real] = dest
         return files, list(dirs_list)
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def get_dependencies(self):
         output = self.get_targets(self.expand_filename_sch(GS.out_dir))[0]

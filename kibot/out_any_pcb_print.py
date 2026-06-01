@@ -47,6 +47,7 @@ class Any_PCB_PrintOptions(VariantOptions):
                 Usually user colors are stored as `user`, but you can give it another name """
         add_drill_marks(self)
         super().__init__()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -63,9 +64,6 @@ class Any_PCB_PrintOptions(VariantOptions):
         self.unfilter_pcb_components()
         self._files_to_remove.append(pcb_dir)
         return fname
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def run(self, output, svg=False):
         super().run(self._layers)

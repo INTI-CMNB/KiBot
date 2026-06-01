@@ -675,6 +675,7 @@ class BoMOptions(BaseOptions):
                 But don't mark them as empty in the HTML """
         super().__init__()
         self._no_conflict_example = ['Config', 'Part']
+        self.get_targets = self._get_targets
 
     def _guess_format(self):
         """ Figure out the format """
@@ -1158,9 +1159,6 @@ class BoMOptions(BaseOptions):
         # Undo sub_pcb
         if must_revert_sub_pcb:
             self.variant._sub_pcb.revert(comps_hash)
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
 
 @output_class

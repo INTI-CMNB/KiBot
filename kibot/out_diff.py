@@ -127,6 +127,7 @@ class DiffOptions(AnyDiffOptions):
             """ A regular expression used to match the used tags for `KIBOT_TAG` """
         super().__init__()
         self.add_to_doc("zones", "Be careful with the cache when changing this setting")
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -145,9 +146,6 @@ class DiffOptions(AnyDiffOptions):
             self._tag_filter = re.compile(self.tag_filter)
         except Exception as e:
             raise KiPlotConfigurationError('Invalid regular expression '+str(e))
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def get_digest(self, file_path, restart=True):
         logger.debug('Hashing '+file_path)

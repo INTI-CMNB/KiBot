@@ -60,14 +60,12 @@ class NetlistOptions(VariantOptions):
                 """
         super().__init__()
         self.help_only_sub_pcbs()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
         self._expand_id, self._expand_ext = EXTENSIONS[self.format]
         self._category = 'PCB/fabrication/verification' if self.format == 'ipc' else 'PCB/export'
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def run_cli(self, name, format):
         super().run(name)

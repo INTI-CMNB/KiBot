@@ -254,6 +254,7 @@ class PcbDrawOptions(VariantOptions):
                 The value is how much zeros has the multiplier (1 mm = 10 power `svg_precision` units).
                 Note that for an A4 paper Firefox 91 and Chrome 105 can't handle more than 5 """
         super().__init__()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         self._filters_to_expand = False
@@ -348,9 +349,6 @@ class PcbDrawOptions(VariantOptions):
                     ext_list.append(ac.ref)
             new_list += ext_list
         return new_list
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def build_plot_components(self):
         from .PcbDraw.plot import PlotComponents, ResistorValue
