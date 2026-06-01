@@ -821,7 +821,8 @@ def check_makefile(ctx, mkfile, prj, dbg, txt):
     assert len(deps) == 1, deps
     assert ctx.get_out_path(prj+'-archive.zip') in deps
     deps = targets[targets['archive']].split(' ')
-    assert len(deps) == 19, deps
+    n_deps = 19 if context.ki10() else 18
+    assert len(deps) == n_deps, deps
     # - position
     assert ctx.get_out_path(os.path.join(POS_DIR, prj+'-top_pos.csv')) in deps
     assert ctx.get_out_path(os.path.join(POS_DIR, prj+'-bottom_pos.csv')) in deps
@@ -856,7 +857,10 @@ def test_makefile_1(test_dir):
     prj = 'test_v5'
     ctx = context.TestContext(test_dir, prj, 'makefile_1_ki10' if context.ki10() else 'makefile_1')
     mkfile = ctx.get_out_path('Makefile')
-    ctx.run(extra=['-s', 'all', 'archive', 'pcb_stats'])
+    extra = ['-s', 'all', 'archive']
+    if context.ki10():
+        extra.append('pcb_stats')
+    ctx.run(extra=extra)
     ctx.run(extra=['-m', mkfile])
     check_makefile(ctx, mkfile, prj, '-v', r"^\t\$\(KIBOT_CMD\) -s (.*) -i$")
     ctx.clean_up()
@@ -868,7 +872,10 @@ def test_makefile_2(test_dir):
     prj = 'test_v5'
     ctx = context.TestContext(test_dir, prj, 'makefile_1_ki10' if context.ki10() else 'makefile_1')
     mkfile = ctx.get_out_path('Makefile')
-    ctx.run(extra=['-s', 'all', 'archive', 'pcb_stats'])
+    extra = ['-s', 'all', 'archive']
+    if context.ki10():
+        extra.append('pcb_stats')
+    ctx.run(extra=extra)
     ctx.run(extra=['-m', mkfile], no_verbose=True)
     check_makefile(ctx, mkfile, prj, '', r"^\t@\$\(KIBOT_CMD\) -s (.*) -i 2>> \$\(LOGFILE\)$")
     ctx.clean_up()
