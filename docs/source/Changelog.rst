@@ -67,11 +67,15 @@ Fixed
 
 -  PCB Stats:
 
-   -  Missing targets
+   -  Missing targets (See #928)
 
 -  Report:
 
    -  Now all SVG schematic pages are included, not just the first
+
+-  VRML
+
+   -  Avoid WRL files for KiCad 10 (See #928)
 
 Changed
 -------

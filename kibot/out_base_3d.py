@@ -620,6 +620,10 @@ class Base3DOptions(VariantOptions):
         return list(models)
 
     def filter_components(self, highlight=None, force_wrl=False, also_sch=False, force_step=False):
+        if GS.ki10:
+            # KiCad 10 removed WRL files, so we must enforce the use of STEP files
+            force_wrl = False
+            force_step = True
         if not self._comps:
             # No filters, but we need to apply some stuff
             all_comps = None

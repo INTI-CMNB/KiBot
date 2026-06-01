@@ -35,9 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The list of targets now includes all schematic pages
   - Output when the `output` option was empty
 - PCB Stats:
-  - Missing targets
+  - Missing targets (See #928)
 - Report:
   - Now all SVG schematic pages are included, not just the first
+- VRML
+  - Avoid WRL files for KiCad 10 (See #928)
 
 ## Changed
 - E/DRC and BoM: As we now have dark mode support the CSS is more complex and
