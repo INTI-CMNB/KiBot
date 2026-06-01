@@ -166,7 +166,9 @@ class Base3DOptions(VariantOptions):
         self._tmp_dir = None
         super().__init__()
         self._expand_id = '3D'
-        self.get_targets = self._get_targets
+
+    def get_targets(self, out_dir):
+        return self._get_targets(out_dir)
 
     def copy_options(self, ref):
         super().copy_options(ref)
