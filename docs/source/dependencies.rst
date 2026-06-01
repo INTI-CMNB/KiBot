@@ -17,10 +17,10 @@
 -  Mandatory for: `convert_pcb`, `dxf_sch_print`, `gencad`, `hpgl_sch_print`, `netlist`, `pdf_pcb_print`, `pdf_sch_print`, `ps_sch_print`, `render_3d`, `run_drc`, `run_erc`, `step`, `svg_pcb_print`, `svg_sch_print`, `update_xml`, `vrml`
 -  Optional to:
 
-   -  Compare schematics for `diff` (v2.2.0) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.7)
-   -  Show KiAuto installation information for `info` (v2.0.0) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.7)
-   -  Compare schematics for `kiri` (v2.2.0) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.7)
-   -  Print the page frame in GUI mode for `pcb_print` (v1.6.7) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.7)
+   -  Compare schematics for `diff` (v2.2.0) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.9)
+   -  Show KiAuto installation information for `info` (v2.0.0) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.9)
+   -  Compare schematics for `kiri` (v2.2.0) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.9)
+   -  Print the page frame in GUI mode for `pcb_print` (v1.6.7) (KiCad 7: 2.2.8, KiCad 8: 2.3.2, KiCad 9: 2.3.5, KiCad 10: 2.3.9)
 
 `KiKit <https://github.com/INTI-CMNB/KiKit>`__ :index:`: <pair: dependency; KiKit>`  v1.5.1 |image11| |Auto-download|
 
