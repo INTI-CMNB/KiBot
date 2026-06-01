@@ -1228,8 +1228,8 @@ class ReportOptions(VariantOptions):
                     # Split PDFs, otherwise we get the first page
                     if of.endswith('.pdf'):
                         split = split_pdf(of)
-                        split_pdfs.extend(split)
                         if len(split) > 1:
+                            split_pdfs.extend(split)
                             for pdf_page, pdf_name in enumerate(split):
                                 dest.append((os.path.relpath(pdf_name, base_dir), comment+f" page {pdf_page+1}", o.name))
                             continue
