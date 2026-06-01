@@ -65,6 +65,10 @@ Fixed
    -  The list of targets now includes all schematic pages
    -  Output when the ``output`` option was empty
 
+-  PCB Stats:
+
+   -  Missing targets
+
 -  Report:
 
    -  Now all SVG schematic pages are included, not just the first

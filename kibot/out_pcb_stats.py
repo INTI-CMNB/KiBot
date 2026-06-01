@@ -31,6 +31,7 @@ class PCB_StatsOptions(VariantOptions):
             """ Subtract holes from copper areas """
         super().__init__()
         self._expand_id = 'statistics'
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
