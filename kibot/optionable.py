@@ -402,7 +402,7 @@ class Optionable(object):
 
     def get_attrs_gen(self):
         """ Returns a (key, val) iterator on public attributes """
-        return filter(lambda k: k[0][0] != '_', vars(self).items())
+        return filter(lambda k: (k[0][0] != '_') and (k[0] != 'get_targets'), vars(self).items())
 
     @staticmethod
     def _find_global_variant():
