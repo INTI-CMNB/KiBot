@@ -213,7 +213,10 @@ class KiConf(object):
                 cfg += '.json'
             if os.path.isfile(cfg):
                 return cfg
-        logger.warning(W_NOCONFIG + 'Unable to find KiCad configuration file ({})'.format(cfg))
+        msg = W_NOCONFIG+f'Unable to find KiCad configuration file `{cfg}`'
+        if GS.ci_cd_detected:
+            msg = W_SILLY+msg
+        logger.warning(msg)
         return None
 
     def _guess_kicad_data_dir(data_dir):

@@ -93,6 +93,11 @@ Changed
    on-the-fly
 -  Report: the outputs that generates images no longer needs to be
    already executed, KiBot will run them
+-  Promoted to “silly” warnings when we are on CI/CD:
+
+   -  W008 Unable to find KiCad configuration file
+   -  W058 Missing KiCad main config file
+   -  W058 Missing default system table
 
 [1.9.0] - 2026-05-12
 --------------------
