@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CLI:
   - When using a --variant and an specific target, it was generated for the
     first variant in the list, not the rest
+- Gerber Drill:
+  - Avoid showing an error when KiCad 10 skips a drill file (See #928)
 - KiRi:
   - `kiri_server` path to the HTML
 - *SCH Print:
