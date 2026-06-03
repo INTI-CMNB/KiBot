@@ -7,24 +7,15 @@
 	(title_block
 		(title "${VARIANT}")
 		(comment 1 "${VARIANT_DESC}")
+		(comment 2 "${VARIANT}")
 	)
 	(lib_symbols)
-	(text "${VARIANT_DESC}"
+	(text "${VARIANT}\n${VARIANT_DESC}"
 		(exclude_from_sim no)
-		(at 93.472 63.754 0)
+		(at 103.124 44.196 0)
 		(effects
 			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "530ac3e6-49cc-4093-8e72-27a4180aab37")
-	)
-	(text "${VARIANT}"
-		(exclude_from_sim no)
-		(at 93.218 60.706 0)
-		(effects
-			(font
-				(size 1.27 1.27)
+				(size 7.62 7.62)
 			)
 		)
 		(uuid "cac53220-88e4-4851-85eb-d15961bce36d")

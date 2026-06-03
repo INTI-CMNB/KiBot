@@ -24,6 +24,10 @@ PDF_FILE = 'Schematic.pdf'
 SVG_FILE = 'Schematic.svg'
 NI_DIR = 'no_inductor'
 cov = coverage.Coverage()
+# Even the Ubuntu builds are slightly different
+is_debian = os.path.isfile('/etc/debian_version') and not os.path.isfile('/etc/lsb-release')
+DIFF_TOL = 10 if is_debian else 5000
+DIFF_TOL2 = 100 if is_debian else 5000
 
 
 @pytest.mark.slow
@@ -261,3 +265,22 @@ def test_sch_variant_diff(test_dir):
                          'kibom-variant_3-diff_sch_Current-test_variant.pdf',
                          'kibom-variant_3-diff_sch.pdf'])
     ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad native variants")
+def test_print_sch_variant_var_ki10(test_dir):
+    """ Test printing a schematic that uses VARIANT and VARIANT_DESC in:
+        - The canvas
+        - The worksheet itself
+        - Fields used in the worksheet
+        We try 2 variants and no variant.
+        This test uses KiCad 10 native variants.
+        We force a temporal file save using a customized title, this is harder to get right because we
+        save the schematic """
+    prj = 'variant_var'
+    ctx = context.TestContextSCH(test_dir, prj, 'variant_var_ki10')
+    ctx.run(extra=['--variant', 'production', '--variant', 'development', '--variant', 'NONE', 'schematic'])
+    ctx.compare_image(prj+'-schematic_production.pdf', tol=DIFF_TOL, height='100%')
+    ctx.compare_image(prj+'-schematic_development.pdf', tol=DIFF_TOL, height='100%')
+    ctx.compare_image(prj+'-schematic.pdf', tol=DIFF_TOL, height='100%')
+    ctx.clean_up(keep_project=True)

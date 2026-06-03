@@ -75,3 +75,5 @@ outputs:
   - name: schematic
     type: pdf_sch_print
     comment: "Schematic PDF"
+    options:
+      title: "Forced title for %v %V"
