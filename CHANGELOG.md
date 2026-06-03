@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `remove_split_pdfs`: To control if we remove split PDFs
 
 ## Fixed
+- Warnings:
+  - 11 and 148 were always filtered for CI/CD, even when using --warn-ci-cd
 - CLI:
   - When using a --variant and an specific target, it was generated for the
     first variant in the list, not the rest
@@ -52,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   output that generates the CSV first, it gets generated on-the-fly
 - Report: the outputs that generates images no longer needs to be already
   executed, KiBot will run them
-- Promoted to "silly" warnings when we are on CI/CD:
+- More common CI/CD warnings filtered:
   - W008 Unable to find KiCad configuration file
   - W058 Missing KiCad main config file
   - W058 Missing default system table

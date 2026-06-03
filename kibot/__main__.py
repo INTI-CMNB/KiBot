@@ -165,7 +165,8 @@ from .error import KiPlotConfigurationError
 from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
-                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS)
+                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS, W_NOCONFIG, W_NOLIBS, W_NOKIENV, W_KIAUTO,
+                   W_NODEFSYMLIB, W_MISLIBTAB)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -174,6 +175,14 @@ from .kiplot import (generate_outputs, load_actions, config_output, generate_mak
                      solve_board_file, solve_project_file, check_board_file, exec_with_retry, load_config)
 from .registrable import RegOutput
 GS.kibot_version = __version__
+CI_CD_WARNINGS = ((W_NOCONFIG, ''),  # 8: Unable to find KiCad configuration file `{cfg}`
+                  (W_NOKIENV, ''),   # 9: KiCad config without environment.vars section
+                  (W_NOLIBS, '(3D models|user templates)'),  # 10: Missing user templates and 3D models
+                  (W_NODEFSYMLIB, ''),                       # 11 Missing default symbol library table
+                  (W_MISLIBTAB, ''),                         # 148: Missing default system footprint table ...
+                  (W_KIAUTO, 'Missing KiCad main config file'),  # From KiAuto
+                  (W_KIAUTO, 'Missing default system table'),    # From KiAuto
+                  )
 
 
 def list_pre_and_outs_names(logger, outputs, do_config, only_pre, only_groups):
@@ -446,10 +455,8 @@ def apply_warning_filter(args):
             GS.exit_with_error(f'-w/--no-warn must specify a comma separated list of numbers ({args.no_warn})', EXIT_BAD_ARGS)
     if detect_ci_env() and not args.warn_ci_cd:
         # Disable warnings we always get on docker images
-        #  9: KiCad config without environment.vars section
-        # 10: Missing user templates and 3D models
         logger.debug('Filtering warnings we always get on CI/CD')
-        log.set_filters([SimpleFilter(n, regex=r) for n, r in ((9, ''), (10, '(3D models|user templates)'))])
+        log.set_filters([SimpleFilter(int(n[2:5]), regex=r) for n, r in CI_CD_WARNINGS])
 
 
 def debug_arguments(args):

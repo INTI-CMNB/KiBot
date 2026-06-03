@@ -119,16 +119,6 @@ def load_actions(progress=None):
         activate.deactivate()
 
 
-def filter_warning(text):
-    if not GS.ci_cd_detected:
-        return False
-    if 'Missing KiCad main config file' in text:
-        return True
-    if 'Missing default system table' in text:
-        return True
-    return False
-
-
 def extract_errors(text):
     in_error = in_warning = False
     msg = ''
@@ -142,10 +132,7 @@ def extract_errors(text):
                 logger.error(msg.rstrip())
             elif in_warning:
                 in_warning = False
-                msg = W_KIAUTO+msg.rstrip()
-                if filter_warning(msg):
-                    msg = W_SILLY+msg
-                logger.warning(msg)
+                logger.warning(W_KIAUTO+msg.rstrip())
         if line.startswith('ERROR:'):
             in_error = True
             msg = line[6:]
@@ -157,10 +144,7 @@ def extract_errors(text):
         logger.error(msg.rstrip())
     elif in_warning:
         in_warning = False
-        msg = W_KIAUTO+msg.rstrip()
-        if filter_warning(msg):
-            msg = W_SILLY+msg
-        logger.warning(msg)
+        logger.warning(W_KIAUTO+msg.rstrip())
 
 
 def debug_output(res):
