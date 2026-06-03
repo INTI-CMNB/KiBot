@@ -444,6 +444,8 @@ class SimpleFilter(object):
 
 def detect_ci_env():
     GS.ci_cd_detected = os.path.isfile('/etc/kiauto_tag') or ('GITLAB_CI' in os.environ) or ('GITHUB_RUN_ID' in os.environ)
+    if GS.ci_cd_detected:
+        logger.info('CI/CD environment detected')
     return GS.ci_cd_detected
 
 
