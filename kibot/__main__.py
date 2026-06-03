@@ -444,8 +444,6 @@ class SimpleFilter(object):
 
 def detect_ci_env():
     GS.ci_cd_detected = os.path.isfile('/etc/kiauto_tag') or ('GITLAB_CI' in os.environ) or ('GITHUB_RUN_ID' in os.environ)
-    if GS.ci_cd_detected:
-        logger.info('CI/CD environment detected')
     return GS.ci_cd_detected
 
 
@@ -609,6 +607,11 @@ def main():
             GS.exit_with_error('Asked to copy options but no PCB specified.', EXIT_BAD_ARGS)
         create_example(args.board_file, GS.out_dir, args.copy_options, args.copy_and_expand)
         sys.exit(0)
+
+    if GS.ci_cd_detected:
+        # Informed here to avoid interference with the various --help* options
+        logger.info('CI/CD environment detected')
+
     if args.quick_start:
         # Some kind of wizard to get usable examples
         generate_examples(args.start, args.dry, args.type)
