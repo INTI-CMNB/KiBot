@@ -587,6 +587,8 @@ class Base3DOptions(VariantOptions):
                         msg = W_MISS3D+f'Missing 3D model for {ref}: `{full_name}`'
                         if replace is not None:
                             msg += f' replaced by `{replace}`'
+                        elif GS.ki10 and full_name.endswith('.wrl'):
+                            msg += ' WRL files are no longer used by KiCad 10 replace it by a STEP file'
                         logger.warning(msg)
                     if replace is not None:
                         self.used_3d_models[os.path.basename(replace)] = replace
