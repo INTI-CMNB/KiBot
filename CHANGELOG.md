@@ -58,6 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - W008 Unable to find KiCad configuration file
   - W058 Missing KiCad main config file
   - W058 Missing default system table
+- No more reports on PCB/SCH fields mismatch when the variants modified the
+  field
 
 ## [1.9.0] - 2026-05-12
 ### Added

@@ -421,11 +421,15 @@ def copy_fields(c, real_fields, env, extra_env=None):
             # Already there
             old = c.get_field_value(name)
             if value and old != value and old != expanded_fields[name]:
-                logger.warning(f"{W_VALMISMATCH}{name} field mismatch for `{c.ref}` (SCH: `{old}` PCB: `{value}`)")
+                # Check if it was modified by a variant
+                bkp_value = c.dfields_bkp.get(name) if c.dfields_bkp else None
+                if not (bkp_value and value == bkp_value.value):
+                    bkp_value = expand_one_footprint_field(bkp_value.value, env, extra_env) if bkp_value else None
+                    if not (bkp_value and value == bkp_value):
+                        logger.warning(f"{W_VALMISMATCH}{name} field mismatch for `{c.ref}` (SCH: `{old}` PCB: `{value}`)")
                 c.set_field(name, value)
         else:
             # New one
-            logger.debug(f'Adding {name} field to {c.ref} ({value})')
             c.set_field(name, value)
 
 
@@ -509,8 +513,15 @@ def get_board_comps_data(comps, kicad_variant=None):
         if new_value != c.value:
             expanded_value = expand_one_footprint_field(c.value, env, extra_env)
             if new_value != expanded_value:
-                logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` "
-                               f"(`{expanded_value}`) PCB: `{new_value}`)")
+                # Is different even after expanding vars
+                # But perhaps is different because a variant changed it
+                bkp_value = c.dfields_bkp.get('value') if c.dfields_bkp else None
+                if not (bkp_value and new_value == bkp_value.value):
+                    bkp_value = expand_one_footprint_field(bkp_value.value, env, extra_env) if bkp_value else None
+                    if not (bkp_value and new_value == bkp_value):
+                        # Ok, is different
+                        logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` "
+                                       f"(`{expanded_value}`) PCB: `{new_value}`)")
         if 'Value' in real_fields:
             # We already computed it
             del real_fields['Value']
