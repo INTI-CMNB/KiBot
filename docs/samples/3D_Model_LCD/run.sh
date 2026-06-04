@@ -1,2 +1,2 @@
 #!/bin/sh
-kibot -d output
+kibot -w 143 -d output
