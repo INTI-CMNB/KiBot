@@ -974,7 +974,8 @@ class GS(object):
 
     @staticmethod
     def get_fields(footprint):
-        """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE) """
+        """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE)
+            Note: KiCad 6/7 only returns `properties`, KiCad 8+ returns real fields (Value, Footprint, etc.) """
         if GS.ki8:
             # KiCad 8 defines a special object (PCB_FIELD) and its iterator
             return {f.GetName(): f.GetText() for f in footprint.GetFields()}
@@ -998,6 +999,17 @@ class GS(object):
                     footprint.GetFieldByName(fld).SetVisible(False)
         elif GS.ki6:
             footprint.SetProperties(flds)
+
+    @staticmethod
+    def clear_fields(footprint):
+        """ Clears the content of all fields in a FOOTPRINT (aka MODULE)
+            We don't remove them because the API fails when using Delete/Remove and
+            because we want to keep some attributes """
+        if GS.ki8:
+            for f in footprint.GetFields():
+                footprint.SetField(f.GetName(), '')
+        elif GS.ki6:
+            footprint.SetProperties({})
 
     @staticmethod
     def get_shown_text(obj, allow_extra_text=True, a_depth=0):

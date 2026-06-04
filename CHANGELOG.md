@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Now all SVG schematic pages are included, not just the first
 - VRML
   - Avoid WRL files for KiCad 10 (See #928)
+- Now we clear fields created by a variant, so they don't interfere in
+  multiple variants generation.
 
 ## Changed
 - E/DRC and BoM: As we now have dark mode support the CSS is more complex and

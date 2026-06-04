@@ -86,6 +86,9 @@ Fixed
 
    -  Avoid WRL files for KiCad 10 (See #928)
 
+-  Now we clear fields created by a variant, so they don’t interfere in
+   multiple variants generation.
+
 Changed
 -------
 

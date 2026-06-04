@@ -997,6 +997,7 @@ class VariantOptions(BaseOptions):
                 m.SetValue(data[0])
                 if has_GetFPIDAsString:
                     m.SetFPIDAsString(data[2])
+                GS.clear_fields(m)
                 GS.set_fields(m, data[1])
 
     def patch_prjname(self, fname):
