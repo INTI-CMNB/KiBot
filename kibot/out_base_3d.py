@@ -695,12 +695,10 @@ class Base3DOptions(VariantOptions):
         g.SetText(cur_text)
         self._replaced_variant_texts.append((g, ori_text))
         if GS.debug_level > 2:
-            logger.error(f'- {g.GetClass()} {GS.get_shown_text(g)} @ {g.GetCenter()}: {ori_text} -> {cur_text}')
+            logger.debug(f'- {g.GetClass()} {GS.get_shown_text(g)} @ {g.GetCenter()}: {ori_text} -> {cur_text}')
 
     def replace_variant_var(self):
-        logger.error(self.variant)
-        if GS.debug_level > 2:
-            logger.debug('VARIANT* processing')
+        logger.debugl(2, 'VARIANT* processing')
         self._replaced_variant_texts = []
         for g in GS.board.GetDrawings():
             self.replace_one_variant_var(g)
