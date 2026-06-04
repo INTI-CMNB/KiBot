@@ -99,8 +99,9 @@ class KiCad(BasicVariant):
             if RegOutput.is_variant(name):
                 cur_v = RegOutput.get_variant(name)
                 if cur_v.type != 'kicad':
+                    logger.error(cur_v.__dict__)
                     # Collision with another variant
-                    config_error(f'The project defines a varinat named `{v}` which is already used by `{cur_v}`')
+                    config_error(f'The project defines a variant named `{v}` which is already used by `{cur_v}`')
                 # Skip if already defined in the config file
                 continue
             # Import it
