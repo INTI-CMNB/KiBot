@@ -783,8 +783,7 @@ class Unparser:
         # Special case: 3.__abs__() is a syntax error, so if t.value
         # is an integer literal then we need to either parenthesize
         # it or add an extra space to get 3 .__abs__().
-        if ((isinstance(v, ast.Constant) and isinstance(v.value, int)) or
-                (isinstance(v, ast.Num) and isinstance(v.n, int))):
+        if (isinstance(v, ast.Constant) and isinstance(v.value, int)):
             self.write(" ")
         self.write(".")
         self.write(t.attr)
@@ -847,8 +846,6 @@ class Unparser:
             # Omit the surrounding quotes in string snippets
             if type(v) is ast.Constant:
                 self.write(self.maybe_colorize(escape(v.value), ColorScheme.STRING))
-            elif type(v) is ast.Str:  # up to Python 3.7
-                self.write(self.maybe_colorize(escape(v.s), ColorScheme.STRING))
             elif type(v) is ast.FormattedValue:
                 self._FormattedValue_helper(v)
             else:

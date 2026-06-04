@@ -19,6 +19,7 @@ Versioning <https://semver.org/spec/v2.0.0.html>`__.
 Added
 ~~~~~
 
+-  Support for Python 3.14 (#930)
 -  CLI:
 
    -  –keep-temporals: to keep temporal files
@@ -110,8 +111,8 @@ Changed
 -  No more reports on PCB/SCH fields mismatch when the variants modified
    the field
 
-[1.9.0] - 2026-05-12
---------------------
+`1.9.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...v1.9.0>`__ - 2026-05-12
+-----------------------------------------------------------------------------------
 
 .. _added-1:
 

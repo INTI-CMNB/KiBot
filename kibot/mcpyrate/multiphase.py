@@ -60,8 +60,6 @@ def iswithphase(stmt, *, filename):
     arg = macroargs[0]
     if type(arg) is ast.Constant:
         n = arg.value
-    elif type(arg) is ast.Num:  # TODO: Python 3.8: remove ast.Num
-        n = arg.n
     else:
         return False
 
@@ -113,8 +111,6 @@ def extract_phase(tree, *, filename, phase=0):
 
             if type(macroarg) is ast.Constant:
                 macroarg.value -= 1
-            elif type(macroarg) is ast.Num:  # TODO: Python 3.8: remove ast.Num
-                macroarg.n -= 1
             remaining.append(deepcopy(withphase))
 
     thisphase = []

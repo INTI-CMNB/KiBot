@@ -84,8 +84,6 @@ def step_expansion(tree, *, args, syntax, expander, **kw):
     for arg in args:
         if type(arg) is ast.Constant:
             v = arg.value
-        elif type(arg) is ast.Str:  # up to Python 3.7
-            v = arg.s
         else:
             raise TypeError(f"expected str argument, got {repr(arg)} {unparse_with_fallbacks(arg)}")
 

@@ -66,7 +66,7 @@ def document(sentences, **kw):
                 # -Num
                 type_hint = '[number={}]'.format(-value.operand.value)
             elif is_str(value):
-                type_hint = "[string='{}']".format(value.s)
+                type_hint = "[string='{}']".format(value.value)
             elif isinstance(value, Attribute):
                 # Used for the default options. I.e. GS.def_global_option
                 val = eval(unparse(value))
@@ -86,7 +86,7 @@ def document(sentences, **kw):
                 target = Name(id=doc_id, ctx=Store())
             # Reuse the s.value Str
             help_str = s.value
-            doc_str = s.value.s.rstrip()
+            doc_str = s.value.value.rstrip()
             doc_str_2 = ' '+doc_str[2:] if doc_str.startswith(' *') else doc_str
             if type_hint and (doc_str_2.startswith(' [string') or doc_str_2.startswith(' [number') or
                               doc_str_2.startswith(' [boolean')):
@@ -97,7 +97,7 @@ def document(sentences, **kw):
                 # Move the marker to the beginning
                 doc_str = doc_str_2
                 type_hint = '*'+type_hint
-            help_str.s = type_hint+doc_str+post_hint
+            help_str.value = type_hint+doc_str+post_hint
             sentences[n] = Assign(targets=[target], value=help_str)
             # Copy the line number from the original docstring
             copy_location(target, s)
