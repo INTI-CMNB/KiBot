@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some limited support for the VARIANT and VARIANT_DESC variables found
   in KiCad 10. They can be used for things like 3D and print_pcb even
   for KiCad 6.
+- Variants:
+  - pre_transform filter to KiCad variants
 - E/DRC:
   - Dark mode support and icon to select it.
 - BoM:

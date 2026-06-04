@@ -5,6 +5,8 @@
 # Project: KiBot (formerly KiPlot)
 import json
 import os
+from .fil_base import apply_pre_transform, BaseFilter
+from .optionable import Optionable
 from .registrable import RegOutput
 from .error import config_error
 from .gs import GS
@@ -22,8 +24,21 @@ class KiCad(BasicVariant):
         Used for KiCad 10 and newer variants.
         Defining them in the configuration file allows to change the comment and to define the `file_id`
     """
+    def __init__(self):
+        super().__init__()
+        with document:
+            # * Filters
+            self.pre_transform = Optionable
+            """ [string|list(string)='_null'] Name of the filter to transform fields before applying other filters. """
+
+    def config(self, parent):
+        super().config(parent)
+        self.pre_transform = BaseFilter.solve_filter(self.pre_transform, 'pre_transform', is_transform=True)
+
     def filter(self, comps, call_back=None):
         # Applies this variant to the components
+        if not isinstance(self.pre_transform, type):
+            comps = apply_pre_transform(comps, self.pre_transform)
         logger.debug(f'Applying KiCad variant `{self.name}`')
         if call_back is None:
             if GS.debug_level:

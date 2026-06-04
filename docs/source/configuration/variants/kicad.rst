@@ -12,4 +12,6 @@
    -  ``comment`` :index:`: <pair: variant - kicad; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
    -  ``file_id`` :index:`: <pair: variant - kicad; file_id>` [:ref:`string <string>`] (default: ``''``) Text to use as the replacement for %v expansion.
    -  ``name`` :index:`: <pair: variant - kicad; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular variant definition.
+   -  ``pre_transform`` :index:`: <pair: variant - kicad; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters..
+
 

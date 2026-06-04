@@ -367,18 +367,18 @@ Used as single data type:
 0 different data type combinations
 ================================================================================
 ================================================================================
-4 variants types with a total of 78 different parameters
-Single type parameters: 63 (81 %)
+4 variants types with a total of 79 different parameters
+Single type parameters: 64 (81 %)
 Multi type parameters: 15 (19 %)
 Average parameters: 20
 Maximum number of parameters: 25
-Minimum number of parameters: 4
+Minimum number of parameters: 5
 Histogram:
   0-  9: *
  10- 19: 
  20- 29: ***
 Variants sorted by parameters:
-- kicad: 4
+- kicad: 5
 - kibom: 24
 - ibom: 25
 - kicost: 25
@@ -397,7 +397,7 @@ Variants sorted by depth:
 --------------------------------------------------------------------------------
 6 different data types
 -             String:   48
-- ListStringSingular:   15
+- ListStringSingular:   16
 -             Number:   15
 -             Choice:    6
 -            Boolean:    6
@@ -405,7 +405,7 @@ Variants sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:   33 
-- ListStringSingular:   15 
+- ListStringSingular:   16 
 -             Choice:    6 ['kibom.sub_pcbs.units', 'kibom.sub_pcbs.tool', 'ibom.sub_pcbs.units', 'ibom.sub_pcbs.tool', 'kicost.sub_pcbs.units', 'kicost.sub_pcbs.tool']
 -            Boolean:    6 ['kibom.sub_pcbs.strip_annotation', 'kibom.sub_pcbs.center_result', 'ibom.sub_pcbs.strip_annotation', 'ibom.sub_pcbs.center_result', 'kicost.sub_pcbs.strip_annotation', 'kicost.sub_pcbs.center_result']
 -           ListDict:    3 ['kibom.sub_pcbs', 'ibom.sub_pcbs', 'kicost.sub_pcbs']
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2651 different parameters
-Single type parameters: 2434 (92 %)
+97 totals types with a total of 2652 different parameters
+Single type parameters: 2435 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 27
 Maximum number of parameters: 218
@@ -458,9 +458,9 @@ Totals sorted by parameters:
 - run_erc: 4
 - update_xml: 4
 - urlify: 4
-- kicad: 4
 - filters: 5
 - expand_text_vars: 5
+- kicad: 5
 - field_rename: 6
 - separate_pins: 6
 - var_rename: 6
@@ -654,7 +654,7 @@ Totals sorted by depth:
 -             String: 1147
 -            Boolean:  669
 -             Number:  360
-- ListStringSingular:  337
+- ListStringSingular:  338
 -             Choice:  145
 -               Dict:  103
 -           ListDict:   30
@@ -669,7 +669,7 @@ Totals sorted by depth:
 Used as single data type:
 -             String:  961 
 -            Boolean:  589 
-- ListStringSingular:  333 
+- ListStringSingular:  334 
 -             Number:  251 
 -             Choice:  142 
 -               Dict:   82 
