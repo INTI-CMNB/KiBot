@@ -76,3 +76,4 @@ experiments/kicad/Delete_Field/
 tests/.config/kicad/
 DONACIONES
 IMPORTANTE
+docs/samples/3D_Model_LCD/run_local.sh

@@ -654,6 +654,7 @@ class Base3DOptions(VariantOptions):
                 return ret
             return GS.pcb_file
         self.filter_pcb_components(do_3D=True, do_2D=True, highlight=highlight)
+        self.replace_variant_var()
         if also_sch:
             self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps,
                                  rename_function=abs_path_model, rename_filter='*')
@@ -666,8 +667,43 @@ class Base3DOptions(VariantOptions):
         else:
             self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps)
             fname = self.save_tmp_board()
+        self.restore_variant_var()
         self.unfilter_pcb_components(do_3D=True, do_2D=True)
         return fname
+
+    def restore_variant_var(self):
+        for g, ori_text in self._replaced_variant_texts:
+            g.SetText(ori_text)
+        self._replaced_variant_texts = []
+
+    def replace_one_variant_var(self, g):
+        if not hasattr(g, 'GetShownText'):
+            return
+        ori_text = cur_text = g.GetText()
+        changed = False
+        if '${VARIANT}' in cur_text:
+            changed = True
+            cur_text = cur_text.replace('${VARIANT}', self.variant.name)
+        if '${VARIANT_DESC}' in cur_text:
+            changed = True
+            cur_text = cur_text.replace('${VARIANT_DESC}', self.variant.comment)
+        if not changed:
+            return
+        g.SetText(cur_text)
+        self._replaced_variant_texts.append((g, ori_text))
+        if GS.debug_level > 2:
+            logger.error(f'- {g.GetClass()} {GS.get_shown_text(g)} @ {g.GetCenter()}: {ori_text} -> {cur_text}')
+
+    def replace_variant_var(self):
+        logger.error(self.variant)
+        if GS.debug_level > 2:
+            logger.debug('VARIANT* processing')
+        self._replaced_variant_texts = []
+        for g in GS.board.GetDrawings():
+            self.replace_one_variant_var(g)
+        for m in GS.get_modules():
+            for g in m.GraphicalItems():
+                self.replace_one_variant_var(g)
 
     def remove_temporals(self):
         super().remove_temporals()
