@@ -230,6 +230,7 @@ class Base3DOptions(VariantOptions):
 
     def try_download_kicad(self, model, full_name, downloaded, rel_dirs, force_wrl, force_step):
         if not (model.startswith('${KISYS3DMOD}/') or re.search(r"^\$\{KICAD\d+_3DMODEL_DIR\}\/", model)):
+            logger.debugl(2, f"{model} is missing but doesn't look like a KiCad internal model")
             return None
         # This is a model from KiCad, try to download it
         if force_wrl:
