@@ -32,7 +32,7 @@ MANIFEST
 *.epr
 htmlcov/
 pp/
-output/
+/output
 .coverage
 .coverage.*
 TODO

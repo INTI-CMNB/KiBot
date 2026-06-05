@@ -189,7 +189,7 @@ separated list of models to replace the current models.
 Changing the 3D model, complex mechanism
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When the a component has a long list of 3D models and you want to keep
+When a component has a long list of 3D models and you want to keep
 all the information in the PCB you can use this mechanism.
 
 The information is stored in the ``Text items`` of the footprint. If you
@@ -211,8 +211,10 @@ list of 3D models. The ``SLOT1,SLOT2,SLOTN`` is a comma separated list
 of 3D model positions in the list of 3D models. All the slots listed
 will be enabled, the rest will be disabled.
 
-Here is an
-`example <https://github.com/INTI-CMNB/KiBot/tree/master/docs/samples/3D_Model_LCD>`__.
+Here is a
+`KiCad 10 example <https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/3D_Model_LCD_native_variants>`__,
+that uses KiCad native variants, and a `KiCad 9 example
+<https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/3D_Model_LCD>`__, using KiCost variants.
 In this example we have a display whose aspect and connection can
 radically change according to the variant. We have two variants:
 
@@ -251,7 +253,7 @@ The WH1602B-TMI-JT# uses slots 2 and 5. So the effective list will be:
 To achieve it we define the following texts in the footprint:
 ``%left:1,3,4,6%`` and ``%top:2,5%``. Here are both variants:
 
-.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/samples/3D_Model_LCD/output/lcd-3D_top_variant_left.png
+.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/dev/docs/samples/3D_Model_LCD_native_variants/output/lcd-3D_top_variant_left.png
    :alt: Left variant
 
    Left variant
