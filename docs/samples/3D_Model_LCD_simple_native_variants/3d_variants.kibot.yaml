@@ -1,0 +1,27 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+variants:
+  - name: 'top'
+    comment: 'LCD with top connections'
+    type: kicad
+    file_id: _variant_top
+
+  - name: 'left'
+    comment: 'LCD with left connections'
+    type: kicad
+    file_id: _variant_left
+
+  - name: 'default'
+    comment: 'Default variant'
+    type: kicad
+    # Is here just to define a name and comment, but not file_id
+
+outputs:
+  - name: 3d_example
+    comment: "3D view using KiCad"
+    type: render_3d
+    options:
+      zoom: 5
+      ray_tracing: true

@@ -174,13 +174,23 @@ This mechanism allows small changes to the 3D model. Is simple to use,
 but the information is located in the schematic.
 
 If a component defines the field ``_3D_model`` then its value will
-replace the 3D model. You can use ``var_rename`` or
-``var_rename_kicost`` filter to define this field only for certain
-variants. In this way you can change the 3D model according to the
-component variant.
+replace the 3D model. KiCad 10 native variants allows it, for other
+type of variants you can use ``var_rename`` or ``var_rename_kicost``
+filter to define this field only for certain variants. In this way you
+can change the 3D model according to the component variant.
+
+.. note::
+   The name of the field can be configured using the `field_3D_model`
+   global option.
+
 
 When the component has more than one 3D model you must provide a comma
-separated list of models to replace the current models.
+separated list of models to replace the current models. The list must
+contain the same ammount of models to be replaced.
+
+This is a simple
+`KiCad 10 example <https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/3D_Model_LCD_simple_native_variants>`__,
+that uses KiCad native variants.
 
 
 .. index::
@@ -258,7 +268,7 @@ To achieve it we define the following texts in the footprint:
 
    Left variant
 
-.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/samples/3D_Model_LCD/output/lcd-3D_top_variant_top.png
+.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/dev/docs/samples/3D_Model_LCD_native_variants/output/lcd-3D_top_variant_top.png
    :alt: Top variant
 
    Top variant
