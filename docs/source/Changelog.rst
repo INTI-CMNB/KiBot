@@ -55,6 +55,9 @@ Added
    -  The full report now works with SVGs and PDFs for both (SCH and
       PCB), SVGs have priority
    -  ``remove_split_pdfs``: To control if we remove split PDFs
+   -  ``collect_images``: To just avoid collecting images, enabled by
+      default when generating a CSV. Avoids unintended infinite loops.
+      (See #931)
 
 Fixed
 -----
@@ -117,6 +120,8 @@ Changed
 
 -  No more reports on PCB/SCH fields mismatch when the variants modified
    the field
+-  Avoid more than 20 levels of nested outputs, this is an infinite
+   loop.
 
 `1.9.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...v1.9.0>`__ - 2026-05-12
 -----------------------------------------------------------------------------------

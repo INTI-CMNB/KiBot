@@ -14440,6 +14440,13 @@
           null
         ],
         [
+          "collect_images",
+          [
+            "DataTypeChoice"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"

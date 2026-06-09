@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - The full report now works with SVGs and PDFs for both (SCH and PCB),
     SVGs have priority
   - `remove_split_pdfs`: To control if we remove split PDFs
+  - `collect_images`: To just avoid collecting images, enabled by
+    default when generating a CSV. Avoids unintended infinite loops.
+    (See #931)
 
 ## Fixed
 - Warnings:
@@ -68,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - W058 Missing default system table
 - No more reports on PCB/SCH fields mismatch when the variants modified the
   field
+- Avoid more than 20 levels of nested outputs, this is an infinite loop.
 
 ## [1.9.0] - 2026-05-12
 ### Added

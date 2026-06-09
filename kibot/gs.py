@@ -135,6 +135,7 @@ class GS(object):
     keep_temporals = False    # Selected from command line
     # Maximum recursive replace
     MAXDEPTH = 20
+    MAXDEPTH_OUTPUTS = 20
     # VIATYPE, not exported by KiCad 5 (6, 7, 8 and 9 defines it the same way)
     # For KiCad 10 we adjust it
     VIATYPE_THROUGH = 3

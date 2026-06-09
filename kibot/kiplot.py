@@ -707,6 +707,9 @@ def run_output(out, dont_stop=False):
     GS.current_output = out.name
     logger.info('  '*run_output.depth+'- '+str(out))
     run_output.depth += 1
+    if run_output.depth > GS.MAXDEPTH_OUTPUTS:
+        config_error(f"Too many nested outputs (>{GS.MAXDEPTH_OUTPUTS}) check your configuration, "
+                     "possibly an infinite loop")
     try:
         out.run(get_output_dir(out.dir, out))
         out._done = True
