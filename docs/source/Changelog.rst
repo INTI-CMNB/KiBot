@@ -27,6 +27,10 @@ Added
 -  Some limited support for the VARIANT and VARIANT_DESC variables found
    in KiCad 10. They can be used for things like 3D and print_pcb even
    for KiCad 6.
+-  Schematic:
+
+   -  Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
+
 -  Variants:
 
    -  pre_transform filter to KiCad variants

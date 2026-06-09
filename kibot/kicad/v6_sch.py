@@ -2416,29 +2416,33 @@ class SchematicV6(Schematic):
     def _get_title_block(self, items):
         if not isinstance(items, list):
             raise SchError('The title block is not a list')
+        sheet_name = self.sheet_path_h.split('/')[-1]
+        if not sheet_name:
+            sheet_name = 'Root'
+        extra_vars = {'SHEETNAME': sheet_name, 'SHEETPATH': self.sheet_path_h, 'SHEETFILE': self.fname_rel}
         for item in items:
             if not isinstance(item, list) or len(item) < 2 or not isinstance(item[0], Symbol):
                 raise SchError('Wrong title block entry ({})'.format(item))
             i_type = item[0].value()
             if i_type == 'title':
                 self.title_ori = _check_str(item, 1, i_type)
-                self.title = GS.expand_text_variables(self.title_ori)
+                self.title = GS.expand_text_variables(self.title_ori, extra_vars=extra_vars)
             elif i_type == 'date':
                 self.date_ori = _check_str(item, 1, i_type)
-                self.date = GS.expand_text_variables(self.date_ori)
+                self.date = GS.expand_text_variables(self.date_ori, extra_vars=extra_vars)
             elif i_type == 'rev':
                 self.revision_ori = _check_str(item, 1, i_type)
-                self.revision = GS.expand_text_variables(self.revision_ori)
+                self.revision = GS.expand_text_variables(self.revision_ori, extra_vars=extra_vars)
             elif i_type == 'company':
                 self.company_ori = _check_str(item, 1, i_type)
-                self.company = GS.expand_text_variables(self.company_ori)
+                self.company = GS.expand_text_variables(self.company_ori, extra_vars=extra_vars)
             elif i_type == 'comment':
                 index = _check_integer(item, 1, i_type)
                 if index < 1 or index > 9:
                     raise SchError('Unsupported comment index {} in title block'.format(index))
                 value = _check_str(item, 2, i_type)
                 self.comment_ori[index-1] = value
-                self.comment[index-1] = GS.expand_text_variables(value)
+                self.comment[index-1] = GS.expand_text_variables(value, extra_vars=extra_vars)
             else:
                 raise SchError('Unsupported entry in title block ({})'.format(item))
         self._fill_missing_title_block()
