@@ -1264,6 +1264,7 @@ class SchematicComponentV6(SchematicComponent):
 
     def set_ref(self, ref):
         self.ref = ref
+        self.f_ref = ref
         # Separate the reference in its components
         self.split_ref()
         self.set_field('Reference', ref)
