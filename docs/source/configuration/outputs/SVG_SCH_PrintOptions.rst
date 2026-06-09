@@ -34,6 +34,7 @@ SVG_SCH_PrintOptions parameters
    file is available.
 -  ``title`` :index:`: <pair: output - svg_sch_print - options; title>` [:ref:`string <string>`] (default: ``''``) Text used to replace the sheet title. %VALUE expansions are allowed.
    If it starts with `+` the text is concatenated.
+-  ``title_propagate`` :index:`: <pair: output - svg_sch_print - options; title_propagate>` [:ref:`boolean <boolean>`] (default: ``false``) When enabled we also set the title for all the sub-sheets.
 -  ``variant`` :index:`: <pair: output - svg_sch_print - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
    Not fitted components are crossed.
 

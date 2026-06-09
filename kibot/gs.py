@@ -44,6 +44,7 @@ elif hasattr(pcbnew, 'PCB_PLOT_PARAMS'):
 KICAD5_SVG_SCALE = 116930/297002200
 # Characters we don't want in a file name
 INVALID_CHARS = r'[?%*:|"<>]'
+KICAD_DYNAMIC_VARS = {'VARIANT', 'VARIANT_DESC', 'SHEETNAME', 'SHEETPATH', 'SHEETFILE'}
 
 
 class GS(object):
@@ -216,6 +217,7 @@ class GS(object):
     global_set_text_variables_sheet_title = None
     global_set_text_variables_sheet_title_min = None
     global_set_text_variables_sheet_title_default = None
+    global_schematic_sheet_name_workaround = None
     global_silk_screen_color = None
     global_silk_screen_color_bottom = None
     global_silk_screen_color_top = None
@@ -547,7 +549,7 @@ class GS(object):
                 value = os.environ.get(vname, None)
             if value is None:
                 value = '${'+vname+'}'
-                if vname not in {'VARIANT', 'VARIANT_DESC'}:  # These are dynamic
+                if vname not in KICAD_DYNAMIC_VARS:
                     logger.warning(W_UNKVAR+"Unknown text variable `{}`".format(vname))
             if match.start():
                 new_text += text[last:match.start()]

@@ -3427,6 +3427,13 @@
           null
         ],
         [
+          "title_propagate",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "sheet_reference_layout",
           [
             "DataTypeString"
@@ -5277,6 +5284,13 @@
           "title",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "title_propagate",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -12470,6 +12484,13 @@
           null
         ],
         [
+          "title_propagate",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "sheet_reference_layout",
           [
             "DataTypeString"
@@ -13520,6 +13541,13 @@
           "title",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "title_propagate",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -15934,6 +15962,13 @@
           "title",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "title_propagate",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],

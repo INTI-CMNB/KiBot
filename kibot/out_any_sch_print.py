@@ -120,6 +120,8 @@ class Any_SCH_PrintOptions(VariantOptions):
             self.title = ''
             """ Text used to replace the sheet title. %VALUE expansions are allowed.
                 If it starts with `+` the text is concatenated """
+            self.title_propagate = False
+            """ When enabled we also set the title for all the sub-sheets """
             self.sheet_reference_layout = ''
             """ Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project.
                 This option works only when you print the toplevel sheet of a project and the project
@@ -199,7 +201,7 @@ class Any_SCH_PrintOptions(VariantOptions):
         replaced_images = self.sch_replace_images(GS.sch)
         try:
             if self.title:
-                self.set_title(self.title, sch=True)
+                self.set_title(self.title, sch=True, propagate=self.title_propagate)
             sch_file = self.save_tmp_sch_if_variant(force=self.title or replaced_images)
             fmt = 'hpgl' if self._expand_ext == 'plt' else self._expand_ext
             cmd = [command, 'export', '--file_format', fmt, '-o', name]

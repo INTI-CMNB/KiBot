@@ -938,7 +938,7 @@ class VariantOptions(BaseOptions):
         if self._sub_pcb:
             self._sub_pcb.revert(self._comps_hash)
 
-    def set_title(self, title, sch=False):
+    def set_title(self, title, sch=False, propagate=False):
         self.old_title = None
         if title:
             if sch:
@@ -950,14 +950,17 @@ class VariantOptions(BaseOptions):
             if text[0] == '+':
                 text = self.old_title+text[1:]
             if sch:
-                self.old_title = GS.sch.set_title(text)
+                self.old_title = GS.sch.set_titles(text) if propagate else GS.sch.set_title(text)
             else:
                 tb.SetTitle(text)
 
     def restore_title(self, sch=False):
         if self.old_title is not None:
             if sch:
-                GS.sch.set_title(self.old_title)
+                if isinstance(self.old_title, str):
+                    GS.sch.set_title(self.old_title)
+                else:
+                    GS.sch.restore_titles(self.old_title)
             else:
                 GS.board.GetTitleBlock().SetTitle(self.old_title)
             self.old_title = None

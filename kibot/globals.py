@@ -463,6 +463,11 @@ class Globals(FiltersOptions):
             self.code_page_fallback = 'latin1'
             """ Code page to use when UTF-8 decode fails. Leave empty to just use ASCII and spaces for codes
                 outside ASCII """
+            self.schematic_sheet_name_workaround = False
+            """ When printing a schematic the SHEETNAME variable is wrongly expanded for page 1.
+                This error is present in KiCad 9 and at least 10.0.3.
+                This workaround makes KiBot expand it for page 1. You must use the `title` option to set
+                the desired title, i.e. `My Project - ${SHEETNAME}` """
         self.set_doc('filters', " [list(dict)=[]] KiBot and KiCost warnings to be ignored."
                                 " Add 1000 to KiCost warnings (WCnnn) ")
         self._filter_what = 'KiBot warnings'

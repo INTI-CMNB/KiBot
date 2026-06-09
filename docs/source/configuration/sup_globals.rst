@@ -210,6 +210,10 @@
          The width of the text box will be the width of the image. |br|
          The text box must contain *kibot_image_X* where X is the output name. |br|
          This option configures the prefix used. If this option is empty no images will be pasted.
+      -  ``schematic_sheet_name_workaround`` :index:`: <pair: global options; schematic_sheet_name_workaround>` [:ref:`boolean <boolean>`] (default: ``false``) When printing a schematic the SHEETNAME variable is wrongly expanded for page 1.
+         This error is present in KiCad 9 and at least 10.0.3. |br|
+         This workaround makes KiBot expand it for page 1. You must use the `title` option to set
+         the desired title, i.e. `My Project - ${SHEETNAME}`.
       -  ``set_text_variables_before_output`` :index:`: <pair: global options; set_text_variables_before_output>` [:ref:`boolean <boolean>`] (default: ``false``) Run the `set_text_variables` preflight before running each output that involves variants.
          This can be used when a text variable uses the variant and you want to create more than
          one variant in the same run. Note that this could be slow because it forces a board

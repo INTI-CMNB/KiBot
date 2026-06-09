@@ -31,6 +31,11 @@ Added
 
    -  Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
 
+-  Globals:
+
+   -  ``schematic_sheet_name_workaround`` to workaround SHEETNAME on
+      page 1 (See #933)
+
 -  Variants:
 
    -  pre_transform filter to KiCad variants
@@ -62,6 +67,11 @@ Added
    -  ``collect_images``: To just avoid collecting images, enabled by
       default when generating a CSV. Avoids unintended infinite loops.
       (See #931)
+
+-  \*SCH Print
+
+   -  ``title_propagate``: The title is not only set for page 1 but also
+      for all pages.
 
 Fixed
 -----

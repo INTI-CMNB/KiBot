@@ -2413,13 +2413,24 @@ class SchematicV6(Schematic):
         if not self.title:
             self.title = os.path.splitext(os.path.basename(self.fname))[0]
 
+    def _get_sheet_name(self):
+        sheet_name = self.sheet_path_h.split('/')[-1]
+        return 'Root' if not sheet_name else sheet_name
+
+    def _get_extra_vars(self, forced=False):
+        """ Returns a dict with KiCad variables that are expanded for this particular sheet.
+            We use them to expand variables in the title block.
+            The force=True argument is used for the regular use.
+            We also use it to workaround a bug in KiCad CLI that fails to correctly expand
+            SHEETNAME for page 1 (KiCad 9/10.0.3) """
+        if forced or (GS.global_schematic_sheet_name_workaround and self.sheet_path_h == '/'):
+            return {'SHEETNAME': self._get_sheet_name(), 'SHEETPATH': self.sheet_path_h, 'SHEETFILE': self.fname_rel}
+        return {}
+
     def _get_title_block(self, items):
         if not isinstance(items, list):
             raise SchError('The title block is not a list')
-        sheet_name = self.sheet_path_h.split('/')[-1]
-        if not sheet_name:
-            sheet_name = 'Root'
-        extra_vars = {'SHEETNAME': sheet_name, 'SHEETPATH': self.sheet_path_h, 'SHEETFILE': self.fname_rel}
+        extra_vars = self._get_extra_vars(forced=True)
         for item in items:
             if not isinstance(item, list) or len(item) < 2 or not isinstance(item[0], Symbol):
                 raise SchError('Wrong title block entry ({})'.format(item))
@@ -2485,7 +2496,8 @@ class SchematicV6(Schematic):
     def write_title_block(self):
         data = []
         if self.title_ori:
-            data += [_symbol('title', [self.title_ori]), Sep()]
+            title = self.title if GS.global_schematic_sheet_name_workaround and self.sheet_path_h == '/' else self.title_ori
+            data += [_symbol('title', [title]), Sep()]
         if self.date_ori:
             data += [_symbol('date', [self.date_ori]), Sep()]
         if self.revision_ori:
@@ -2765,11 +2777,41 @@ class SchematicV6(Schematic):
     def get_title(self):
         return self.title_ori
 
-    def set_title(self, title):
+    def set_title(self, title, propagate=False):
         """ Used only to save a variant """
         old_title = self.title_ori
         self.title_ori = title
+        extra_vars = self._get_extra_vars()
+        self.title = GS.expand_text_variables(self.title_ori, extra_vars=extra_vars)
+        logger.debug(f"Changing title for {self.sheet_path_h}: `{old_title}` -> "
+                     f"`{self.title_ori}` [expanded `{self.title}`]")
         return old_title
+
+    def set_titles(self, title, olds=None):
+        """ Used only to save a variant """
+        old_title_ori = self.title_ori
+        old_title = self.title
+        self.title_ori = title
+        extra_vars = self._get_extra_vars()
+        self.title = GS.expand_text_variables(self.title_ori, extra_vars=extra_vars)
+        logger.debug(f"Changing title for {self.sheet_path_h}: `{old_title_ori}` -> "
+                     f"`{self.title_ori}` [expanded `{self.title}`]")
+        if olds is None:
+            olds = {}
+        olds[self.sheet_path] = (old_title, old_title_ori)
+        for sch in self.sheets:
+            sch.sch.set_titles(title, olds)
+        return olds
+
+    def restore_titles(self, olds):
+        cur_title_ori = self.title_ori
+        old_values = olds[self.sheet_path]
+        self.title_ori = old_values[1]
+        self.title = old_values[0]
+        logger.debug(f"Restoring title for {self.sheet_path_h}: `{cur_title_ori}` -> "
+                     f"`{self.title_ori}` [expanded `{self.title}`]")
+        for sch in self.sheets:
+            sch.sch.restore_titles(olds)
 
     def get_full_path(self, ori=True):
         """ Path using the UUID of the root. Used by v7 """
