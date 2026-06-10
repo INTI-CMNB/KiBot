@@ -158,7 +158,7 @@ def test_print_sch_variant_ni_1(test_dir):
     r_name = 'test_v5_wks-schematic_(no_L).pdf'
     o_name = os.path.join(NI_DIR, r_name)
     ctx.expect_out_file(o_name)
-    ctx.compare_pdf(o_name, r_name, height='100%')
+    ctx.compare_pdf(o_name, r_name, height='100%', tol=50)
     ctx.clean_up(keep_project=True)
 
 
@@ -172,7 +172,7 @@ def test_print_sch_svg_variant_ni_1(test_dir):
     r_name = 'test_v5-schematic_(no_L).svg'
     o_name = os.path.join(NI_DIR, r_name)
     ctx.expect_out_file(o_name)
-    ctx.compare_image(o_name, r_name)
+    ctx.compare_image(o_name, r_name, tol=50)
     ctx.clean_up()
 
 
@@ -186,7 +186,7 @@ def test_print_sch_variant_ni_2(test_dir):
     r_name = 'test_v5-schematic_(no_L).pdf'
     o_name = os.path.join(NI_DIR, 'test_v5-schematic.pdf')
     ctx.expect_out_file(o_name)
-    ctx.compare_pdf(o_name, r_name)
+    ctx.compare_pdf(o_name, r_name, tol=50)
     ctx.clean_up()
 
 

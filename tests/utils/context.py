@@ -629,7 +629,7 @@ class TestContext(object):
         if ae > tol and fix_here and os.environ.get('KIBOT_COPY_REF') == '1':
             logging.error(f'cp {full_img} {full_ref}')
             shutil.copy2(full_img, full_ref)
-        assert ae <= tol
+        assert ae <= tol, f"{ae} > {tol}"
 
     def compare_pdf(self, gen, reference=None, diff='diff-{}.png', height='87%', off_y='0', tol=0):
         """ For multi-page PDFs """
@@ -637,23 +637,23 @@ class TestContext(object):
             reference = gen
         logging.debug('Comparing PDFs: '+gen+' vs '+reference)
         # Split the reference
-        logging.debug('Splitting '+reference)
         full_ref_name = os.path.join(REF_DIR, reference)
         cmd = ['convert', '-density', '150',
                full_ref_name,
                # Avoid the transparency, not repeatable across KiCad releases
                '-background', 'white', '-alpha', 'background', '-alpha', 'off',
                self.get_out_path('ref-%d.png')]
+        logging.debug(f"Splitting {reference} with {usable_cmd(cmd)}")
         logging.debug(full_ref_name)
         subprocess.check_call(cmd)
         # Split the generated
-        logging.debug('Splitting '+gen)
         full_gen_name = self.get_out_path(gen)
         cmd = ['convert', '-density', '150',
                full_gen_name,
                # Avoid the transparency, not repeatable across KiCad releases
                '-background', 'white', '-alpha', 'background', '-alpha', 'off',
                self.get_out_path('gen-%d.png')]
+        logging.debug(f"Splitting {gen} with {usable_cmd(cmd)}")
         subprocess.check_call(cmd)
         # Check number of pages
         ref_pages = glob(self.get_out_path('ref-*.png'))
