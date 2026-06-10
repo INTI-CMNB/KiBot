@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from decimal import Decimal
@@ -14,7 +14,7 @@ from .bom.units import comp_match
 from .EasyEDA.easyeda_3d import download_easyeda_3d_model
 from .fil_base import reset_filters
 from .misc import (W_MISS3D, W_FAILDL, W_DOWN3D, DISABLE_3D_MODEL_TEXT, W_BADTOL, W_BADRES, W_RESVALISSUE, W_RES3DNAME,
-                   W_MISSWRL, EMBED_PREFIX, get_file_hash, USER_AGENT)
+                   W_MISSWRL, EMBED_PREFIX, get_file_hash, USER_AGENT, KICAD_VERSION_9_0_9)
 from .gs import GS
 from .optionable import Optionable
 from .out_base import VariantOptions, BaseOutput
@@ -588,7 +588,7 @@ class Base3DOptions(VariantOptions):
                         if replace is not None:
                             msg += f' replaced by `{replace}`'
                         elif GS.ki10 and full_name.endswith('.wrl'):
-                            msg += ' WRL files are no longer used by KiCad 10 replace it by a STEP file'
+                            msg += ' WRL files are no longer used by KiCad 9.0.9/10 replace it by a STEP file'
                         logger.warning(msg)
                     if replace is not None:
                         self.used_3d_models[os.path.basename(replace)] = replace
@@ -623,8 +623,9 @@ class Base3DOptions(VariantOptions):
         return list(models)
 
     def filter_components(self, highlight=None, force_wrl=False, also_sch=False, force_step=False):
-        if GS.ki10:
+        if GS.kicad_version_n >= KICAD_VERSION_9_0_9:
             # KiCad 10 removed WRL files, so we must enforce the use of STEP files
+            # But wait, why not also remove them from the 9.0.9 repo? Lets make the last stable release to be crippled
             force_wrl = False
             force_step = True
         if not self._comps:
