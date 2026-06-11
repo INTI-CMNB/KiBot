@@ -25,7 +25,7 @@ from .error import KiPlotConfigurationError
 from .misc import (RENDER_3D_ERR, PCB_MAT_COLORS, PCB_FINISH_COLORS, SOLDER_COLORS, SILK_COLORS,
                    KICAD_VERSION_6_0_2, MISSING_TOOL, W_INV3DLAYER, W_NEEDSK8, W_NEEDSK6, W_DEPR,
                    G_SILKCOLORS, G_MASKCOLORS, G_PASTECOLORS, FINISH_TO_COLOR, G_FINISHCOLORS,
-                   G_BOARDCOLORS)
+                   G_BOARDCOLORS, KICAD_VERSION_10_0_3)
 from .gs import GS
 from .out_base_3d import Base3DOptionsWithHL, Base3D
 from .kiplot import run_command
@@ -472,6 +472,8 @@ class Render3DOptions(Base3DOptionsWithHL):
             cmd.append('--use-board-stackup-colors')
         if not self.orthographic:
             cmd.append('--perspective')
+        if GS.kicad_version_n >= KICAD_VERSION_10_0_3:
+            self.add_kicad_cli_variant(cmd)
 
         # All the rest of the options are controlled by the preset
         cfg = os.path.join(GS.kicad_conf_path, '3d_viewer.json')
