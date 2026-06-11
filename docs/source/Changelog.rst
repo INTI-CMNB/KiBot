@@ -87,6 +87,7 @@ Fixed
 
    -  11 and 148 were always filtered for CI/CD, even when using
       –warn-ci-cd
+   -  Crash when missing basic fields, KiCad 6+
 
 -  CLI:
 

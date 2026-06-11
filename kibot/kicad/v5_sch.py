@@ -1072,7 +1072,8 @@ class SchematicComponent(object):
                 self.datasheet = f.value
                 basic += 1
         if basic < 4:
-            logger.warning(W_MISCFLD + 'Component `{}` without the basic fields'.format(self.f_ref))
+            ref = getattr(self, "f_ref", self.ref)
+            logger.warning(W_MISCFLD + f'Component `{ref}` without the basic fields')
 
     def _validate(self):
         for field in self.fields:
