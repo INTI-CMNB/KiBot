@@ -207,6 +207,7 @@ class GS(object):
     global_output = None
     global_pcb_finish = None
     global_pcb_material = None
+    global_pcb_material_color = None
     global_remove_solder_paste_for_dnp = None
     global_remove_solder_mask_for_dnp = None
     global_remove_adhesive_for_dnp = None
@@ -224,6 +225,7 @@ class GS(object):
     global_solder_mask_color = None
     global_solder_mask_color_bottom = None
     global_solder_mask_color_top = None
+    global_solder_paste_color = None
     global_str_yes = None
     global_str_no = None
     global_time_format = None

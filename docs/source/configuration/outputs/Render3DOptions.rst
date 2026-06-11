@@ -16,14 +16,14 @@ Render3DOptions parameters
 -  **move_y** :index:`: <pair: output - render_3d - options; move_y>` [:ref:`number <number>`] (default: ``0``) Steps to move in the Y axis, positive is up.
    Just like pressing the up arrow in the 3D viewer.
 -  **no_virtual** :index:`: <pair: output - render_3d - options; no_virtual>` [:ref:`boolean <boolean>`] (default: ``false``) Used to exclude 3D models for components with 'virtual' attribute.
--  **output** :index:`: <pair: output - render_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated image file (%i='3D_$VIEW' %x='png'). Affected by global options.
+-  **output** :index:`: <pair: output - render_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated image file (%i='3D_$VIEW' %x='png'/'jpg'). Affected by global options.
 -  **ray_tracing** :index:`: <pair: output - render_3d - options; ray_tracing>` [:ref:`boolean <boolean>`] (default: ``false``) Enable the ray tracing. Much better result, but slow, and you'll need to adjust `wait_rt`.
 -  **rotate_x** :index:`: <pair: output - render_3d - options; rotate_x>` [:ref:`number <number>`] (default: ``0``) Steps to rotate around the X axis, positive is clockwise.
-   Each step is currently 10 degrees. Only for KiCad 6 or newer.
+   Each step is currently 10 degrees. Only for KiCad 6+.
 -  **rotate_y** :index:`: <pair: output - render_3d - options; rotate_y>` [:ref:`number <number>`] (default: ``0``) Steps to rotate around the Y axis, positive is clockwise.
-   Each step is currently 10 degrees. Only for KiCad 6 or newer.
+   Each step is currently 10 degrees. Only for KiCad 6+.
 -  **rotate_z** :index:`: <pair: output - render_3d - options; rotate_z>` [:ref:`number <number>`] (default: ``0``) Steps to rotate around the Z axis, positive is clockwise.
-   Each step is currently 10 degrees. Only for KiCad 6 or newer.
+   Each step is currently 10 degrees. Only for KiCad 6+.
 -  **show_components** :index:`: <pair: output - render_3d - options; show_components>` [:ref:`list(string) <list(string)>` | :ref:`string <string>`] (default: ``'all'``) (choices: "none", "all") (also accepts any string) List of components to draw, can be also a string for `none` or `all`.
    Ranges like *R5-R10* are supported. |br|
    Unlike the `pcbdraw` output, the default is `all`.
@@ -37,8 +37,8 @@ Render3DOptions parameters
 -  ``background1`` :index:`: <pair: output - render_3d - options; background1>` [:ref:`string <string>`] (default: ``'#66667F'``) First color for the background gradient.
 -  ``background2`` :index:`: <pair: output - render_3d - options; background2>` [:ref:`string <string>`] (default: ``'#CCCCE5'``) Second color for the background gradient.
 -  ``board`` :index:`: <pair: output - render_3d - options; board>` [:ref:`string <string>`] (default: ``'#332B16'``) Color for the board without copper or solder mask.
--  ``clip_silk_on_via_annulus`` :index:`: <pair: output - render_3d - options; clip_silk_on_via_annulus>` [:ref:`boolean <boolean>`] (default: ``true``) Clip silkscreen at via annuli (KiCad 6+).
--  ``copper`` :index:`: <pair: output - render_3d - options; copper>` [:ref:`string <string>`] (default: ``'#8b898c'``) Color for the copper.
+-  ``clip_silk_on_via_annulus`` :index:`: <pair: output - render_3d - options; clip_silk_on_via_annulus>` [:ref:`boolean <boolean>`] (default: ``true``) Clip silkscreen at via annuli (KiCad 6 to 9).
+-  ``copper`` :index:`: <pair: output - render_3d - options; copper>` [:ref:`string <string>`] (default: ``'#8b898c'``) Color for the copper, both sides.
 -  ``dnf_filter`` :index:`: <pair: output - render_3d - options; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as not fitted.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -57,6 +57,7 @@ Render3DOptions parameters
 
 -  ``force_stackup_colors`` :index:`: <pair: output - render_3d - options; force_stackup_colors>` [:ref:`boolean <boolean>`] (default: ``false``) Tell KiCad to use the colors from the stackup. They are better than the unified KiBot colors.
    Needs KiCad 6 or newer.
+-  ``format`` :index:`: <pair: output - render_3d - options; format>` [:ref:`string <string>`] (default: ``'png'``) (choices: "png", "jpg") Output format.
 -  ``height`` :index:`: <pair: output - render_3d - options; height>` [:ref:`number <number>`] (default: ``720``) Image height (aprox.).
 -  ``highlight`` :index:`: <pair: output - render_3d - options; highlight>` [:ref:`list(string) <list(string)>`] (default: ``[]``) List of components to highlight. Ranges like *R5-R10* are supported.
 
@@ -71,21 +72,28 @@ Render3DOptions parameters
 -  ``no_smd`` :index:`: <pair: output - render_3d - options; no_smd>` [:ref:`boolean <boolean>`] (default: ``false``) Used to exclude 3D models for surface mount components.
 -  ``no_tht`` :index:`: <pair: output - render_3d - options; no_tht>` [:ref:`boolean <boolean>`] (default: ``false``) Used to exclude 3D models for through hole components.
 -  ``orthographic`` :index:`: <pair: output - render_3d - options; orthographic>` [:ref:`boolean <boolean>`] (default: ``false``) Enable the orthographic projection mode (top view looks flat).
+-  ``pivot_x`` :index:`: <pair: output - render_3d - options; pivot_x>` [:ref:`number <number>`] (default: ``0``) Set pivot point relative to the board center in centimeters, X axis. Needs KiCad 10+ using CLI.
+-  ``pivot_y`` :index:`: <pair: output - render_3d - options; pivot_y>` [:ref:`number <number>`] (default: ``0``) Set pivot point relative to the board center in centimeters, Y axis. Needs KiCad 10+ using CLI.
+-  ``pivot_z`` :index:`: <pair: output - render_3d - options; pivot_z>` [:ref:`number <number>`] (default: ``0``) Set pivot point relative to the board center in centimeters, Z axis. Needs KiCad 10+ using CLI.
 -  ``pre_transform`` :index:`: <pair: output - render_3d - options; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
--  ``realistic`` :index:`: <pair: output - render_3d - options; realistic>` [:ref:`boolean <boolean>`] (default: ``true``) When disabled we use the colors of the layers used by the GUI. Needs KiCad 6 or 7.
-   Is emulated on KiCad 8.
+-  ``realistic`` :index:`: <pair: output - render_3d - options; realistic>` [:ref:`boolean <boolean>`] (default: ``true``) When disabled we use the colors of the layers used by the GUI. Needs KiCad 6, 7 or 10+.
+   Is emulated on KiCad 8 and 9.
+-  ``rotate_degrees`` :index:`: <pair: output - render_3d - options; rotate_degrees>` [:ref:`boolean <boolean>`] (default: ``false``) Instead of `steps` use degrees for rotations. Only available for KiCad 10+ using CLI.
 -  ``show_adhesive`` :index:`: <pair: output - render_3d - options; show_adhesive>` [:ref:`boolean <boolean>`] (default: ``false``) Show the content of F.Adhesive/B.Adhesive layers. KiCad 6 or newer.
 -  ``show_board_body`` :index:`: <pair: output - render_3d - options; show_board_body>` [:ref:`boolean <boolean>`] (default: ``true``) Show the PCB core material. KiCad 6 or newer.
 -  ``show_comments`` :index:`: <pair: output - render_3d - options; show_comments>` [:ref:`boolean <boolean>`] (default: ``false``) Show the content of the User.Comments and User.Drawings layer for KiCad 5, 6 and 7.
-   On KiCad 8 this option controls only the User.Comments and you have a separated option for the
+   On KiCad 8+ this option controls only the User.Comments and you have a separated option for the
    User.Drawings called `show_drawings`
    Note that KiCad 5/6/7 doesn't show it when `realistic` is enabled, but KiCad 8 does it. |br|
    Also note that KiCad 5 ray tracer shows comments outside the PCB, but newer KiCad versions
-   doesn't.
+   doesn't. |br|
+   KiCad 10.0.3 ignores them.
+-  ``show_copper_bottom`` :index:`: <pair: output - render_3d - options; show_copper_bottom>` [:ref:`boolean <boolean>`] (default: ``true``) Show copper on the bottom layer (KiCad 10+ using CLI).
+-  ``show_copper_top`` :index:`: <pair: output - render_3d - options; show_copper_top>` [:ref:`boolean <boolean>`] (default: ``true``) Show copper on the top layer (KiCad 10+ using CLI).
 -  ``show_drawings`` :index:`: <pair: output - render_3d - options; show_drawings>` [:ref:`boolean <boolean>`] (default: ``false``) Show the content of the User.Drawings layer. Only available for KiCad 8 and newer.
    Consult `show_comments` to learn when drawings are visible.
 -  ``show_eco`` :index:`: <pair: output - render_3d - options; show_eco>` [:ref:`boolean <boolean>`] (default: ``false``) Show the content of the Eco1.User/Eco2.User layers.
@@ -97,21 +105,33 @@ Render3DOptions parameters
 -  ``show_eco2`` :index:`: <pair: output - render_3d - options; show_eco2>` [:ref:`boolean <boolean>`] (default: ``false``) Show the content of the Eco1.User layer. KiCad 8 supports individual Eco layer options, for 6 and 7
    use the `show_eco` option. |br|
    Consult `show_comments` to learn when drawings are visible.
+-  ``show_plated_barrels`` :index:`: <pair: output - render_3d - options; show_plated_barrels>` [:ref:`boolean <boolean>`] (default: ``true``) Show plated through holes (KiCad 10+ using CLI).
+-  ``show_references`` :index:`: <pair: output - render_3d - options; show_references>` [:ref:`boolean <boolean>`] (default: ``true``) Show component references in the silk screen (KiCad 10+ using CLI).
 -  ``show_silkscreen`` :index:`: <pair: output - render_3d - options; show_silkscreen>` [:ref:`boolean <boolean>`] (default: ``true``) Show the silkscreen layers (KiCad 6+).
 -  ``show_soldermask`` :index:`: <pair: output - render_3d - options; show_soldermask>` [:ref:`boolean <boolean>`] (default: ``true``) Show the solder mask layers (KiCad 6+).
 -  ``show_solderpaste`` :index:`: <pair: output - render_3d - options; show_solderpaste>` [:ref:`boolean <boolean>`] (default: ``true``) Show the solder paste layers (KiCad 6+).
--  ``show_zones`` :index:`: <pair: output - render_3d - options; show_zones>` [:ref:`boolean <boolean>`] (default: ``true``) Show filled areas in zones (KiCad 6+).
--  ``silk`` :index:`: <pair: output - render_3d - options; silk>` [:ref:`string <string>`] (default: ``'#d5dce4'``) Color for the silk screen.
--  ``solder_mask`` :index:`: <pair: output - render_3d - options; solder_mask>` [:ref:`string <string>`] (default: ``'#208b47'``) Color for the solder mask.
+-  ``show_values`` :index:`: <pair: output - render_3d - options; show_values>` [:ref:`boolean <boolean>`] (default: ``true``) Show component values in the silk screen (KiCad 10+ using CLI).
+-  ``show_zones`` :index:`: <pair: output - render_3d - options; show_zones>` [:ref:`boolean <boolean>`] (default: ``true``) Show filled areas in zones (KiCad 6 to 9).
+-  ``silk`` :index:`: <pair: output - render_3d - options; silk>` [:ref:`string <string>`] (default: ``'#d5dce4'``) Color for the silk screen, both sides.
+-  ``solder_mask`` :index:`: <pair: output - render_3d - options; solder_mask>` [:ref:`string <string>`] (default: ``'#208b47'``) Color for the solder mask, both sides.
 -  ``solder_paste`` :index:`: <pair: output - render_3d - options; solder_paste>` [:ref:`string <string>`] (default: ``'#808080'``) Color for the solder paste.
--  ``subtract_mask_from_silk`` :index:`: <pair: output - render_3d - options; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``true``) Clip silkscreen at solder mask edges (KiCad 6+).
+-  ``subtract_mask_from_silk`` :index:`: <pair: output - render_3d - options; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``true``) Clip silkscreen at solder mask edges (KiCad 6 to 9).
 -  ``transparent_background`` :index:`: <pair: output - render_3d - options; transparent_background>` [:ref:`boolean <boolean>`] (default: ``false``) When enabled the image will be post-processed to make the background transparent.
-   In this mode the `background1` and `background2` colors are ignored.
--  ``transparent_background_color`` :index:`: <pair: output - render_3d - options; transparent_background_color>` [:ref:`string <string>`] (default: ``'#00ff00'``) Color used for the chroma key. Adjust it if some regions of the board becomes transparent.
+   In this mode the `background1` and `background2` colors are ignored. |br|
+   Only available for PNGs.
+-  ``transparent_background_color`` :index:`: <pair: output - render_3d - options; transparent_background_color>` [:ref:`string <string>`] (default: ``'#00ff00'``) Only used for KiCad 9 and older.
+   Color used for the chroma key. Adjust it if some regions of the board becomes transparent.
 -  ``transparent_background_fuzz`` :index:`: <pair: output - render_3d - options; transparent_background_fuzz>` [:ref:`number <number>`] (default: ``15``) (range: 0 to 100) Chroma key tolerance (percent). Bigger values will remove more pixels.
+   Only used for KiCad 9 and older.
+-  ``use_cli`` :index:`: <pair: output - render_3d - options; use_cli>` [:ref:`boolean <boolean>`] (default: ``true``) Try using `kicad-cli` for KiCad 10+.
+   More reliable, but with tons of limitations, see KiCad bugs:
+   `21950 <https://gitlab.com/kicad/code/kicad/-/work_items/21950>`__
+   `24599 <https://gitlab.com/kicad/code/kicad/-/work_items/24599>`__
+   `20126 <https://gitlab.com/kicad/code/kicad/-/work_items/20126>`__.
 -  ``variant`` :index:`: <pair: output - render_3d - options; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 -  *wait_ray_tracing* :index:`: <pair: output - render_3d - options; wait_ray_tracing>` Alias for wait_render.
--  ``wait_render`` :index:`: <pair: output - render_3d - options; wait_render>` [:ref:`number <number>`] (default: ``-600``) How many seconds we must wait before capturing the render (ray tracing or normal).
+-  ``wait_render`` :index:`: <pair: output - render_3d - options; wait_render>` [:ref:`number <number>`] (default: ``-600``) Only used for KiCad 9 and older.
+   How many seconds we must wait before capturing the render (ray tracing or normal). |br|
    Lamentably KiCad can save an unfinished image. Enlarge it if your image looks partially rendered. |br|
    Use negative values to enable the auto-detect using CPU load. |br|
    In this case the value is interpreted as a time-out. |br|.

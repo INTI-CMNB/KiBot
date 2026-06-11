@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2021-2024 Salvador E. Tropea
-# Copyright (c) 2021-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2021-2026 Salvador E. Tropea
+# Copyright (c) 2021-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
-# KiCad 6/6.0.1 bug: https://gitlab.com/kicad/code/kicad/-/issues/9890
+# KiCad 6/6.0.1 bug: https://gitlab.com/kicad/code/kicad/-/issues/9890 Crash [Fixed in 6.0.2]
+# KiCad 10 related bugs:
+# https://gitlab.com/kicad/code/kicad/-/work_items/21950 -> we need to patch KiCad to get presets working
+# https://gitlab.com/kicad/code/kicad/-/work_items/24599 -> Various options ignored
 """
 Dependencies:
   - from: KiAuto
@@ -15,10 +18,14 @@ Dependencies:
   - from: ImageMagick
     role: Automatically crop images
 """
+import json
+import re
 import os
 from .error import KiPlotConfigurationError
 from .misc import (RENDER_3D_ERR, PCB_MAT_COLORS, PCB_FINISH_COLORS, SOLDER_COLORS, SILK_COLORS,
-                   KICAD_VERSION_6_0_2, MISSING_TOOL, W_INV3DLAYER, W_NEEDSK8, W_NEEDSK6, W_DEPR)
+                   KICAD_VERSION_6_0_2, MISSING_TOOL, W_INV3DLAYER, W_NEEDSK8, W_NEEDSK6, W_DEPR,
+                   G_SILKCOLORS, G_MASKCOLORS, G_PASTECOLORS, FINISH_TO_COLOR, G_FINISHCOLORS,
+                   G_BOARDCOLORS)
 from .gs import GS
 from .out_base_3d import Base3DOptionsWithHL, Base3D
 from .kiplot import run_command
@@ -29,7 +36,7 @@ logger = log.get_logger()
 
 
 def _run_command(cmd):
-    run_command(cmd, err_lvl=RENDER_3D_ERR)
+    return run_command(cmd, err_lvl=RENDER_3D_ERR)
 
 
 class Render3DOptions(Base3DOptionsWithHL):
@@ -46,7 +53,9 @@ class Render3DOptions(Base3DOptionsWithHL):
     def __init__(self):
         with document:
             self.output = GS.def_global_output
-            """ *Name for the generated image file (%i='3D_$VIEW' %x='png') """
+            """ *Name for the generated image file (%i='3D_$VIEW' %x='png'/'jpg') """
+            self.format = 'png'
+            """ [png,jpg] Output format """
             self.no_tht = False
             """ Used to exclude 3D models for through hole components """
             self.no_smd = False
@@ -58,11 +67,11 @@ class Render3DOptions(Base3DOptionsWithHL):
             self.board = "#332B16"
             """ Color for the board without copper or solder mask """
             self.copper = "#8b898c"
-            """ Color for the copper """
+            """ Color for the copper, both sides """
             self.silk = "#d5dce4"
-            """ Color for the silk screen """
+            """ Color for the silk screen, both sides """
             self.solder_mask = "#208b47"
-            """ Color for the solder mask """
+            """ Color for the solder mask, both sides """
             self.solder_paste = "#808080"
             """ Color for the solder paste """
             self.move_x = 0
@@ -73,17 +82,26 @@ class Render3DOptions(Base3DOptionsWithHL):
                 Just like pressing the up arrow in the 3D viewer """
             self.rotate_x = 0
             """ *Steps to rotate around the X axis, positive is clockwise.
-                Each step is currently 10 degrees. Only for KiCad 6 or newer """
+                Each step is currently 10 degrees. Only for KiCad 6+ """
             self.rotate_y = 0
             """ *Steps to rotate around the Y axis, positive is clockwise.
-                Each step is currently 10 degrees. Only for KiCad 6 or newer """
+                Each step is currently 10 degrees. Only for KiCad 6+ """
             self.rotate_z = 0
             """ *Steps to rotate around the Z axis, positive is clockwise.
-                Each step is currently 10 degrees. Only for KiCad 6 or newer """
+                Each step is currently 10 degrees. Only for KiCad 6+ """
+            self.rotate_degrees = False
+            """ Instead of `steps` use degrees for rotations. Only available for KiCad 10+ using CLI"""
+            self.pivot_x = 0
+            """ Set pivot point relative to the board center in centimeters, X axis. Needs KiCad 10+ using CLI """
+            self.pivot_y = 0
+            """ Set pivot point relative to the board center in centimeters, Y axis. Needs KiCad 10+ using CLI """
+            self.pivot_z = 0
+            """ Set pivot point relative to the board center in centimeters, Z axis. Needs KiCad 10+ using CLI """
             self.ray_tracing = False
             """ *Enable the ray tracing. Much better result, but slow, and you'll need to adjust `wait_rt` """
             self.wait_render = -600
-            """ How many seconds we must wait before capturing the render (ray tracing or normal).
+            """ Only used for KiCad 9 and older.
+                How many seconds we must wait before capturing the render (ray tracing or normal).
                 Lamentably KiCad can save an unfinished image. Enlarge it if your image looks partially rendered.
                 Use negative values to enable the auto-detect using CPU load.
                 In this case the value is interpreted as a time-out. """
@@ -107,12 +125,22 @@ class Render3DOptions(Base3DOptionsWithHL):
             """ Show the solder mask layers (KiCad 6+) """
             self.show_solderpaste = True
             """ Show the solder paste layers (KiCad 6+) """
+            self.show_copper_top = True
+            """ Show copper on the top layer (KiCad 10+ using CLI) """
+            self.show_copper_bottom = True
+            """ Show copper on the bottom layer (KiCad 10+ using CLI) """
+            self.show_plated_barrels = True
+            """ Show plated through holes (KiCad 10+ using CLI) """
+            self.show_references = True
+            """ Show component references in the silk screen (KiCad 10+ using CLI) """
+            self.show_values = True
+            """ Show component values in the silk screen (KiCad 10+ using CLI) """
             self.show_zones = True
-            """ Show filled areas in zones (KiCad 6+) """
+            """ Show filled areas in zones (KiCad 6 to 9) """
             self.clip_silk_on_via_annulus = True
-            """ Clip silkscreen at via annuli (KiCad 6+) """
+            """ Clip silkscreen at via annuli (KiCad 6 to 9) """
             self.subtract_mask_from_silk = True
-            """ Clip silkscreen at solder mask edges (KiCad 6+) """
+            """ Clip silkscreen at solder mask edges (KiCad 6 to 9) """
             self.auto_crop = False
             """ When enabled the image will be post-processed to remove the empty space around the image.
                 In this mode the `background2` is changed to be the same as `background1` """
@@ -121,14 +149,17 @@ class Render3DOptions(Base3DOptionsWithHL):
                 Enable it to force a double pass. It was the default in KiBot 1.7.0 and older """
             self.transparent_background = False
             """ When enabled the image will be post-processed to make the background transparent.
-                In this mode the `background1` and `background2` colors are ignored """
+                In this mode the `background1` and `background2` colors are ignored.
+                Only available for PNGs """
             self.transparent_background_color = "#00ff00"
-            """ Color used for the chroma key. Adjust it if some regions of the board becomes transparent """
+            """ Only used for KiCad 9 and older.
+                Color used for the chroma key. Adjust it if some regions of the board becomes transparent """
             self.transparent_background_fuzz = 15
-            """ [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels """
+            """ [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels.
+                Only used for KiCad 9 and older """
             self.realistic = True
-            """ When disabled we use the colors of the layers used by the GUI. Needs KiCad 6 or 7.
-                Is emulated on KiCad 8 """
+            """ When disabled we use the colors of the layers used by the GUI. Needs KiCad 6, 7 or 10+.
+                Is emulated on KiCad 8 and 9 """
             self.force_stackup_colors = False
             """ Tell KiCad to use the colors from the stackup. They are better than the unified KiBot colors.
                 Needs KiCad 6 or newer """
@@ -136,11 +167,12 @@ class Render3DOptions(Base3DOptionsWithHL):
             """ Show the PCB core material. KiCad 6 or newer """
             self.show_comments = False
             """ Show the content of the User.Comments and User.Drawings layer for KiCad 5, 6 and 7.
-                On KiCad 8 this option controls only the User.Comments and you have a separated option for the
+                On KiCad 8+ this option controls only the User.Comments and you have a separated option for the
                 User.Drawings called `show_drawings`
                 Note that KiCad 5/6/7 doesn't show it when `realistic` is enabled, but KiCad 8 does it.
                 Also note that KiCad 5 ray tracer shows comments outside the PCB, but newer KiCad versions
-                doesn't """
+                doesn't.
+                KiCad 10.0.3 ignores them """
             self.show_drawings = False
             """ Show the content of the User.Drawings layer. Only available for KiCad 8 and newer.
                 Consult `show_comments` to learn when drawings are visible """
@@ -158,6 +190,14 @@ class Render3DOptions(Base3DOptionsWithHL):
                 Consult `show_comments` to learn when drawings are visible """
             self.show_adhesive = False
             """ Show the content of F.Adhesive/B.Adhesive layers. KiCad 6 or newer """
+            self.use_cli = True
+            """ Try using `kicad-cli` for KiCad 10+.
+                More reliable, but with tons of limitations, see KiCad bugs:
+                [21950](https://gitlab.com/kicad/code/kicad/-/work_items/21950)
+                [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
+                [20126](https://gitlab.com/kicad/code/kicad/-/work_items/20126)
+            """
+
         super().__init__()
         self._expand_ext = 'png'
 
@@ -205,6 +245,14 @@ class Render3DOptions(Base3DOptionsWithHL):
         if view is not None:
             self.view = view
         self._expand_id += '_'+self._rviews.get(self.view)
+        # Sanity checks
+        if self.rotate_degrees and not (GS.ki10 and self.use_cli):
+            raise KiPlotConfigurationError("KiCad 10 is needed for rotations in degrees")
+        if self.transparent_background and self.format != 'png':
+            raise KiPlotConfigurationError("Transparent background is only available for PNGs")
+        if self.force_stackup_colors and not self.realistic:
+            raise KiPlotConfigurationError("Choose to disable `realistic` or enable `force_stackup_colors`, not both")
+        self._expand_ext = self.format
 
     def setup_renderer(self, components, active_components, bottom, name):
         super().setup_renderer(components, active_components)
@@ -274,8 +322,6 @@ class Render3DOptions(Base3DOptionsWithHL):
             cmd.append('--use_layer_colors')
         if self.force_stackup_colors:
             cmd.append('--use_stackup_colors')
-        if self.force_stackup_colors and not self.realistic:
-            raise KiPlotConfigurationError("Choose to disable `realistic` or enable `force_stackup_colors`, not both")
         if not self.show_board_body:
             cmd.append('--hide_board_body')
         if self.show_comments:
@@ -305,14 +351,217 @@ class Render3DOptions(Base3DOptionsWithHL):
             if not self.realistic:
                 logger.warning(W_NEEDSK6+"disabling `realistic` needs KiCad 6 or newer")
 
+    def cli_stackup_colors(self):
+        colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
+                  {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
+                  ]
+        # Apply global defaults
+        # Board (core)
+        if GS.global_pcb_material_color is not None:
+            if GS.global_pcb_material_color[0] == '#':
+                color = GS.global_pcb_material_color
+            else:
+                color = G_BOARDCOLORS.get(GS.global_pcb_material_color, '#6d744bd4')
+        else:
+            color = '#6d744bd4'
+        logger.error(f"- Core {GS.global_pcb_material_color} -> {color}")
+        colors.append({'layer': 'board', 'color': color})
+        # Solder mask
+        name = GS.global_solder_mask_color_bottom or GS.global_solder_mask_color
+        color = G_MASKCOLORS[name] if name and name.lower() in G_MASKCOLORS else G_MASKCOLORS['']
+        colors.append({'layer': 'soldermask_bottom', 'color': color})
+        logger.error(f"- Solder mask bottom {name} -> {color}")
+        name = GS.global_solder_mask_color_top or GS.global_solder_mask_color
+        color = G_MASKCOLORS[name] if name and name.lower() in G_MASKCOLORS else G_MASKCOLORS['']
+        colors.append({'layer': 'soldermask_top', 'color': color})
+        logger.error(f"- Solder mask top {name} -> {color}")
+        # Silk screen
+        name = GS.global_silk_screen_color_bottom or GS.global_silk_screen_color
+        color = G_SILKCOLORS[name] if name and name.lower() in G_SILKCOLORS else G_SILKCOLORS['']
+        colors.append({'layer': 'silkscreen_bottom', 'color': color})
+        logger.error(f"- Silk bottom top {name} -> {color}")
+        name = GS.global_silk_screen_color_top or GS.global_silk_screen_color
+        color = G_SILKCOLORS[name] if name and name.lower() in G_SILKCOLORS else G_SILKCOLORS['']
+        colors.append({'layer': 'silkscreen_top', 'color': color})
+        logger.error(f"- Silk screen top {name} -> {color}")
+        # PCB finish
+        if GS.global_pcb_finish is not None:
+            color_n = FINISH_TO_COLOR.get(GS.global_pcb_finish.lower(), 'copper')
+        else:
+            color_n = 'copper'
+        color = G_FINISHCOLORS[color_n]
+        colors.append({'layer': 'copper', 'color': color})
+        colors.append({'layer': 'copper_bottom', 'color': color})
+        logger.error(f"- Copper {GS.global_pcb_finish} -> {color} ({color_n})")
+        # Solder paste
+        if GS.global_solder_paste_color is not None:
+            if GS.global_solder_paste_color[0] == '#':
+                color = GS.global_solder_paste_color
+            else:
+                color = G_PASTECOLORS.get(GS.global_solder_paste_color, '#808080ff')
+        else:
+            color = '#808080ff'
+        colors.append({'layer': 'solderpaste', 'color': color})
+        logger.error(f"- Solder paste {GS.global_solder_paste_color} -> {color}")
+        return colors
+
+    def cli_gui_colors(self):
+        copper = "rgb(77, 127, 196)"  # Top
+        silk_bottom = "rgb(232, 178, 167)"
+        silk_top = "rgb(242, 237, 161)"
+        solder_bottom = "rgba(2, 255, 238, 0.400)"
+        solder_top = "rgba(216, 100, 255, 0.400)"
+        solder_paste = "rgba(180, 160, 154, 0.902)"  # Top
+        colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
+                  {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
+                  {'layer': 'board', 'color': self.color_str_to_rgb(self.board)},
+                  {'layer': 'copper', 'color': copper},
+                  {'layer': 'copper_bottom', 'color': copper},  # TODO: split?
+                  {'layer': 'silkscreen_top', 'color': silk_top},
+                  {'layer': 'silkscreen_bottom', 'color': silk_bottom},
+                  {'layer': 'soldermask_top', 'color': solder_top},
+                  {'layer': 'soldermask_bottom', 'color': solder_bottom},
+                  {'layer': 'solderpaste', 'color': solder_paste},
+                  ]
+        return colors
+
+    def cli_user_colors(self):
+        copper = self.color_str_to_rgb(self.copper)
+        silk_top = silk_bottom = self.color_str_to_rgb(self.silk)  # TODO: split?
+        solder_top = solder_bottom = self.color_str_to_rgb(self.solder_mask)  # TODO: split?
+        solder_paste = self.color_str_to_rgb(self.solder_paste)
+        colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
+                  {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
+                  {'layer': 'board', 'color': self.color_str_to_rgb(self.board)},
+                  {'layer': 'copper', 'color': copper},
+                  {'layer': 'copper_bottom', 'color': copper},  # TODO: split?
+                  {'layer': 'silkscreen_top', 'color': silk_top},
+                  {'layer': 'silkscreen_bottom', 'color': silk_bottom},
+                  {'layer': 'soldermask_top', 'color': solder_top},
+                  {'layer': 'soldermask_bottom', 'color': solder_bottom},
+                  {'layer': 'solderpaste', 'color': solder_paste},
+                  ]
+        return colors
+
+    def kicad_cli_cmd(self, command, output):
+        view = self._rviews.get(self.view, self.view)
+        if view == 'rear':
+            view = 'back'
+        rx = -(self.rotate_x if self.rotate_degrees else self.rotate_x*10)
+        ry = -(self.rotate_y if self.rotate_degrees else self.rotate_y*10)
+        rz = -(self.rotate_z if self.rotate_degrees else self.rotate_z*10)
+        cmd = [command, 'pcb', 'render',
+               '--output', output,
+               # -D, --define-var  they come from set_text_variable, no need to define more
+               '--width', str(self.width+16),
+               '--height', str(self.height+16),
+               '--side', view,
+               '--background', 'transparent' if self.transparent_background else 'opaque',
+               '--quality', 'high' if self.ray_tracing else 'basic',
+               '--preset', '_kibot_preset',
+               # '--use-board-stackup-colors' conditionally added
+               # '--floor' enables options that are already enabled in "high" (ray trace)
+               # '--perspective' conditionally added
+               # '--zoom' added as Z in --pan
+               '--pan', f"{self.move_x},{self.move_y},{self.zoom}",
+               '--pivot', f"{self.pivot_x},{self.pivot_y},{self.pivot_z}",
+               '--rotate', f"{rx},{ry},{rz}",
+               # TODO: --light*
+               ]
+        if self.force_stackup_colors:
+            cmd.append('--use-board-stackup-colors')
+        if not self.orthographic:
+            cmd.append('--perspective')
+
+        # All the rest of the options are controlled by the preset
+        cfg = os.path.join(GS.kicad_conf_path, '3d_viewer.json')
+        if not os.path.isfile(cfg):
+            old_cfg = {}
+        else:
+            with open(cfg, 'rt') as f:
+                old_cfg = json.load(f)
+
+        # Included layers
+        # fp_text is needed for fp_references and fp_values
+        # off_board_silk and drawings are not working
+        # 3d_axes and bounding_boxes seems to be ignored
+        # non_pos_file_models and dnp_models should be filter business
+        layers = ['off_board_silk', 'fp_text']
+        if self.show_references:
+            layers.append('fp_references')
+        if self.show_values:
+            layers.append('fp_values')
+        if self.show_copper_top:
+            layers.append('copper')
+        if self.show_copper_bottom:
+            layers.append('copper_bottom')
+        if self.show_plated_barrels:
+            layers.append('plated_barrels')
+        if not self.no_tht:
+            layers.append('th_models')
+        if not self.no_smd:
+            layers.append('smd_models')
+        if not self.no_virtual:
+            layers.append('virtual_models')
+        if self.show_silkscreen:
+            layers.extend(['silkscreen_bottom', 'silkscreen_top'])
+        if self.show_soldermask:
+            layers.extend(['soldermask_bottom', 'soldermask_top'])
+        if self.show_solderpaste:
+            layers.append('solderpaste')
+        if self.show_board_body:
+            layers.append('board')
+        if self.show_comments:
+            layers.append('user_comments')
+        if self.show_drawings:
+            layers.append('user_drawings')
+        if self.show_eco or self.show_eco1:
+            layers.append('user_eco1')
+        if self.show_eco or self.show_eco2:
+            layers.append('user_eco2')
+        if self.show_adhesive:
+            layers.append('adhesive')
+
+        # Colors
+        if self.force_stackup_colors:
+            colors = self.cli_stackup_colors()
+        elif not self.realistic:
+            colors = self.cli_gui_colors()
+        else:
+            colors = self.cli_user_colors()
+        colors.extend([{"layer": "user_comments", "color": "rgb(217, 217, 217)"},
+                       {"layer": "user_drawings", "color": "rgb(217, 217, 217)"},
+                       {"layer": "user_eco1", "color": "rgb(179, 26, 26)"},
+                       {"layer": "user_eco2", "color": "rgb(179, 26, 26)"}])
+
+        # Preset
+        preset = {'name': '_kibot_preset', 'layers': layers, 'colors': colors}
+
+        # Add our preset
+        if 'layer_presets' not in old_cfg:
+            old_cfg['layer_presets'] = []
+        new_presets = [p for p in old_cfg['layer_presets'] if p.get('name') != '_kibot_preset'] + [preset]
+        old_cfg['layer_presets'] = new_presets
+        # Save the new config
+        with open(cfg, 'wt') as f:
+            f.write(json.dumps(old_cfg, sort_keys=True, indent=2))
+
+        return cmd
+
+    def check_kicad_cli_bug(self):
+        res = _run_command([GS.kicad_cli, 'pcb', 'render', '--help'])
+        # KiCad 9.x and 10.0.0-3 has a bug that always forces --use-board-stackup-colors
+        return re.search(r'--use-board-stackup-colors.*default:\s+false', res) is not None
+
     def run(self, output):
         super().run(output)
         logger.warning(W_DEPR+'This output depends on KiCad version, use `blender_export` instead')
         if GS.ki6 and GS.kicad_version_n < KICAD_VERSION_6_0_2:
             GS.exit_with_error("3D Viewer not supported for KiCad 6.0.0/1\n"
                                "Please upgrade KiCad to 6.0.2 or newer", MISSING_TOOL)
-        command = self.ensure_tool('KiAuto')
-        if self.transparent_background:
+        use_cli = GS.ki10 and self.use_cli and self.check_kicad_cli_bug()
+        command = GS.kicad_cli if use_cli else self.ensure_tool('KiAuto')
+        if self.transparent_background and not use_cli:
             # Use the chroma key color
             self.background1 = self.background2 = self.transparent_background_color
             convert_command = self.ensure_tool('ImageMagick')
@@ -320,24 +569,33 @@ class Render3DOptions(Base3DOptionsWithHL):
             # Avoid a gradient
             self.background2 = self.background1
             convert_command = self.ensure_tool('ImageMagick')
+
         # Base command with overwrite
-        cmd = [command, '--rec_w', str(self.width+2), '--rec_h', str(self.height+85),
-               '3d_view', '--output_name', output]
-        self.add_options(cmd)
+        if use_cli:
+            # Using kicad-cli
+            cmd = self.kicad_cli_cmd(command, output)
+        else:
+            cmd = [command, '--rec_w', str(self.width+2), '--rec_h', str(self.height+85),
+                   '3d_view', '--output_name', output]
+            self.add_options(cmd)
         # The board
         self.apply_show_components()
         board_name = self.filter_components(highlight=set(self.expand_kf_components(self._highlight)))
         self.undo_show_components()
-        cmd.extend([board_name, os.path.dirname(output)])
-        # Execute it
-        self.exec_with_retry(self.add_extra_options(cmd), RENDER_3D_ERR)
+        cmd.append(board_name)
+        if use_cli:
+            _run_command(cmd)
+        else:
+            cmd.append(os.path.dirname(output))
+            # Execute it
+            self.exec_with_retry(self.add_extra_options(cmd), RENDER_3D_ERR)
         if self.auto_crop:
             cmd = [convert_command, output, '-trim', '+repage']
             if self.enable_crop_workaround:
                 cmd.extend(['-trim', '+repage'])
             cmd.append(output)
             _run_command(cmd)
-        if self.transparent_background:
+        if self.transparent_background and not use_cli:
             _run_command([convert_command, output, '-fuzz', str(self.transparent_background_fuzz)+'%', '-transparent',
                           self.color_str_to_rgb(self.transparent_background_color), output])
 

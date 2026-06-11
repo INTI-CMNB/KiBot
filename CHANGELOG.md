@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Globals:
   - `schematic_sheet_name_workaround` to workaround SHEETNAME on page 1
     (See #933)
+  - `pcb_material_color` default color for the PCB core material
+  - `solder_paste_color` default color for the solder paste
 - Variants:
   - pre_transform filter to KiCad variants
 - E/DRC:
@@ -30,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - KiCad Site:
   - `bom` configuration
   - `kiri` configuration
+- Render 3D:
+  - KiCad 10: support for kicad-cli interface, adds some new options but
+    has various limitations, hopping they will be fixed.
 - Report:
   - All PDF pages are included, not just the first
   - The full report now works with SVGs and PDFs for both (SCH and PCB),

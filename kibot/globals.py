@@ -259,6 +259,8 @@ class Globals(FiltersOptions):
             self.pcb_material = 'FR4'
             """ PCB core material. Currently used for documentation and to choose default colors.
                 Currently known are FR1 to FR5 """
+            self.pcb_material_color = '#6D744BD3'
+            """ Default PCB core material color, used when the stack-up doesn't specify it """
             self.remove_solder_paste_for_dnp = True
             """ When applying filters and variants remove the solder paste for components that won't be included """
             self.remove_adhesive_for_dnp = True
@@ -308,6 +310,8 @@ class Globals(FiltersOptions):
             self.solder_mask_color_bottom = ''
             """ Color for the bottom solder mask. When not defined `solder_mask_color` is used.
                 Read `solder_mask_color` help """
+            self.solder_paste_color = 'grey'
+            """ Color for the solder paste in 3D renders """
             self.time_format = '%H-%M-%S'
             """ Format used for the time we started the script. Uses the `strftime` format """
             self.time_reformat = True
@@ -501,6 +505,10 @@ class Globals(FiltersOptions):
             if ly.color:
                 self.solder_mask_color_bottom = ly.color.lower()
                 logger.debug("- B.Mask color: "+ly.color)
+        elif ly.name == "B.Paste":
+            if ly.color:
+                self.solder_paste_color = ly.color.lower()
+                logger.debug("- B.Paste color: "+ly.color)
         elif ly.material:
             if not len(materials):
                 materials.add(ly.material)
@@ -508,6 +516,9 @@ class Globals(FiltersOptions):
             elif ly.material not in materials:
                 materials.add(ly.material)
                 self.pcb_material += ' / '+ly.material
+            if ly.type == 'core':
+                self.pcb_material_color = ly.color.lower()
+                logger.debug("- Core color: "+ly.color)
         elif ly.type == 'copper' and ly.thickness:
             if not len(thicknesses):
                 thicknesses.add(ly.thickness)

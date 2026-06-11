@@ -191,6 +191,7 @@
          Immersion Ag, ImAu, Immersion Gold, Immersion Au, Immersion Tin, Immersion Nickel, OSP and HT_OSP.
       -  ``pcb_material`` :index:`: <pair: global options; pcb_material>` [:ref:`string <string>`] (default: ``'FR4'``) PCB core material. Currently used for documentation and to choose default colors.
          Currently known are FR1 to FR5.
+      -  ``pcb_material_color`` :index:`: <pair: global options; pcb_material_color>` [:ref:`string <string>`] (default: ``'#6D744BD3'``) Default PCB core material color, used when the stack-up doesn't specify it.
       -  ``remove_adhesive_for_dnp`` :index:`: <pair: global options; remove_adhesive_for_dnp>` [:ref:`boolean <boolean>`] (default: ``true``) When applying filters and variants remove the adhesive (glue) for components that won't be included.
       -  ``remove_solder_mask_for_dnp`` :index:`: <pair: global options; remove_solder_mask_for_dnp>` [:ref:`boolean <boolean>`] (default: ``false``) When applying filters and variants remove the solder mask apertures for components that won't be included.
       -  ``remove_solder_paste_for_dnp`` :index:`: <pair: global options; remove_solder_paste_for_dnp>` [:ref:`boolean <boolean>`] (default: ``true``) When applying filters and variants remove the solder paste for components that won't be included.
@@ -239,6 +240,7 @@
          Read `solder_mask_color` help.
       -  ``solder_mask_color_top`` :index:`: <pair: global options; solder_mask_color_top>` [:ref:`string <string>`] (default: ``''``) Color for the top solder mask. When not defined `solder_mask_color` is used.
          Read `solder_mask_color` help.
+      -  ``solder_paste_color`` :index:`: <pair: global options; solder_paste_color>` [:ref:`string <string>`] (default: ``'grey'``) Color for the solder paste in 3D renders.
       -  ``str_no`` :index:`: <pair: global options; str_no>` [:ref:`string <string>`] (default: ``'no'``) String used for *no*. Currently used by the **update_pcb_characteristics** preflight.
       -  ``str_yes`` :index:`: <pair: global options; str_yes>` [:ref:`string <string>`] (default: ``'yes'``) String used for *yes*. Currently used by the **update_pcb_characteristics** preflight.
       -  ``time_format`` :index:`: <pair: global options; time_format>` [:ref:`string <string>`] (default: ``'%H-%M-%S'``) Format used for the time we started the script. Uses the `strftime` format.

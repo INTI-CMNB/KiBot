@@ -373,6 +373,63 @@ SOLDER_COLORS = {'green': ("#285e3a", "#208b47"),
                  'yellow': ("#73823d", "#f2a756"),
                  'purple': ("#30234a", "#451d70")}
 SILK_COLORS = {'black': "0b1013", 'white': "d5dce4"}
+G_SILKCOLORS = {
+    '': '#f5f5f5ff',  # white
+    'white': '#f5f5f5ff',
+    'green': '#143324ff',
+    'red': '#b51315ff',
+    'blue': '#023ba2ff',
+    'black': '#0b0b0bff',
+    'purple': '#200235ff',
+    'yellow': '#c2c300ff',
+}
+G_MASKCOLORS = {
+    '': '#143324d4',  # green
+    'green': '#143324d4',
+    'light green': '#5ba80cd4',
+    'saturated green': '#0d680bd4',
+    'red': '#851315d4',         # Adjusted from #b5 13 15 d4
+    'light red': '#d2280ed4',
+    'red/orange': '#ef3529d4',
+    'blue': '#02223bd4',        # Adjusted from 2,  59, 162,
+    'light blue 1': '#364f74d4',
+    'light blue 2': '#3d5582d4',
+    'green/blue': '#154650d4',
+    'black': '#0b0b0bd4',
+    'white': '#f5f5f5d4',
+    'purple': '#200235d4',
+    'light purple': '#771f5bd4',
+    'yellow': '#c2c300d4',
+}
+G_PASTECOLORS = {
+    'grey': '#808080ff',
+    'dark grey': '#5a5a5aff',
+    'silver': '#d5d5d5ff',
+}
+FINISH_TO_COLOR = {'hal': "silver", 'hasl': "silver", 'imag': "silver", 'hal snpb': "silver", 'hal lead-free': "silver",
+                   'immersion silver': "silver", 'immersion ag': "silver",
+                   'enig': "gold", 'enepig': "gold", 'hard gold': "gold", 'imau': "gold", 'immersion gold': "gold",
+                   'immersion au': "gold", 'immersion nickel': "gold",
+                   'none': "copper", 'osp': "copper", 'ht_osp': "copper",
+                   'immersion tin': "tin"}
+G_FINISHCOLORS = {
+    'copper': '#b87332ff',
+    'gold': '#b29c00ff',
+    'silver': '#d5d5d5ff',
+    'tin': '#a0a0a0ff',
+}
+G_BOARDCOLORS = {
+    'fr4 natural, dark': '#332b16d4',
+    'fr4 natural': '#6d744bd4',
+    'ptfe natural': '#fcfcfae6',
+    'polyimide': '#cd8200ad',
+    'phenolic natural': '#5c1106e6',
+    'brown 1': '#92632fd4',
+    'brown 2': '#a07b36d4',
+    'brown 3': '#92632fd4',
+    'aluminum': '#d5d5d5ff',
+}
+
 # Some browser name to pretend, popular at the moment
 # https://techblog.willshouse.com/2012/01/03/most-common-user-agents/ on 2024-10-22
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36'

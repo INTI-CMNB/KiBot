@@ -8,9 +8,25 @@ outputs:
     options:
       ray_tracing: false
       realistic: true
+      transparent_background: false
+      show_soldermask: true  # OK
+      show_silkscreen: true  # OK
+      show_board_body: true # OK
+      no_tht: false  # OK
+      no_smd: false  # OK
+      show_solderpaste: true   # OK
       force_stackup_colors: true
       show_drawings: true
       show_comments: true
       show_eco: true
       show_eco1: true
       show_eco2: true
+      rotate_x: 4
+      rotate_y: 0
+      rotate_z: -4
+      pivot_x: 3
+      # rotate_degrees: true
+      move_x: 3
+      move_y: 3
+      zoom: -5
+      use_cli: true

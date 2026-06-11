@@ -4468,9 +4468,9 @@ outputs:
       background2: '#CCCCE5'
       # [string='#332B16'] Color for the board without copper or solder mask
       board: '#332B16'
-      # [boolean=true] Clip silkscreen at via annuli (KiCad 6+)
+      # [boolean=true] Clip silkscreen at via annuli (KiCad 6 to 9)
       clip_silk_on_via_annulus: true
-      # [string='#8b898c'] Color for the copper
+      # [string='#8b898c'] Color for the copper, both sides
       copper: '#8b898c'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -4499,6 +4499,8 @@ outputs:
       # [boolean=false] Tell KiCad to use the colors from the stackup. They are better than the unified KiBot colors.
       # Needs KiCad 6 or newer
       force_stackup_colors: false
+      # [string='png'] [png,jpg] Output format
+      format: 'png'
       # [number=720] Image height (aprox.)
       height: 720
       # [list(string)=[]] List of components to highlight. Ranges like *R5-R10* are supported
@@ -4530,8 +4532,14 @@ outputs:
       no_virtual: false
       # [boolean=false] Enable the orthographic projection mode (top view looks flat)
       orthographic: false
-      # [string='%f-%i%I%v.%x'] Name for the generated image file (%i='3D_$VIEW' %x='png'). Affected by global options
+      # [string='%f-%i%I%v.%x'] Name for the generated image file (%i='3D_$VIEW' %x='png'/'jpg'). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [number=0] Set pivot point relative to the board center in centimeters, X axis. Needs KiCad 10+ using CLI
+      pivot_x: 0
+      # [number=0] Set pivot point relative to the board center in centimeters, Y axis. Needs KiCad 10+ using CLI
+      pivot_y: 0
+      # [number=0] Set pivot point relative to the board center in centimeters, Z axis. Needs KiCad 10+ using CLI
+      pivot_z: 0
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4539,33 +4547,40 @@ outputs:
       pre_transform: '_null'
       # [boolean=false] Enable the ray tracing. Much better result, but slow, and you'll need to adjust `wait_rt`
       ray_tracing: false
-      # [boolean=true] When disabled we use the colors of the layers used by the GUI. Needs KiCad 6 or 7.
-      # Is emulated on KiCad 8
+      # [boolean=true] When disabled we use the colors of the layers used by the GUI. Needs KiCad 6, 7 or 10+.
+      # Is emulated on KiCad 8 and 9
       realistic: true
+      # [boolean=false] Instead of `steps` use degrees for rotations. Only available for KiCad 10+ using CLI
+      rotate_degrees: false
       # [number=0] Steps to rotate around the X axis, positive is clockwise.
-      # Each step is currently 10 degrees. Only for KiCad 6 or newer
+      # Each step is currently 10 degrees. Only for KiCad 6+
       rotate_x: 0
       # [number=0] Steps to rotate around the Y axis, positive is clockwise.
-      # Each step is currently 10 degrees. Only for KiCad 6 or newer
+      # Each step is currently 10 degrees. Only for KiCad 6+
       rotate_y: 0
       # [number=0] Steps to rotate around the Z axis, positive is clockwise.
-      # Each step is currently 10 degrees. Only for KiCad 6 or newer
+      # Each step is currently 10 degrees. Only for KiCad 6+
       rotate_z: 0
       # [boolean=false] Show the content of F.Adhesive/B.Adhesive layers. KiCad 6 or newer
       show_adhesive: false
       # [boolean=true] Show the PCB core material. KiCad 6 or newer
       show_board_body: true
       # [boolean=false] Show the content of the User.Comments and User.Drawings layer for KiCad 5, 6 and 7.
-      # On KiCad 8 this option controls only the User.Comments and you have a separated option for the
+      # On KiCad 8+ this option controls only the User.Comments and you have a separated option for the
       # User.Drawings called `show_drawings`
       # Note that KiCad 5/6/7 doesn't show it when `realistic` is enabled, but KiCad 8 does it.
       # Also note that KiCad 5 ray tracer shows comments outside the PCB, but newer KiCad versions
-      # doesn't
+      # doesn't.
+      # KiCad 10.0.3 ignores them
       show_comments: false
       # [list(string)|string='all'] [none,all,*] List of components to draw, can be also a string for `none` or `all`.
       # Ranges like *R5-R10* are supported.
       # Unlike the `pcbdraw` output, the default is `all`
       show_components: 'all'
+      # [boolean=true] Show copper on the bottom layer (KiCad 10+ using CLI)
+      show_copper_bottom: true
+      # [boolean=true] Show copper on the top layer (KiCad 10+ using CLI)
+      show_copper_top: true
       # [boolean=false] Show the content of the User.Drawings layer. Only available for KiCad 8 and newer.
       # Consult `show_comments` to learn when drawings are visible
       show_drawings: false
@@ -4581,35 +4596,51 @@ outputs:
       # use the `show_eco` option.
       # Consult `show_comments` to learn when drawings are visible
       show_eco2: false
+      # [boolean=true] Show plated through holes (KiCad 10+ using CLI)
+      show_plated_barrels: true
+      # [boolean=true] Show component references in the silk screen (KiCad 10+ using CLI)
+      show_references: true
       # [boolean=true] Show the silkscreen layers (KiCad 6+)
       show_silkscreen: true
       # [boolean=true] Show the solder mask layers (KiCad 6+)
       show_soldermask: true
       # [boolean=true] Show the solder paste layers (KiCad 6+)
       show_solderpaste: true
-      # [boolean=true] Show filled areas in zones (KiCad 6+)
+      # [boolean=true] Show component values in the silk screen (KiCad 10+ using CLI)
+      show_values: true
+      # [boolean=true] Show filled areas in zones (KiCad 6 to 9)
       show_zones: true
-      # [string='#d5dce4'] Color for the silk screen
+      # [string='#d5dce4'] Color for the silk screen, both sides
       silk: '#d5dce4'
-      # [string='#208b47'] Color for the solder mask
+      # [string='#208b47'] Color for the solder mask, both sides
       solder_mask: '#208b47'
       # [string='#808080'] Color for the solder paste
       solder_paste: '#808080'
-      # [boolean=true] Clip silkscreen at solder mask edges (KiCad 6+)
+      # [boolean=true] Clip silkscreen at solder mask edges (KiCad 6 to 9)
       subtract_mask_from_silk: true
       # [boolean=false] When enabled the image will be post-processed to make the background transparent.
-      # In this mode the `background1` and `background2` colors are ignored
+      # In this mode the `background1` and `background2` colors are ignored.
+      # Only available for PNGs
       transparent_background: false
-      # [string='#00ff00'] Color used for the chroma key. Adjust it if some regions of the board becomes transparent
+      # [string='#00ff00'] Only used for KiCad 9 and older.
+      # Color used for the chroma key. Adjust it if some regions of the board becomes transparent
       transparent_background_color: '#00ff00'
-      # [number=15] [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels
+      # [number=15] [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels.
+      # Only used for KiCad 9 and older
       transparent_background_fuzz: 15
+      # [boolean=true] Try using `kicad-cli` for KiCad 10+.
+      # More reliable, but with tons of limitations, see KiCad bugs:
+      # [21950](https://gitlab.com/kicad/code/kicad/-/work_items/21950)
+      # [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
+      # [20126](https://gitlab.com/kicad/code/kicad/-/work_items/20126)
+      use_cli: true
       # [string=''] Board variant to apply
       variant: ''
       # [string='top'] [top,bottom,front,rear,right,left,z,Z,y,Y,x,X] Point of view
       view: 'top'
       # `wait_ray_tracing` is an alias for `wait_render`
-      # [number=-600] How many seconds we must wait before capturing the render (ray tracing or normal).
+      # [number=-600] Only used for KiCad 9 and older.
+      # How many seconds we must wait before capturing the render (ray tracing or normal).
       # Lamentably KiCad can save an unfinished image. Enlarge it if your image looks partially rendered.
       # Use negative values to enable the auto-detect using CPU load.
       # In this case the value is interpreted as a time-out.

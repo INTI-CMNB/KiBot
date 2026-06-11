@@ -13869,6 +13869,13 @@
           null
         ],
         [
+          "format",
+          [
+            "DataTypeChoice"
+          ],
+          null
+        ],
+        [
           "no_tht",
           [
             "DataTypeBoolean"
@@ -13967,6 +13974,34 @@
           null
         ],
         [
+          "rotate_degrees",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "pivot_x",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "pivot_y",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "pivot_z",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
           "ray_tracing",
           [
             "DataTypeBoolean"
@@ -14031,6 +14066,41 @@
         ],
         [
           "show_solderpaste",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "show_copper_top",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "show_copper_bottom",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "show_plated_barrels",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "show_references",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "show_values",
           [
             "DataTypeBoolean"
           ],
@@ -14150,6 +14220,13 @@
         ],
         [
           "show_adhesive",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "use_cli",
           [
             "DataTypeBoolean"
           ],
