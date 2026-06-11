@@ -578,6 +578,8 @@ class Render3DOptions(Base3DOptionsWithHL):
         cmd.append(board_name)
         if use_cli:
             _run_command(cmd)
+            if self._files_to_remove:
+                self.remove_temporals()
         else:
             cmd.append(os.path.dirname(output))
             # Execute it
