@@ -353,9 +353,7 @@ class Render3DOptions(Base3DOptionsWithHL):
 
     def cli_stackup_colors(self):
         logger.debug("Looking for colors for the 3D render from the stack-up")
-        colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
-                  {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
-                  ]
+        colors = []
         # Apply global defaults
         # Board (core)
         if GS.global_pcb_material_color is not None:
@@ -407,22 +405,14 @@ class Render3DOptions(Base3DOptionsWithHL):
         return colors
 
     def cli_gui_colors(self):
-        copper = "rgb(77, 127, 196)"  # Top
-        silk_bottom = "rgb(232, 178, 167)"
-        silk_top = "rgb(242, 237, 161)"
-        solder_bottom = "rgba(2, 255, 238, 0.400)"
-        solder_top = "rgba(216, 100, 255, 0.400)"
-        solder_paste = "rgba(180, 160, 154, 0.902)"  # Top
-        colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
-                  {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
-                  {'layer': 'board', 'color': self.color_str_to_rgb(self.board)},
-                  {'layer': 'copper', 'color': copper},
-                  {'layer': 'copper_bottom', 'color': copper},  # TODO: split?
-                  {'layer': 'silkscreen_top', 'color': silk_top},
-                  {'layer': 'silkscreen_bottom', 'color': silk_bottom},
-                  {'layer': 'soldermask_top', 'color': solder_top},
-                  {'layer': 'soldermask_bottom', 'color': solder_bottom},
-                  {'layer': 'solderpaste', 'color': solder_paste},
+        colors = [{'layer': 'board', 'color': self.color_str_to_rgb(self.board)},
+                  {'layer': 'copper', 'color': "rgb(200, 52, 52)"},
+                  {'layer': 'copper_bottom', 'color': "rgb(77, 127, 196)"},
+                  {'layer': 'silkscreen_top', 'color': "rgb(242, 237, 161)"},
+                  {'layer': 'silkscreen_bottom', 'color': "rgb(232, 178, 167)"},
+                  {'layer': 'soldermask_top', 'color': "rgba(216, 100, 255, 0.400)"},
+                  {'layer': 'soldermask_bottom', 'color': "rgba(2, 255, 238, 0.400)"},
+                  {'layer': 'solderpaste', 'color': "rgba(180, 160, 154, 0.902)"},
                   ]
         return colors
 
@@ -431,9 +421,7 @@ class Render3DOptions(Base3DOptionsWithHL):
         silk_top = silk_bottom = self.color_str_to_rgb(self.silk)  # TODO: split?
         solder_top = solder_bottom = self.color_str_to_rgb(self.solder_mask)  # TODO: split?
         solder_paste = self.color_str_to_rgb(self.solder_paste)
-        colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
-                  {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
-                  {'layer': 'board', 'color': self.color_str_to_rgb(self.board)},
+        colors = [{'layer': 'board', 'color': self.color_str_to_rgb(self.board)},
                   {'layer': 'copper', 'color': copper},
                   {'layer': 'copper_bottom', 'color': copper},  # TODO: split?
                   {'layer': 'silkscreen_top', 'color': silk_top},
@@ -535,7 +523,9 @@ class Render3DOptions(Base3DOptionsWithHL):
         colors.extend([{"layer": "user_comments", "color": "rgb(217, 217, 217)"},
                        {"layer": "user_drawings", "color": "rgb(217, 217, 217)"},
                        {"layer": "user_eco1", "color": "rgb(179, 26, 26)"},
-                       {"layer": "user_eco2", "color": "rgb(179, 26, 26)"}])
+                       {"layer": "user_eco2", "color": "rgb(179, 26, 26)"},
+                       {"layer": "background_bottom", "color": self.color_str_to_rgb(self.background1)},
+                       {"layer": "background_top", "color": self.color_str_to_rgb(self.background2)}])
 
         # Preset
         preset = {'name': '_kibot_preset', 'layers': layers, 'colors': colors}
