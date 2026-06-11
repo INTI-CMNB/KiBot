@@ -352,6 +352,7 @@ class Render3DOptions(Base3DOptionsWithHL):
                 logger.warning(W_NEEDSK6+"disabling `realistic` needs KiCad 6 or newer")
 
     def cli_stackup_colors(self):
+        logger.debug("Looking for colors for the 3D render from the stack-up")
         colors = [{'layer': 'background_bottom', 'color': self.color_str_to_rgb(self.background1)},
                   {'layer': 'background_top', 'color': self.color_str_to_rgb(self.background2)},
                   ]
@@ -364,26 +365,26 @@ class Render3DOptions(Base3DOptionsWithHL):
                 color = G_BOARDCOLORS.get(GS.global_pcb_material_color, '#6d744bd4')
         else:
             color = '#6d744bd4'
-        logger.error(f"- Core {GS.global_pcb_material_color} -> {color}")
+        logger.debug(f"- Core {GS.global_pcb_material_color} -> {color}")
         colors.append({'layer': 'board', 'color': color})
         # Solder mask
         name = GS.global_solder_mask_color_bottom or GS.global_solder_mask_color
         color = G_MASKCOLORS[name] if name and name.lower() in G_MASKCOLORS else G_MASKCOLORS['']
         colors.append({'layer': 'soldermask_bottom', 'color': color})
-        logger.error(f"- Solder mask bottom {name} -> {color}")
+        logger.debug(f"- Solder mask bottom {name} -> {color}")
         name = GS.global_solder_mask_color_top or GS.global_solder_mask_color
         color = G_MASKCOLORS[name] if name and name.lower() in G_MASKCOLORS else G_MASKCOLORS['']
         colors.append({'layer': 'soldermask_top', 'color': color})
-        logger.error(f"- Solder mask top {name} -> {color}")
+        logger.debug(f"- Solder mask top {name} -> {color}")
         # Silk screen
         name = GS.global_silk_screen_color_bottom or GS.global_silk_screen_color
         color = G_SILKCOLORS[name] if name and name.lower() in G_SILKCOLORS else G_SILKCOLORS['']
         colors.append({'layer': 'silkscreen_bottom', 'color': color})
-        logger.error(f"- Silk bottom top {name} -> {color}")
+        logger.debug(f"- Silk bottom top {name} -> {color}")
         name = GS.global_silk_screen_color_top or GS.global_silk_screen_color
         color = G_SILKCOLORS[name] if name and name.lower() in G_SILKCOLORS else G_SILKCOLORS['']
         colors.append({'layer': 'silkscreen_top', 'color': color})
-        logger.error(f"- Silk screen top {name} -> {color}")
+        logger.debug(f"- Silk screen top {name} -> {color}")
         # PCB finish
         if GS.global_pcb_finish is not None:
             color_n = FINISH_TO_COLOR.get(GS.global_pcb_finish.lower(), 'copper')
@@ -392,7 +393,7 @@ class Render3DOptions(Base3DOptionsWithHL):
         color = G_FINISHCOLORS[color_n]
         colors.append({'layer': 'copper', 'color': color})
         colors.append({'layer': 'copper_bottom', 'color': color})
-        logger.error(f"- Copper {GS.global_pcb_finish} -> {color} ({color_n})")
+        logger.debug(f"- Copper {GS.global_pcb_finish} -> {color} ({color_n})")
         # Solder paste
         if GS.global_solder_paste_color is not None:
             if GS.global_solder_paste_color[0] == '#':
@@ -402,7 +403,7 @@ class Render3DOptions(Base3DOptionsWithHL):
         else:
             color = '#808080ff'
         colors.append({'layer': 'solderpaste', 'color': color})
-        logger.error(f"- Solder paste {GS.global_solder_paste_color} -> {color}")
+        logger.debug(f"- Solder paste {GS.global_solder_paste_color} -> {color}")
         return colors
 
     def cli_gui_colors(self):
