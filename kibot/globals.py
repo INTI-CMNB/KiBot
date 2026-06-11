@@ -516,7 +516,7 @@ class Globals(FiltersOptions):
             elif ly.material not in materials:
                 materials.add(ly.material)
                 self.pcb_material += ' / '+ly.material
-            if ly.type == 'core':
+            if ly.type == 'core' and ly.color:
                 self.pcb_material_color = ly.color.lower()
                 logger.debug("- Core color: "+ly.color)
         elif ly.type == 'copper' and ly.thickness:
