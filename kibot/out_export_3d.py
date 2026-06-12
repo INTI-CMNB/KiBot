@@ -26,8 +26,7 @@ class Export_3DOptions(Base3DOptions):
             self.format = 'step'
             """ *[step,glb,stl,xao,brep,ply,u3d,pdf] 3D format used.
                 - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
-                - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
-                  known as WebGL Transmissions Format or WebGL TF.
+                - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly known as WebGL Transmissions Format or WebGL TF.
                 - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
                 - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
                 - BRep: Part of Open CASCADE Technology (OCCT)
