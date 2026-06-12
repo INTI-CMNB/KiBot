@@ -789,6 +789,7 @@ ELEMENTS_USED = (
 @dataclass
 class PlotSubstrate(PlotInterface):
     drill_holes: bool = True
+    copper: bool = True
     outline_width: int = mm2ki(0.1)
     only_mask: bool = False
 
@@ -806,7 +807,8 @@ class PlotSubstrate(PlotInterface):
 
         to_plot: List[PlotAction] = []
         for e in ELEMENTS_USED[self.only_mask]:
-            to_plot.append(PlotAction(e, [SUBSTRATE_ELEMENTS[e][plotter.render_back]], SUBSTRATE_PROCESS[e]))
+            if self.copper or e != "copper":
+                to_plot.append(PlotAction(e, [SUBSTRATE_ELEMENTS[e][plotter.render_back]], SUBSTRATE_PROCESS[e]))
 
         self._container = etree.Element("g", id="substrate")
         self._container.attrib["clip-path"] = "url(#cut-off)"

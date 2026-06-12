@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
-# License: GPL-3.0
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
+# License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
 Dependencies:
@@ -237,6 +237,8 @@ class PcbDrawOptions(VariantOptions):
                 Note this also affects the drill holes """
             self.show_solderpaste = True
             """ Show the solder paste layers """
+            self.show_copper = True
+            """ Show tracks and zones """
             self.resistor_remap = PcbDrawResistorRemap
             """ [list(dict)=[]] List of resistors to be remapped. You can change the value of the resistors here """
             self.resistor_flip = Optionable
@@ -447,7 +449,8 @@ class PcbDrawOptions(VariantOptions):
                     plotter.resolve_style(self._style)
                 else:
                     plotter.style = self._style
-            plotter.plot_plan = [PlotSubstrate(drill_holes=not self.no_drillholes, outline_width=mm2ki(self.outline_width))]
+            plotter.plot_plan = [PlotSubstrate(drill_holes=not self.no_drillholes, outline_width=mm2ki(self.outline_width),
+                                 copper=self.show_copper)]
             if self.show_solderpaste:
                 plotter.plot_plan.append(PlotPaste())
             if self.vcuts:

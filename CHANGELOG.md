@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - KiCad Site:
   - `bom` configuration
   - `kiri` configuration
+- PcbDraw:
+  - `show_copper` to disable tracks and zones (from 1.2.0)
 - Render 3D:
   - KiCad 10: support for kicad-cli interface, adds some new options but
     has various limitations, hopping they will be fixed.

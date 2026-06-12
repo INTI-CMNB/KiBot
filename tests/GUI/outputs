@@ -11583,6 +11583,13 @@
           null
         ],
         [
+          "show_copper",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "resistor_remap",
           [
             "DataTypeListDict"

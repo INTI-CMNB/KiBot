@@ -3889,6 +3889,8 @@ outputs:
       # You can use `_kf(FILTER)` as an element in the list to get all the components that pass the filter.
       # You can even use `_kf(FILTER1;FILTER2)` to concatenate filters
       show_components: 'none'
+      # [boolean=true] Show tracks and zones
+      show_copper: true
       # [boolean=true] Show the solder paste layers
       show_solderpaste: true
       # [string='kicad_edge'] [kicad_edge,kicad_all,svg_paths] Method used to detect the size of the resulting image.

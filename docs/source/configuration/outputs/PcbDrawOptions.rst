@@ -58,6 +58,7 @@ PcbDrawOptions parameters
 -  ``resistor_flip`` :index:`: <pair: output - pcbdraw - options; resistor_flip>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) [:ref:`comma separated <comma_sep>`] List of resistors to flip its bands.
 
 -  ``resistor_remap`` :index:`: <pair: output - pcbdraw - options; resistor_remap>`  [:ref:`PcbDrawResistorRemap parameters <PcbDrawResistorRemap>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) List of resistors to be remapped. You can change the value of the resistors here.
+-  ``show_copper`` :index:`: <pair: output - pcbdraw - options; show_copper>` [:ref:`boolean <boolean>`] (default: ``true``) Show tracks and zones.
 -  ``show_solderpaste`` :index:`: <pair: output - pcbdraw - options; show_solderpaste>` [:ref:`boolean <boolean>`] (default: ``true``) Show the solder paste layers.
 -  ``size_detection`` :index:`: <pair: output - pcbdraw - options; size_detection>` [:ref:`string <string>`] (default: ``'kicad_edge'``) (choices: "kicad_edge", "kicad_all", "svg_paths") Method used to detect the size of the resulting image.
    The `kicad_edge` method uses the size of the board as reported by KiCad,
