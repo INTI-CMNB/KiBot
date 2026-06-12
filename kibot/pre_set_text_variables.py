@@ -186,10 +186,10 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         if GS.board:
             # Force a project and PCB reload
             GS.reload_project(pro_name)
-        # Check if we need to force a PCB text variables reset or update
-        if GS.global_invalidate_pcb_text_cache == 'auto':
-            logger.debug('Forcing PCB text variables reset')
-            GS.global_invalidate_pcb_text_cache = 'yes'
+        # Force PCB Cache update for native QR/barcodes in auto
         if GS.global_update_pcb_text_cache == 'auto':
             logger.debug('Forcing PCB text variables update')
             GS.global_update_pcb_text_cache = 'yes'
+        if GS.global_invalidate_pcb_text_cache == 'auto':
+            logger.debug('Skipping PCB text variables reset')
+            GS.global_invalidate_pcb_text_cache = 'no'

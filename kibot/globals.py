@@ -424,7 +424,7 @@ class Globals(FiltersOptions):
                 The `auto` value will remove the cached values only when using `set_text_variables`.
                 Note that at least one of the `invalidate_pcb_text_cache` and `update_pcb_text_cache` config values must be set
                 to 'no', otherwise an error is produced."""
-            self.update_pcb_text_cache = 'no'
+            self.update_pcb_text_cache = 'auto'
             """ [auto,yes,no] Update the text variables cache in the PCB file. This makes the PCB file self-contained (usable
                 without the project file next to it) by copying all text variables from the project file (possibly modified by
                 the `set_text_variables` preflight) into the PCB file (the cache is completely replaced).
@@ -618,7 +618,7 @@ class Globals(FiltersOptions):
                 KiConf.aliases_3D[alias.name] = alias.value
                 logger.debugl(1, '- {}={}'.format(alias.name, alias.value))
             logger.debugl(1, 'Finished adding aliases')
-        if GS.global_invalidate_pcb_text_cache != 'no' and GS.global_update_pcb_text_cache != 'no':
+        if GS.global_invalidate_pcb_text_cache == 'yes' and GS.global_update_pcb_text_cache == 'yes':
             raise KiPlotConfigurationError("At least one of `invalidate_pcb_text_cache` and `update_pcb_text_cache`"
                                            " option must be `no`")
 
