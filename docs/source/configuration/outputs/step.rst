@@ -6,9 +6,9 @@
 STEP (ISO 10303-21 Clear Text Encoding of the Exchange Structure)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Exports the PCB as a 3D model.
+Exports the PCB as a 3D model with KiAuto.
 This is the most common 3D format for exchange purposes. |br|
-For KiCad 9 use the `export_3d` output. |br|
+For KiCad 9 use the `export_3d` output, see :ref:`export_3d`. |br|
 This output is what you get from the 'File/Export/STEP' menu in pcbnew. |br|
 
 Type: ``step``

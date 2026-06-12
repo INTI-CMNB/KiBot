@@ -148,8 +148,9 @@ class Export_3DOptions(Base3DOptions):
 
 @output_class
 class Export_3D(Base3D):
-    """ Various 3D models exports using KiCad (BREP/GLB/STL/STEP/XAO)
-        Exports the PCB as a 3D model using KiCad 9 or newer.
+    """ 3D models exports of various formats using KiCad (BREP/GLB/STL/STEP/XAO)
+        :index:`: <pair: step; export_3d with kicad-cli>`
+        Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli.
         Supported formats include:
         - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
         - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
