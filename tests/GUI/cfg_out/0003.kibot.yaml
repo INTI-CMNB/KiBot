@@ -152,7 +152,7 @@ outputs:
     table: ''
 - name: output.export_3d
   type: export_3d
-  comment: Exports the PCB as a 3D model using KiCad 9 or newer
+  comment: Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli
   options:
     output: output.export_3d.options.dict
 - name: output.gencad
@@ -480,7 +480,7 @@ outputs:
     jigthickness: 20
 - name: output.step
   type: step
-  comment: Exports the PCB as a 3D model
+  comment: Exports the PCB as a 3D model with KiAuto
   options:
     metric_units: false
 - name: output.svg
