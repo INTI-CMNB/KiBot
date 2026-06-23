@@ -10,7 +10,10 @@ Exports the PCB as a 3D model using KiCad 9 or newer.
 Supported formats include:
 
 - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
-- GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly known as WebGL Transmissions Format or WebGL TF. |br|
+- GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
+
+  known as WebGL Transmissions Format or WebGL TF. |br|
+
 - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
 - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
 - BRep: Part of Open CASCADE Technology (OCCT)
