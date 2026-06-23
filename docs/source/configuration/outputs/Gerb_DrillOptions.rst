@@ -60,6 +60,11 @@ Gerb_DrillOptions parameters
 .. _Gerb_DrillOptions_table:
 
 -  ``table`` :index:`: <pair: output - gerb_drill - options; table>`  [:ref:`DrillTable parameters <DrillTable>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``''``) Name of the drill table. Not generated unless a name is specified.
+   
+.. note::
+   if the PCB contains no drills the file won't be generated.
+..
+
 
 .. _Gerb_DrillOptions_use_aux_axis_as_origin:
 

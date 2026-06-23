@@ -138,7 +138,8 @@ class AnyDrill(VariantOptions):
             self.report = DrillReport
             """ [dict|string=''] Name of the drill report. Not generated unless a name is specified """
             self.table = DrillTable
-            """ [dict|string=''] Name of the drill table. Not generated unless a name is specified """
+            """ [dict|string=''] Name of the drill table. Not generated unless a name is specified.
+                Important: if the PCB contains no drills the file won't be generated """
             self.pth_id = None
             """ [string] Force this replacement for %i when generating PTH and unified files """
             self.npth_id = None

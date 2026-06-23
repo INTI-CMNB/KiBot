@@ -92,6 +92,11 @@ ExcellonOptions parameters
 .. _ExcellonOptions_table:
 
 -  ``table`` :index:`: <pair: output - excellon - options; table>`  [:ref:`DrillTable parameters <DrillTable>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``''``) Name of the drill table. Not generated unless a name is specified.
+   
+.. note::
+   if the PCB contains no drills the file won't be generated.
+..
+
 
 .. _ExcellonOptions_use_aux_axis_as_origin:
 

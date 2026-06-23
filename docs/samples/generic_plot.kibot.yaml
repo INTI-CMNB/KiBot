@@ -1433,7 +1433,8 @@ outputs:
       right_digits: 0
       # [boolean=true] Use route command for oval holes (G00), otherwise use G85
       route_mode_for_oval_holes: true
-      # [dict|string=''] Name of the drill table. Not generated unless a name is specified
+      # [dict|string=''] Name of the drill table. Not generated unless a name is specified.
+      # Important: if the PCB contains no drills the file won't be generated
       table:
         # [list(dict)|list(string)] List of columns to display.
         # Each entry can be a dictionary with `field`, `name` or just a string (field name)
@@ -1647,7 +1648,8 @@ outputs:
         # [string=''] Name of the drill report. Not generated unless a name is specified.
         # (%i='drill_report' %x='txt')
         filename: ''
-      # [dict|string=''] Name of the drill table. Not generated unless a name is specified
+      # [dict|string=''] Name of the drill table. Not generated unless a name is specified.
+      # Important: if the PCB contains no drills the file won't be generated
       table:
         # [list(dict)|list(string)] List of columns to display.
         # Each entry can be a dictionary with `field`, `name` or just a string (field name)
