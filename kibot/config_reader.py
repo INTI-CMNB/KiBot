@@ -1280,6 +1280,8 @@ def adapt_text(text, cl=None):
 
 
 def adapt_to_rst_urls(text, cl=None):
+    if text is None:
+        return None
     if rst_mode and cl is not None:
         # Replace "See `XXXX`" by "See :ref:`OPTION <CLASS_OPTION>`"
         # This creates a reference to a local option
