@@ -59,6 +59,8 @@ comp_range_regex = re.compile(r'([a-zA-Z]+)(\d+)-([a-zA-Z]+)(\d+)')
 
 
 class BaseOutput(RegOutput):
+    _extra_index_pairs = []
+
     def __init__(self):
         super().__init__()
         with document:

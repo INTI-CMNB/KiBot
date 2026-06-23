@@ -149,18 +149,23 @@ class Export_3DOptions(Base3DOptions):
 
 @output_class
 class Export_3D(Base3D):
-    """ Various 3D models exports using KiCad (BREP/GLB/STL/STEP/XAO)
-        Exports the PCB as a 3D model using KiCad 9 or newer.
+    """ 3D models exports of various formats using KiCad (BREP/GLB/STL/STEP/XAO)
+        Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli.
         Supported formats include:
         - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
         - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
-          known as WebGL Transmissions Format or WebGL TF.
+        > known as WebGL Transmissions Format or WebGL TF.
         - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
         - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
         - BRep: Part of Open CASCADE Technology (OCCT)
-        STEP is the most common 3D format for exchange purposes """
+        STEP is the most common 3D format for exchange purposes
+    """
     # OCCT 7.7 needed, how to detect?
     #   - PLY: Polygon File Format or the Stanford Triangle Format.
+
+    # This adds a cross reference in the "step" index entry so people can find `export_3d`
+    _extra_index_pairs = [('step', 'export_3d with kicad-cli')]
+
     def __init__(self):
         super().__init__()
         with document:

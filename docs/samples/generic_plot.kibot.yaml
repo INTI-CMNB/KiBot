@@ -1456,17 +1456,17 @@ outputs:
       variant: ''
       # [string='DECIMAL_FORMAT'] [DECIMAL_FORMAT,SUPPRESS_LEADING,SUPPRESS_TRAILING,KEEP_ZEROS] How to handle the zeros
       zeros_format: 'DECIMAL_FORMAT'
-  # Various 3D models exports using KiCad (BREP/GLB/STL/STEP/XAO):
+  # 3D models exports of various formats using KiCad (BREP/GLB/STL/STEP/XAO):
   # Supported formats include:
   # - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
   # - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
-  #   known as WebGL Transmissions Format or WebGL TF.
+  # > known as WebGL Transmissions Format or WebGL TF.
   # - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
   # - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
   # - BRep: Part of Open CASCADE Technology (OCCT)
   # STEP is the most common 3D format for exchange purposes
   - name: 'export_3d_example'
-    comment: 'Exports the PCB as a 3D model using KiCad 9 or newer.'
+    comment: 'Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli.'
     type: 'export_3d'
     dir: 'Example/export_3d_dir'
     options:
@@ -4904,10 +4904,10 @@ outputs:
       variant: ''
   # STEP (ISO 10303-21 Clear Text Encoding of the Exchange Structure):
   # This is the most common 3D format for exchange purposes.
-  # For KiCad 9 use the `export_3d` output.
+  # For KiCad 9 use the `export_3d` output, see the `export_3d` output.
   # This output is what you get from the 'File/Export/STEP' menu in pcbnew.
   - name: 'step_example'
-    comment: 'Exports the PCB as a 3D model.'
+    comment: 'Exports the PCB as a 3D model with KiAuto.'
     type: 'step'
     dir: 'Example/step_dir'
     options:
