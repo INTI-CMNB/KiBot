@@ -957,6 +957,8 @@ def print_output_options(name, cl, indent, context=None, skip_keys=False, skip_o
                     print()
                 if ln < clines-1 and lines[ln+1].lstrip()[0] == '.':
                     text += ' |br|'
+            elif text[0] == '>' and in_list:
+                text = ' ' + text[1:]
             else:
                 if in_list:
                     in_list = False

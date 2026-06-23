@@ -21,9 +21,7 @@ Export_3DOptions parameters
 
    - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
    - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
-
-   known as WebGL Transmissions Format or WebGL TF. |br|
-
+     known as WebGL Transmissions Format or WebGL TF. |br|
    - STL: 3D printer format, from stereolithography CAD software created by 3D Systems. |br|
    - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations. |br|
    - BRep: Part of Open CASCADE Technology (OCCT)
