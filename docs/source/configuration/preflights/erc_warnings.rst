@@ -9,5 +9,8 @@ ERC Warnings (**Deprecated**)
 Option for `run_erc`. ERC warnings are considered errors.
 Use the `warnings_as_errors` option from `run_erc`/`erc` instead
 
+
+.. _ERC_Warnings_erc_warnings:
+
    -  **erc_warnings** :index:`: <pair: preflight - erc_warnings; erc_warnings>` [:ref:`boolean <boolean>`] (default: ``false``) Enable this preflight.
 

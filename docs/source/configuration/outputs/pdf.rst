@@ -21,14 +21,29 @@ Category: **PCB/docs**
 
 Parameters:
 
+
+.. _PDF_comment:
+
 -  **comment** :index:`: <pair: output - pdf; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes. It helps to identify the output.
+
+.. _PDF_dir:
+
 -  **dir** :index:`: <pair: output - pdf; dir>` [:ref:`string <string>`] (default: ``'./'``) Output directory for the generated files.
    If it starts with `+` the rest is concatenated to the default dir.
+
+.. _PDF_layers:
+
 -  **layers** :index:`: <pair: output - pdf; layers>`  [:ref:`Layer parameters <Layer>`] [:ref:`list(dict) <list(dict)>` | :ref:`list(string) <list(string)>` | :ref:`string <string>`] (default: ``'all'``) (choices: "all", "selected", "copper", "technical", "user", "inners", "outers") (also accepts any string) List
    of PCB layers to plot.
+
+.. _PDF_name:
+
 -  **name** :index:`: <pair: output - pdf; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular output definition.
    Avoid using `_` as first character. These names are reserved for KiBot.
 -  **options** :index:`: <pair: output - pdf; options>`  [:ref:`PDFOptions parameters <PDFOptions>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the `pdf` output.
+
+.. _PDF_output:
+
 -  **output** :index:`: <pair: output - pdf; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Output file name, the default KiCad name if empty.
 
 .. note::
@@ -37,45 +52,96 @@ Parameters:
                    them uses the default KiCad name. Affected by global options. |br|
 ..
 
+
+.. _PDF_plot_sheet_reference:
+
 -  **plot_sheet_reference** :index:`: <pair: output - pdf; plot_sheet_reference>` [:ref:`boolean <boolean>`] (default: ``false``) Include the frame and title block. Only available for KiCad 6+ and you get a poor result
    (i.e. always the default worksheet style, also problems expanding text variables). |br|
    The `pcb_print` output can do a better job for PDF, SVG, PS, EPS and PNG outputs.
+
+.. _PDF_scaling:
+
 -  **scaling** :index:`: <pair: output - pdf; scaling>` [:ref:`number <number>`] (default: ``1``) Scale factor (0 means autoscaling).
+
+.. _PDF_type:
+
 -  **type** :index:`: <pair: output - pdf; type>` 'pdf'
+
+.. _PDF_category:
+
 -  ``category`` :index:`: <pair: output - pdf; category>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) [:ref:`comma separated <comma_sep>`] The category for this output. If not specified an internally defined
    category is used. |br|
    Categories looks like file system paths, i.e. **PCB/fabrication/gerber**. |br|
    Using '.' or './' as a category puts the file at the root. |br|
    The categories are currently used for `navigate_results` and `navigate_results_rb`.
 
+
+.. _PDF_custom_reports:
+
 -  ``custom_reports`` :index:`: <pair: output - pdf; custom_reports>`  [:ref:`CustomReport parameters <CustomReport>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A list of customized reports for the manufacturer.
+
+.. _PDF_disable_run_by_default:
+
 -  ``disable_run_by_default`` :index:`: <pair: output - pdf; disable_run_by_default>` [:ref:`string <string>` | :ref:`boolean <boolean>`] (default: ``''``) Use it to disable the `run_by_default` status of other output.
    Useful when this output extends another and you don't want to generate the original. |br|
    Use the boolean true value to disable the output you are extending.
+
+.. _PDF_dnf_filter:
+
 -  ``dnf_filter`` :index:`: <pair: output - pdf; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as not fitted.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _PDF_drill_marks:
+
 -  ``drill_marks`` :index:`: <pair: output - pdf; drill_marks>` [:ref:`string <string>`] (default: ``'full'``) (choices: "none", "small", "full") What to use to indicate the drill places, can be none, small or full (for real scale).
+
+.. _PDF_edge_cut_extension:
+
 -  ``edge_cut_extension`` :index:`: <pair: output - pdf; edge_cut_extension>` [:ref:`string <string>`] (default: ``''``) Used to configure the edge cuts layer extension for Protel mode. Include the dot.
+
+.. _PDF_exclude_edge_layer:
+
 -  ``exclude_edge_layer`` :index:`: <pair: output - pdf; exclude_edge_layer>` [:ref:`boolean <boolean>`] (default: ``true``) Do not include the PCB edge layer.
+
+.. _PDF_exclude_filter:
+
 -  ``exclude_filter`` :index:`: <pair: output - pdf; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to exclude components from processing.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _PDF_exclude_pads_from_silkscreen:
+
 -  ``exclude_pads_from_silkscreen`` :index:`: <pair: output - pdf; exclude_pads_from_silkscreen>` [:ref:`boolean <boolean>`] (default: ``false``) Do not plot the component pads in the silk screen (KiCad 5.x only).
+
+.. _PDF_extends:
+
 -  ``extends`` :index:`: <pair: output - pdf; extends>` [:ref:`string <string>`] (default: ``''``) Copy the `options` section from the indicated output.
    Used to inherit options from another output of the same type.
+
+.. _PDF_force_plot_invisible_refs_vals:
+
 -  ``force_plot_invisible_refs_vals`` :index:`: <pair: output - pdf; force_plot_invisible_refs_vals>` [:ref:`boolean <boolean>`] (default: ``false``) Include references and values even when they are marked as invisible.
    Not available on KiCad 9.0.1 and newer.
+
+.. _PDF_groups:
+
 -  ``groups`` :index:`: <pair: output - pdf; groups>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) One or more groups to add this output. In order to catch typos
    we recommend to add outputs only to existing groups. You can create an empty group if
    needed.
 
+
+.. _PDF_individual_page_scaling:
+
 -  ``individual_page_scaling`` :index:`: <pair: output - pdf; individual_page_scaling>` [:ref:`boolean <boolean>`] (default: ``true``) Tell KiCad to apply the scaling for each layer as a separated entity.
    Disabling it the pages are coherent and can be superposed.
+
+.. _PDF_inner_extension_pattern:
+
 -  ``inner_extension_pattern`` :index:`: <pair: output - pdf; inner_extension_pattern>` [:ref:`string <string>`] (default: ``''``) Used to change the Protel style extensions for inner layers.
    The replacement pattern can contain %n for the inner layer number and %N for the layer number. |br|
    Example '.g%n'. |br|
@@ -85,27 +151,60 @@ Parameters:
                    isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1. |br|
 ..
 
+
+.. _PDF_output_id:
+
 -  ``output_id`` :index:`: <pair: output - pdf; output_id>` [:ref:`string <string>`] (default: ``''``) Text to use for the %I expansion content. To differentiate variations of this output.
+
+.. _PDF_plot_footprint_refs:
+
 -  ``plot_footprint_refs`` :index:`: <pair: output - pdf; plot_footprint_refs>` [:ref:`boolean <boolean>`] (default: ``true``) Include the footprint references.
+
+.. _PDF_plot_footprint_values:
+
 -  ``plot_footprint_values`` :index:`: <pair: output - pdf; plot_footprint_values>` [:ref:`boolean <boolean>`] (default: ``true``) Include the footprint values.
+
+.. _PDF_pre_transform:
+
 -  ``pre_transform`` :index:`: <pair: output - pdf; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
    Is a short-cut to use for simple cases where a variant is an overkill. |br|
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _PDF_priority:
+
 -  ``priority`` :index:`: <pair: output - pdf; priority>` [:ref:`number <number>`] (default: ``50``) (range: 0 to 100) Priority for this output. High priority outputs are created first.
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
+
+.. _PDF_run_by_default:
+
 -  ``run_by_default`` :index:`: <pair: output - pdf; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
--  ``sketch_pad_line_width`` :index:`: <pair: output - pdf; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
+
+.. _PDF_sketch_pad_line_width:
+
+-  ``sketch_pad_line_width`` :index:`: <pair: output - pdf; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <PDF_sketch_pads_on_fab_layers>` (KiCad 6+)
    Note that this value is currently ignored by KiCad (6.0.9).
+
+.. _PDF_sketch_pads_on_fab_layers:
+
 -  ``sketch_pads_on_fab_layers`` :index:`: <pair: output - pdf; sketch_pads_on_fab_layers>` [:ref:`boolean <boolean>`] (default: ``false``) Draw only the outline of the pads on the \\*.Fab layers (KiCad 6+).
+
+.. _PDF_tent_vias:
+
 -  ``tent_vias`` :index:`: <pair: output - pdf; tent_vias>` [:ref:`boolean <boolean>`] (default: ``true``) Cover the vias. Usable for KiCad versions older than 9.
    
 .. warning::
    KiCad 8 has a bug that ignores this option. Set it from KiCad GUI.
 ..
 
+
+.. _PDF_uppercase_extensions:
+
 -  ``uppercase_extensions`` :index:`: <pair: output - pdf; uppercase_extensions>` [:ref:`boolean <boolean>`] (default: ``false``) Use uppercase names for the extensions.
+
+.. _PDF_variant:
+
 -  ``variant`` :index:`: <pair: output - pdf; variant>` [:ref:`string <string>`] (default: ``''``) Board variant to apply.
 
 Used dicts

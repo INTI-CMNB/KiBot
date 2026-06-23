@@ -20,31 +20,64 @@ Category: **Schematic/docs**
 
 Parameters:
 
+
+.. _HPGL_SCH_Print_comment:
+
 -  **comment** :index:`: <pair: output - hpgl_sch_print; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes. It helps to identify the output.
+
+.. _HPGL_SCH_Print_dir:
+
 -  **dir** :index:`: <pair: output - hpgl_sch_print; dir>` [:ref:`string <string>`] (default: ``'./'``) Output directory for the generated files.
    If it starts with `+` the rest is concatenated to the default dir.
+
+.. _HPGL_SCH_Print_name:
+
 -  **name** :index:`: <pair: output - hpgl_sch_print; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular output definition.
    Avoid using `_` as first character. These names are reserved for KiBot.
 -  **options** :index:`: <pair: output - hpgl_sch_print; options>`  [:ref:`HPGL_SCH_PrintOptions parameters <HPGL_SCH_PrintOptions>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the `hpgl_sch_print` output.
+
+.. _HPGL_SCH_Print_type:
+
 -  **type** :index:`: <pair: output - hpgl_sch_print; type>` 'hpgl_sch_print'
+
+.. _HPGL_SCH_Print_category:
+
 -  ``category`` :index:`: <pair: output - hpgl_sch_print; category>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) [:ref:`comma separated <comma_sep>`] The category for this output. If not specified an internally defined
    category is used. |br|
    Categories looks like file system paths, i.e. **PCB/fabrication/gerber**. |br|
    Using '.' or './' as a category puts the file at the root. |br|
    The categories are currently used for `navigate_results` and `navigate_results_rb`.
 
+
+.. _HPGL_SCH_Print_disable_run_by_default:
+
 -  ``disable_run_by_default`` :index:`: <pair: output - hpgl_sch_print; disable_run_by_default>` [:ref:`string <string>` | :ref:`boolean <boolean>`] (default: ``''``) Use it to disable the `run_by_default` status of other output.
    Useful when this output extends another and you don't want to generate the original. |br|
    Use the boolean true value to disable the output you are extending.
+
+.. _HPGL_SCH_Print_extends:
+
 -  ``extends`` :index:`: <pair: output - hpgl_sch_print; extends>` [:ref:`string <string>`] (default: ``''``) Copy the `options` section from the indicated output.
    Used to inherit options from another output of the same type.
+
+.. _HPGL_SCH_Print_groups:
+
 -  ``groups`` :index:`: <pair: output - hpgl_sch_print; groups>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) One or more groups to add this output. In order to catch typos
    we recommend to add outputs only to existing groups. You can create an empty group if
    needed.
 
+
+.. _HPGL_SCH_Print_output_id:
+
 -  ``output_id`` :index:`: <pair: output - hpgl_sch_print; output_id>` [:ref:`string <string>`] (default: ``''``) Text to use for the %I expansion content. To differentiate variations of this output.
+
+.. _HPGL_SCH_Print_priority:
+
 -  ``priority`` :index:`: <pair: output - hpgl_sch_print; priority>` [:ref:`number <number>`] (default: ``50``) (range: 0 to 100) Priority for this output. High priority outputs are created first.
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
+
+.. _HPGL_SCH_Print_run_by_default:
+
 -  ``run_by_default`` :index:`: <pair: output - hpgl_sch_print; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
 
 Used dicts

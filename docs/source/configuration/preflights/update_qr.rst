@@ -10,5 +10,8 @@ Update the QR codes.
 Complements the `qr_lib` output. |br|
 The KiCad 6 files and the KiCad 5 PCB needs manual update, generating a new library isn't enough
 
+
+.. _Update_QR_update_qr:
+
    -  **update_qr** :index:`: <pair: preflight - update_qr; update_qr>` [:ref:`boolean <boolean>`] (default: ``false``) Enable this preflight.
 

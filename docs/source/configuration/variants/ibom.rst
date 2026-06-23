@@ -10,31 +10,64 @@
    If this value matches with a value in the whitelist is included. |br|
    If this value matches with a value in the blacklist is excluded
 
+
+.. _IBoM_comment:
+
    -  ``comment`` :index:`: <pair: variant - ibom; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _IBoM_dnc_filter:
+
    -  ``dnc_filter`` :index:`: <pair: variant - ibom; dnc_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as 'Do Not Change'.
       Use '_kibom_dnc' for the default KiBoM behavior.
+
+
+.. _IBoM_dnf_filter:
 
    -  ``dnf_filter`` :index:`: <pair: variant - ibom; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as 'Do Not Fit'.
       Use '_kibom_dnf' for the default KiBoM behavior. |br|
       Use '_kicost_dnp'' for the default KiCost behavior.
 
+
+.. _IBoM_exclude_filter:
+
    -  ``exclude_filter`` :index:`: <pair: variant - ibom; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_mechanical'``) Name of the filter to exclude components from BoM processing.
       Use '_mechanical' for the default KiBoM behavior.
 
+
+.. _IBoM_file_id:
+
    -  ``file_id`` :index:`: <pair: variant - ibom; file_id>` [:ref:`string <string>`] (default: ``''``) Text to use as the replacement for %v expansion.
+
+.. _IBoM_name:
+
    -  ``name`` :index:`: <pair: variant - ibom; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular variant definition.
+
+.. _IBoM_pre_transform:
+
    -  ``pre_transform`` :index:`: <pair: variant - ibom; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
       Use '_var_rename' to transform VARIANT:FIELD fields. |br|
       Use '_var_rename_kicost' to transform kicost.VARIANT:FIELD fields. |br|
       Use '_kicost_rename' to apply KiCost field rename rules.
+
+
+.. _IBoM_sub_pcbs:
 
    -  ``sub_pcbs`` :index:`: <pair: variant - ibom; sub_pcbs>`  [:ref:`SubPCBOptions parameters <SubPCBOptions>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) Used for multi-board workflows as defined by KiKit.
       I don't recommend using it, for detail read
       `this <https://github.com/INTI-CMNB/KiBot/tree/master/docs/1_SCH_2_part_PCBs>`__. |br|
       But if you really need it you can define the sub-PCBs here. |br|
       Then you just use *VARIANT[SUB_PCB_NAME]* instead of just *VARIANT*.
+
+.. _IBoM_variant_field:
+
    -  ``variant_field`` :index:`: <pair: variant - ibom; variant_field>` [:ref:`string <string>`] (default: ``'Config'``) Name of the field that stores board variant for component.
+
+.. _IBoM_variants_blacklist:
+
    -  ``variants_blacklist`` :index:`: <pair: variant - ibom; variants_blacklist>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`comma separated <comma_sep>`] List of board variants to exclude from the BOM.
+
+
+.. _IBoM_variants_whitelist:
 
    -  ``variants_whitelist`` :index:`: <pair: variant - ibom; variants_whitelist>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`comma separated <comma_sep>`] List of board variants to include in the BOM.
 

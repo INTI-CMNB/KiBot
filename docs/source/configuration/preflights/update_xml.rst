@@ -11,6 +11,9 @@ To ensure our generated BoM is up to date. |br|
 Note that this isn't needed when using the internal BoM generator (`bom`). |br|
 You can compare the PCB and schematic netlists using it (KiCad 6 and 7 only)
 
+
+.. _Update_XML_update_xml:
+
    -  **update_xml** :index:`: <pair: preflight - update_xml; update_xml>`  [:ref:`Update_XMLOptions parameters <Update_XMLOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
 Used dicts

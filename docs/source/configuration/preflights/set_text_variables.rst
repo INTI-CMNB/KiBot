@@ -17,6 +17,9 @@ You can get text variables containing the names of the schematics sheets enablin
        don't use `-s all` or this preflight will be skipped
 .. 
 
+
+.. _Set_Text_Variables_set_text_variables:
+
    -  **set_text_variables** :index:`: <pair: preflight - set_text_variables; set_text_variables>`  [:ref:`KiCadVariable parameters <KiCadVariable_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) One or more variable definition.
 
 Used dicts

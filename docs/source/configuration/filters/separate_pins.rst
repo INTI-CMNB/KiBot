@@ -18,11 +18,26 @@ Separate Pins
 ..
 
 
+
+.. _Separate_Pins_comment:
+
    -  **comment** :index:`: <pair: filter - separate_pins; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Separate_Pins_name:
+
    -  **name** :index:`: <pair: filter - separate_pins; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Separate_Pins_attribute:
+
    -  ``attribute`` :index:`: <pair: filter - separate_pins; attribute>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``['testpoint']``) (choices: "bga", "local_fiducial", "global_fiducial", "testpoint", "heatsink", "castellated", "none") Fabrication
       attribute/s of the included pads.
 
+
+.. _Separate_Pins_keep_component:
+
    -  ``keep_component`` :index:`: <pair: filter - separate_pins; keep_component>` [:ref:`boolean <boolean>`] (default: ``false``) If we also keep the original component or we just get the selected pads.
+
+.. _Separate_Pins_ref_sep:
+
    -  ``ref_sep`` :index:`: <pair: filter - separate_pins; ref_sep>` [:ref:`string <string>`] (default: ``'.'``) Separator used in the reference (i.e. R10.1).
 

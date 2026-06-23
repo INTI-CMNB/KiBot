@@ -11,8 +11,17 @@ Footprint Rotator
    The `JLCPCB Rotation Offset` and `JLCPCB Position Offset` fields can be used to adjust special cases. |br|
    The internal `_rot_footprint` filter implements the simplest case. |br|
 
+
+.. _Rot_Footprint_comment:
+
    -  **comment** :index:`: <pair: filter - rot_footprint; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Rot_Footprint_name:
+
    -  **name** :index:`: <pair: filter - rot_footprint; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Rot_Footprint_bennymeg_mode:
+
    -  ``bennymeg_mode`` :index:`: <pair: filter - rot_footprint; bennymeg_mode>` [:ref:`boolean <boolean>`] (default: ``true``) Implements the `rot_fields` and `offset_fields` in the same way that the bennymeg/JLC-Plugin-for-KiCad tool.
       Note that the computation for bottom rotations is wrong, forcing the user to uses arbitrary rotations. |br|
       The correct computation is `(180 - component rot) + angle` but the plugin does `180 - (component rot + angle)`. |br|
@@ -20,35 +29,68 @@ Footprint Rotator
       This option also controls the way offset signs are interpreted. When enabled the offsets matches this plugin,
       when disabled matches the interpretation used by the matthewlai/JLCKicadTools plugin. |br|
       Disabling this option you'll get better algorithms, but loose compatibility with this plugin.
+
+.. _Rot_Footprint_extend:
+
    -  ``extend`` :index:`: <pair: filter - rot_footprint; extend>` [:ref:`boolean <boolean>`] (default: ``true``) Extends the internal list of rotations with the one provided.
       Otherwise just use the provided list. |br|
       Note that the provided list has more precedence than the internal list.
+
+.. _Rot_Footprint_invert_bottom:
+
    -  ``invert_bottom`` :index:`: <pair: filter - rot_footprint; invert_bottom>` [:ref:`boolean <boolean>`] (default: ``false``) Rotation for bottom components is negated, resulting in either: `(- component rot - angle)`
       or when combined with `negative_bottom`, `(angle - component rot)`.
+
+.. _Rot_Footprint_mirror_bottom:
+
    -  ``mirror_bottom`` :index:`: <pair: filter - rot_footprint; mirror_bottom>` [:ref:`boolean <boolean>`] (default: ``false``) The original component rotation for components in the bottom is mirrored before applying
       the adjust so you get `(180 - component rot + angle)`. This is used by JLCPCB.
+
+.. _Rot_Footprint_negative_bottom:
+
    -  ``negative_bottom`` :index:`: <pair: filter - rot_footprint; negative_bottom>` [:ref:`boolean <boolean>`] (default: ``true``) Rotation for bottom components is computed via subtraction as `(component rot - angle)`.
+
+.. _Rot_Footprint_offset_fields:
+
    -  ``offset_fields`` :index:`: <pair: filter - rot_footprint; offset_fields>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``['JLCPCB Position Offset', 'JLCPosOffset']``) [:ref:`comma separated <comma_sep>`] List of fields that can contain a position offset.
       The optional fields can contain a comma separated x,y position offset. |br|
       This concept is from the bennymeg/JLC-Plugin-for-KiCad tool.
+
+
+.. _Rot_Footprint_offsets:
 
    -  ``offsets`` :index:`: <pair: filter - rot_footprint; offsets>` [:ref:`list(list(string)) <list(list(string))>`] (default: ``[]``) A list of pairs regular expression/offset.
       Footprints matching the regular expression will be moved the specified offset. |br|
       The offset must be two numbers separated by a comma. The first is the X offset. |br|
       The signs matches the matthewlai/JLCKicadTools plugin specs.
 
+
+.. _Rot_Footprint_rot_fields:
+
    -  ``rot_fields`` :index:`: <pair: filter - rot_footprint; rot_fields>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``['JLCPCB Rotation Offset', 'JLCRotOffset']``) [:ref:`comma separated <comma_sep>`] List of fields that can contain a rotation offset.
       The optional fields can contain a counter-clockwise orientation offset in degrees. |br|
       This concept is from the bennymeg/JLC-Plugin-for-KiCad tool.
+
+
+.. _Rot_Footprint_rotations:
 
    -  ``rotations`` :index:`: <pair: filter - rot_footprint; rotations>` [:ref:`list(list(string)) <list(list(string))>`] (default: ``[]``) A list of pairs regular expression/rotation.
       Footprints matching the regular expression will be rotated the indicated angle. |br|
       The angle matches the matthewlai/JLCKicadTools plugin specs.
 
+
+.. _Rot_Footprint_rotations_and_offsets:
+
    -  ``rotations_and_offsets`` :index:`: <pair: filter - rot_footprint; rotations_and_offsets>`  [:ref:`Regex parameters <Regex_fi>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A list of rules to match components and specify the rotation and offsets.
       This is a more flexible version of the `rotations` and `offsets` options. |br|
       Note that this list has more precedence.
+
+.. _Rot_Footprint_skip_bottom:
+
    -  ``skip_bottom`` :index:`: <pair: filter - rot_footprint; skip_bottom>` [:ref:`boolean <boolean>`] (default: ``false``) Do not rotate components on the bottom.
+
+.. _Rot_Footprint_skip_top:
+
    -  ``skip_top`` :index:`: <pair: filter - rot_footprint; skip_top>` [:ref:`boolean <boolean>`] (default: ``false``) Do not rotate components on the top.
 
 Used dicts

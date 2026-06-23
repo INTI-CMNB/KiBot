@@ -6,6 +6,9 @@
 SCH_ReplaceOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+.. _SCH_ReplaceOptions_date_command:
+
 -  ``date_command`` :index:`: <pair: preflight - sch_replace - sch_replace; date_command>` [:ref:`string <string>`] (default: ``''``) Command to get the date to use in the SCH. |br|
    ```git log -1 --format='%as' -- "$KIBOT_SCH_NAME"``` |br|
    Will return the date in YYYY-MM-DD format. |br|
@@ -16,6 +19,9 @@ SCH_ReplaceOptions parameters
       on KiCad 6 the title block data is optional. |br|
                    This command will work only if you have a date in the SCH/Schematic. |br|
 ..
+
+
+.. _SCH_ReplaceOptions_replace_tags:
 
 -  ``replace_tags`` :index:`: <pair: preflight - sch_replace - sch_replace; replace_tags>`  [:ref:`TagReplaceSCH parameters <TagReplaceSCH_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) Tag or tags to replace.
 

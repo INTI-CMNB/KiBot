@@ -9,8 +9,17 @@ Field Renamer
    This filter implements a field renamer. |br|
    The internal `_kicost_rename` filter emulates the KiCost behavior. |br|
 
+
+.. _Field_Rename_comment:
+
    -  **comment** :index:`: <pair: filter - field_rename; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Field_Rename_name:
+
    -  **name** :index:`: <pair: filter - field_rename; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Field_Rename_rename:
+
    -  ``rename`` :index:`: <pair: filter - field_rename; rename>`  [:ref:`FieldRename parameters <FieldRename_fi>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) Fields to rename.
 
 Used dicts

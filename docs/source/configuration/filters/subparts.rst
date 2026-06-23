@@ -17,22 +17,67 @@ Subparts (**Deprecated**)
    You can also explicitly add extra components in the schematic and mark them as not for the
    PCB. |br|
 
+
+.. _Subparts_comment:
+
    -  **comment** :index:`: <pair: filter - subparts; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Subparts_name:
+
    -  **name** :index:`: <pair: filter - subparts; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Subparts_check_multiplier:
+
    -  ``check_multiplier`` :index:`: <pair: filter - subparts; check_multiplier>` [:ref:`list(string) <list(string)>`] (default: computed for your project) List of fields to include for multiplier computation.
       If empty all fields in `split_fields` and `manf_pn_field` are used.
 
+
+.. _Subparts_manf_field:
+
    -  ``manf_field`` :index:`: <pair: filter - subparts; manf_field>` [:ref:`string <string>`] (default: ``'manf'``) Field for the manufacturer name.
+
+.. _Subparts_manf_pn_field:
+
    -  ``manf_pn_field`` :index:`: <pair: filter - subparts; manf_pn_field>` [:ref:`string <string>`] (default: ``'manf#'``) Field for the manufacturer part number.
+
+.. _Subparts_modify_first_value:
+
    -  ``modify_first_value`` :index:`: <pair: filter - subparts; modify_first_value>` [:ref:`boolean <boolean>`] (default: ``true``) Modify even the value for the first component in the list (KiCost behavior).
+
+.. _Subparts_modify_value:
+
    -  ``modify_value`` :index:`: <pair: filter - subparts; modify_value>` [:ref:`boolean <boolean>`] (default: ``true``) Add '- p N/M' to the value.
+
+.. _Subparts_mult_separators:
+
    -  ``mult_separators`` :index:`: <pair: filter - subparts; mult_separators>` [:ref:`string <string>`] (default: ``':'``) Separators used for the multiplier. Each character in this string is a valid separator.
+
+.. _Subparts_multiplier:
+
    -  ``multiplier`` :index:`: <pair: filter - subparts; multiplier>` [:ref:`boolean <boolean>`] (default: ``true``) Enables the subpart multiplier mechanism.
+
+.. _Subparts_ref_sep:
+
    -  ``ref_sep`` :index:`: <pair: filter - subparts; ref_sep>` [:ref:`string <string>`] (default: ``'#'``) Separator used in the reference (i.e. R10#1).
+
+.. _Subparts_separators:
+
    -  ``separators`` :index:`: <pair: filter - subparts; separators>` [:ref:`string <string>`] (default: ``';,'``) Separators used between subparts. Each character in this string is a valid separator.
+
+.. _Subparts_split_fields:
+
    -  ``split_fields`` :index:`: <pair: filter - subparts; split_fields>` [:ref:`list(string) <list(string)>`] (default: ``['arrow#', 'digikey#', 'farnell#', 'lcsc#', 'mouser#', 'newark#', 'rs#', 'tme#']``) List of fields to split, usually the distributors part numbers.
 
+
+.. _Subparts_split_fields_expand:
+
    -  ``split_fields_expand`` :index:`: <pair: filter - subparts; split_fields_expand>` [:ref:`boolean <boolean>`] (default: ``false``) When `true` the fields in `split_fields` are added to the internal names.
+
+.. _Subparts_use_ref_sep_for_first:
+
    -  ``use_ref_sep_for_first`` :index:`: <pair: filter - subparts; use_ref_sep_for_first>` [:ref:`boolean <boolean>`] (default: ``true``) Force the reference separator use even for the first component in the list (KiCost behavior).
+
+.. _Subparts_value_alt_field:
+
    -  ``value_alt_field`` :index:`: <pair: filter - subparts; value_alt_field>` [:ref:`string <string>`] (default: ``'value_subparts'``) Field containing replacements for the `Value` field. So we get real values for split parts.
 

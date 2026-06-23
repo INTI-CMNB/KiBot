@@ -6,11 +6,23 @@
 IncludeTableOptions parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+.. _IncludeTableOptions_outputs:
+
 -  **outputs** :index:`: <pair: output - pcb_print - options - include_table; outputs>`  [:ref:`IncTableOutputOptions parameters <IncTableOutputOptions>`] [:ref:`list(dict) <list(dict)>` | :ref:`list(string) <list(string)>` | :ref:`string <string>`] (default: computed for your project) List of CSV-generating outputs.
    When empty we include all possible outputs.
+
+.. _IncludeTableOptions_enabled:
+
 -  ``enabled`` :index:`: <pair: output - pcb_print - options - include_table; enabled>` [:ref:`boolean <boolean>`] (default: ``true``) Enable the check. This is the replacement for the boolean value.
+
+.. _IncludeTableOptions_format_drill_table:
+
 -  ``format_drill_table`` :index:`: <pair: output - pcb_print - options - include_table; format_drill_table>` [:ref:`boolean <boolean>`] (default: ``true``) If True, CSV drill tables will have drill marks displayed on the left and
    an extra bottom rule for the total number of holes.
+
+.. _IncludeTableOptions_group_name:
+
 -  ``group_name`` :index:`: <pair: output - pcb_print - options - include_table; group_name>` [:ref:`string <string>`] (default: ``'kibot_table'``) Name for the group containing the table. The name of the group
    should be <group_name>_X where X is the output name. |br|
    When the output generates more than one CSV use *kibot_table_out[2]*
