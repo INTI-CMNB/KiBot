@@ -105,6 +105,11 @@ Fixed
    -  When using a –variant and an specific target, it was generated for
       the first variant in the list, not the rest
 
+-  Filters:
+
+   -  Applied only to the first copy of a KiKit panel with default
+      ``renameref`` (#937)
+
 -  Gerber Drill:
 
    -  Avoid showing an error when KiCad 10 skips a drill file (See #928)

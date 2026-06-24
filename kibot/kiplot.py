@@ -507,11 +507,16 @@ def get_board_comps_data(comps, kicad_variant=None):
                     if c is None:
                         continue
                 else:
+                    # This isn't normal, but KiKit can create a panel with repeated references
+                    # In this case we have an schematic with M components and a PCB with N*M components
+                    # N repeated components in the PCB points to the same component in the schematic
                     logger.debugl(3, f"Repeated {c.ref}/{ref}")
-                    continue
+                    c = c.copy()
+                    logger.warning(W_REPREF+"Repeated component in PCB, normal for a KiKit panel")
             else:
                 # When using references they can be repeated
                 # We already got this reference and filled the PCB info, this is another copy
+                logger.debugl(3, f"Repeated {c.ref}/{ref}")
                 c = c.copy()
             comps.append(c)
 
