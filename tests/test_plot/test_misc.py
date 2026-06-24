@@ -2151,3 +2151,65 @@ def test_vrml_1(test_dir):
     ctx.expect_out_file(prj+'-vrml.wrl')
     ctx.search_err('Missing component in generated VRML', invert=True)
     ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki9(), reason="Just checking with modern KiCad")
+def test_panel_rotation_plain(test_dir):
+    """ This is related to #936/#937
+        We try to generate a position file from a panel with repeated references.
+        N components points to the same schematic component """
+    prj = 'panel_rotation'
+    ctx = context.TestContext(test_dir, prj, prj)
+    # Create a panel with C5, C5; J1, J1
+    ctx.run(extra=['panel_repeated'])
+    # Create the P&P
+    pcb_file = ctx.get_out_path(os.path.basename(prj+'-panel.kicad_pcb'))
+    ctx.run(extra=['-vvv', '-b', pcb_file, '-e', ctx.sch_file, 'create_pnp_jlc'], no_board_file=True)
+    # Look for the warning about repeated components
+    ctx.search_err('Repeated component in PCB, normal for a KiKit panel')
+    res, _, _ = ctx.load_csv(prj+'-panel-both_pos.csv')
+    diff = {}
+    rots = {}
+    rrots = {}
+    for r in res:
+        ref = r[0]
+        rot = float(r[4])
+        diff[ref] = rot - diff.get(ref, 0)
+        rots[ref] = rots.get(ref, '') + ' ' + r[4]
+        rrots[ref] = rot
+    logging.debug(f"Diffs: {diff}")
+    logging.debug(f"Rotations: {rots}")
+    assert not any(v != 0.0 for v in diff.values()), f'Diffs: {diff} Rotations: {rots}'
+    assert rrots == {'C5': 0.0, 'J1': 90.0, 'J2': 180.0, 'SW2': 0.0, 'U1': 0.0}
+    ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki9(), reason="Just checking with modern KiCad")
+def test_panel_rotation_renamed(test_dir):
+    """ This is related to #936/#937
+        We try to generate a position file from a panel with renamed references.
+        Here we rename the schematic components and also get new copies """
+    prj = 'panel_rotation'
+    ctx = context.TestContext(test_dir, prj, prj)
+    # Create a panel with C5, C5; J1, J1
+    ctx.run(extra=['panel_renamed'])
+    # Create the P&P
+    pcb_file = ctx.get_out_path(os.path.basename(prj+'-panel.kicad_pcb'))
+    ctx.run(extra=['-vvv', '-b', pcb_file, '-e', ctx.sch_file, 'create_pnp_jlc'], no_board_file=True)
+    # Look for the warning about repeated components
+    ctx.search_err('Reference mismatch is normal for a KiKit panel with custom `renameref`')
+    res, _, _ = ctx.load_csv(prj+'-panel-both_pos.csv')
+    diff = {}
+    rots = {}
+    rrots = {}
+    for r in res:
+        ref = r[0][:-2]  # Remove the -0 and -1
+        rot = float(r[4])
+        diff[ref] = rot - diff.get(ref, 0)
+        rots[ref] = rots.get(ref, '') + ' ' + r[4]
+        rrots[ref] = rot
+    logging.debug(f"Diffs: {diff}")
+    logging.debug(f"Rotations: {rots}")
+    assert not any(v != 0.0 for v in diff.values()), f'Diffs: {diff} Rotations: {rots}'
+    assert rrots == {'C5': 0.0, 'J1': 90.0, 'J2': 180.0, 'SW2': 0.0, 'U1': 0.0}
+    ctx.clean_up(keep_project=True)
