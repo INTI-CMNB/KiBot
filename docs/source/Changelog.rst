@@ -92,6 +92,8 @@ Fixed
    -  11 and 148 were always filtered for CI/CD, even when using
       –warn-ci-cd
    -  Crash when missing basic fields, KiCad 6+
+   -  Avoid warning about datasheet mismatch when creating a component
+      from the PCB.
 
 -  CLI:
 

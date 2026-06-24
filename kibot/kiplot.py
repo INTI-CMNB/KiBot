@@ -344,7 +344,7 @@ def load_sch(sch_file=None, forced=False):
     GS.sch = load_any_sch(sch_file, os.path.splitext(os.path.basename(sch_file))[0])
 
 
-def create_component_from_footprint(m, ref, env):
+def create_component_from_footprint(m, ref, env, real_fields):
     c = SchematicComponentV6()
     c.f_ref = c.ref = ref
     c.name = m.GetValue()
@@ -374,7 +374,7 @@ def create_component_from_footprint(m, ref, env):
     # Datasheet
     f = SchematicField()
     f.name = 'Datasheet'
-    f.value = '~'
+    f.value = real_fields.get('Datasheet', '~')
     f.number = 3
     c.add_field(f)
     # Other fields
@@ -474,6 +474,10 @@ def get_board_comps_data(comps, kicad_variant=None):
         else:
             # By reference
             c = comps_hash.get(ref)
+
+        real_fields = GS.get_fields(m)
+        extra_env = create_extra_env(real_fields)
+
         if c is None:
             if not (attrs & MOD_BOARD_ONLY) and not ref.startswith('KiKit_'):
                 logger.warning(W_PCBNOSCH+f'`{ref}` component in board, but not in schematic')
@@ -482,19 +486,20 @@ def get_board_comps_data(comps, kicad_variant=None):
                 logger.debugl(3, f"Not including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
                 continue
             # Create a component for this so we can include/exclude it using filters
-            c = create_component_from_footprint(m, ref, env)
+            c = create_component_from_footprint(m, ref, env, real_fields)
             if c is None:
                 continue
             if GS.ki6:
                 logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
             comps.append(c)
+
         if c.has_pcb_info:
             if GS.ki6:
                 if c.ref != ref:
                     # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
                     logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
                                   " unrelated, making a new one")
-                    c = create_component_from_footprint(m, ref, env)
+                    c = create_component_from_footprint(m, ref, env, real_fields)
                     if c is None:
                         continue
                 else:
@@ -505,8 +510,6 @@ def get_board_comps_data(comps, kicad_variant=None):
                 # We already got this reference and filled the PCB info, this is another copy
                 c = c.copy()
             comps.append(c)
-        real_fields = GS.get_fields(m)
-        extra_env = create_extra_env(real_fields)
 
         # Check the "Value", inform if different
         new_value = expand_one_footprint_field(m.GetValue(), env, extra_env)
