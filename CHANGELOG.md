@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - KiCad Site:
   - `bom` configuration
   - `kiri` configuration
+- Panelize:
+  - Better support for `renameref` use. Now we set the reference from the
+    PCB when global `use_pcb_fields` variable is enabled.
 - PcbDraw:
   - `show_copper` to disable tracks and zones (from 1.2.0)
 - Render 3D:

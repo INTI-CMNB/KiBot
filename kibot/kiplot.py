@@ -28,7 +28,7 @@ from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, vers
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY)
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY, W_REPREF)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -427,7 +427,11 @@ def copy_fields(c, real_fields, env, extra_env=None):
                     bkp_value = expand_one_footprint_field(bkp_value.value, env, extra_env) if bkp_value else None
                     if not (bkp_value and value == bkp_value):
                         logger.warning(f"{W_VALMISMATCH}{name} field mismatch for `{c.ref}` (SCH: `{old}` PCB: `{value}`)")
-                c.set_field(name, value)
+                if name == 'Reference':
+                    logger.warning(f"{W_REPREF}Reference mismatch is normal for a KiKit panel with custom `renameref`")
+                    c.set_ref(value)
+                else:
+                    c.set_field(name, value)
         else:
             # New one
             c.set_field(name, value)
