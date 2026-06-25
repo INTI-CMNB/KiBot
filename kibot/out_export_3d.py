@@ -158,10 +158,9 @@ class Export_3D(Base3D):
         - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
         - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
         - BRep: Part of Open CASCADE Technology (OCCT)
+        - PLY: Polygon File Format or the Stanford Triangle Format.
         STEP is the most common 3D format for exchange purposes
     """
-    # OCCT 7.7 needed, how to detect?
-    #   - PLY: Polygon File Format or the Stanford Triangle Format.
 
     # This adds a cross reference in the "step" index entry so people can find `export_3d`
     _extra_index_pairs = [('step', 'export_3d with kicad-cli')]

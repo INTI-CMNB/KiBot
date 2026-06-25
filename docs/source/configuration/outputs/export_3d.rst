@@ -16,6 +16,7 @@ Supported formats include:
 - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
 - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
 - BRep: Part of Open CASCADE Technology (OCCT)
+- PLY: Polygon File Format or the Stanford Triangle Format.
 
 STEP is the most common 3D format for exchange purposes
 
