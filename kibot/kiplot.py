@@ -214,6 +214,16 @@ def exec_with_retry(cmd, exit_with=None):
             return ret
 
 
+def _load_board(pcb_file, pcbnew):
+    with hide_stderr():
+        board = pcbnew.LoadBoard(pcb_file)
+    if board is None:
+        # KiCad 9 doesn't stop and returns None
+        GS.exit_with_error(f'Error loading PCB file ({pcb_file}). Corrupted?', CORRUPTED_PCB)
+        raise OSError
+    return board
+
+
 def load_board(pcb_file=None, forced=False):
     if GS.board is not None and not forced:
         # Already loaded
@@ -223,12 +233,7 @@ def load_board(pcb_file=None, forced=False):
         GS.check_pcb()
         pcb_file = GS.pcb_file
     try:
-        with hide_stderr():
-            board = pcbnew.LoadBoard(pcb_file)
-        if board is None:
-            # KiCad 9 doesn't stop and returns None
-            GS.exit_with_error(f'Error loading PCB file ({pcb_file}). Corrupted?', CORRUPTED_PCB)
-            raise OSError
+        board = _load_board(pcb_file, pcbnew)
         if GS.global_work_layer and board.GetLayerID(GS.global_work_layer) < 0:
             raise KiPlotConfigurationError(f"Unknown layer used for the global `work_layer` option"
                                            f" (`{GS.global_work_layer}`)")
@@ -249,6 +254,10 @@ def load_board(pcb_file=None, forced=False):
             board.SetProperties(props)
             # Save the PCB, so external tools also gets the reset, i.e. panelize, see #652
             GS.save_pcb(pcb_file, board)
+            # KiCad 10 has QRs that might be generated from variable, they need a reload
+            if GS.ki10:
+                logger.debug('Reloading the PCB to workaround KiCad bug #14360')
+                board = _load_board(pcb_file, pcbnew)
         if BasePreFlight.get_option('check_zone_fills'):
             GS.fill_zones(board)
         if GS.global_units and GS.ki6:

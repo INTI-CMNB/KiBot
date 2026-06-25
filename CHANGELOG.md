@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Some limited support for the VARIANT and VARIANT_DESC variables found
   in KiCad 10. They can be used for things like 3D and print_pcb even
   for KiCad 6.
+- Workaround for KiCad 10 bug 14360 which prevents native QRs to be updated
+  when they use a KiCad variable.
 - Schematic:
   - Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
 - Globals:

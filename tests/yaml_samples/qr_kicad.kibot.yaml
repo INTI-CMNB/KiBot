@@ -1,0 +1,34 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+globals:
+  invalidate_pcb_text_cache: "no"
+  update_pcb_text_cache: "auto"
+
+preflight:
+  set_text_variables:
+    - variable: "TEST_VAR"
+      text: "Hello!"
+
+outputs:
+  - name: 'print_front'
+    comment: "Print F.SilkS"
+    type: pcb_print
+    options:
+      output: PCB.pdf
+      plot_sheet_reference: false
+      format: 'PDF'
+      scaling: 8
+      pages:
+        - monochrome: true
+          layers: F.SilkS
+
+  - name: 'print_front_cli'
+    comment: "Print F.SilkS using CLI"
+    type: pdf
+    options:
+      output: PCB_cli.pdf
+      scaling: 8
+    layers:
+      - F.SilkS

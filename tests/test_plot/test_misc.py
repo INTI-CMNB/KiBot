@@ -1184,6 +1184,40 @@ def test_qr_lib_1(test_dir):
         os.remove(bkp)
 
 
+def scan_pdf(ctx, fname):
+    cmd = ['convert', '-density', '300', ctx.get_out_path(fname), '-background', 'white', '-alpha', 'remove', '-alpha',
+           'off', ctx.get_out_path('%d.png')]
+    subprocess.check_call(cmd)
+    cmd = ['zbarimg', '--nodbus', '--quiet', ctx.get_out_path('0.png')]
+    res = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode()
+    res = res.split('\n')[0]
+    if res.startswith('QR-Code:'):
+        res = res[8:]
+    return res
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Native QRs are for KiCad 10+")
+def test_qr_kicad_1(test_dir):
+    """ This test checks that we can set a text variable (using set_text_variables) that is used to generate a native QR code.
+        The PCB doesn't have it in the cache
+        This is related to KiCad bug #14360 """
+    prj = 'qr_kicad'
+    ctx = context.TestContext(test_dir, prj, prj)
+    ctx.run()
+
+    res = scan_pdf(ctx, "PCB.pdf")
+    logging.debug(res)
+
+    # Restore the original PCB, otherwise the value gets cached
+    bkp = ctx.board_file+'-bak'
+    if os.path.isfile(bkp):
+        os.rename(bkp, ctx.board_file)
+
+    ctx.clean_up(keep_project=True)
+
+    assert res == 'Hello!', res
+
+
 def test_report_simple_1(test_dir):
     prj = 'light_control'
     ctx = context.TestContext(test_dir, prj, 'report_simple_1', POS_DIR)
