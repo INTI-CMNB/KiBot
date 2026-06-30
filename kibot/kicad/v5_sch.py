@@ -900,6 +900,8 @@ class SchematicComponent(object):
         self.parent_component = None
         # Position offset i.e. from the rotation filter
         self.pos_offset_x = self.pos_offset_y = None
+        # Not from a KiCad sheet
+        self.parent_sheet = None
         # KiCad 5 PCB flags (mutually exclusive)
         self.smd = False
         self.virtual = False
