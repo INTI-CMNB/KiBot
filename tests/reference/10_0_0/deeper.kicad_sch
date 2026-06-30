@@ -10,6 +10,7 @@
 
   (lib_symbols
     (symbol "Device:R" (pin_numbers hide) (pin_names (offset 0)) (exclude_from_sim no) (in_bom yes) (on_board yes) (in_pos_files yes) (duplicate_pin_numbers_are_jumpers no)
+      (jumper_pin_groups ("1" "2"))
       (property "Reference" "R" (at 2.032 0 90) (do_not_autoplace no) (show_name no)
         (effects (font (size 1.27 1.27)))
       )
