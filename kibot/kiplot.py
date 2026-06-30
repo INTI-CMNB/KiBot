@@ -619,6 +619,8 @@ def get_board_comps_data(comps, kicad_variant=None):
 
 def expand_comp_fields(c, env):
     extra_env = {f.name.upper() if f.name.lower() in INTERNAL_FIELDS else f.name: f.value for f in c.fields}
+    # You can define "properties" for a sheet, and they become variables for all the components inside it
+    extra_env.update(c.parent_sheet.sheet_properties)
     for f in c.fields:
         new_value = f.value
         depth = 1

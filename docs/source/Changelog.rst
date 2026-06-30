@@ -33,6 +33,7 @@ Added
 
    -  Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
    -  Support for the ``jumper_pin_groups`` attribute of symbols. (#942)
+   -  Some support for properties defined at sheet level. (#941)
 
 -  Globals:
 

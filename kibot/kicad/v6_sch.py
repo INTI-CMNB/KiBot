@@ -2070,7 +2070,7 @@ class Sheet(object):
         sheet.sheet_path_ori = path_join(parent_obj.sheet_path_ori, self.uuid_ori)
         sheet.sheet_path_h = path_join(parent_obj.sheet_path_h, self.name)
         parent_obj.sheet_paths[sheet.sheet_path_ori] = sheet
-        sheet.load(os.path.join(parent_dir, self.file), project, parent_obj)
+        sheet.load(os.path.join(parent_dir, self.file), project, parent_obj, local_properties=self.properties)
         # self.sheet_paths
         if self.projects is not None:
             # KiCad v7 sheet pages are here
@@ -2891,7 +2891,7 @@ class SchematicV6(Schematic):
             if n not in defined:
                 logger.warning(W_PAGEMIS+f"Schematic page number `{n}` is not defined")
 
-    def load(self, fname, project, parent=None, mapped_uuid=None):  # noqa: C901
+    def load(self, fname, project, parent=None, mapped_uuid=None, local_properties=None):  # noqa: C901
         """ Load a v6.x KiCad Schematic.
             The caller must be sure the file exists.
             Only the schematics are loaded not the libs. """
@@ -2911,6 +2911,7 @@ class SchematicV6(Schematic):
             self.root_file_path = os.path.dirname(os.path.abspath(fname))
             self.embedded_file_names = {}
             self.used_variants = {}
+            self.sheet_properties = {}
         else:
             self.fields = parent.fields
             self.fields_lc = parent.fields_lc
@@ -2923,6 +2924,9 @@ class SchematicV6(Schematic):
             self.root_file_path = parent.root_file_path
             self.embedded_file_names = parent.embedded_file_names
             self.used_variants = parent.used_variants
+            self.sheet_properties = parent.sheet_properties.copy()
+            if local_properties is not None:
+                self.sheet_properties.update({f.name: f.value for f in local_properties})
         self.symbol_instances = []
         self.parent = parent
         self.fname = fname
