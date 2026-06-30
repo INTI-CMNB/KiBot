@@ -23,7 +23,7 @@ from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
                            _check_float, _check_str, _check_symbol_value, _check_symbol_float, _check_symbol_int,
                            _check_symbol_str, _get_offset, _get_yes_no, _get_at, _get_size, _get_xy, _get_points,
-                           _check_relaxed, Color, _symbol, _check_floats, _get_yes_no_maybe_alone)
+                           _check_relaxed, Color, _symbol, _check_floats, _get_yes_no_maybe_alone, _get_pin_groups)
 from .v5_sch import SchematicComponent, Schematic
 
 logger = log.get_logger()
@@ -844,6 +844,7 @@ class LibComponent(object):
         self.embedded_file_names = {}
         # KiCad 10
         self.body_styles = None
+        self.jumper_pin_groups = None
 
     def get_field_value(self, field):
         field = field.lower()
@@ -911,6 +912,8 @@ class LibComponent(object):
                 comp.in_pos_files = _get_yes_no(i, 1, i_type)
             elif i_type == 'duplicate_pin_numbers_are_jumpers':
                 comp.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
+            elif i_type == 'jumper_pin_groups':
+                comp.jumper_pin_groups = _get_pin_groups(i)
             elif i_type == 'power':
                 # Not yet documented
                 comp.is_power = True
@@ -1060,6 +1063,9 @@ class LibComponent(object):
             if s.duplicate_pin_numbers_are_jumpers is not None:
                 sdata.append(_symbol_yn('duplicate_pin_numbers_are_jumpers', s.duplicate_pin_numbers_are_jumpers))
         sdata.append(Sep())
+        if s.jumper_pin_groups:
+            sdata.append(_symbol('jumper_pin_groups', s.jumper_pin_groups))
+            sdata.append(Sep())
         if s.unit_name is not None:
             sdata.append(_symbol('unit_name', [s.unit_name]))
             sdata.append(Sep())

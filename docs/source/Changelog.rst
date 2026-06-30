@@ -32,6 +32,7 @@ Added
 -  Schematic:
 
    -  Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
+   -  Support for the ``jumper_pin_groups`` attribute of symbols. (#942)
 
 -  Globals:
 

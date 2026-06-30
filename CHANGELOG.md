@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   when they use a KiCad variable.
 - Schematic:
   - Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
+  - Support for the `jumper_pin_groups` attribute of symbols. (#942)
 - Globals:
   - `schematic_sheet_name_workaround` to workaround SHEETNAME on page 1
     (See #933)
