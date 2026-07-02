@@ -75,6 +75,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - *SCH Print:
   - The list of targets now includes all schematic pages
   - Output when the `output` option was empty
+  - DNP components when no variant is used and we set a title or replace
+    images ('kibot_image_OUTPUT') (#943)
 - PCB Stats:
   - Missing targets (See #928)
 - Report:

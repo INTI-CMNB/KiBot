@@ -1496,7 +1496,7 @@ class SchematicComponentV6(SchematicComponent):
         lib_id = self.lib_id
         is_crossed = not (self.fitted or not self.included)
         native_cross = GS.ki7 and GS.global_cross_using_kicad
-        dnp = False if native_cross else self.kicad_dnp
+        dnp = False if native_cross and GS.variant is not None else self.kicad_dnp
         if cross and (self.lib or self.local_name) and is_crossed:
             if native_cross:
                 # Just inform KiCad we want to make it DNP

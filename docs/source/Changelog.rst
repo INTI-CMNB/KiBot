@@ -126,6 +126,8 @@ Fixed
 
    -  The list of targets now includes all schematic pages
    -  Output when the ``output`` option was empty
+   -  DNP components when no variant is used and we set a title or
+      replace images (‘kibot_image_OUTPUT’) (#943)
 
 -  PCB Stats:
 
