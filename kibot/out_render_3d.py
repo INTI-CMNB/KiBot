@@ -452,9 +452,7 @@ class Render3DOptions(Base3DOptionsWithHL):
                # '--floor' enables options that are already enabled in "high" (ray trace)
                # '--perspective' conditionally added
                # '--zoom' added as Z in --pan
-               '--pan', f"{self.move_x},{self.move_y},{self.zoom}",
-               '--pivot', f"{self.pivot_x},{self.pivot_y},{self.pivot_z}",
-               '--rotate', f"{rx},{ry},{rz}",
+               # '--pan'/'--pivot'/'--rotate' added after the --use-board-stackup-colors flag
                # TODO: --light*
                ]
         if self.force_stackup_colors:
@@ -463,6 +461,10 @@ class Render3DOptions(Base3DOptionsWithHL):
             cmd.append('--perspective')
         if GS.kicad_version_n >= KICAD_VERSION_10_0_3:
             self.add_kicad_cli_variant(cmd)
+
+        cmd += ['--pan', f"{self.move_x},{self.move_y},{self.zoom}",
+                '--pivot', f"{self.pivot_x},{self.pivot_y},{self.pivot_z}",
+                '--rotate', f"{rx},{ry},{rz}"]
 
         # All the rest of the options are controlled by the preset
         cfg = os.path.join(GS.kicad_conf_path, '3d_viewer.json')
