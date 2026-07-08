@@ -17,7 +17,7 @@ import re
 from ..gs import GS
 from .. import log
 from ..misc import (W_NOLIB, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE, W_SCHNOTIMP,
-                    W_PAGENOINT, W_PAGEDUP, W_PAGEMIS)
+                    W_PAGENOINT, W_PAGEDUP, W_PAGEMIS, KICAD_VERSION_10_0_3)
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
@@ -2502,7 +2502,9 @@ class SchematicV6(Schematic):
     def write_title_block(self):
         data = []
         if self.title_ori:
-            title = self.title if GS.global_schematic_sheet_name_workaround and self.sheet_path_h == '/' else self.title_ori
+            # Root sheet name wrongly expanded by kicad-cli, fixed in 10.0.4 (Bug #24572)
+            do_title_workaround = GS.kicad_version_n <= KICAD_VERSION_10_0_3 and GS.global_schematic_sheet_name_workaround
+            title = self.title if do_title_workaround and self.sheet_path_h == '/' else self.title_ori
             data += [_symbol('title', [title]), Sep()]
         if self.date_ori:
             data += [_symbol('date', [self.date_ori]), Sep()]
