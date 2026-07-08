@@ -457,8 +457,8 @@ class Render3DOptions(Base3DOptionsWithHL):
                '--rotate', f"{rx},{ry},{rz}",
                # TODO: --light*
                ]
-        if self.force_stackup_colors:
-            cmd.append('--use-board-stackup-colors')
+        # if self.force_stackup_colors:
+        #     cmd.append('--use-board-stackup-colors')
         if not self.orthographic:
             cmd.append('--perspective')
         if GS.kicad_version_n >= KICAD_VERSION_10_0_3:
