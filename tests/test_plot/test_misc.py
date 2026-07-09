@@ -1619,6 +1619,42 @@ def test_diff_kiri_1(test_dir):
     ctx.clean_up(keep_project=True)
 
 
+@pytest.mark.slow
+@pytest.mark.eeschema
+def test_diff_kiri_commits(test_dir):
+    """ KiRi with an explicit list of git revisions """
+    prj = 'light_control'
+    yaml = 'kiri_commits'
+    ctx = context.TestContext(test_dir, prj, yaml)
+    git_init(ctx)
+    pcb = prj+'.kicad_pcb'
+    sch = prj+context.KICAD_SCH_EXT
+    file = ctx.get_out_path(pcb)
+    shutil.copy2(ctx.board_file, file)
+    shutil.copy2(ctx.board_file.replace('.kicad_pcb', context.KICAD_SCH_EXT),
+                 file.replace('.kicad_pcb', context.KICAD_SCH_EXT))
+    ctx.run_command(['git', 'add', pcb, sch], chdir_out=True)
+    ctx.run_command(['git', 'commit', '-m', 'Reference'], chdir_out=True)
+    ctx.run_command(['git', 'tag', '-a', 'v1', '-m', 'Tag description'], chdir_out=True)
+    hash1 = ctx.run_command(['git', 'log', '--pretty=format:%h', '-n', '1'], chdir_out=True)
+    shutil.copy2(ctx.board_file.replace(prj, prj+'_diff'), file)
+    shutil.copy2(ctx.board_file.replace(prj, prj+'_diff').replace('.kicad_pcb', context.KICAD_SCH_EXT),
+                 file.replace('.kicad_pcb', context.KICAD_SCH_EXT))
+    ctx.run_command(['git', 'add', pcb, sch], chdir_out=True)
+    ctx.run_command(['git', 'commit', '-m', 'New version'], chdir_out=True)
+    hash2 = ctx.run_command(['git', 'log', '--pretty=format:%h', '-n', '1'], chdir_out=True)
+    ctx.run(extra=['-b', file], no_board_file=True, extra_debug=True)
+    ctx.expect_out_file([hash1+'/_KIRI_/pcb_layers', hash2+'/_KIRI_/pcb_layers',
+                         hash1+'/_KIRI_/sch_sheets', hash2+'/_KIRI_/sch_sheets',
+                         'index.html', 'commits', 'project'])
+    commits_txt = ctx.get_out_path('commits')
+    with open(commits_txt, 'rt') as f:
+        commits = f.read()
+    assert 'Release v1' in commits
+    assert 'Release v2' in commits
+    ctx.clean_up(keep_project=True)
+
+
 def test_diff_git_2(test_dir):
     """ Difference between the two repo points, wipe the current file """
     prj = 'light_control'

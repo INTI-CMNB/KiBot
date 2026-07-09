@@ -1,0 +1,15 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: 'kiri'
+    comment: "Test for KiRi explicit commits"
+    type: kiri
+    layers: ['F.Cu', 'In1.Cu', 'F.SilkS']
+    options:
+      commits:
+        - v1
+        - HEAD
+      labels:
+        - 'Release v1'
+        - 'Release v2'

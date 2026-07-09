@@ -71,10 +71,20 @@ class KiRiOptions(AnyDiffOptions):
             self.background_color = "#FFFFFF"
             """ Color used for the background of the diff canvas """
             self.max_commits = 0
-            """ Maximum number of commits to include. Use 0 for all available commits """
+            """ Maximum number of commits to include. Use 0 for all available commits.
+                Ignored when *commits* is not empty """
             self.revision = 'HEAD'
             """ Starting point for the commits, can be a branch, a hash, etc.
-                Note that this can be a revision-range, consult the gitrevisions manual for more information """
+                Note that this can be a revision-range, consult the gitrevisions manual for more information.
+                Ignored when *commits* is not empty """
+            self.commits = []
+            """ [string|list(string)] Explicit list of git revisions (commit hashes, tags, branches, etc.).
+                When not empty this list is used as-is and *max_commits* and *revision* are ignored.
+                The order in the list is preserved in the KiRI user interface """
+            self.labels = []
+            """ [string|list(string)] Optional labels for the *commits* list. Must have the same length.
+                When provided they replace the commit subject in the KiRI interface.
+                Useful to show release names instead of commit messages """
             self.keep_generated = False
             """ *Avoid PCB and SCH images regeneration. Useful for incremental usage """
         super().__init__()
@@ -86,6 +96,41 @@ class KiRiOptions(AnyDiffOptions):
         self.validate_colors(['background_color'])
         if self.max_commits < 0:
             raise KiPlotConfigurationError(f"Wrong number of commits ({self.max_commits}) must be positive")
+        if isinstance(self.commits, str):
+            self.commits = [self.commits] if self.commits else []
+        if isinstance(self.labels, str):
+            self.labels = [self.labels] if self.labels else []
+        if self.labels and len(self.labels) != len(self.commits):
+            raise KiPlotConfigurationError('`labels` must have the same length as `commits` '
+                                           f'({len(self.labels)} != {len(self.commits)})')
+
+    def _log_format(self):
+        return ['log', '-1', "--date=format:%Y-%m-%d %H:%M:%S", '--pretty=format:%H | %ad | %an | %s']
+
+    def _parse_log_entry(self, res, label=None):
+        if not res:
+            return None
+        entry = res.split(' | ')
+        if label:
+            entry[3] = label
+        return entry
+
+    def _collect_hashes_explicit(self):
+        hashes = []
+        self._resolved_commits = []
+        for i, rev in enumerate(self.commits):
+            try:
+                full_hash = self.run_git(['rev-parse', '--verify', rev], just_raise=True)
+            except CalledProcessError:
+                raise KiPlotConfigurationError(f"Unknown git revision in `commits`: `{rev}`") from None
+            label = self.labels[i] if i < len(self.labels) else None
+            res = self.run_git(self._log_format() + [full_hash])
+            entry = self._parse_log_entry(res, label)
+            if entry is None:
+                raise KiPlotConfigurationError(f"Unable to get git log for revision `{rev}`")
+            hashes.append(entry)
+            self._resolved_commits.append(full_hash)
+        return hashes
 
     def _get_targets(self, out_dir, only_index=False):
         self.init_tools(out_dir)
@@ -189,10 +234,21 @@ class KiRiOptions(AnyDiffOptions):
             f.write((GS.pcb_title or 'No title')+'|'+(GS.pcb_rev or '')+'|'+(GS.pcb_date or today)+'\n')
 
     def get_modified_status(self, pcb_file, sch_files):
-        res = self.run_git(['log', '--pretty=format:%H', self.revision] + self._max_commits + ['--', pcb_file])
-        self.commits_with_changed_pcb = set(res.split())
-        res = self.run_git(['log', '--pretty=format:%H', self.revision] + self._max_commits + ['--'] + sch_files)
-        self.commits_with_changed_sch = set(res.split())
+        if self.commits:
+            self.commits_with_changed_pcb = set()
+            self.commits_with_changed_sch = set()
+            for full_hash in self._resolved_commits:
+                res = self.run_git(['log', '--pretty=format:%H', '-n', '1', full_hash, '--', pcb_file])
+                if res:
+                    self.commits_with_changed_pcb.add(res)
+                res = self.run_git(['log', '--pretty=format:%H', '-n', '1', full_hash, '--'] + sch_files)
+                if res:
+                    self.commits_with_changed_sch.add(res)
+        else:
+            res = self.run_git(['log', '--pretty=format:%H', self.revision] + self._max_commits + ['--', pcb_file])
+            self.commits_with_changed_pcb = set(res.split())
+            res = self.run_git(['log', '--pretty=format:%H', self.revision] + self._max_commits + ['--'] + sch_files)
+            self.commits_with_changed_sch = set(res.split())
         if GS.debug_level > 1:
             logger.debug(f'Commits with changes in the PCB: {self.commits_with_changed_pcb}')
             logger.debug(f'Commits with changes in the Schematics: {self.commits_with_changed_sch}')
@@ -268,11 +324,15 @@ class KiRiOptions(AnyDiffOptions):
         self.pcb_rel_name = self.run_git(['ls-files', '--full-name', GS.pcb_file])
         if not self.pcb_rel_name:
             raise KiPlotConfigurationError("The PCB must be committed")
-        # Get a list of hashes where we have changes
-        self._max_commits = ['-n', str(self.max_commits)] if self.max_commits else []
-        cmd = ['log', "--date=format:%Y-%m-%d %H:%M:%S", '--pretty=format:%H | %ad | %an | %s']
-        res = self.run_git(cmd + self._max_commits + [self.revision, '--', GS.pcb_file] + sch_files)
-        hashes = [r.split(' | ') for r in res.split('\n')]
+        if self.commits:
+            hashes = self._collect_hashes_explicit()
+        else:
+            # Get a list of hashes where we have changes
+            self._resolved_commits = []
+            self._max_commits = ['-n', str(self.max_commits)] if self.max_commits else []
+            cmd = ['log', "--date=format:%Y-%m-%d %H:%M:%S", '--pretty=format:%H | %ad | %an | %s']
+            res = self.run_git(cmd + self._max_commits + [self.revision, '--', GS.pcb_file] + sch_files)
+            hashes = [r.split(' | ') for r in res.split('\n') if r]
         sch_dirty = self.git_dirty(GS.sch_file)
         pcb_dirty = self.git_dirty(GS.pcb_file)
         return hashes, sch_dirty, pcb_dirty, sch_files
