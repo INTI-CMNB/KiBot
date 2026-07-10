@@ -87,6 +87,8 @@ class KiRiOptions(AnyDiffOptions):
                 Useful to show release names instead of commit messages """
             self.keep_generated = False
             """ *Avoid PCB and SCH images regeneration. Useful for incremental usage """
+            self.include_dirty = True
+            """ When false, do not add uncommitted local changes (_local_) to the commit list """
         super().__init__()
         self.add_to_doc("zones", "Be careful with the *keep_generated* option when changing this setting")
         self._kiri_mode = True
@@ -103,6 +105,9 @@ class KiRiOptions(AnyDiffOptions):
         if self.labels and len(self.labels) != len(self.commits):
             raise KiPlotConfigurationError('`labels` must have the same length as `commits` '
                                            f'({len(self.labels)} != {len(self.commits)})')
+
+    def _add_dirty_local(self, sch_dirty, pcb_dirty):
+        return self.include_dirty and (sch_dirty or pcb_dirty)
 
     def _log_format(self):
         return ['log', '-1', "--date=format:%Y-%m-%d %H:%M:%S", '--pretty=format:%H | %ad | %an | %s']
@@ -135,14 +140,14 @@ class KiRiOptions(AnyDiffOptions):
     def _get_targets(self, out_dir, only_index=False):
         self.init_tools(out_dir)
         hashes, sch_dirty, pcb_dirty, sch_files = self.collect_hashes()
-        if len(hashes) + (1 if sch_dirty or pcb_dirty else 0) < 2:
+        if len(hashes) + (1 if self._add_dirty_local(sch_dirty, pcb_dirty) else 0) < 2:
             return []
         if only_index:
             return [os.path.join(self.cache_dir, 'index.html')]
         files = [os.path.join(self.cache_dir, f) for f in ['index.html', 'blank.svg', 'commits', 'kiri-server', 'project']]
         for h in hashes:
             files.append(os.path.join(self.cache_dir, h[0][:7]))
-        if sch_dirty or pcb_dirty:
+        if self._add_dirty_local(sch_dirty, pcb_dirty):
             files.append(os.path.join(self.cache_dir, HASH_LOCAL))
         return files
 
@@ -341,7 +346,7 @@ class KiRiOptions(AnyDiffOptions):
         self.init_tools(self._parent.output_dir)
         hashes, sch_dirty, pcb_dirty, sch_files = self.collect_hashes()
         # Ensure we have at least 2
-        if len(hashes) + (1 if sch_dirty or pcb_dirty else 0) < 2:
+        if len(hashes) + (1 if self._add_dirty_local(sch_dirty, pcb_dirty) else 0) < 2:
             logger.warning(W_NOTHCMP+'Nothing to compare')
             return
         # Get more information about what is changed
@@ -387,7 +392,7 @@ class KiRiOptions(AnyDiffOptions):
                 if git_tmp_wd:
                     self.remove_git_worktree(git_tmp_wd)
             # Do we have modifications?
-            if sch_dirty or pcb_dirty:
+            if self._add_dirty_local(sch_dirty, pcb_dirty):
                 # Include the current files
                 dst_dir = os.path.join(self.cache_dir, HASH_LOCAL)
                 already_generated = os.path.isdir(dst_dir)
@@ -454,7 +459,7 @@ class KiRi(BaseOutput):  # noqa: F821
             ops = KiRiOptions()
             ops.git_command = git_command
             hashes, sch_dirty, pcb_dirty, _ = ops.collect_hashes()
-            if sch_dirty or pcb_dirty:
+            if ops._add_dirty_local(sch_dirty, pcb_dirty):
                 hashes.append(HASH_LOCAL)
             if len(hashes) < 2:
                 return None
