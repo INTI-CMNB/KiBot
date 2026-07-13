@@ -7476,7 +7476,28 @@
           null
         ],
         [
+          "commits",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
+          "labels",
+          [
+            "DataTypeListStringSingular"
+          ],
+          null
+        ],
+        [
           "keep_generated",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "include_dirty",
           [
             "DataTypeBoolean"
           ],

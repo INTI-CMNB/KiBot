@@ -21,6 +21,12 @@ KiRiOptions parameters
 
 -  ``background_color`` :index:`: <pair: output - kiri - options; background_color>` [:ref:`string <string>`] (default: ``'#FFFFFF'``) Color used for the background of the diff canvas.
 
+.. _KiRiOptions_commits:
+
+-  ``commits`` :index:`: <pair: output - kiri - options; commits>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] Explicit list of git revisions (commit hashes, tags, branches, etc.).
+   When not empty this list is used as-is and `max_commits` and `revision` are ignored. |br|
+   The order in the list is preserved in the KiRi user interface.
+
 .. _KiRiOptions_dnf_filter:
 
 -  ``dnf_filter`` :index:`: <pair: output - kiri - options; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to mark components as not fitted.
@@ -37,9 +43,20 @@ KiRiOptions parameters
    variant.
 
 
+.. _KiRiOptions_include_dirty:
+
+-  ``include_dirty`` :index:`: <pair: output - kiri - options; include_dirty>` [:ref:`boolean <boolean>`] (default: ``true``) When false, do not add uncommitted local changes (_local_) to the commit list.
+
+.. _KiRiOptions_labels:
+
+-  ``labels`` :index:`: <pair: output - kiri - options; labels>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] Optional labels for the `commits` list. Must have the same length.
+   When provided they replace the commit subject in the KiRi interface. |br|
+   Useful to show release names instead of commit messages.
+
 .. _KiRiOptions_max_commits:
 
 -  ``max_commits`` :index:`: <pair: output - kiri - options; max_commits>` [:ref:`number <number>`] (default: ``0``) Maximum number of commits to include. Use 0 for all available commits.
+   Ignored when `commits` is not empty.
 
 .. _KiRiOptions_pre_transform:
 
@@ -52,7 +69,8 @@ KiRiOptions parameters
 .. _KiRiOptions_revision:
 
 -  ``revision`` :index:`: <pair: output - kiri - options; revision>` [:ref:`string <string>`] (default: ``'HEAD'``) Starting point for the commits, can be a branch, a hash, etc.
-   Note that this can be a revision-range, consult the gitrevisions manual for more information.
+   Note that this can be a revision-range, consult the gitrevisions manual for more information. |br|
+   Ignored when `commits` is not empty.
 
 .. _KiRiOptions_variant:
 

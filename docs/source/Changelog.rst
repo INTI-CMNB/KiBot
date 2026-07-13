@@ -64,6 +64,12 @@ Added
    -  ``bom`` configuration
    -  ``kiri`` configuration
 
+-  KiRi:
+
+   -  ``commits`` and ``labels`` options to include an explicit list of
+      git revisions (hashes, tags, branches, etc.) (#946)
+   -  ``include_dirty`` to exclude the local changes. (#946)
+
 -  Panelize:
 
    -  Better support for ``renameref`` use. Now we set the reference

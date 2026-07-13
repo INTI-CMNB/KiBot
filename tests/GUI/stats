@@ -1,5 +1,5 @@
-56 outputs types with a total of 2271 different parameters
-Single type parameters: 2080 (92 %)
+56 outputs types with a total of 2274 different parameters
+Single type parameters: 2083 (92 %)
 Multi type parameters: 191 (8 %)
 Average parameters: 41
 Maximum number of parameters: 218
@@ -44,7 +44,6 @@ Outputs sorted by parameters:
 - qr_lib: 25
 - compress: 26
 - ipc2581: 26
-- kiri: 26
 - stencil_3d: 26
 - dxf_sch_print: 27
 - kikit_present: 27
@@ -57,6 +56,7 @@ Outputs sorted by parameters:
 - bom_labels: 28
 - stencil_for_jig: 28
 - hpgl_sch_print: 29
+- kiri: 29
 - copy_files: 31
 - pdf_pcb_print: 31
 - position: 33
@@ -154,9 +154,9 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String:  978
--            Boolean:  579
+-            Boolean:  580
 -             Number:  310
-- ListStringSingular:  307
+- ListStringSingular:  309
 -             Choice:  115
 -               Dict:   92
 -   ListDictOrString:   24
@@ -170,8 +170,8 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  810 
--            Boolean:  509 
-- ListStringSingular:  303 
+-            Boolean:  510 
+- ListStringSingular:  305 
 -             Number:  216 
 -             Choice:  112 
 -               Dict:   79 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2670 different parameters
-Single type parameters: 2453 (92 %)
+97 totals types with a total of 2673 different parameters
+Single type parameters: 2456 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -500,7 +500,6 @@ Totals sorted by parameters:
 - kicost: 25
 - compress: 26
 - ipc2581: 26
-- kiri: 26
 - stencil_3d: 26
 - dxf_sch_print: 27
 - kikit_present: 27
@@ -513,6 +512,7 @@ Totals sorted by parameters:
 - bom_labels: 28
 - stencil_for_jig: 28
 - hpgl_sch_print: 29
+- kiri: 29
 - copy_files: 31
 - pdf_pcb_print: 31
 - position: 33
@@ -652,9 +652,9 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1147
--            Boolean:  682
+-            Boolean:  683
 -             Number:  363
-- ListStringSingular:  338
+- ListStringSingular:  340
 -             Choice:  147
 -               Dict:  103
 -           ListDict:   30
@@ -668,8 +668,8 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  961 
--            Boolean:  602 
-- ListStringSingular:  334 
+-            Boolean:  603 
+- ListStringSingular:  336 
 -             Number:  254 
 -             Choice:  144 
 -               Dict:   82 

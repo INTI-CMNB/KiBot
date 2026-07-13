@@ -72,18 +72,18 @@ class KiRiOptions(AnyDiffOptions):
             """ Color used for the background of the diff canvas """
             self.max_commits = 0
             """ Maximum number of commits to include. Use 0 for all available commits.
-                Ignored when *commits* is not empty """
+                Ignored when `commits` is not empty """
             self.revision = 'HEAD'
             """ Starting point for the commits, can be a branch, a hash, etc.
                 Note that this can be a revision-range, consult the gitrevisions manual for more information.
-                Ignored when *commits* is not empty """
+                Ignored when `commits` is not empty """
             self.commits = []
             """ [string|list(string)] Explicit list of git revisions (commit hashes, tags, branches, etc.).
-                When not empty this list is used as-is and *max_commits* and *revision* are ignored.
-                The order in the list is preserved in the KiRI user interface """
+                When not empty this list is used as-is and `max_commits` and `revision` are ignored.
+                The order in the list is preserved in the KiRi user interface """
             self.labels = []
-            """ [string|list(string)] Optional labels for the *commits* list. Must have the same length.
-                When provided they replace the commit subject in the KiRI interface.
+            """ [string|list(string)] Optional labels for the `commits` list. Must have the same length.
+                When provided they replace the commit subject in the KiRi interface.
                 Useful to show release names instead of commit messages """
             self.keep_generated = False
             """ *Avoid PCB and SCH images regeneration. Useful for incremental usage """
