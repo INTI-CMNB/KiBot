@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [1.9.1] - UNRELEASED
 ### Added
 - Support for Python 3.14 (#930)
@@ -55,6 +54,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - *SCH Print
   - `title_propagate`: The title is not only set for page 1 but also for
     all pages.
+- KiRi: `commits` and `labels` options to include an explicit list of git
+  revisions (hashes, tags, branches, etc.) instead of using `max_commits` and
+  `revision`. The order in `commits` is preserved in the KiRI interface and
+  optional `labels` replace the commit subject (useful for release names).
 
 ## Fixed
 - Warnings:
