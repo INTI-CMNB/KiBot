@@ -1,0 +1,11 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: odb_tgz_mm
+    comment: "PCB in ODB++ format"
+    type: odb
+    dir: Export
+    options:
+      compression: tgz
+
