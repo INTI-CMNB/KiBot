@@ -2283,3 +2283,14 @@ def test_panel_rotation_renamed(test_dir):
     assert not any(v != 0.0 for v in diff.values()), f'Diffs: {diff} Rotations: {rots}'
     assert rrots == {'C5': 0.0, 'J1': 90.0, 'J2': 180.0, 'SW2': 0.0, 'U1': 0.0}
     ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Just checking with modern KiCad")
+def test_wrong_sch_font(test_dir):
+    """ This is related to #948
+        Check we inform the user if fonts are missing during SCH print """
+    prj = 'wrong_font'
+    ctx = context.TestContextSCH(test_dir, prj, 'print_sch')
+    ctx.run()
+    ctx.search_err('Missing font `Ninja Naruto NO`, using')
+    ctx.clean_up()
