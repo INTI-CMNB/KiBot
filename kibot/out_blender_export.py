@@ -274,8 +274,8 @@ class PCB3DExportOptions(Base3DOptionsWithHL):
         with document:
             self.output = GS.def_global_output
             """ Name for the generated PCB3D file (%i='blender_export' %x='pcb3d') """
-            self.version = '2.7'
-            """ [2.1,2.1_haschtl,2.7] Variant of the format used """
+            self.version = '2.17'
+            """ [2.1,2.1_haschtl,2.7,2.17] Variant of the format used """
             self.solder_paste_for_populated = True
             """ Add solder paste only for the populated components.
                 Populated components are the ones listed in `show_components` """
@@ -469,6 +469,12 @@ class Blender_ExportOptions(BaseOptions):
             options['stackup_file'] = 'stackup'
             options['stackup_dir'] = 'layers'
             options['stackup_format'] = 'BIN'
+        elif self.pcb3d.version == '2.17':
+            options['stackup_create'] = True
+            options['stackup_file'] = 'stackup.toml'
+            options['stackup_dir'] = 'layers'
+            options['stackup_format'] = options['board_bounds_format'] = options['pads_info_format'] = 'TOML'
+            options['board_bounds_file'] = options['sub_boards_bounds_file'] = 'bounds.toml'
         options['solder_join_on_heatsink'] = self.pcb3d.solder_join_on_heatsink
         tree = {'name': '_temporal_pcb3d_tools',
                 'type': 'pcb2blender_tools',

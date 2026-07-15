@@ -50,6 +50,10 @@ Added
 
    -  Dark mode support and icon to select it.
 
+-  Blender Export:
+
+   -  Added support for PCB2Blender 2.17 format, and made default
+
 -  BoM:
 
    -  JSON output format. As a helper for external renderers (See #917)

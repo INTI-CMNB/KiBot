@@ -355,8 +355,8 @@ outputs:
         solder_paste_for_populated: true
         # [string=''] Board variant to apply
         variant: ''
-        # [string='2.7'] [2.1,2.1_haschtl,2.7] Variant of the format used
-        version: '2.7'
+        # [string='2.17'] [2.1,2.1_haschtl,2.7,2.17] Variant of the format used
+        version: '2.17'
       # [dict={}] Options to configure how Blender imports the PCB.
       # The default values are good for most cases
       pcb_import:
