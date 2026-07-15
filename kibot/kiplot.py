@@ -464,6 +464,9 @@ def get_board_comps_data(comps, kicad_variant=None):
         comps_hash_ref = {c.ref: c for c in comps}
     else:
         comps_hash = {c.ref: c for c in comps}
+    # Reset the "has_pcb_info" flag
+    for c in comps:
+        c.has_pcb_info = False
     # Get the KiCad variables for fields
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
