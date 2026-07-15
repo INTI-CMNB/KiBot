@@ -82,6 +82,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Output when the `output` option was empty
   - DNP components when no variant is used and we set a title or replace
     images ('kibot_image_OUTPUT') (#943)
+- PCB2Blender Tools:
+  - Crash for oblong drills
 - PCB Stats:
   - Missing targets (See #928)
 - Report:

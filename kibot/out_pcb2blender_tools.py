@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2023-2025 Salvador E. Tropea
-# Copyright (c) 2023-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2023-2026 Salvador E. Tropea
+# Copyright (c) 2023-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Some code is adapted from: https://github.com/30350n/pcb2blender
@@ -81,6 +81,10 @@ class PadType(Enum):
     CONN = 2
     NPTH = 3
 
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN
+
 
 class PadShape(Enum):
     UNKNOWN = -1
@@ -92,11 +96,20 @@ class PadShape(Enum):
     CHAMFERED_RECT = 5
     CUSTOM = 6
 
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN
+
 
 class DrillShape(Enum):
     UNKNOWN = -1
     CIRCULAR = 0
     OVAL = 1
+    # OBLONG = 2
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN
 
 
 class PadFabType(Enum):
@@ -107,6 +120,10 @@ class PadFabType(Enum):
     HEATSINK = 5
     CASTELLATED = 6
     MECHANICAL = 7
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN
 
 
 def sanitized(name):
