@@ -52,7 +52,7 @@ Added
 
 -  Blender Export:
 
-   -  Added support for PCB2Blender 2.17 format, and made default
+   -  Added support for PCB2Blender 2.17 format
 
 -  BoM:
 

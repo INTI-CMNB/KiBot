@@ -274,7 +274,7 @@ class PCB3DExportOptions(Base3DOptionsWithHL):
         with document:
             self.output = GS.def_global_output
             """ Name for the generated PCB3D file (%i='blender_export' %x='pcb3d') """
-            self.version = '2.17'
+            self.version = '2.7'
             """ [2.1,2.1_haschtl,2.7,2.17] Variant of the format used """
             self.solder_paste_for_populated = True
             """ Add solder paste only for the populated components.

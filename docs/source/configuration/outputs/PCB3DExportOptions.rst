@@ -104,5 +104,5 @@ PCB3DExportOptions parameters
 
 .. _PCB3DExportOptions_version:
 
--  ``version`` :index:`: <pair: output - blender_export - options - pcb3d; version>` [:ref:`string <string>`] (default: ``'2.17'``) (choices: "2.1", "2.1_haschtl", "2.7", "2.17") Variant of the format used.
+-  ``version`` :index:`: <pair: output - blender_export - options - pcb3d; version>` [:ref:`string <string>`] (default: ``'2.7'``) (choices: "2.1", "2.1_haschtl", "2.7", "2.17") Variant of the format used.
 

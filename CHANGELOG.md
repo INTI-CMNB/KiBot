@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - E/DRC:
   - Dark mode support and icon to select it.
 - Blender Export:
-  - Added support for PCB2Blender 2.17 format, and made default
+  - Added support for PCB2Blender 2.17 format
 - BoM:
   - JSON output format. As a helper for external renderers (See #917)
   - Dark mode support and icon to select it.
