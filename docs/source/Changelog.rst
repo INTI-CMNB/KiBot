@@ -180,6 +180,9 @@ Changed
    the field
 -  Avoid more than 20 levels of nested outputs, this is an infinite
    loop.
+-  Quick Start:
+
+   -  Use ``force_stackup_colors`` for ``render_3d``
 
 `1.9.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...v1.9.0>`__ - 2026-05-12
 -----------------------------------------------------------------------------------

@@ -109,6 +109,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No more reports on PCB/SCH fields mismatch when the variants modified the
   field
 - Avoid more than 20 levels of nested outputs, this is an infinite loop.
+- Quick Start:
+  - Use `force_stackup_colors` for `render_3d`
 
 ## [1.9.0] - 2026-05-12
 ### Added

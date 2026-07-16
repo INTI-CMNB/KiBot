@@ -630,7 +630,7 @@ class Render_3D(Base3D):  # noqa: F821
             gb['comment'] = '3D view from top'
             gb['type'] = name
             gb['dir'] = '3D'
-            gb['options'] = {'ray_tracing': True, 'orthographic': True}
+            gb['options'] = {'ray_tracing': True, 'orthographic': True, 'force_stackup_colors': True}
             outs.append(gb)
             if GS.ki6:
                 gb = {}
@@ -639,7 +639,7 @@ class Render_3D(Base3D):  # noqa: F821
                 gb['type'] = name
                 gb['dir'] = '3D'
                 gb['output_id'] = '30deg'
-                gb['options'] = {'ray_tracing': True, 'rotate_x': 3, 'rotate_z': -2}
+                gb['options'] = {'ray_tracing': True, 'rotate_x': 3, 'rotate_z': -2, 'force_stackup_colors': True}
                 outs.append(gb)
         if has_bottom:
             gb = {}
@@ -647,6 +647,6 @@ class Render_3D(Base3D):  # noqa: F821
             gb['comment'] = '3D view from bottom'
             gb['type'] = name
             gb['dir'] = '3D'
-            gb['options'] = {'ray_tracing': True, 'orthographic': True, 'view': 'bottom'}
+            gb['options'] = {'ray_tracing': True, 'orthographic': True, 'view': 'bottom', 'force_stackup_colors': True}
             outs.append(gb)
         return outs
