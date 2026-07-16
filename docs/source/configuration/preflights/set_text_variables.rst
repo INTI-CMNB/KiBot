@@ -14,7 +14,7 @@ You can get text variables containing the names of the schematics sheets enablin
 `set_text_variables_sheet_title` global option. |br|
 
 .. warning::
-       don't use `-s all` or this preflight will be skipped
+   don't use `-s all` or this preflight will be skipped
 .. 
 
 

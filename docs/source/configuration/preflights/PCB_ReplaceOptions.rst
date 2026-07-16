@@ -16,8 +16,8 @@ PCB_ReplaceOptions parameters
    Will return the date in YYYY-MM-DD_HH-MM-SS format. |br|
 
 .. note::
-      on KiCad 6 the title block data is optional. |br|
-                   This command will work only if you have a date in the PCB/Schematic. |br|
+   on KiCad 6 the title block data is optional. |br|
+   This command will work only if you have a date in the PCB/Schematic. |br|
 ..
 
 

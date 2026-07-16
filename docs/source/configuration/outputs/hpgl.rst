@@ -11,7 +11,7 @@ Only available for KiCad 9 and older. |br|
 This output is what you get from the File/Plot menu in pcbnew. |br|
 
 .. note::
-           If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
+   If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
 .. 
 
 Type: ``hpgl``

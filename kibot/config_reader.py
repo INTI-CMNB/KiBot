@@ -1215,6 +1215,7 @@ def adapt_text(text, cl=None):
         text = text.replace("\\", "\\\\")
         text = text.replace("_'", "\\_'")
         lines = text.splitlines()
+        indent_for_note = '   '
         if len(lines) > 1:
             t = []
             in_list = False
@@ -1236,19 +1237,19 @@ def adapt_text(text, cl=None):
                     if in_warning:
                         exit_warning = True
                 if in_warning:
-                    ln = '   '+ln
+                    ln = indent_for_note+ln.lstrip()
                 if 'Warning: ' in ln:
                     indent = ln.index('Warning: ')
                     t.append('')
                     t.append('.. warning::')
                     in_warning = True
-                    ln = ln[:indent]+'   '+ln[indent+9:]
+                    ln = indent_for_note+ln[indent+9:].lstrip()
                 if 'Important: ' in ln:
                     indent = ln.index('Important: ')
                     t.append('')
                     t.append('.. note::')
                     in_warning = True
-                    ln = ln[:indent]+'   '+ln[indent+11:]
+                    ln = indent_for_note+ln[indent+11:].lstrip()
                 t.append(ln)
                 if exit_warning:
                     t.append('..')

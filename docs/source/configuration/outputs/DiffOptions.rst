@@ -107,8 +107,8 @@ DiffOptions parameters
    The tags can be filtered using `tag_filter` option. |br|
 
 .. note::
-      when using the `checkout` GitHub action you just get the
-                   last commit. To clone the full repo use `fetch-depth: '0'`. |br|
+   when using the `checkout` GitHub action you just get the
+   last commit. To clone the full repo use `fetch-depth: '0'`. |br|
 ..
 
 

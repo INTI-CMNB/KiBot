@@ -11,7 +11,7 @@ This output is what you get from the 'File/Plot' menu in eeschema. |br|
 Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
 
 .. note::
-           If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
+   If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
 .. 
 
 Type: ``dxf_sch_print``

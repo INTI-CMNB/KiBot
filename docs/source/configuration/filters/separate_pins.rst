@@ -11,10 +11,10 @@ Separate Pins
    Use it as a `pre_transform` filter for the `bom` output. |br|
 
 .. note::
-      The pin coordinates aren't affected by the rotation filters. |br|
+   The pin coordinates aren't affected by the rotation filters. |br|
 
 .. note::
-         Needs KiCad 6 or newer. |br|
+   Needs KiCad 6 or newer. |br|
 ..
 
 

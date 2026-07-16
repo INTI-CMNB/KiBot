@@ -11,7 +11,7 @@ This output is what you get from the File/Plot menu in pcbnew. |br|
 The `pcb_print` is usually a better alternative. |br|
 
 .. note::
-           If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
+   If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
 .. 
 
 Type: ``ps``

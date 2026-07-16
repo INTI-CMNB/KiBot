@@ -17,9 +17,9 @@ GerberOptions parameters
 -  **output** :index:`: <pair: output - gerber - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Output file name, the default KiCad name if empty.
 
 .. note::
-      KiCad will always create the file using its own name and then we can rename it. |br|
-                   For this reason you must avoid generating two variants at the same directory when one of
-                   them uses the default KiCad name. Affected by global options. |br|
+   KiCad will always create the file using its own name and then we can rename it. |br|
+   For this reason you must avoid generating two variants at the same directory when one of
+   them uses the default KiCad name. Affected by global options. |br|
 ..
 
 
@@ -46,8 +46,8 @@ GerberOptions parameters
 -  **use_protel_extensions** :index:`: <pair: output - gerber - options; use_protel_extensions>` [:ref:`boolean <boolean>`] (default: ``false``) Use legacy Protel file extensions.
 
 .. note::
-      Inner layers numbering is different for KiCad 8 and 9. KiCad 8 starts numbering inner
-                   layers with 2 and KiCad 9 with 1. |br|
+   Inner layers numbering is different for KiCad 8 and 9. KiCad 8 starts numbering inner
+   layers with 2 and KiCad 9 with 1. |br|
 ..
 
 
@@ -107,8 +107,8 @@ GerberOptions parameters
    Example '.g%n'. |br|
 
 .. note::
-      this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
-                   isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1. |br|
+   this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
+   isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1. |br|
 ..
 
 

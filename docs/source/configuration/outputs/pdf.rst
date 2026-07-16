@@ -12,7 +12,7 @@ This output is what you get from the File/Plot menu in pcbnew. |br|
 The `pcb_print` is usually a better alternative. |br|
 
 .. note::
-           If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
+   If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
 .. 
 
 Type: ``pdf``
@@ -47,9 +47,9 @@ Parameters:
 -  **output** :index:`: <pair: output - pdf; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Output file name, the default KiCad name if empty.
 
 .. note::
-      KiCad will always create the file using its own name and then we can rename it. |br|
-                   For this reason you must avoid generating two variants at the same directory when one of
-                   them uses the default KiCad name. Affected by global options. |br|
+   KiCad will always create the file using its own name and then we can rename it. |br|
+   For this reason you must avoid generating two variants at the same directory when one of
+   them uses the default KiCad name. Affected by global options. |br|
 ..
 
 
@@ -147,8 +147,8 @@ Parameters:
    Example '.g%n'. |br|
 
 .. note::
-      this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
-                   isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1. |br|
+   this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
+   isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1. |br|
 ..
 
 

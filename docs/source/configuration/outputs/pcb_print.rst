@@ -16,7 +16,7 @@ You can add images generated other outputs to your print, see :ref:`add_print_im
    you want to make it faster just add a `check_zone_fills` preflight. This will skip the reload
 
 .. note::
-              If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
+   If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|
 ..
 
 
