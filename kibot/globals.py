@@ -376,7 +376,10 @@ class Globals(FiltersOptions):
             self.kicad_default_variant = True
             """ For KiCad 10+ use the `Default` variant, even when no variant is specified """
             self.colored_tht_resistors = True
-            """ Try to add color bands to the 3D models of KiCad THT resistors """
+            """ Try to add color bands to the 3D models of KiCad THT resistors.
+                Important: KiCad 10 doesn't include WRL models anymore, you have to install the models for the resistors
+                you use. You can download them from KiCad 9 or from
+                [here](https://gitlab.com/kicad/libraries/kicad-packages3D/-/tree/9.0.9?ref_type=tags) """
             self.cache_3d_resistors = False
             """ Use a cache for the generated 3D models of colored resistors.
                 Will save time, but you could need to remove the cache if you need to regenerate them """

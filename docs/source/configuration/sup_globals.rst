@@ -89,6 +89,13 @@
 
       -  ``colored_tht_resistors`` :index:`: <pair: global options; colored_tht_resistors>` [:ref:`boolean <boolean>`] (default: ``true``) Try to add color bands to the 3D models of KiCad THT resistors.
 
+.. note::
+   KiCad 10 doesn't include WRL models anymore, you have to install the models for the resistors
+   you use. You can download them from KiCad 9 or from
+   `here <https://gitlab.com/kicad/libraries/kicad-packages3D/-/tree/9.0.9?ref_type=tags>`__. |br|
+..
+
+
 .. _Globals_copper_finish:
 
       -  *copper_finish* :index:`: <pair: global options; copper_finish>` Alias for pcb_finish.
