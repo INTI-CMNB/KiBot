@@ -526,7 +526,9 @@ class PcbDraw(BaseOutput):  # noqa: F821
         Note that this output is fast for simple PCBs, but becomes useless for huge ones.
         You can easily create very complex PCBs using the `panelize` output.
         In this case you can use other outputs, like `render_3d`, which are slow for small
-        PCBs but can handle big ones """
+        PCBs but can handle big ones.
+        Also note that `render_3d` using `force_stackup_colors` and `orthographic` will
+        produce a better alternative and you don't need 2D models. """
     def __init__(self):
         super().__init__()
         with document:

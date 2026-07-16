@@ -12,7 +12,9 @@ Can also render the components if the 2D models are available. |br|
 Note that this output is fast for simple PCBs, but becomes useless for huge ones. |br|
 You can easily create very complex PCBs using the `panelize` output. |br|
 In this case you can use other outputs, like `render_3d`, which are slow for small
-PCBs but can handle big ones
+PCBs but can handle big ones. |br|
+Also note that `render_3d` using `force_stackup_colors` and `orthographic` will
+produce a better alternative and you don't need 2D models. |br|
 
 Type: ``pcbdraw``
 
