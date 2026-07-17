@@ -8,7 +8,11 @@ PCB with variant generator
 
 Creates a copy of the PCB with all the filters and variants applied.
 This copy isn't intended for development without a careful review. |br|
-Can be used to export legacy variants to KiCad 10 variants
+Can be used to export legacy variants to KiCad 10 variants. In this case you should disable the global
+`cross_footprints_for_dnp`, `remove_solder_paste_for_dnp`, `remove_adhesive_for_dnp` and
+`remove_3D_models_for_dnp` options. |br|
+Here is an `example <https://github.com/INTI-CMNB/KiBot/blob/dev/tests/yaml_samples/export_variants.kibot.yaml>`__
+configuration showing how to migrate to KiCad 10 native variants
 
 Type: ``pcb_variant``
 

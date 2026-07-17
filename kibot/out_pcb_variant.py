@@ -167,7 +167,12 @@ class PCB_Variant(BaseOutput):  # noqa: F821
     """ PCB with variant generator
         Creates a copy of the PCB with all the filters and variants applied.
         This copy isn't intended for development without a careful review.
-        Can be used to export legacy variants to KiCad 10 variants """
+        Can be used to export legacy variants to KiCad 10 variants. In this case you should disable the global
+        `cross_footprints_for_dnp`, `remove_solder_paste_for_dnp`, `remove_adhesive_for_dnp` and
+        `remove_3D_models_for_dnp` options.
+        Here is an [example](https://github.com/INTI-CMNB/KiBot/blob/dev/tests/yaml_samples/export_variants.kibot.yaml)
+        configuration showing how to migrate to KiCad 10 native variants
+    """
     def __init__(self):
         super().__init__()
         with document:
