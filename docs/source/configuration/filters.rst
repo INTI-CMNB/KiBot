@@ -26,9 +26,9 @@ Variants are currently used to create *assembly variants*. This concept
 is used to manufacture one PCB used for various products. You can learn
 more about KiBot variants on the following `example
 repo <https://inti-cmnb.github.io/kibot_variants_arduprog/>`__. The
-example is currently using KiCad 6, if you want to see the example files
-for KiCad 5 go
-`here <https://github.com/INTI-CMNB/kibot_variants_arduprog/tree/KiCad5/>`__.
+example is currently using KiCad 10, if you want to see the example files
+for KiCad 9 go
+`here <https://github.com/INTI-CMNB/kibot_variants_arduprog/tree/KiCad9/>`__.
 
 As mentioned above the current use of filters is to mark some
 components. Mainly to exclude them, but also to mark them as special.
