@@ -1,0 +1,58 @@
+# This config is used to export KiBoM/iBoM/KiCost variants to native KiCad 10 variants
+kibot:
+  version: 1
+
+globals:
+  # We don't want to reformat the date
+  time_reformat: false
+  # Disable changes to the PCB based on the variant
+  cross_footprints_for_dnp: false
+  remove_solder_paste_for_dnp: false
+  remove_adhesive_for_dnp: false
+  remove_3D_models_for_dnp: false
+  # This is not needed here, but you might need it the config used with the exported project
+  # disable_kicad_cross_on_fab: false
+
+# Put your variants here, these are just examples
+variants:
+  - name: 'default'
+    comment: 'Minimal PCB no USB'
+    type: kibom
+
+  - name: 'USB'
+    comment: 'Full board'
+    type: kibom
+    file_id: _USB
+    variant: USB
+
+  - name: 'XTAL'
+    comment: 'No USB, but crystal included'
+    type: kibom
+    file_id: _XTAL
+    variant: XTAL
+
+# Here we export the Schematic and PCB to a dir named "exported"
+outputs:
+  # Export the schematic
+  - name: 'sch_ki10_export'
+    comment: "Schematic w/all variants"
+    type: sch_variant
+    dir: exported
+    options:
+      # Here you choose the variant that will become "Default", you can remove it if the "Default" isn't one of the
+      # defined variants
+      variant: default
+      copy_project: true
+
+  # Export the PCB
+  - name: 'pcb_ki10_export'
+    comment: "PCB w/all variants"
+    type: pcb_variant
+    dir: exported
+    options:
+      # Here you choose the variant that will become "Default", you can remove it if the "Default" isn't one of the
+      # defined variants
+      variant: default
+      copy_project: true
+      output: "%f.%x"
+
