@@ -208,6 +208,7 @@ class GS(object):
     global_pcb_finish = None
     global_pcb_material = None
     global_pcb_material_color = None
+    global_remove_3D_models_for_dnp = None
     global_remove_solder_paste_for_dnp = None
     global_remove_solder_mask_for_dnp = None
     global_remove_adhesive_for_dnp = None
