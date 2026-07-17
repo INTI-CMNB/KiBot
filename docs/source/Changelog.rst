@@ -41,6 +41,8 @@ Added
       page 1 (See #933)
    -  ``pcb_material_color`` default color for the PCB core material
    -  ``solder_paste_color`` default color for the solder paste
+   -  ``remove_3D_models_for_dnp`` to disable 3D models removal from
+      variants
 
 -  Variants:
 

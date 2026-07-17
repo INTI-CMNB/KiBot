@@ -458,6 +458,10 @@
 
       -  ``pcb_material_color`` :index:`: <pair: global options; pcb_material_color>` [:ref:`string <string>`] (default: ``'#6D744BD3'``) Default PCB core material color, used when the stack-up doesn't specify it.
 
+.. _Globals_remove_3D_models_for_dnp:
+
+      -  ``remove_3D_models_for_dnp`` :index:`: <pair: global options; remove_3D_models_for_dnp>` [:ref:`boolean <boolean>`] (default: ``true``) When applying filters and variants remove the 3D models for components that won't be included.
+
 .. _Globals_remove_adhesive_for_dnp:
 
       -  ``remove_adhesive_for_dnp`` :index:`: <pair: global options; remove_adhesive_for_dnp>` [:ref:`boolean <boolean>`] (default: ``true``) When applying filters and variants remove the adhesive (glue) for components that won't be included.

@@ -267,6 +267,8 @@ class Globals(FiltersOptions):
             """ When applying filters and variants remove the adhesive (glue) for components that won't be included """
             self.remove_solder_mask_for_dnp = False
             """ When applying filters and variants remove the solder mask apertures for components that won't be included """
+            self.remove_3D_models_for_dnp = True
+            """ When applying filters and variants remove the 3D models for components that won't be included """
             self.always_warn_about_paste_pads = False
             """ Used to detect the use of pads just for paste """
             self.restore_project = False

@@ -653,7 +653,7 @@ class VariantOptions(BaseOptions):
     def remove_3D_models(self, board, comps_hash):
         """ Removes 3D models for excluded or not fitted components.
             Applies the global_field_3D_model model rename """
-        if not comps_hash:
+        if not comps_hash or not GS.global_remove_3D_models_for_dnp:
             return
         # Remove the 3D models for not fitted components
         rem_models = []
@@ -681,7 +681,7 @@ class VariantOptions(BaseOptions):
         """ Restore the removed 3D models.
             Restores the renamed models. """
         self.undo_3d_models_rename(board)
-        if not comps_hash:
+        if not comps_hash or not GS.global_remove_3D_models_for_dnp:
             return
         # Undo the removing
         for m in GS.get_modules_board(board):

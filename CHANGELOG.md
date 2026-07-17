@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     (See #933)
   - `pcb_material_color` default color for the PCB core material
   - `solder_paste_color` default color for the solder paste
+  - `remove_3D_models_for_dnp` to disable 3D models removal from variants
 - Variants:
   - pre_transform filter to KiCad variants
 - E/DRC:
