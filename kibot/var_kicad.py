@@ -92,6 +92,8 @@ class KiCad(BasicVariant):
             kv.file_id = '_'+v
             logger.debug(f"- Variant {kv.name} from schematic")
             RegOutput.add_variant(kv)
+        if 'Default' not in used_variants:
+            KiCad.add_default()
 
     @staticmethod
     def get_from_pro():
@@ -105,6 +107,8 @@ class KiCad(BasicVariant):
         except Exception as e:
             # This is not fatal
             logger.debug(f"Error while looking for variants in the project: {e}")
+            return False
+        if len(variants) == 0:
             return False
         for v in variants:
             name = v.get('name')
@@ -129,4 +133,6 @@ class KiCad(BasicVariant):
             kv.file_id = '_'+kv.name
             logger.debug(f"- Variant {kv.name} from schematic")
             RegOutput.add_variant(kv)
+        if 'Default' not in variants:
+            KiCad.add_default()
         return True
