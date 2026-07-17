@@ -14,6 +14,14 @@ from some of the processing stages. The most common use is to exclude
 them from some output. You can also change components fields/properties
 and also the 3D model.
 
+.. note::
+   KiCad 10 incorporated variants. They implement most of the things,
+   but not changing the 3D models aspect.
+   If you want to migrate from KiBot variants to native KiCad 10
+   variants consult the following
+   `example <https://github.com/INTI-CMNB/KiBot/blob/dev/tests/yaml_samples/export_variants.kibot.yaml>`__.
+..
+
 Variants are currently used to create *assembly variants*. This concept
 is used to manufacture one PCB used for various products. You can learn
 more about KiBot variants on the following `example
