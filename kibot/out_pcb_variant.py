@@ -82,7 +82,7 @@ class PCB_Variant_Options(VariantOptions):
             default_variant.name = "Default"
             default_variant.dnp = not c.fitted
             default_variant.exclude_from_sim = c.exclude_from_sim
-            default_variant.in_bom = c.included
+            default_variant.in_bom = c.included and c.in_bom_pcb
             default_variant.on_board = c.on_board
             default_variant.in_pos_files = c.in_pos_files
             for f in c.fields:
@@ -111,13 +111,14 @@ class PCB_Variant_Options(VariantOptions):
                         break
                 else:
                     diff_fields = False
-                if cur.dnp != (not c.fitted) or cur.in_bom != c.included or cur.in_pos_files != c.in_pos_files or diff_fields:
+                included = c.included and c.in_bom_pcb
+                if cur.dnp != (not c.fitted) or cur.in_bom != included or cur.in_pos_files != c.in_pos_files or diff_fields:
                     m = GS.board.ResolveItem(KIID(c.pcb_id)).Cast()
                     # Create or recycle a variant
                     new_v = m.GetVariant(v) if m.HasVariant(v) else m.AddVariant(v)
                     # Set it as the legacy variant
                     new_v.SetDNP(not c.fitted)
-                    new_v.SetExcludedFromBOM(not c.included)
+                    new_v.SetExcludedFromBOM(not included)
                     new_v.SetExcludedFromPosFiles(not c.in_pos_files)
                     for f in c.fields:
                         new_v.SetFieldValue(f.name, f.value)
@@ -140,7 +141,8 @@ class PCB_Variant_Options(VariantOptions):
                 continue
             m = m.Cast()
             m.SetDNP(not c.fitted)
-            m.SetExcludedFromBOM(not c.included)
+            included = c.included and c.in_bom_pcb
+            m.SetExcludedFromBOM(not included)
             for f in c.fields:
                 m.SetField(f.name, f.value)
 

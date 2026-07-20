@@ -75,7 +75,7 @@ class Sch_Variant_Options(VariantOptions):
             default_variant.name = "Default"
             default_variant.dnp = not c.fitted
             default_variant.exclude_from_sim = c.exclude_from_sim
-            default_variant.in_bom = c.included
+            default_variant.in_bom = c.included and c.in_bom
             default_variant.on_board = c.on_board
             default_variant.in_pos_files = c.in_pos_files
             for f in c.fields:
@@ -106,8 +106,9 @@ class Sch_Variant_Options(VariantOptions):
                 if cur.exclude_from_sim != c.exclude_from_sim:
                     new_v.exclude_from_sim = c.exclude_from_sim
                     used = True
-                if cur.in_bom != c.included:
-                    new_v.in_bom = c.included
+                included = c.included and c.in_bom
+                if cur.in_bom != included:
+                    new_v.in_bom = included
                     used = True
                 if cur.on_board != c.on_board:
                     new_v.on_board = c.on_board
@@ -131,7 +132,7 @@ class Sch_Variant_Options(VariantOptions):
         # Transfer the variant to the component
         for c in self._comps:
             c.kicad_dnp = not c.fitted
-            c.in_bom = c.included
+            c.in_bom = c.included and c.in_bom
 
         return True
 

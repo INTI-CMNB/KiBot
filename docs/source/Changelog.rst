@@ -149,6 +149,10 @@ Fixed
 
    -  Missing targets (See #928)
 
+-  SCH/PCB Variant:
+
+   -  “Exclude from bom” flag wrongly exported
+
 -  Report:
 
    -  Now all SVG schematic pages are included, not just the first
