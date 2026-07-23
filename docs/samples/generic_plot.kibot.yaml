@@ -4653,11 +4653,10 @@ outputs:
       # [number=15] [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels.
       # Only used for KiCad 9 and older
       transparent_background_fuzz: 15
-      # [boolean=true] Try using `kicad-cli` for KiCad 10+.
-      # More reliable, but with tons of limitations, see KiCad bugs:
-      # [21950](https://gitlab.com/kicad/code/kicad/-/work_items/21950)
-      # [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
+      # [boolean=true] Try using `kicad-cli` for KiCad 10+. Recommended for KiCad 10.0.5 or newer.
+      # More reliable, but with some limitations, see KiCad bugs:
       # [20126](https://gitlab.com/kicad/code/kicad/-/work_items/20126)
+      # [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
       use_cli: true
       # [string=''] Board variant to apply
       variant: ''

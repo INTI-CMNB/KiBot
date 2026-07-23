@@ -315,11 +315,10 @@ Render3DOptions parameters
 
 .. _Render3DOptions_use_cli:
 
--  ``use_cli`` :index:`: <pair: output - render_3d - options; use_cli>` [:ref:`boolean <boolean>`] (default: ``true``) Try using `kicad-cli` for KiCad 10+.
-   More reliable, but with tons of limitations, see KiCad bugs:
-   `21950 <https://gitlab.com/kicad/code/kicad/-/work_items/21950>`__
-   `24599 <https://gitlab.com/kicad/code/kicad/-/work_items/24599>`__
-   `20126 <https://gitlab.com/kicad/code/kicad/-/work_items/20126>`__.
+-  ``use_cli`` :index:`: <pair: output - render_3d - options; use_cli>` [:ref:`boolean <boolean>`] (default: ``true``) Try using `kicad-cli` for KiCad 10+. Recommended for KiCad 10.0.5 or newer.
+   More reliable, but with some limitations, see KiCad bugs:
+   `20126 <https://gitlab.com/kicad/code/kicad/-/work_items/20126>`__
+   `24599 <https://gitlab.com/kicad/code/kicad/-/work_items/24599>`__.
 
 .. _Render3DOptions_variant:
 

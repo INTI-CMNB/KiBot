@@ -5,8 +5,8 @@
 # Project: KiBot (formerly KiPlot)
 # KiCad 6/6.0.1 bug: https://gitlab.com/kicad/code/kicad/-/issues/9890 Crash [Fixed in 6.0.2]
 # KiCad 10 related bugs:
-# https://gitlab.com/kicad/code/kicad/-/work_items/21950 -> we need to patch KiCad to get presets working
-# https://gitlab.com/kicad/code/kicad/-/work_items/24599 -> Various options ignored
+# https://gitlab.com/kicad/code/kicad/-/work_items/21950 -> we need to patch KiCad to get presets working [Fixed in 10.0.5]
+# https://gitlab.com/kicad/code/kicad/-/work_items/24599 -> Various options ignored [Mostly fixed in 10.0.5]
 """
 Dependencies:
   - from: KiAuto
@@ -191,11 +191,10 @@ class Render3DOptions(Base3DOptionsWithHL):
             self.show_adhesive = False
             """ Show the content of F.Adhesive/B.Adhesive layers. KiCad 6 or newer """
             self.use_cli = True
-            """ Try using `kicad-cli` for KiCad 10+.
-                More reliable, but with tons of limitations, see KiCad bugs:
-                [21950](https://gitlab.com/kicad/code/kicad/-/work_items/21950)
-                [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
+            """ Try using `kicad-cli` for KiCad 10+. Recommended for KiCad 10.0.5 or newer.
+                More reliable, but with some limitations, see KiCad bugs:
                 [20126](https://gitlab.com/kicad/code/kicad/-/work_items/20126)
+                [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
             """
 
         super().__init__()
