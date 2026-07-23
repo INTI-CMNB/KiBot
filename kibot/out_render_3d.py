@@ -25,7 +25,7 @@ from .error import KiPlotConfigurationError
 from .misc import (RENDER_3D_ERR, PCB_MAT_COLORS, PCB_FINISH_COLORS, SOLDER_COLORS, SILK_COLORS,
                    KICAD_VERSION_6_0_2, MISSING_TOOL, W_INV3DLAYER, W_NEEDSK8, W_NEEDSK6, W_DEPR,
                    G_SILKCOLORS, G_MASKCOLORS, G_PASTECOLORS, FINISH_TO_COLOR, G_FINISHCOLORS,
-                   G_BOARDCOLORS, KICAD_VERSION_10_0_3)
+                   G_BOARDCOLORS, KICAD_VERSION_10_0_3, KICAD_VERSION_10_0_5)
 from .gs import GS
 from .out_base_3d import Base3DOptionsWithHL, Base3D
 from .kiplot import run_command
@@ -541,6 +541,8 @@ class Render3DOptions(Base3DOptionsWithHL):
         return cmd
 
     def check_kicad_cli_bug(self):
+        if GS.kicad_version_n >= KICAD_VERSION_10_0_5:
+            return True
         res = _run_command([GS.kicad_cli, 'pcb', 'render', '--help'])
         # KiCad 9.x and 10.0.0-3 has a bug that always forces --use-board-stackup-colors
         return re.search(r'--use-board-stackup-colors.*default:\s+false', res) is not None
