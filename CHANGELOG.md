@@ -87,6 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Crash for oblong drills
 - PCB Stats:
   - Missing targets (See #928)
+- PDFUnite:
+  - Using just the first page when using the internal joiner (#950)
 - SCH/PCB Variant:
   - "Exclude from bom" flag wrongly exported
 - Report:

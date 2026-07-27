@@ -21,15 +21,17 @@ def create_pdf_from_pages(input_files, output_fn, forced_width=None):
         file = open(filename, 'rb')
         open_files.append(file)
         pdf_reader = PyPDF2.PdfFileReader(file)
-        page_obj = pdf_reader.getPage(0)
-        if forced_width is not None:
-            width = float(page_obj.mediaBox.getWidth())*25.4/72
-            scale = round(forced_width/width, 4)
-            logger.debugl(1, 'PDF scale {} ({} -> {})'.format(scale, width, forced_width))
-            if abs(1.0-scale) > 0.0001:
-                page_obj.scaleBy(scale)
-        page_obj.compressContentStreams()
-        output.addPage(page_obj)
+        num_pages = len(pdf_reader.pages)
+        for page in range(num_pages):
+            page_obj = pdf_reader.getPage(page)
+            if forced_width is not None:
+                width = float(page_obj.mediaBox.getWidth())*25.4/72
+                scale = round(forced_width/width, 4)
+                logger.debugl(1, 'PDF scale {} ({} -> {})'.format(scale, width, forced_width))
+                if abs(1.0-scale) > 0.0001:
+                    page_obj.scaleBy(scale)
+            page_obj.compressContentStreams()
+            output.addPage(page_obj)
     # Write all pages to a file
     with open(output_fn, 'wb') as pdf_output:
         output.write(pdf_output)

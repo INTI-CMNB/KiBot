@@ -149,6 +149,10 @@ Fixed
 
    -  Missing targets (See #928)
 
+-  PDFUnite:
+
+   -  Using just the first page when using the internal joiner (#950)
+
 -  SCH/PCB Variant:
 
    -  “Exclude from bom” flag wrongly exported
