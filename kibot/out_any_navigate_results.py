@@ -122,6 +122,21 @@ def _run_command(cmd, fname=None):
     return True
 
 
+def ps_needs_rotation(file):
+    try:
+        with open(file, 'rb') as f:
+            data = f.read(1000).decode('ascii')
+        res = re.search(r'%%Creator: (.*)', data)
+        if res is None:
+            return False
+        creator = res.group(1).lower()
+        if 'eeschema' in creator or 'pcbnew' in creator or 'kicad' in creator:
+            return True
+    except Exception:
+        pass
+    return False
+
+
 class Any_Navigate_ResultsOptions(BaseOptions):
     def __init__(self):
         with document:
@@ -272,8 +287,10 @@ class Any_Navigate_ResultsOptions(BaseOptions):
                '-resize', str(self._big_icon)+'x']
         if self.image_white_background:
             cmd.extend(['-background', 'white', '-alpha', 'remove', '-alpha', 'off'])
-        if ext == 'ps':
+        if ext == 'ps' and ps_needs_rotation(file_ori):
             # ImageMagick 6.9.11 (and also the one in Debian 11) rotates the PS
+            # Same for 7.1.1 on Debian 13
+            # Is some detail about how KiCad creates the PS, the ones created using ghostscript doesn't have this issue
             cmd.extend(['-rotate', '90'])
         if not no_icon:
             cmd.extend([  # Add the file type icon

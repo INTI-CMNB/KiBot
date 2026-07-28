@@ -25,6 +25,10 @@ Fixed
    -  Mark KiCad 10 as good (green, not red)
    -  Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 
+-  Navigate Results:
+
+   -  Rotated PostScript for the PCB Print output
+
 `1.9.1 <https://github.com/INTI-CMNB/KiBot/compare/v1.9.0...v1.9.1>`__ - 2026-07-28
 -----------------------------------------------------------------------------------
 

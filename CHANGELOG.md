@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - KiBot Check:
   - Mark KiCad 10 as good (green, not red)
   - Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
+- Navigate Results:
+  - Rotated PostScript for the PCB Print output
 
 ## [1.9.1] - 2026-07-28
 ### Added
