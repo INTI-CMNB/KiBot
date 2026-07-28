@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.9.2] - Unreleased
 ## Fixed
 - Quick Start: avoid including HPGL for KiCad 10
+- KiBot Check:
+  - Mark KiCad 10 as good (green, not red)
+  - Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 
 ## [1.9.1] - 2026-07-28
 ### Added

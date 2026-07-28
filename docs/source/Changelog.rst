@@ -20,6 +20,10 @@ Fixed
 -----
 
 -  Quick Start: avoid including HPGL for KiCad 10
+-  KiBot Check:
+
+   -  Mark KiCad 10 as good (green, not red)
+   -  Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 
 `1.9.1 <https://github.com/INTI-CMNB/KiBot/compare/v1.9.0...v1.9.1>`__ - 2026-07-28
 -----------------------------------------------------------------------------------
