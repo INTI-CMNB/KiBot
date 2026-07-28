@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.1] - UNRELEASED
+## [1.9.1] - 2026-07-28
 ### Added
 - Support for Python 3.14 (#930)
 - CLI:
@@ -1840,7 +1840,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gerber job generation
 
 
-[Unreleased]: https://github.com/INTI-CMNB/KiBot/compare/v1.9.0...dev
+[Unreleased]: https://github.com/INTI-CMNB/KiBot/compare/v1.9.1...dev
+[1.9.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...v1.9.0
 [1.8.5]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5
 [1.8.4]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.3...v1.8.4
