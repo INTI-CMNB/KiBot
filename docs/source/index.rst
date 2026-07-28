@@ -14,12 +14,10 @@ KiBot (formerly KiPlot)
 - If you are looking for the GitHub Actions documentation, and you already know how
   to use KiBot, or want a quick start, read: :ref:`usage-of-github-actions`
 
-**New on v1.9.0**
+**New on v1.9.1**
 
-- Support for KiCad 10.0.1, native variants are experimental, please look `here <https://github.com/INTI-CMNB/KiBot/discussions/906>`__.
-- New outputs: BoM Labels (bom_labels), PCB stats (pcb_stats) and Hugo KiCad Site helper (kicad_site)
-- New filter: `alternatives`
-- Updated KiCad 3D models download URL and mechanism
+- Better support for KiCad 10 native variants and schematic format.
+- Faster KiCad 10 3D render, has some limitations and KiCad 10.0.5 or newer is recommended.
 
 
 .. toctree::
