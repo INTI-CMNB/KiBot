@@ -2326,7 +2326,8 @@ if args.show_paths:
 # KiCad
 home = os.path.expanduser('~')
 try:
-    import pcbnew
+    with hide_stderr():
+        import pcbnew
     kicad_ok = True
     # Fill the plug-in locations
     # TODO: Windows? MacOSX?
