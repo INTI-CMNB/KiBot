@@ -1481,10 +1481,12 @@ def test_quick_start_1(test_dir):
     ctx.expect_out_file(dest_conf)
     # 2) List the generated outputs
     ctx.run(extra=['-c', dest_conf_f, '-b', dest_file, '-l'], no_out_dir=True, no_yaml_file=True, no_board_file=True)
-    OUTS = ['boardview', 'dxf', 'excellon', 'gencad', 'gerb_drill', 'gerber', 'compress', 'hpgl', 'ibom',
+    OUTS = ['boardview', 'dxf', 'excellon', 'gencad', 'gerb_drill', 'gerber', 'compress', 'ibom',
             'navigate_results_rb', 'netlist', 'pcb_print', 'pcbdraw', 'pdf', 'position', 'ps', 'render_3d',
             'report', 'svg', 'kiri', 'kicanvas',
             'bom', 'download_datasheets', 'pdf_sch_print', 'svg_sch_print']
+    if not context.ki10():
+        OUTS.append('hpgl')
     if context.ki9():
         OUTS.extend(['odb', 'export_3d', 'ipc2581'])
     else:
