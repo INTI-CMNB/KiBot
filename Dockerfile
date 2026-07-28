@@ -1,6 +1,6 @@
-FROM ghcr.io/inti-cmnb/kicad7_auto_full:1.9.0-6_k7.0.11_d12.1_b3.5.1
+FROM ghcr.io/inti-cmnb/kicad6_auto_full:1.9.0-6_k6.0.11_d12.1_b3.5.1
 LABEL AUTHOR Salvador E. Tropea <stropea@inti.gob.ar>
-LABEL Description="Export various files from KiCad projects (KiCad 7)"
+LABEL Description="Export various files from KiCad projects (KiCad 6)"
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
