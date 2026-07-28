@@ -1,3 +1,9 @@
+kibot (1.9.2-1) UNRELEASED; urgency=medium
+
+  * Next release
+
+ -- Salvador Eduardo Tropea <salvador@inti.gob.ar>  Tue, 28 Jul 2026 10:28:42 -0300
+
 kibot (1.9.1-1) stable; urgency=medium
 
   * Added support for Python 3.14
