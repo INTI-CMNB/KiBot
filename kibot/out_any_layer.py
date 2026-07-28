@@ -327,6 +327,8 @@ class AnyLayer(BaseOutput):
 
     @staticmethod
     def get_conf_examples(name, layers):
+        if name == 'hpgl' and GS.ki10:
+            return None
         gb = {}
         outs = [gb]
         name_u = name.upper()
