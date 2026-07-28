@@ -28,7 +28,7 @@ from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, vers
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY)
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY, W_REPREF)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -214,6 +214,16 @@ def exec_with_retry(cmd, exit_with=None):
             return ret
 
 
+def _load_board(pcb_file, pcbnew):
+    with hide_stderr():
+        board = pcbnew.LoadBoard(pcb_file)
+    if board is None:
+        # KiCad 9 doesn't stop and returns None
+        GS.exit_with_error(f'Error loading PCB file ({pcb_file}). Corrupted?', CORRUPTED_PCB)
+        raise OSError
+    return board
+
+
 def load_board(pcb_file=None, forced=False):
     if GS.board is not None and not forced:
         # Already loaded
@@ -223,12 +233,7 @@ def load_board(pcb_file=None, forced=False):
         GS.check_pcb()
         pcb_file = GS.pcb_file
     try:
-        with hide_stderr():
-            board = pcbnew.LoadBoard(pcb_file)
-        if board is None:
-            # KiCad 9 doesn't stop and returns None
-            GS.exit_with_error(f'Error loading PCB file ({pcb_file}). Corrupted?', CORRUPTED_PCB)
-            raise OSError
+        board = _load_board(pcb_file, pcbnew)
         if GS.global_work_layer and board.GetLayerID(GS.global_work_layer) < 0:
             raise KiPlotConfigurationError(f"Unknown layer used for the global `work_layer` option"
                                            f" (`{GS.global_work_layer}`)")
@@ -249,6 +254,10 @@ def load_board(pcb_file=None, forced=False):
             board.SetProperties(props)
             # Save the PCB, so external tools also gets the reset, i.e. panelize, see #652
             GS.save_pcb(pcb_file, board)
+            # KiCad 10 has QRs that might be generated from variable, they need a reload
+            if GS.ki10:
+                logger.debug('Reloading the PCB to workaround KiCad bug #14360')
+                board = _load_board(pcb_file, pcbnew)
         if BasePreFlight.get_option('check_zone_fills'):
             GS.fill_zones(board)
         if GS.global_units and GS.ki6:
@@ -344,7 +353,7 @@ def load_sch(sch_file=None, forced=False):
     GS.sch = load_any_sch(sch_file, os.path.splitext(os.path.basename(sch_file))[0])
 
 
-def create_component_from_footprint(m, ref, env):
+def create_component_from_footprint(m, ref, env, real_fields):
     c = SchematicComponentV6()
     c.f_ref = c.ref = ref
     c.name = m.GetValue()
@@ -374,7 +383,7 @@ def create_component_from_footprint(m, ref, env):
     # Datasheet
     f = SchematicField()
     f.name = 'Datasheet'
-    f.value = '~'
+    f.value = real_fields.get('Datasheet', '~')
     f.number = 3
     c.add_field(f)
     # Other fields
@@ -421,11 +430,19 @@ def copy_fields(c, real_fields, env, extra_env=None):
             # Already there
             old = c.get_field_value(name)
             if value and old != value and old != expanded_fields[name]:
-                logger.warning(f"{W_VALMISMATCH}{name} field mismatch for `{c.ref}` (SCH: `{old}` PCB: `{value}`)")
-                c.set_field(name, value)
+                # Check if it was modified by a variant
+                bkp_value = c.dfields_bkp.get(name) if c.dfields_bkp else None
+                if not (bkp_value and value == bkp_value.value):
+                    bkp_value = expand_one_footprint_field(bkp_value.value, env, extra_env) if bkp_value else None
+                    if not (bkp_value and value == bkp_value):
+                        logger.warning(f"{W_VALMISMATCH}{name} field mismatch for `{c.ref}` (SCH: `{old}` PCB: `{value}`)")
+                if name == 'Reference':
+                    logger.warning(f"{W_REPREF}Reference mismatch is normal for a KiKit panel with custom `renameref`")
+                    c.set_ref(value)
+                else:
+                    c.set_field(name, value)
         else:
             # New one
-            logger.debug(f'Adding {name} field to {c.ref} ({value})')
             c.set_field(name, value)
 
 
@@ -447,6 +464,9 @@ def get_board_comps_data(comps, kicad_variant=None):
         comps_hash_ref = {c.ref: c for c in comps}
     else:
         comps_hash = {c.ref: c for c in comps}
+    # Reset the "has_pcb_info" flag
+    for c in comps:
+        c.has_pcb_info = False
     # Get the KiCad variables for fields
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
@@ -470,6 +490,10 @@ def get_board_comps_data(comps, kicad_variant=None):
         else:
             # By reference
             c = comps_hash.get(ref)
+
+        real_fields = GS.get_fields(m)
+        extra_env = create_extra_env(real_fields)
+
         if c is None:
             if not (attrs & MOD_BOARD_ONLY) and not ref.startswith('KiKit_'):
                 logger.warning(W_PCBNOSCH+f'`{ref}` component in board, but not in schematic')
@@ -478,39 +502,50 @@ def get_board_comps_data(comps, kicad_variant=None):
                 logger.debugl(3, f"Not including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
                 continue
             # Create a component for this so we can include/exclude it using filters
-            c = create_component_from_footprint(m, ref, env)
+            c = create_component_from_footprint(m, ref, env, real_fields)
             if c is None:
                 continue
             if GS.ki6:
                 logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
             comps.append(c)
+
         if c.has_pcb_info:
             if GS.ki6:
                 if c.ref != ref:
                     # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
                     logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
                                   " unrelated, making a new one")
-                    c = create_component_from_footprint(m, ref, env)
+                    c = create_component_from_footprint(m, ref, env, real_fields)
                     if c is None:
                         continue
                 else:
+                    # This isn't normal, but KiKit can create a panel with repeated references
+                    # In this case we have an schematic with M components and a PCB with N*M components
+                    # N repeated components in the PCB points to the same component in the schematic
                     logger.debugl(3, f"Repeated {c.ref}/{ref}")
-                    continue
+                    c = c.copy()
+                    logger.warning(W_REPREF+"Repeated component in PCB, normal for a KiKit panel")
             else:
                 # When using references they can be repeated
                 # We already got this reference and filled the PCB info, this is another copy
+                logger.debugl(3, f"Repeated {c.ref}/{ref}")
                 c = c.copy()
             comps.append(c)
-        real_fields = GS.get_fields(m)
-        extra_env = create_extra_env(real_fields)
 
         # Check the "Value", inform if different
         new_value = expand_one_footprint_field(m.GetValue(), env, extra_env)
         if new_value != c.value:
             expanded_value = expand_one_footprint_field(c.value, env, extra_env)
             if new_value != expanded_value:
-                logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` "
-                               f"(`{expanded_value}`) PCB: `{new_value}`)")
+                # Is different even after expanding vars
+                # But perhaps is different because a variant changed it
+                bkp_value = c.dfields_bkp.get('value') if c.dfields_bkp else None
+                if not (bkp_value and new_value == bkp_value.value):
+                    bkp_value = expand_one_footprint_field(bkp_value.value, env, extra_env) if bkp_value else None
+                    if not (bkp_value and new_value == bkp_value):
+                        # Ok, is different
+                        logger.warning(f"{W_VALMISMATCH}Value field mismatch for `{ref}` (SCH: `{c.value}` "
+                                       f"(`{expanded_value}`) PCB: `{new_value}`)")
         if 'Value' in real_fields:
             # We already computed it
             del real_fields['Value']
@@ -581,11 +616,15 @@ def get_board_comps_data(comps, kicad_variant=None):
                         # We have pad a valid pad, assume this is all SMD and keep looking
                         c.smd = True
     if kicad_variant is not None:
+        logger.debug(f"Switching the PCB to {old_variant}")
         GS.board.SetCurrentVariant(old_variant)
 
 
 def expand_comp_fields(c, env):
     extra_env = {f.name.upper() if f.name.lower() in INTERNAL_FIELDS else f.name: f.value for f in c.fields}
+    # You can define "properties" for a sheet, and they become variables for all the components inside it
+    if c.parent_sheet is not None:
+        extra_env.update(c.parent_sheet.sheet_properties)
     for f in c.fields:
         new_value = f.value
         depth = 1
@@ -693,6 +732,11 @@ def run_output(out, dont_stop=False):
             pre.apply()
             load_board()
     GS.current_output = out.name
+    logger.info('  '*run_output.depth+'- '+str(out))
+    run_output.depth += 1
+    if run_output.depth > GS.MAXDEPTH_OUTPUTS:
+        config_error(f"Too many nested outputs (>{GS.MAXDEPTH_OUTPUTS}) check your configuration, "
+                     "possibly an infinite loop")
     try:
         out.run(get_output_dir(out.dir, out))
         out._done = True
@@ -712,6 +756,11 @@ def run_output(out, dont_stop=False):
         if not dont_stop:
             raise
         GS.errors_ignored = True
+    run_output.depth -= 1
+
+
+# run_output local and persistent depth
+run_output.depth = 0
 
 
 def configure_and_run(tree, out_dir, msg):
@@ -794,7 +843,6 @@ def _generate_outputs(targets, invert, skip_pre, cli_order, no_priority, dont_st
         if GS.get_stop_flag():
             break
         if config_output(out, dont_stop=dont_stop):
-            logger.info('- '+str(out))
             run_output(out, dont_stop)
 
 

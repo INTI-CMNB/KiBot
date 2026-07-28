@@ -113,7 +113,11 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         # Get the current definitions
         with open(pro_name, 'rt') as f:
             pro_text = f.read()
-        data = json.loads(pro_text)
+        try:
+            data = json.loads(pro_text)
+        except Exception as e:
+            raise KiPlotConfigurationError(f"Failed to load project `{pro_name}`: {e}")
+
         text_variables = data.get('text_variables', {})
 
         # Sheet titles:

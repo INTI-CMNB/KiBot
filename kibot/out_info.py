@@ -8,6 +8,10 @@ Dependencies:
   - from: KiAuto
     role: Show KiAuto installation information
     version: 2.0.0
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.9
 """
 import os
 import sys
@@ -32,9 +36,7 @@ class InfoOptions(BaseOptions):
         self._expand_id = 'info'
         self._expand_ext = 'txt'
         self._none_related = True
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
+        self.get_targets = self._get_targets
 
     def run(self, name):
         dir = os.path.dirname(os.path.abspath(sys.argv[0]))

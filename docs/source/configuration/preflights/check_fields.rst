@@ -13,6 +13,9 @@ When an error is hit execution is stopped. |br|
 One use is to check that all components are suitable for a temperature range. |br|
 In this case a field must declare the temperature range
 
+
+.. _Check_Fields_check_fields:
+
    -  **check_fields** :index:`: <pair: preflight - check_fields; check_fields>`  [:ref:`FieldCheck parameters <FieldCheck_pre>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) One or more check rules.
 
 Used dicts

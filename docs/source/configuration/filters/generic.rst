@@ -12,36 +12,102 @@ Generic filter
    The internal `_mechanical` filter emulates the KiBoM behavior for default exclusions. |br|
    The internal `_kicost_dnp` filter emulates KiCost's `dnp` field. |br|
 
+
+.. _Generic_comment:
+
    -  **comment** :index:`: <pair: filter - generic; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Generic_name:
+
    -  **name** :index:`: <pair: filter - generic; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Generic_config_field:
+
    -  ``config_field`` :index:`: <pair: filter - generic; config_field>` [:ref:`string <string>`] (default: ``'Config'``) Name of the field used to classify components.
+
+.. _Generic_config_separators:
+
    -  ``config_separators`` :index:`: <pair: filter - generic; config_separators>` [:ref:`string <string>`] (default: ``' ,'``) Characters used to separate options inside the config field.
+
+.. _Generic_exclude_all_hash_ref:
+
    -  ``exclude_all_hash_ref`` :index:`: <pair: filter - generic; exclude_all_hash_ref>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude all components with a reference starting with #.
+
+.. _Generic_exclude_any:
+
    -  ``exclude_any`` :index:`: <pair: filter - generic; exclude_any>`  [:ref:`BoMRegex parameters <BoMRegex_fi>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A series of regular expressions used to exclude parts.
       If a component matches ANY of these, it will be excluded. |br|
       Column names are case-insensitive.
+
+.. _Generic_exclude_bottom:
+
    -  ``exclude_bottom`` :index:`: <pair: filter - generic; exclude_bottom>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components on the bottom side of the PCB.
+
+.. _Generic_exclude_config:
+
    -  ``exclude_config`` :index:`: <pair: filter - generic; exclude_config>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components containing a key value in the config field.
       Separators are applied.
+
+.. _Generic_exclude_empty_val:
+
    -  ``exclude_empty_val`` :index:`: <pair: filter - generic; exclude_empty_val>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components with empty 'Value'.
+
+.. _Generic_exclude_field:
+
    -  ``exclude_field`` :index:`: <pair: filter - generic; exclude_field>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components if a field is named as any of the keys.
+
+.. _Generic_exclude_kicad_dnp:
+
    -  ``exclude_kicad_dnp`` :index:`: <pair: filter - generic; exclude_kicad_dnp>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked *Do not populate* in KiCad (KiCad 7+)
       For the `bom` output also use `kicad_dnp_applied: 'no'`.
+
+.. _Generic_exclude_not_in_bom:
+
    -  ``exclude_not_in_bom`` :index:`: <pair: filter - generic; exclude_not_in_bom>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked *Exclude from bill of materials* (KiCad 6+).
+
+.. _Generic_exclude_not_on_board:
+
    -  ``exclude_not_on_board`` :index:`: <pair: filter - generic; exclude_not_on_board>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked *Exclude from board* (KiCad 6+).
+
+.. _Generic_exclude_refs:
+
    -  ``exclude_refs`` :index:`: <pair: filter - generic; exclude_refs>` [:ref:`list(string) <list(string)>`] (default: ``[]``) List of references to be excluded.
       Use R* for all references with R prefix.
 
+
+.. _Generic_exclude_smd:
+
    -  ``exclude_smd`` :index:`: <pair: filter - generic; exclude_smd>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked as smd in the PCB.
+
+.. _Generic_exclude_tht:
+
    -  ``exclude_tht`` :index:`: <pair: filter - generic; exclude_tht>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked as through-hole in the PCB.
+
+.. _Generic_exclude_top:
+
    -  ``exclude_top`` :index:`: <pair: filter - generic; exclude_top>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components on the top side of the PCB.
+
+.. _Generic_exclude_value:
+
    -  ``exclude_value`` :index:`: <pair: filter - generic; exclude_value>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components if their 'Value' is any of the keys.
+
+.. _Generic_exclude_virtual:
+
    -  ``exclude_virtual`` :index:`: <pair: filter - generic; exclude_virtual>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude components marked as virtual in the PCB.
+
+.. _Generic_include_only:
+
    -  ``include_only`` :index:`: <pair: filter - generic; include_only>`  [:ref:`BoMRegex parameters <BoMRegex_fi>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A series of regular expressions used to include parts.
       If there are any regex defined here, only components that match against ANY of them will be included. |br|
       Column/field names are case-insensitive. |br|
       If empty this rule is ignored.
+
+.. _Generic_invert:
+
    -  ``invert`` :index:`: <pair: filter - generic; invert>` [:ref:`boolean <boolean>`] (default: ``false``) Invert the result of the filter.
+
+.. _Generic_keys:
+
    -  ``keys`` :index:`: <pair: filter - generic; keys>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'dnf_list'``) (choices: "dnc_list", "dnf_list") (also accepts any string) List of keys to match.
       The `dnf_list` and `dnc_list` internal lists can be specified as strings. |br|
       Use `dnf_list` for ['dnf', 'dnl', 'dnp', 'do not fit', 'do not load', 'do not place', 'no stuff', 'nofit', 'noload', 'noplace', 'nostuff', 'not fitted', 'not loaded', 'not placed']. |br|

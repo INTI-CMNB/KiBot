@@ -1,0 +1,35 @@
+kibot:
+  version: 1
+
+outputs:
+  # This is a report output used to create a CSV table
+  # It might collect the images from 'print_front'
+  - name: csv_comp_count
+    comment: 'Component report (count) in CSV format'
+    type: report
+    category: 'Manufacturing/Assembly'
+    dir: 'Manufacturing/Assembly'
+    output_id: components_count
+    options:
+      output: '%f-%I%v.csv'
+      template: total_components
+      exclude_filter: '_mechanical'
+      csv_remove_leading_spaces: true
+      # Uncommenting this will fail because we created an infinite loop
+      # collect_images: 'yes'
+
+  - name: 'print_front'
+    comment: "Experiment"
+    type: pcb_print
+    options:
+      plot_sheet_reference: true
+      # Here we ask to fill tables, and hence `csv_comp_count` must be run
+      # But if `csv_comp_count` collects our images it will execute us
+      include_table: true
+      format: 'PDF'
+      keep_temporal_files: true
+      pages:
+        - layers:
+            - layer: F.Cu
+            - layer: Edge.Cuts
+              color: "#FF4040"

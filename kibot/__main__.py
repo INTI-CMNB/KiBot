@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
@@ -12,7 +12,8 @@ Usage:
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
          [--fail-on-warnings] [-F] [--warn-ci-cd] [--warn-all] [--banner N]
-         [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
+         [--gui | --internal-check] [--keep-temporals] [-I INJECT]
+         [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
@@ -66,6 +67,7 @@ Options:
   --internal-check                 Run some outputs internal checks
   -i, --invert-sel                 Generate the outputs not listed as targets
   -I, --gui-inject INJECT          Inject events to the GUI from INJECT file
+  --keep-temporals                 Keep temporal files (most of them)
   -l, --list                       List available outputs, preflights and
                                    groups (in the config file).
                                    You don't need to specify an SCH/PCB unless
@@ -163,7 +165,8 @@ from .error import KiPlotConfigurationError
 from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
-                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS)
+                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS, W_NOCONFIG, W_NOLIBS, W_NOKIENV, W_KIAUTO,
+                   W_NODEFSYMLIB, W_MISLIBTAB)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -172,6 +175,14 @@ from .kiplot import (generate_outputs, load_actions, config_output, generate_mak
                      solve_board_file, solve_project_file, check_board_file, exec_with_retry, load_config)
 from .registrable import RegOutput
 GS.kibot_version = __version__
+CI_CD_WARNINGS = ((W_NOCONFIG, ''),  # 8: Unable to find KiCad configuration file `{cfg}`
+                  (W_NOKIENV, ''),   # 9: KiCad config without environment.vars section
+                  (W_NOLIBS, '(3D models|user templates)'),  # 10: Missing user templates and 3D models
+                  (W_NODEFSYMLIB, ''),                       # 11 Missing default symbol library table
+                  (W_MISLIBTAB, ''),                         # 148: Missing default system footprint table ...
+                  (W_KIAUTO, 'Missing KiCad main config file'),  # From KiAuto
+                  (W_KIAUTO, 'Missing default system table'),    # From KiAuto
+                  )
 
 
 def list_pre_and_outs_names(logger, outputs, do_config, only_pre, only_groups):
@@ -444,10 +455,8 @@ def apply_warning_filter(args):
             GS.exit_with_error(f'-w/--no-warn must specify a comma separated list of numbers ({args.no_warn})', EXIT_BAD_ARGS)
     if detect_ci_env() and not args.warn_ci_cd:
         # Disable warnings we always get on docker images
-        #  9: KiCad config without environment.vars section
-        # 10: Missing user templates and 3D models
         logger.debug('Filtering warnings we always get on CI/CD')
-        log.set_filters([SimpleFilter(n, regex=r) for n, r in ((9, ''), (10, '(3D models|user templates)'))])
+        log.set_filters([SimpleFilter(int(n[2:5]), regex=r) for n, r in CI_CD_WARNINGS])
 
 
 def debug_arguments(args):
@@ -555,6 +564,8 @@ def main():
             GS.exit_with_error(f'The banner option needs an integer ({id})', EXIT_BAD_ARGS)
         logger.info(get_banner(id))
 
+    GS.keep_temporals = args.keep_temporals
+
     if args.help_outputs or args.help_list_outputs:
         print_outputs_help(args.rst, details=args.help_outputs)
         sys.exit(0)
@@ -596,6 +607,11 @@ def main():
             GS.exit_with_error('Asked to copy options but no PCB specified.', EXIT_BAD_ARGS)
         create_example(args.board_file, GS.out_dir, args.copy_options, args.copy_and_expand)
         sys.exit(0)
+
+    if GS.ci_cd_detected:
+        # Informed here to avoid interference with the various --help* options
+        logger.info('CI/CD environment detected')
+
     if args.quick_start:
         # Some kind of wizard to get usable examples
         generate_examples(args.start, args.dry, args.type)
@@ -686,6 +702,8 @@ def main():
                         old_tree = o._tree
                         o.__init__()
                         o.set_tree(old_tree)
+                        o.name = old_tree.get('name')
+                        o.type = old_tree.get('type')
                     # Preflights aren't "variantic", so skip all of them for the rest of variants
                     args.skip_pre = 'all'
                 generate_outputs(args.target, args.invert_sel, args.skip_pre, args.cli_order, args.no_priority,

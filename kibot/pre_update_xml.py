@@ -9,6 +9,10 @@ Dependencies:
     role: mandatory
     command: eeschema_do
     version: 1.5.4
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.9
 """
 from collections import namedtuple
 import os

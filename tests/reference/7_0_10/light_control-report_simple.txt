@@ -1,1 +1,64 @@
-../7_0_3/light_control-report_simple.txt
+PCB Specifications:
+Size:
+
+- 59.69x48.26 mm
+
+Class: 6D
+
+Track width: ≥ 0.15 mm
+
+Insulation distance: ≥ 0.15 mm
+
+Minimum drill size: ≥ 0.35 mm (finished metalized hole: 0.25 mm)
+
+Minimum slot width: ≥ 0.6 mm (PTH: 0.6, NPTH: N/A)
+
+Ring collar: ≥ 0.08 mm
+
+Special features:
+
+- Edge connector: yes, bevelled
+- Castellated pads
+- Edge plating
+
+Stackup:
+
+Impedance controlled: YES
+
+| Name                 | Type                 | Color            | Thickness [µm]| Material        | Er        | Loss tan     |
+|----------------------|----------------------|------------------|---------------|-----------------|-----------|--------------|
+| F.SilkS              | Top Silk Screen      | White            |               | Liquid Photo    |           |              |
+| F.Paste              | Top Solder Paste     |                  |               |                 |           |              |
+| F.Mask               | Top Solder Mask      | Blue             |            10 | Liquid Ink      |       3.3 |        0.000 |
+| F.Cu                 | copper               |                  |            35 |                 |           |              |
+| dielectric 1         | prepreg              | PTFE natural     |           480 | FR4             |       4.5 |        0.020 |
+| In1.Cu               | copper               |                  |            35 |                 |           |              |
+| dielectric 2         | core                 | FR4 natural      |           480 | FR4             |       4.5 |        0.020 |
+| In2.Cu               | copper               |                  |            35 |                 |           |              |
+| dielectric 3 (1/2)   | prepreg              | Polyimide        |           240 | Kapton          |       3.2 |        0.004 |
+| dielectric 3 (2/2)   | prepreg              |                  |           240 | Kapton          |       3.2 |        0.004 |
+| B.Cu                 | copper               |                  |            35 |                 |           |              |
+| B.Mask               | Bottom Solder Mask   | Red              |            10 | Dry Film        |       3.3 |        0.000 |
+| B.Paste              | Bottom Solder Paste  |                  |               |                 |           |              |
+| B.SilkS              | Bottom Silk Screen   | Black            |               | Direct Printing |           |              |
+
+Materials:
+
+- FR4 / Kapton, 1.6 mm
+- ENIG
+- 4 layers
+- 35 µm copper thickness
+
+Solder mask:
+
+- TOP / BOTTOM
+- Top: Blue / Bottom: Red
+
+Marking:
+
+- TOP / BOTTOM screen printing
+- Silk: Top: White / Bottom: Black
+
+Other markings:
+
+- ROHS / UL / Date - Yes if available

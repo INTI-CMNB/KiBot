@@ -59,6 +59,8 @@ comp_range_regex = re.compile(r'([a-zA-Z]+)(\d+)-([a-zA-Z]+)(\d+)')
 
 
 class BaseOutput(RegOutput):
+    _extra_index_pairs = []
+
     def __init__(self):
         super().__init__()
         with document:
@@ -651,7 +653,7 @@ class VariantOptions(BaseOptions):
     def remove_3D_models(self, board, comps_hash):
         """ Removes 3D models for excluded or not fitted components.
             Applies the global_field_3D_model model rename """
-        if not comps_hash:
+        if not comps_hash or not GS.global_remove_3D_models_for_dnp:
             return
         # Remove the 3D models for not fitted components
         rem_models = []
@@ -679,7 +681,7 @@ class VariantOptions(BaseOptions):
         """ Restore the removed 3D models.
             Restores the renamed models. """
         self.undo_3d_models_rename(board)
-        if not comps_hash:
+        if not comps_hash or not GS.global_remove_3D_models_for_dnp:
             return
         # Undo the removing
         for m in GS.get_modules_board(board):
@@ -938,7 +940,7 @@ class VariantOptions(BaseOptions):
         if self._sub_pcb:
             self._sub_pcb.revert(self._comps_hash)
 
-    def set_title(self, title, sch=False):
+    def set_title(self, title, sch=False, propagate=False):
         self.old_title = None
         if title:
             if sch:
@@ -950,14 +952,17 @@ class VariantOptions(BaseOptions):
             if text[0] == '+':
                 text = self.old_title+text[1:]
             if sch:
-                self.old_title = GS.sch.set_title(text)
+                self.old_title = GS.sch.set_titles(text) if propagate else GS.sch.set_title(text)
             else:
                 tb.SetTitle(text)
 
     def restore_title(self, sch=False):
         if self.old_title is not None:
             if sch:
-                GS.sch.set_title(self.old_title)
+                if isinstance(self.old_title, str):
+                    GS.sch.set_title(self.old_title)
+                else:
+                    GS.sch.restore_titles(self.old_title)
             else:
                 GS.board.GetTitleBlock().SetTitle(self.old_title)
             self.old_title = None
@@ -997,6 +1002,7 @@ class VariantOptions(BaseOptions):
                 m.SetValue(data[0])
                 if has_GetFPIDAsString:
                     m.SetFPIDAsString(data[2])
+                GS.clear_fields(m)
                 GS.set_fields(m, data[1])
 
     def patch_prjname(self, fname):
@@ -1113,19 +1119,22 @@ class VariantOptions(BaseOptions):
         return new_list
 
     def remove_temporals(self):
-        logger.debug('Removing temporal files')
+        action = 'Keeping' if GS.keep_temporals else 'Removing'
+        logger.debug(f'{action} temporal files')
         for f in self._files_to_remove:
             if os.path.isfile(f):
                 logger.debug('- File `{}`'.format(f))
-                os.remove(f)
+                if not GS.keep_temporals:
+                    os.remove(f)
             elif os.path.isdir(f):
                 logger.debug('- Dir `{}`'.format(f))
-                rmtree(f)
+                if not GS.keep_temporals:
+                    rmtree(f)
         self._files_to_remove = []
         self._highlight_3D_file = None
 
     def add_extra_options(self, cmd, dir=None):
-        cmd, video_remove = GS.add_extra_options(cmd)
+        cmd, video_remove = GS.add_extra_options(cmd, self.kicad_variant_name())
         if video_remove:
             self._files_to_remove.append(os.path.join(dir or cmd[-1], GS.get_kiauto_video_name(cmd)))
         return cmd
@@ -1158,12 +1167,31 @@ class VariantOptions(BaseOptions):
         # Apply the variant
         if self.variant:
             # Apply the variant
-            comps = self.variant.filter(comps)
+            comps = self.variant.filter(comps, self.kicad_var_cb)
             self._sub_pcb = self.variant._sub_pcb
         self._comps = comps
 
     def run(self, output_dir):
         self.load_list_components()
+        variant = self.variant or GS.solved_global_variant
+        if variant:
+            if GS.pro_variables:
+                GS.pro_variables['VARIANT'] = variant.name
+                GS.pro_variables['VARIANT_DESC'] = variant.comment
+            else:
+                logger.debug("Not setting VARIANT*")
+            if GS.board and GS.kicad_variant_name(variant):
+                logger.debug(f"Switching the PCB to {variant.name}")
+                GS.board.SetCurrentVariant(variant.name)
+        else:
+            # KiCad 10 behavior when "Default" variant is selected
+            if GS.pro_variables:
+                GS.pro_variables['VARIANT'] = GS.pro_variables['VARIANT_DESC'] = ""
+            else:
+                logger.debug("Not setting VARIANT*")
+            if GS.ki10 and GS.board:
+                logger.debug("Switching the PCB to 'Default' variant")
+                GS.board.SetCurrentVariant('')
 
     # The following 5 members are used by 2D and 3D renderers
     def setup_renderer(self, components, active_components):

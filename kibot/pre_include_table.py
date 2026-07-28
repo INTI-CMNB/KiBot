@@ -15,7 +15,7 @@ from .kicad.pcb_draw_helpers import (draw_rect, draw_line, draw_text, get_text_w
                                      draw_marker, get_marker_best_pen_size,
                                      GR_TEXT_HJUSTIFY_LEFT, GR_TEXT_HJUSTIFY_RIGHT,
                                      GR_TEXT_HJUSTIFY_CENTER)
-from .kiplot import load_board, get_output_targets, look_for_output
+from .kiplot import load_board, get_output_targets, look_for_output, run_output
 from .misc import W_NOMATCHGRP
 from .optionable import Optionable
 from .registrable import RegOutput
@@ -265,11 +265,9 @@ def measure_table(cols, out, bold_headers, font=None):
         c.width = c.max_len/tot_len
 
 
-def update_table(ops, parent, force_index=-1, only_drill_tables=False):
+def update_table(ops, parent, force_index=-1, only_drill_tables=False, allow_run=False):
     logger.debug('Starting include table preflight')
     load_board()
-    csv_files = []
-    csv_name = []
     out_to_csv_mapping = {}
 
     logger.debug('- Analyzing requested outputs')
@@ -284,12 +282,9 @@ def update_table(ops, parent, force_index=-1, only_drill_tables=False):
         targets, _, o = get_output_targets(out.name, parent)
 
         csv_targets = [file for file in targets if file.endswith('.csv')]
-        for file in csv_targets:
-            csv_files.append(file)
-        for file in csv_targets:
-            file_name = os.path.basename(file)
-            name_without_ext = os.path.splitext(file_name)[0]
-            csv_name.append(name_without_ext)
+        # Run the output if any of the files is missing and we are allowed to run them
+        if any(not os.path.isfile(f) for f in csv_targets) and allow_run:
+            run_output(csv)
         out_to_csv_mapping[out.name] = (out, csv_targets, o.type)
         logger.debug(f'  - {out.name} -> {csv_targets}')
 

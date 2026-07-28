@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2024 Salvador E. Tropea
-# Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2016-2020 Oliver Henry Walters (@SchrodingersGat)
 # License: MIT
 # Project: KiBot (formerly KiPlot)
@@ -11,12 +11,14 @@ BoM Writer.
 This is just a hub that calls the real BoM writer:
 - csv_writer.py
 - html_writer.py
+- json_writer.py
 - kicad_writer.py
 - xml_writer.py
 - xlsx_writer.py
 """
 from .csv_writer import write_csv
 from .html_writer import write_html
+from .json_writer import write_json
 from .xml_writer import write_xml
 from .. import log
 from .. import error
@@ -41,6 +43,8 @@ def write_bom(filename, ext, groups, headings, cfg):
         result = write_csv(filename, ext, groups, headings, head_names, cfg)
     elif ext in ["htm", "html"]:
         result = write_html(filename, groups, headings, head_names, cfg)
+    elif ext == "json":
+        result = write_json(filename, groups, headings, head_names, cfg)
     elif ext == "xml":
         result = write_xml(filename, groups, headings, head_names, cfg)
     elif ext == "xlsx":

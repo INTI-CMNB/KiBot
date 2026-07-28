@@ -5,6 +5,8 @@
 # Project: KiBot (formerly KiPlot)
 import json
 import os
+from .fil_base import apply_pre_transform, BaseFilter
+from .optionable import Optionable
 from .registrable import RegOutput
 from .error import config_error
 from .gs import GS
@@ -22,10 +24,25 @@ class KiCad(BasicVariant):
         Used for KiCad 10 and newer variants.
         Defining them in the configuration file allows to change the comment and to define the `file_id`
     """
+    def __init__(self):
+        super().__init__()
+        with document:
+            # * Filters
+            self.pre_transform = Optionable
+            """ [string|list(string)='_null'] Name of the filter to transform fields before applying other filters. """
+
+    def config(self, parent):
+        super().config(parent)
+        self.pre_transform = BaseFilter.solve_filter(self.pre_transform, 'pre_transform', is_transform=True)
+
     def filter(self, comps, call_back=None):
         # Applies this variant to the components
+        if not isinstance(self.pre_transform, type):
+            comps = apply_pre_transform(comps, self.pre_transform)
         logger.debug(f'Applying KiCad variant `{self.name}`')
         if call_back is None:
+            if GS.debug_level:
+                GS.trace_dump()
             logger.warning("Filter without callback")
             return comps
         for c in comps:
@@ -75,6 +92,8 @@ class KiCad(BasicVariant):
             kv.file_id = '_'+v
             logger.debug(f"- Variant {kv.name} from schematic")
             RegOutput.add_variant(kv)
+        if 'Default' not in used_variants:
+            KiCad.add_default()
 
     @staticmethod
     def get_from_pro():
@@ -89,6 +108,8 @@ class KiCad(BasicVariant):
             # This is not fatal
             logger.debug(f"Error while looking for variants in the project: {e}")
             return False
+        if len(variants) == 0:
+            return False
         for v in variants:
             name = v.get('name')
             if not name:
@@ -97,8 +118,9 @@ class KiCad(BasicVariant):
             if RegOutput.is_variant(name):
                 cur_v = RegOutput.get_variant(name)
                 if cur_v.type != 'kicad':
+                    logger.error(cur_v.__dict__)
                     # Collision with another variant
-                    config_error(f'The project defines a varinat named `{v}` which is already used by `{cur_v}`')
+                    config_error(f'The project defines a variant named `{v}` which is already used by `{cur_v}`')
                 # Skip if already defined in the config file
                 continue
             # Import it
@@ -111,4 +133,6 @@ class KiCad(BasicVariant):
             kv.file_id = '_'+kv.name
             logger.debug(f"- Variant {kv.name} from schematic")
             RegOutput.add_variant(kv)
+        if 'Default' not in variants:
+            KiCad.add_default()
         return True

@@ -67,7 +67,7 @@ def set_domain(name):
 
 
 def set_filters(f):
-    """Set the list of warning filters"""
+    """ Set the list of warning filters, adding to the existing ones """
     if f:
         global filters
         filters = f+filters

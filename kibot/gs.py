@@ -44,6 +44,7 @@ elif hasattr(pcbnew, 'PCB_PLOT_PARAMS'):
 KICAD5_SVG_SCALE = 116930/297002200
 # Characters we don't want in a file name
 INVALID_CHARS = r'[?%*:|"<>]'
+KICAD_DYNAMIC_VARS = {'VARIANT', 'VARIANT_DESC', 'SHEETNAME', 'SHEETPATH', 'SHEETFILE'}
 
 
 class GS(object):
@@ -132,8 +133,10 @@ class GS(object):
     ci_cd_detected = False
     stop_flag = False
     errors_ignored = False    # We ignored at least one error
+    keep_temporals = False    # Selected from command line
     # Maximum recursive replace
     MAXDEPTH = 20
+    MAXDEPTH_OUTPUTS = 20
     # VIATYPE, not exported by KiCad 5 (6, 7, 8 and 9 defines it the same way)
     # For KiCad 10 we adjust it
     VIATYPE_THROUGH = 3
@@ -204,6 +207,8 @@ class GS(object):
     global_output = None
     global_pcb_finish = None
     global_pcb_material = None
+    global_pcb_material_color = None
+    global_remove_3D_models_for_dnp = None
     global_remove_solder_paste_for_dnp = None
     global_remove_solder_mask_for_dnp = None
     global_remove_adhesive_for_dnp = None
@@ -214,12 +219,14 @@ class GS(object):
     global_set_text_variables_sheet_title = None
     global_set_text_variables_sheet_title_min = None
     global_set_text_variables_sheet_title_default = None
+    global_schematic_sheet_name_workaround = None
     global_silk_screen_color = None
     global_silk_screen_color_bottom = None
     global_silk_screen_color_top = None
     global_solder_mask_color = None
     global_solder_mask_color_bottom = None
     global_solder_mask_color_top = None
+    global_solder_paste_color = None
     global_str_yes = None
     global_str_no = None
     global_time_format = None
@@ -545,7 +552,8 @@ class GS(object):
                 value = os.environ.get(vname, None)
             if value is None:
                 value = '${'+vname+'}'
-                logger.warning(W_UNKVAR+"Unknown text variable `{}`".format(vname))
+                if vname not in KICAD_DYNAMIC_VARS:
+                    logger.warning(W_UNKVAR+"Unknown text variable `{}`".format(vname))
             if match.start():
                 new_text += text[last:match.start()]
             new_text += value
@@ -875,7 +883,7 @@ class GS(object):
         return command+'_screencast.ogv'
 
     @staticmethod
-    def add_extra_options(cmd):
+    def add_extra_options(cmd, variant=None):
         is_gitlab_ci = 'GITLAB_CI' in os.environ
         video_remove = (not GS.debug_enabled) and is_gitlab_ci
         if GS.debug_enabled:
@@ -889,6 +897,9 @@ class GS(object):
         if GS.global_kiauto_wait_start:
             cmd.insert(1, str(GS.global_kiauto_wait_start))
             cmd.insert(1, '--wait_start')
+        if variant:
+            cmd.insert(1, variant)
+            cmd.insert(1, '--variant')
         return cmd, video_remove
 
     @staticmethod
@@ -969,7 +980,8 @@ class GS(object):
 
     @staticmethod
     def get_fields(footprint):
-        """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE) """
+        """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE)
+            Note: KiCad 6/7 only returns `properties`, KiCad 8+ returns real fields (Value, Footprint, etc.) """
         if GS.ki8:
             # KiCad 8 defines a special object (PCB_FIELD) and its iterator
             return {f.GetName(): f.GetText() for f in footprint.GetFields()}
@@ -993,6 +1005,17 @@ class GS(object):
                     footprint.GetFieldByName(fld).SetVisible(False)
         elif GS.ki6:
             footprint.SetProperties(flds)
+
+    @staticmethod
+    def clear_fields(footprint):
+        """ Clears the content of all fields in a FOOTPRINT (aka MODULE)
+            We don't remove them because the API fails when using Delete/Remove and
+            because we want to keep some attributes """
+        if GS.ki8:
+            for f in footprint.GetFields():
+                footprint.SetField(f.GetName(), '')
+        elif GS.ki6:
+            footprint.SetProperties({})
 
     @staticmethod
     def get_shown_text(obj, allow_extra_text=True, a_depth=0):
@@ -1199,3 +1222,7 @@ class GS(object):
             # Wonderful! before the other, no default, etc.
             return obj.GetTextBox(None, a_line)
         return obj.GetTextBox(a_line)
+
+    @staticmethod
+    def kicad_variant_name(variant):
+        return variant.name if variant and variant.type == 'kicad' and GS.ki10 else None

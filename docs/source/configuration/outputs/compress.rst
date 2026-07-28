@@ -14,31 +14,64 @@ Type: ``compress``
 
 Parameters:
 
+
+.. _Compress_comment:
+
 -  **comment** :index:`: <pair: output - compress; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes. It helps to identify the output.
+
+.. _Compress_dir:
+
 -  **dir** :index:`: <pair: output - compress; dir>` [:ref:`string <string>`] (default: ``'./'``) Output directory for the generated files.
    If it starts with `+` the rest is concatenated to the default dir.
+
+.. _Compress_name:
+
 -  **name** :index:`: <pair: output - compress; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular output definition.
    Avoid using `_` as first character. These names are reserved for KiBot.
 -  **options** :index:`: <pair: output - compress; options>`  [:ref:`CompressOptions parameters <CompressOptions>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the `compress` output.
+
+.. _Compress_type:
+
 -  **type** :index:`: <pair: output - compress; type>` 'compress'
+
+.. _Compress_category:
+
 -  ``category`` :index:`: <pair: output - compress; category>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) [:ref:`comma separated <comma_sep>`] The category for this output. If not specified an internally defined
    category is used. |br|
    Categories looks like file system paths, i.e. **PCB/fabrication/gerber**. |br|
    Using '.' or './' as a category puts the file at the root. |br|
    The categories are currently used for `navigate_results` and `navigate_results_rb`.
 
+
+.. _Compress_disable_run_by_default:
+
 -  ``disable_run_by_default`` :index:`: <pair: output - compress; disable_run_by_default>` [:ref:`string <string>` | :ref:`boolean <boolean>`] (default: ``''``) Use it to disable the `run_by_default` status of other output.
    Useful when this output extends another and you don't want to generate the original. |br|
    Use the boolean true value to disable the output you are extending.
+
+.. _Compress_extends:
+
 -  ``extends`` :index:`: <pair: output - compress; extends>` [:ref:`string <string>`] (default: ``''``) Copy the `options` section from the indicated output.
    Used to inherit options from another output of the same type.
+
+.. _Compress_groups:
+
 -  ``groups`` :index:`: <pair: output - compress; groups>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) One or more groups to add this output. In order to catch typos
    we recommend to add outputs only to existing groups. You can create an empty group if
    needed.
 
+
+.. _Compress_output_id:
+
 -  ``output_id`` :index:`: <pair: output - compress; output_id>` [:ref:`string <string>`] (default: ``''``) Text to use for the %I expansion content. To differentiate variations of this output.
+
+.. _Compress_priority:
+
 -  ``priority`` :index:`: <pair: output - compress; priority>` [:ref:`number <number>`] (default: ``10``) (range: 0 to 100) Priority for this output. High priority outputs are created first.
    Internally we use 10 for low priority, 90 for high priority and 50 for most outputs.
+
+.. _Compress_run_by_default:
+
 -  ``run_by_default`` :index:`: <pair: output - compress; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
 
 Used dicts

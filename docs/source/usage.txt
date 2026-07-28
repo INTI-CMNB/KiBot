@@ -5,7 +5,8 @@ Usage:
          [-q | -v...] [-L LOGFILE] [-C | -i | -n] [-m MKFILE] [-A] [-g DEF] ...
          [-E DEF] ... [--defs-from-env] [--defs-from-project] [-w LIST] [-D | -W]
          [--fail-on-warnings] [-F] [--warn-ci-cd] [--warn-all] [--banner N]
-         [--gui | --internal-check] [-I INJECT] [--variant VAR] ... [TARGET...]
+         [--gui | --internal-check] [--keep-temporals] [-I INJECT]
+         [--variant VAR] ... [TARGET...]
   kibot [-v...] [-b BOARD] [-e SCHEMA] [-c PLOT_CONFIG] [--banner N]
          [-E DEF] ... [--defs-from-env] [--config-outs]
          [--only-pre|--only-groups] [--only-names] [--output-name-first] --list
@@ -59,6 +60,7 @@ Options:
   --internal-check                 Run some outputs internal checks
   -i, --invert-sel                 Generate the outputs not listed as targets
   -I, --gui-inject INJECT          Inject events to the GUI from INJECT file
+  --keep-temporals                 Keep temporal files (most of them)
   -l, --list                       List available outputs, preflights and
                                    groups (in the config file).
                                    You don't need to specify an SCH/PCB unless

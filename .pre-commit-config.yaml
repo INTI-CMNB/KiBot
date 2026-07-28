@@ -99,3 +99,7 @@ repos:
 #        # specify your target version here, OR in a Vermin config file as usual:
 #        args: ['-t=3.7-', '--violations']
 #        # (if your target is specified in a Vermin config, you may omit the 'args' entry entirely)
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0  # Use the latest version
+    hooks:
+      - id: check-symlinks

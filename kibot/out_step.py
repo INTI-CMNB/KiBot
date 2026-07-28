@@ -9,6 +9,10 @@ Dependencies:
   - from: KiAuto
     role: mandatory
     version: 1.6.1
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.9
     command: kicad2step_do
 """
 import os
@@ -89,9 +93,9 @@ class STEPOptions(Base3DOptions):
 @output_class
 class STEP(Base3D):
     """ STEP (ISO 10303-21 Clear Text Encoding of the Exchange Structure)
-        Exports the PCB as a 3D model.
+        Exports the PCB as a 3D model with KiAuto.
         This is the most common 3D format for exchange purposes.
-        For KiCad 9 use the `export_3d` output.
+        For KiCad 9 use the `export_3d` output, see the `export_3d` output.
         This output is what you get from the 'File/Export/STEP' menu in pcbnew. """
     def __init__(self):
         super().__init__()

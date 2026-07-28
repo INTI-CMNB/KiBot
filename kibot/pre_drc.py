@@ -172,6 +172,7 @@ class DRC(XRC):  # noqa: F821
             GS.restore_bkp(GS.pcb_file)
 
     def get_command(self, output):
+        # No variants here
         cmd = [GS.kicad_cli, 'pcb', 'drc', '-o', output, '--format', 'json', '--severity-all', '--units',
                UNITS_2_KICAD[self._units]]
         if self._schematic_parity:

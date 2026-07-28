@@ -14,13 +14,21 @@ from some of the processing stages. The most common use is to exclude
 them from some output. You can also change components fields/properties
 and also the 3D model.
 
+.. note::
+   KiCad 10 incorporated variants. They implement most of the things,
+   but not changing the 3D models aspect.
+   If you want to migrate from KiBot variants to native KiCad 10
+   variants consult the following
+   `example <https://github.com/INTI-CMNB/KiBot/blob/dev/tests/yaml_samples/export_variants.kibot.yaml>`__.
+..
+
 Variants are currently used to create *assembly variants*. This concept
 is used to manufacture one PCB used for various products. You can learn
 more about KiBot variants on the following `example
 repo <https://inti-cmnb.github.io/kibot_variants_arduprog/>`__. The
-example is currently using KiCad 6, if you want to see the example files
-for KiCad 5 go
-`here <https://github.com/INTI-CMNB/kibot_variants_arduprog/tree/KiCad5/>`__.
+example is currently using KiCad 10, if you want to see the example files
+for KiCad 9 go
+`here <https://github.com/INTI-CMNB/kibot_variants_arduprog/tree/KiCad9/>`__.
 
 As mentioned above the current use of filters is to mark some
 components. Mainly to exclude them, but also to mark them as special.
@@ -174,13 +182,23 @@ This mechanism allows small changes to the 3D model. Is simple to use,
 but the information is located in the schematic.
 
 If a component defines the field ``_3D_model`` then its value will
-replace the 3D model. You can use ``var_rename`` or
-``var_rename_kicost`` filter to define this field only for certain
-variants. In this way you can change the 3D model according to the
-component variant.
+replace the 3D model. KiCad 10 native variants allows it, for other
+type of variants you can use ``var_rename`` or ``var_rename_kicost``
+filter to define this field only for certain variants. In this way you
+can change the 3D model according to the component variant.
+
+.. note::
+   The name of the field can be configured using the `field_3D_model`
+   global option.
+
 
 When the component has more than one 3D model you must provide a comma
-separated list of models to replace the current models.
+separated list of models to replace the current models. The list must
+contain the same ammount of models to be replaced.
+
+This is a simple
+`KiCad 10 example <https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/3D_Model_LCD_simple_native_variants>`__,
+that uses KiCad native variants.
 
 
 .. index::
@@ -189,7 +207,7 @@ separated list of models to replace the current models.
 Changing the 3D model, complex mechanism
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When the a component has a long list of 3D models and you want to keep
+When a component has a long list of 3D models and you want to keep
 all the information in the PCB you can use this mechanism.
 
 The information is stored in the ``Text items`` of the footprint. If you
@@ -211,8 +229,10 @@ list of 3D models. The ``SLOT1,SLOT2,SLOTN`` is a comma separated list
 of 3D model positions in the list of 3D models. All the slots listed
 will be enabled, the rest will be disabled.
 
-Here is an
-`example <https://github.com/INTI-CMNB/KiBot/tree/master/docs/samples/3D_Model_LCD>`__.
+Here is a
+`KiCad 10 example <https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/3D_Model_LCD_native_variants>`__,
+that uses KiCad native variants, and a `KiCad 9 example
+<https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/3D_Model_LCD>`__, using KiCost variants.
 In this example we have a display whose aspect and connection can
 radically change according to the variant. We have two variants:
 
@@ -251,12 +271,12 @@ The WH1602B-TMI-JT# uses slots 2 and 5. So the effective list will be:
 To achieve it we define the following texts in the footprint:
 ``%left:1,3,4,6%`` and ``%top:2,5%``. Here are both variants:
 
-.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/samples/3D_Model_LCD/output/lcd-3D_top_variant_left.png
+.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/dev/docs/samples/3D_Model_LCD_native_variants/output/lcd-3D_top_variant_left.png
    :alt: Left variant
 
    Left variant
 
-.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/master/docs/samples/3D_Model_LCD/output/lcd-3D_top_variant_top.png
+.. figure:: https://raw.githubusercontent.com/INTI-CMNB/KiBot/dev/docs/samples/3D_Model_LCD_native_variants/output/lcd-3D_top_variant_top.png
    :alt: Top variant
 
    Top variant

@@ -1,0 +1,79 @@
+# This example is used with tests/board_samples/kicad_10/variant_var.kicad_pcb
+# The variants are KiCad 10 native variants, so we don't need to define them
+#
+# kibot -L log -b tests/board_samples/kicad_10/variant_var.kicad_pcb -c tests/yaml_samples/variant_var_ki10.kibot.yaml -d pp10/print_pcb_variant_var --variant production --variant development --variant NONE 3d_model
+#
+kiplot:
+  version: 1
+
+outputs:
+  - name: PNG
+    comment: Top copper and silkscreen
+    type: pcb_print
+    dir: PNG
+    options:
+      plot_sheet_reference: true
+      format: PNG
+      scaling: 4
+      pages:
+        - layers:
+            - layer: F.Cu
+            - layer: F.SilkS
+
+  - name: 'svg_layers'
+    comment: "SVGs for layers"
+    type: svg
+    layers: ['F.Cu', 'F.SilkS']
+    options:
+      scaling: 0
+      # plot_sheet_reference: true
+
+  - name: '3d_model'
+    comment: "3D model"
+    type: export_3d
+    options:
+      include_tracks: true
+      include_silkscreen: true
+
+  - name: 'ipc2581'
+    comment: "IPC 2581 export"
+    type: ipc2581
+
+  - name: 'netlist'
+    comment: "Netlist export"
+    type: netlist
+
+  - name: 'odb'
+    comment: "ODB export"
+    type: odb
+
+  - name: 'position'
+    comment: "GBR position"
+    type: position
+    options:
+      format: GBR
+
+  - name: diff_sch
+    type: diff
+    dir: Diff
+    comment: "Diff sch"
+    options:
+      old: KIBOT_TAG-0
+      old_type: git
+      pcb: false
+
+  - name: diff_pcb
+    type: diff
+    dir: Diff
+    comment: "Diff PCB"
+    options:
+      old: KIBOT_TAG-0
+      old_type: git
+      only_different: true
+    layers: ['F.Cu', 'F.SilkS']
+
+  - name: schematic
+    type: pdf_sch_print
+    comment: "Schematic PDF"
+    options:
+      title: "Forced title for %v %V"

@@ -9,6 +9,7 @@ Dependencies:
     role: mandatory
     command: eeschema_do
     version: 2.3.6
+    version_k10: 2.3.9
 """
 from .gs import GS
 from .out_any_sch_print import Any_SCH_PrintOptions
@@ -27,6 +28,7 @@ class PDF_SCH_PrintOptions(Any_SCH_PrintOptions):
         super().__init__()
         self._expand_ext = 'pdf'
         self._exit_error = PDF_SCH_PRINT
+        self._unified_pages = True
 
 
 @output_class

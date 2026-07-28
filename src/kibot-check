@@ -47,6 +47,7 @@ deps = '{\
                 "desc": "Run external commands to create replacement text",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcb_replace",\
                 "version": null\
             },\
@@ -55,6 +56,7 @@ deps = '{\
                 "desc": "Run external commands to create replacement text",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "sch_replace",\
                 "version": null\
             },\
@@ -63,6 +65,7 @@ deps = '{\
                 "desc": "Run external commands to create replacement text",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "set_text_variables",\
                 "version": null\
             }\
@@ -98,6 +101,11 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    3,\
+                    4,\
+                    0\
+                ],\
                 "output": "blender_export",\
                 "version": [\
                     3,\
@@ -138,6 +146,7 @@ deps = '{\
                 "desc": "Get color messages in a portable way",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "global",\
                 "version": null\
             }\
@@ -173,6 +182,7 @@ deps = '{\
                 "desc": "Download datasheets",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "download_datasheets",\
                 "version": null\
             }\
@@ -208,6 +218,7 @@ deps = '{\
                 "desc": "Create outputs preview",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results",\
                 "version": null\
             },\
@@ -216,6 +227,7 @@ deps = '{\
                 "desc": "Create outputs preview",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results_rb",\
                 "version": null\
             },\
@@ -224,6 +236,7 @@ deps = '{\
                 "desc": "Create PNG, PS and EPS formats",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcb_print",\
                 "version": null\
             }\
@@ -259,6 +272,7 @@ deps = '{\
                 "desc": "Compare with files in the repo",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "diff",\
                 "version": null\
             },\
@@ -267,6 +281,7 @@ deps = '{\
                 "desc": "Find commit hash and/or date",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "kikit_present",\
                 "version": null\
             },\
@@ -275,6 +290,7 @@ deps = '{\
                 "desc": "Compare with files in the repo",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "kiri",\
                 "version": null\
             },\
@@ -283,6 +299,7 @@ deps = '{\
                 "desc": "Find origin url",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results",\
                 "version": null\
             },\
@@ -291,6 +308,7 @@ deps = '{\
                 "desc": "Find origin url",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results_rb",\
                 "version": null\
             },\
@@ -299,6 +317,7 @@ deps = '{\
                 "desc": "Find commit hash and/or date",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcb_replace",\
                 "version": null\
             },\
@@ -307,6 +326,7 @@ deps = '{\
                 "desc": "Find commit hash and/or date",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "sch_replace",\
                 "version": null\
             },\
@@ -315,6 +335,7 @@ deps = '{\
                 "desc": "Find commit hash and/or date",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "set_text_variables",\
                 "version": null\
             }\
@@ -354,6 +375,7 @@ deps = '{\
                 "desc": "Automatically crop images",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "blender_export",\
                 "version": null\
             },\
@@ -362,6 +384,7 @@ deps = '{\
                 "desc": "Create outputs preview",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results",\
                 "version": null\
             },\
@@ -370,6 +393,7 @@ deps = '{\
                 "desc": "Create outputs preview",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results_rb",\
                 "version": null\
             },\
@@ -378,6 +402,7 @@ deps = '{\
                 "desc": "Create monochrome prints and scaled PNG files",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcb_print",\
                 "version": null\
             },\
@@ -386,6 +411,7 @@ deps = '{\
                 "desc": "Create JPG and BMP images",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcbdraw",\
                 "version": null\
             },\
@@ -394,6 +420,7 @@ deps = '{\
                 "desc": "Automatically crop images",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "render_3d",\
                 "version": null\
             }\
@@ -434,6 +461,11 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    7,\
+                    0\
+                ],\
                 "output": "ibom",\
                 "version": [\
                     2,\
@@ -473,6 +505,11 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    9,\
+                    1\
+                ],\
                 "output": "kibom",\
                 "version": [\
                     1,\
@@ -508,22 +545,39 @@ deps = '{\
         "pypi_name": "kiauto",\
         "role": [\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": "Compare schematics",\
                 "mandatory": false,\
                 "max_version": null,\
-                "output": "diff",\
-                "version": [\
+                "min_version": [\
                     2,\
                     2,\
                     0\
+                ],\
+                "output": "diff",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    6\
+                ],\
                 "output": "dxf_sch_print",\
                 "version": [\
                     2,\
@@ -532,22 +586,39 @@ deps = '{\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "gencad",\
-                "version": [\
+                "min_version": [\
                     1,\
                     6,\
+                    5\
+                ],\
+                "output": "gencad",\
+                "version": [\
+                    2,\
+                    3,\
                     5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    6\
+                ],\
                 "output": "hpgl_sch_print",\
                 "version": [\
                     2,\
@@ -556,70 +627,127 @@ deps = '{\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": "Show KiAuto installation information",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    0,\
+                    0\
+                ],\
                 "output": "info",\
                 "version": [\
                     2,\
-                    0,\
-                    0\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": "Compare schematics",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    2,\
+                    0\
+                ],\
                 "output": "kiri",\
                 "version": [\
                     2,\
-                    2,\
-                    0\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "netlist",\
-                "version": [\
+                "min_version": [\
                     2,\
                     0,\
                     0\
+                ],\
+                "output": "netlist",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": "Print the page frame in GUI mode",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    6,\
+                    7\
+                ],\
                 "output": "pcb_print",\
                 "version": [\
-                    1,\
-                    6,\
-                    7\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    6,\
+                    7\
+                ],\
                 "output": "pdf_pcb_print",\
                 "version": [\
-                    1,\
-                    6,\
-                    7\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    6\
+                ],\
                 "output": "pdf_sch_print",\
                 "version": [\
                     2,\
@@ -628,10 +756,17 @@ deps = '{\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    6\
+                ],\
                 "output": "ps_sch_print",\
                 "version": [\
                     2,\
@@ -640,46 +775,82 @@ deps = '{\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.8"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    1\
+                ],\
                 "output": "render_3d",\
                 "version": [\
                     2,\
                     3,\
-                    1\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "step",\
-                "version": [\
+                "min_version": [\
                     1,\
                     6,\
                     1\
+                ],\
+                "output": "step",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "svg_pcb_print",\
-                "version": [\
+                "min_version": [\
                     1,\
                     6,\
                     7\
+                ],\
+                "output": "svg_pcb_print",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    6\
+                ],\
                 "output": "svg_sch_print",\
                 "version": [\
                     2,\
@@ -688,63 +859,111 @@ deps = '{\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "vrml",\
-                "version": [\
+                "min_version": [\
                     2,\
                     1,\
                     0\
+                ],\
+                "output": "vrml",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    3,\
+                    2\
+                ],\
                 "output": "convert_pcb",\
                 "version": [\
                     2,\
                     3,\
-                    2\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "run_drc",\
-                "version": [\
+                "min_version": [\
                     2,\
                     0,\
                     0\
+                ],\
+                "output": "run_drc",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "run_erc",\
-                "version": [\
+                "min_version": [\
                     2,\
                     2,\
                     1\
+                ],\
+                "output": "run_erc",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "7": "2.2.8",\
+                    "8": "2.3.2",\
+                    "9": "2.3.5",\
+                    "10": "2.3.9"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
-                "output": "update_xml",\
-                "version": [\
+                "min_version": [\
                     1,\
                     5,\
                     4\
+                ],\
+                "output": "update_xml",\
+                "version": [\
+                    2,\
+                    3,\
+                    5\
                 ]\
             }\
         ],\
@@ -775,10 +994,17 @@ deps = '{\
         "pypi_name": "kidiff",\
         "role": [\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.6.0"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    5,\
+                    3\
+                ],\
                 "output": "diff",\
                 "version": [\
                     2,\
@@ -787,10 +1013,17 @@ deps = '{\
                 ]\
             },\
             {\
-                "all_versions": {},\
+                "all_versions": {\
+                    "10": "2.6.0"\
+                },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    2,\
+                    5,\
+                    1\
+                ],\
                 "output": "kiri",\
                 "version": [\
                     2,\
@@ -830,6 +1063,11 @@ deps = '{\
                 "desc": "Find components costs and specs",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    1,\
+                    8\
+                ],\
                 "output": "bom",\
                 "version": [\
                     1,\
@@ -842,6 +1080,11 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    1,\
+                    7\
+                ],\
                 "output": "kicost",\
                 "version": [\
                     1,\
@@ -880,11 +1123,17 @@ deps = '{\
                 "all_versions": {\
                     "6": "1.5.0",\
                     "7": "1.6.0",\
-                    "9": "1.7.0"\
+                    "9": "1.7.0",\
+                    "10": "1.8.0"\
                 },\
                 "desc": "Separate multiboard projects",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    5,\
+                    0\
+                ],\
                 "output": "global",\
                 "version": [\
                     1,\
@@ -896,11 +1145,17 @@ deps = '{\
                 "all_versions": {\
                     "6": "1.5.0",\
                     "7": "1.6.0",\
-                    "9": "1.7.0"\
+                    "9": "1.7.0",\
+                    "10": "1.8.0"\
                 },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    5,\
+                    1\
+                ],\
                 "output": "panelize",\
                 "version": [\
                     1,\
@@ -912,11 +1167,17 @@ deps = '{\
                 "all_versions": {\
                     "6": "1.5.0",\
                     "7": "1.6.0",\
-                    "9": "1.7.0"\
+                    "9": "1.7.0",\
+                    "10": "1.8.0"\
                 },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    5,\
+                    0\
+                ],\
                 "output": "stencil_3d",\
                 "version": [\
                     1,\
@@ -928,11 +1189,17 @@ deps = '{\
                 "all_versions": {\
                     "6": "1.5.0",\
                     "7": "1.6.0",\
-                    "9": "1.7.0"\
+                    "9": "1.7.0",\
+                    "10": "1.8.0"\
                 },\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    5,\
+                    0\
+                ],\
                 "output": "stencil_for_jig",\
                 "version": [\
                     1,\
@@ -973,6 +1240,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcb_print",\
                 "version": null\
             },\
@@ -981,6 +1249,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcbdraw",\
                 "version": null\
             }\
@@ -1017,6 +1286,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "global",\
                 "version": null\
             }\
@@ -1052,6 +1322,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "stencil_3d",\
                 "version": null\
             },\
@@ -1060,6 +1331,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "stencil_for_jig",\
                 "version": null\
             }\
@@ -1103,6 +1375,7 @@ deps = '{\
                 "desc": "Create PDF/ODF/DOCX files",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "report",\
                 "version": null\
             }\
@@ -1139,6 +1412,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "global",\
                 "version": null\
             }\
@@ -1175,6 +1449,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "qr_lib",\
                 "version": null\
             }\
@@ -1210,6 +1485,7 @@ deps = '{\
                 "desc": "Compress in RAR format",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "compress",\
                 "version": null\
             }\
@@ -1245,6 +1521,7 @@ deps = '{\
                 "desc": "SVG logos for the BoM",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "bom",\
                 "version": null\
             },\
@@ -1253,6 +1530,7 @@ deps = '{\
                 "desc": "Create outputs preview",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results",\
                 "version": null\
             },\
@@ -1261,6 +1539,7 @@ deps = '{\
                 "desc": "Create PNG icons",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results",\
                 "version": null\
             },\
@@ -1269,6 +1548,7 @@ deps = '{\
                 "desc": "Create outputs preview",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results_rb",\
                 "version": null\
             },\
@@ -1277,6 +1557,7 @@ deps = '{\
                 "desc": "Create PNG icons",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "navigate_results_rb",\
                 "version": null\
             },\
@@ -1285,6 +1566,7 @@ deps = '{\
                 "desc": "Create PDF, PNG, PS and EPS formats",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcb_print",\
                 "version": null\
             },\
@@ -1293,6 +1575,7 @@ deps = '{\
                 "desc": "Create PNG, JPG and BMP images",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcbdraw",\
                 "version": null\
             }\
@@ -1339,6 +1622,7 @@ deps = '{\
                 "desc": "Create a PDF with BoM labels",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "bom_labels",\
                 "version": null\
             }\
@@ -1375,6 +1659,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "global",\
                 "version": null\
             }\
@@ -1411,6 +1696,11 @@ deps = '{\
                 "desc": "Create XLSX files",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": [\
+                    1,\
+                    1,\
+                    2\
+                ],\
                 "output": "bom",\
                 "version": [\
                     1,\
@@ -1450,6 +1740,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "stencil_3d",\
                 "version": null\
             },\
@@ -1458,6 +1749,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "stencil_for_jig",\
                 "version": null\
             }\
@@ -1494,6 +1786,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "stencil_3d",\
                 "version": null\
             },\
@@ -1502,6 +1795,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "stencil_for_jig",\
                 "version": null\
             }\
@@ -1538,6 +1832,7 @@ deps = '{\
                 "desc": "Copy embedded files from the schematic to the KiCad cache",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "global",\
                 "version": null\
             }\
@@ -1574,6 +1869,7 @@ deps = '{\
                 "desc": null,\
                 "mandatory": true,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "kikit_present",\
                 "version": null\
             }\
@@ -1610,6 +1906,7 @@ deps = '{\
                 "desc": "Automatically adjust SVG margin",\
                 "mandatory": false,\
                 "max_version": null,\
+                "min_version": null,\
                 "output": "pcbdraw",\
                 "version": null\
             }\
@@ -1732,7 +2029,7 @@ def run_command(cmd, only_first_line=False, pre_ver_text=None, no_err_2=False, n
 
 def simple_run_command(cmd):
     res = run_command(cmd)
-    sev, ver = check_version(res, [{'mandatory': True, 'output': 'global', 'version': None}], no_ver=True)
+    sev, ver = check_version(res, [{'mandatory': True, 'output': 'global', 'version': None, 'min_version': None}], no_ver=True)
     return do_color(res, sev, version=ver)
 
 
@@ -1797,7 +2094,7 @@ def check_tests(tests):
 
 
 def get_version(r):
-    single = r['version']
+    single = r['min_version']
     if not single:
         return single
     all = r['all_versions']

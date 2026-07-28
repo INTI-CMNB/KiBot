@@ -402,7 +402,7 @@ class Optionable(object):
 
     def get_attrs_gen(self):
         """ Returns a (key, val) iterator on public attributes """
-        return filter(lambda k: k[0][0] != '_', vars(self).items())
+        return filter(lambda k: (k[0][0] != '_') and (k[0] != 'get_targets'), vars(self).items())
 
     @staticmethod
     def _find_global_variant():
@@ -728,6 +728,44 @@ class Optionable(object):
         if rest == 'distributor':
             return GS.global_field_distributor[0] if GS.global_field_distributor else field_or_empty
         return field
+
+    def get_kicad_variant(self, c):
+        """ Look for the currently selected variant in the component """
+        vname = 'Default'
+        v = None
+        if self.variant:
+            v = c.variants.get(self.variant.name)
+            if v:
+                logger.debugl(4, f"- Found variant {self.variant.name} for {c.ref}")
+                vname = self.variant.name
+        return v, vname
+
+    def kicad_var_cb(self, c):
+        """ Generic KiCad variants implementation """
+        v, vname = self.get_kicad_variant(c)
+        if v is None:
+            return v, vname
+        # Flags
+        if v.in_bom is not None:
+            c.in_bom = v.in_bom
+        if v.dnp is not None:
+            c.kicad_dnp = v.dnp
+        # Fields
+        for name, value in v.fields.items():
+            c.set_field(name, value)
+            logger.debugl(3, f'- {c.ref} field `{name}` set to `{value}` by `{vname}`')
+        return v, vname
+
+    def kicad_variant_name(self):
+        return GS.kicad_variant_name(self.variant or GS.solved_global_variant)
+
+    def add_kicad_cli_variant(self, cmd):
+        kicad_variant = self.kicad_variant_name()
+        if kicad_variant:
+            cmd.extend(['--variant', kicad_variant])
+
+    def _get_targets(self, out_dir):
+        return [self._parent.expand_filename(out_dir, self.output)]
 
 
 class BaseOptions(Optionable):

@@ -8,17 +8,35 @@ Field Modifier
 
    Changes the content of one or more fields.
 
+
+.. _Field_Modify_comment:
+
    -  **comment** :index:`: <pair: filter - field_modify; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Field_Modify_name:
+
    -  **name** :index:`: <pair: filter - field_modify; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Field_Modify_fields:
+
    -  ``fields`` :index:`: <pair: filter - field_modify; fields>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'Datasheet'``) [:ref:`comma separated <comma_sep>`] Fields to convert.
+
+
+.. _Field_Modify_include:
 
    -  ``include`` :index:`: <pair: filter - field_modify; include>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) Name of the filter to select which components will be affected.
       Applied to all if nothing specified here.
+
+
+.. _Field_Modify_regex:
 
    -  ``regex`` :index:`: <pair: filter - field_modify; regex>` [:ref:`string <string>`] (default: ``'(https?://\\S+)'``) Regular expression to match the field content.
       Only fields that matches will be modified. |br|
       An empty regex will match anything. |br|
       The example matches an HTTP URL.
+
+.. _Field_Modify_replace:
+
    -  ``replace`` :index:`: <pair: filter - field_modify; replace>` [:ref:`string <string>`] (default: ``'<a href="\\1">\\1</a>'``) Text to replace, can contain references to sub-expressions.
       The example converts an HTTP URL into an HTML link, like the URLify filter.
 

@@ -386,6 +386,13 @@
         "DataTypeString"
       ],
       null
+    ],
+    [
+      "pre_transform",
+      [
+        "DataTypeListStringSingular"
+      ],
+      null
     ]
   ],
   "kicost": [

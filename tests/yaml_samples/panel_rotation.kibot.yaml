@@ -1,0 +1,161 @@
+kibot:
+  version: 1
+
+global:
+  time_reformat: false
+
+filters:
+  - name: 'exclude_common'
+    type: 'generic'
+    comment: 'Excludes test points, logos, symbols, and fiducials'
+    exclude_any:
+      - column: Reference
+        regex: '^TP[0-9]*'
+      - column: Reference
+        regex: '^FID'
+      - column: Reference
+        regex: '^LOGO'
+      - column: Reference
+        regex: '^KiKit_'
+      - column: Reference
+        regex: '^kibuzzard-'
+      - column: Reference
+        regex: '^SYM'
+
+  - name: fix_rotation
+    comment: 'Adjust rotation for JLC'
+    type: rot_footprint
+    rotations:
+      - ["^QFN-28-1EP_6x6mm_P0.65mm_EP4.25x4.25mm", -90.0]
+      - ["^QFN-28_4x4mm_P0.5mm", 0.0]
+      - ["^JST_SH_SM02B-SRSS-TB_1x02-1MP_P1.00mm_Horizontal", 180.0]
+      - ["^JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal", 180.0]
+      - ["^JST_SH_SM04B-SRSS-TB_1x04-1MP_P1.00mm_Horizontal", 180.0]
+      - ["^JST_SH_SM06B-SRSS-TB_1x06-1MP_P1.00mm_Horizontal", 180.0]
+      - ["^JST_SH_SM08B-SRSS-TB_1x08-1MP_P1.00mm_Horizontal", 180.0]
+      - ["^JST_SH_BM02B-SRSS-TB_1x02-1MP_P1.00mm_Vertical", 180.0]
+      - ["^JST_SH_BM03B-SRSS-TB_1x03-1MP_P1.00mm_Vertical", 180.0]
+      - ["^JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical", 180.0]
+      - ["^JST_SH_BM06B-SRSS-TB_1x06-1MP_P1.00mm_Vertical", 180.0]
+      - ["^JST_SH_BM08B-SRSS-TB_1x08-1MP_P1.00mm_Vertical", 180.0]
+      - ["^LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm", -90.0]
+      - ["^LED_WS2812B-2020_PLCC4_2.0x2.0mm", 0.0]
+      - ["^SOT-523", 180.0]
+      - ["^SOT-666", -90.0]
+      - ["^XF2M-1415-1A", 180.0]
+      - ["^XF2C_1415-1A", 180.0]
+      - ["^SOTFL50P160X60", 270]
+      - ["^SOP65P640X110-20N", -90]
+      - ["^CP_Elec_6.3x7.7", 0]
+      - ["^CP_Elec_6.3x5.4", 0]
+      - ["^CP_Elec_5x5.4", 0]
+      - ["^Bourns_TC33X_Vertical", -90]
+      - ["^LTR-303ALS-01", -90]
+      - ["^PinHeader_2x05_P1.27mm_Vertical",90]
+      - ["^PinHeader_2x05_P1.27mm_Vertical_SMD",90]
+    offsets:
+      - ["^TO-252-2", "3.3,0"]
+      - ["^Converter_ACDC_MeanWell_IRM-10-xx_THT", "-19.2, 5.5"]
+      - ["^GCT_USB4105-GF-A", "0, -2.5"]
+      - ["^ESP32-S3-WROOM-1-N4R2", "0, 3.65"]
+      - ["^ESP32-S3-WROOM-1-N8R2", "0, 3.65"]
+      - ["^ESP32-S3-WROOM-1-N16R2", "0, 3.65"]
+      - ["^XF2C_1415-1A", "0, -0.37"]
+      - ["^XF2M_1415-1A", "0, -0.37"]
+      - ["^PinHeader_2x05_P1.27mm_Vertical","2.54,0.635"]
+      - ["^PinHeader_2x05_P1.27mm_Vertical_SMD","2.54,0.635"]
+
+variants:
+  - name: jlcpcb
+    comment: 'JLCPCB requires some rotational transforms'
+    type: kibom
+    variant: jlcpcb
+    pre_transform: fix_rotation
+
+outputs:
+  - name: 'create_pnp_jlc'
+    comment: 'Generate JLC PnP File'
+    type: position
+    options:
+      format: CSV
+      units: millimeters
+      separate_files_for_front_and_back: false
+      only_smd: false
+      exclude_filter: 'exclude_common'
+      variant: jlcpcb
+      columns:
+        - id: Ref
+          name: Designator
+        - id: PosX
+          name: "Mid X"
+        - id: PosY
+          name: "Mid Y"
+        - id: Side
+          name: Layer
+        - id: Rot
+          name: Rotation
+
+  - name: 'panel_repeated'
+    comment: "Create a 2x1 panel with repeated references"
+    type: panelize
+    options:
+      title: '+ (Panel)'
+      units: mm
+      configs:
+        - &panel_item_template
+          layout: &layout_ops
+            rows: 2
+            cols: 1
+            space: 2
+          tabs:
+            type: fixed
+            vcount: 2
+            hcount: 2
+          cuts:
+            type: vcuts
+            offset: 0
+            linewidth: 0
+            layer: "Edge.Cuts"
+          framing:
+            type: frame
+            width: 5
+            space: 2
+            fillet: 1
+            mintotalwidth: 70
+            mintotalheight: 70
+            cuts: both
+          tooling:
+            type: 3hole
+            hoffset: 2.5
+            voffset: 2.5
+          fiducials:
+            type: 3fid
+            hoffset: 2.5
+            voffset: 5
+            coppersize: 2
+          text:
+            type: simple
+            text: "Current Sensor Module"
+            anchor: ml
+            hoffset: 2.5
+            orientation: 90
+          text2:
+            type: simple
+            text: "CRG Makes {date}"
+            anchor: mr
+            hoffset: -2.5
+            orientation: 90
+          post:
+            millradius: 1
+
+  - name: 'panel_renamed'
+    comment: "Create a 2x1 panel with different references"
+    type: panelize
+    options:
+      title: '+ (Panel)'
+      units: mm
+      configs:
+        - <<: *panel_item_template
+          layout:
+            <<: *layout_ops
+            renameref: "{orig}-{n}"

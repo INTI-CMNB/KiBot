@@ -13,10 +13,25 @@ Alternatives
    you can leave their value empty. In this way KiBot will know these names are valid even before
    running the filter.. |br|
 
+
+.. _Alternatives_comment:
+
    -  **comment** :index:`: <pair: filter - alternatives; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Alternatives_name:
+
    -  **name** :index:`: <pair: filter - alternatives; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Alternatives_parts:
+
    -  **parts** :index:`: <pair: filter - alternatives; parts>`  [:ref:`AlternativesSymbols parameters <AlternativesSymbols_fi>`] [:ref:`dict <dict>` | :ref:`list(dict) <list(dict)>`] (default: ``[]``) List of symbols to process.
+
+.. _Alternatives_number_from:
+
    -  ``number_from`` :index:`: <pair: filter - alternatives; number_from>` [:ref:`number <number>`] (default: ``2``) First number used for the alternative number (%d).
+
+.. _Alternatives_pattern:
+
    -  ``pattern`` :index:`: <pair: filter - alternatives; pattern>` [:ref:`string <string>`] (default: ``'%f%d'``) Pattern used to generate the alternative field.
       %f is the current field name. |br|
       %d is the alternative number.

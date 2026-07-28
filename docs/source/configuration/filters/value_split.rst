@@ -10,21 +10,57 @@ Value Splitter
    I.e. extracts the tolerance and puts it in the `tolerance` field. |br|
    Usage `example <https://inti-cmnb.github.io/kibot-examples-1/value_split/>`__. |br|
 
+
+.. _Value_Split_comment:
+
    -  **comment** :index:`: <pair: filter - value_split; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Value_Split_name:
+
    -  **name** :index:`: <pair: filter - value_split; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Value_Split_autoplace:
+
    -  ``autoplace`` :index:`: <pair: filter - value_split; autoplace>` [:ref:`boolean <boolean>`] (default: ``true``) Try to figure out the position for the added fields.
+
+.. _Value_Split_autoplace_mechanism:
+
    -  ``autoplace_mechanism`` :index:`: <pair: filter - value_split; autoplace_mechanism>` [:ref:`string <string>`] (default: ``'bottom'``) (choices: "bottom", "top") Put the new field at the bottom/top of the last field.
+
+.. _Value_Split_package:
+
    -  ``package`` :index:`: <pair: filter - value_split; package>` [:ref:`string <string>`] (default: ``'yes'``) (choices: "yes", "no", "soft") Policy for the package.
       yes = overwrite existing value, no = don't touch, soft = copy if not defined.
+
+.. _Value_Split_power:
+
    -  ``power`` :index:`: <pair: filter - value_split; power>` [:ref:`string <string>`] (default: ``'yes'``) (choices: "yes", "no", "soft") Policy for the power rating.
       yes = overwrite existing value, no = don't touch, soft = copy if not defined.
+
+.. _Value_Split_replace_source:
+
    -  ``replace_source`` :index:`: <pair: filter - value_split; replace_source>` [:ref:`boolean <boolean>`] (default: ``true``) Replace the content of the source field using a normalized representation of the interpreted value.
+
+.. _Value_Split_source:
+
    -  ``source`` :index:`: <pair: filter - value_split; source>` [:ref:`string <string>`] (default: ``'Value'``) Name of the field to use as source of information.
+
+.. _Value_Split_temp_coef:
+
    -  ``temp_coef`` :index:`: <pair: filter - value_split; temp_coef>` [:ref:`string <string>`] (default: ``'yes'``) (choices: "yes", "no", "soft") Policy for the temperature coefficient.
       yes = overwrite existing value, no = don't touch, soft = copy if not defined.
+
+.. _Value_Split_tolerance:
+
    -  ``tolerance`` :index:`: <pair: filter - value_split; tolerance>` [:ref:`string <string>`] (default: ``'yes'``) (choices: "yes", "no", "soft") Policy for the tolerance.
       yes = overwrite existing value, no = don't touch, soft = copy if not defined.
+
+.. _Value_Split_visible:
+
    -  ``visible`` :index:`: <pair: filter - value_split; visible>` [:ref:`boolean <boolean>`] (default: ``false``) Make visible the modified fields.
+
+.. _Value_Split_voltage:
+
    -  ``voltage`` :index:`: <pair: filter - value_split; voltage>` [:ref:`string <string>`] (default: ``'yes'``) (choices: "yes", "no", "soft") Policy for the voltage rating.
       yes = overwrite existing value, no = don't touch, soft = copy if not defined.
 

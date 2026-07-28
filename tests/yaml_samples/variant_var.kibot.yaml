@@ -1,0 +1,37 @@
+# Example showing how we can change a footprint using the variants mechanism
+# To get the resistor footprint (default) use:
+# $ kibot -g variant=production -c variant_var.kibot.yaml -b variant_var.kicad_pcb
+# To get the diode footprint use:
+# $ kibot -g variant=development -c variant_var.kibot.yaml -b variant_var.kicad_pcb
+
+kiplot:
+  version: 1
+
+variants:
+  # A variant for production, will define "PROD" as variant
+  - name: 'production'
+    comment: 'Production variant'
+    type: kibom
+    file_id: '_(PROD)'
+    variant: PROD
+
+  - name: 'development'
+    comment: 'Development variant'
+    type: kibom
+    file_id: '_(DEV)'
+    variant: V1
+
+outputs:
+  # An output to clearly show R1
+  - name: PNG
+    comment: Top copper and silkscreen
+    type: pcb_print
+    dir: PNG
+    options:
+      plot_sheet_reference: true
+      scaling: 4
+      format: PNG
+      pages:
+        - layers:
+            - layer: F.Cu
+            - layer: F.SilkS

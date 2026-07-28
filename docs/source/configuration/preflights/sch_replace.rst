@@ -10,6 +10,9 @@ Replaces tags in the schematic. I.e. to insert the git hash or last revision dat
 This is useful for KiCad 5, use `set_text_variables` when using KiCad 6. |br|
 This preflight modifies the schematics. Even when a back-up is done use it carefully
 
+
+.. _SCH_Replace_sch_replace:
+
    -  **sch_replace** :index:`: <pair: preflight - sch_replace; sch_replace>`  [:ref:`SCH_ReplaceOptions parameters <SCH_ReplaceOptions_pre>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the `sch_replace` preflight.
 
 Used dicts

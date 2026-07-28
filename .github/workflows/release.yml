@@ -11,6 +11,8 @@ on:
       - "v3_*"
       - "v4"
       - "v4_*"
+  repository_dispatch:
+    types: [test_release]
 
 jobs:
   check:
@@ -64,6 +66,8 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -86,13 +90,4 @@ jobs:
 
       - name: Trigger kicad_auto image build
         run: |
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto/dispatches --data '{"event_type": "build_k6"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto/dispatches --data '{"event_type": "build_k7"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto/dispatches --data '{"event_type": "build_k8"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto/dispatches --data '{"event_type": "build_k9"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto/dispatches --data '{"event_type": "build_k10"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto_test/dispatches --data '{"event_type": "build_k6"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto_test/dispatches --data '{"event_type": "build_k7"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto_test/dispatches --data '{"event_type": "build_k8"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto_test/dispatches --data '{"event_type": "build_k9"}'
-          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto_test/dispatches --data '{"event_type": "build_k10"}'
+          curl -X POST -u "${{secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" https://api.github.com/repos/INTI-CMNB/kicad_auto/dispatches --data '{"event_type": "refresh_images", "ref": "dev"}'

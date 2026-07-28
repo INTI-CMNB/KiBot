@@ -9,7 +9,21 @@
    Used for KiCad 10 and newer variants. |br|
    Defining them in the configuration file allows to change the comment and to define the `file_id`
 
+
+.. _KiCad_comment:
+
    -  ``comment`` :index:`: <pair: variant - kicad; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _KiCad_file_id:
+
    -  ``file_id`` :index:`: <pair: variant - kicad; file_id>` [:ref:`string <string>`] (default: ``''``) Text to use as the replacement for %v expansion.
+
+.. _KiCad_name:
+
    -  ``name`` :index:`: <pair: variant - kicad; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular variant definition.
+
+.. _KiCad_pre_transform:
+
+   -  ``pre_transform`` :index:`: <pair: variant - kicad; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters..
+
 

@@ -11,6 +11,9 @@ For KiCad 8 use *erc*
 To ensure the schematic is electrically correct. |br|
 The report file name is controlled by the global output pattern (%i=erc %x=txt)
 
+
+.. _Run_ERC_run_erc:
+
    -  **run_erc** :index:`: <pair: preflight - run_erc; run_erc>`  [:ref:`Run_ERCOptions parameters <Run_ERCOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
 Used dicts

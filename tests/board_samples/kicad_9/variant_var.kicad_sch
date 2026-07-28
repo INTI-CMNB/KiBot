@@ -1,0 +1,34 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "515ffefb-67fc-469e-8927-514bdd5221e6")
+	(paper "A4")
+	(lib_symbols)
+	(text "${VARIANT_DESC}"
+		(exclude_from_sim no)
+		(at 93.472 63.754 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "530ac3e6-49cc-4093-8e72-27a4180aab37")
+	)
+	(text "${VARIANT}"
+		(exclude_from_sim no)
+		(at 93.218 60.706 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "cac53220-88e4-4851-85eb-d15961bce36d")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

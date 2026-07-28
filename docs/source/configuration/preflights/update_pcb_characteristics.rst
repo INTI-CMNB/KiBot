@@ -12,5 +12,8 @@ Place* -> *Add Board Characteristics*. But this information is static, so if
 you modify anything related to it the block will be obsolete. |br|
 This preflight tries to refresh the information
 
+
+.. _Update_PCB_Characteristics_update_pcb_characteristics:
+
    -  **update_pcb_characteristics** :index:`: <pair: preflight - update_pcb_characteristics; update_pcb_characteristics>` [:ref:`boolean <boolean>`] (default: ``false``) Enable this preflight.
 

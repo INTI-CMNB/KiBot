@@ -14,7 +14,8 @@ import urllib.parse
 from .columnlist import ColumnList, BoMError
 from .kibot_logo import KIBOT_LOGO, KIBOT_LOGO_W, KIBOT_LOGO_H
 from ..misc import (read_png, STYLE_COMMON, TABLE_MODERN, TABLE_CLASSIC, HEAD_COLOR_R, HEAD_COLOR_R_L, HEAD_COLOR_G,
-                    HEAD_COLOR_G_L, HEAD_COLOR_B, HEAD_COLOR_B_L)
+                    HEAD_COLOR_G_L, HEAD_COLOR_B, HEAD_COLOR_B_L, SEL_THEME, HEAD_COLOR_R_D, HEAD_COLOR_R_L_D, HEAD_COLOR_G_D,
+                    HEAD_COLOR_G_L_D, HEAD_COLOR_B_D, HEAD_COLOR_B_L_D, THEME_BUTTON, THEME_LOGIC)
 from .. import log
 logger = log.get_logger()
 
@@ -23,7 +24,7 @@ logger = log.get_logger()
 # - Stack Overflow: https://stackoverflow.com/questions/61122696/addeventlistener-after-change-event
 # - pimpmykicadbom: https://gitlab.com/antto/pimpmykicadbom
 # - Table Generator: https://www.tablesgenerator.com/
-SORT_CODE = ('<script charset="utf-8">\n'
+SORT_CODE = ('<script>\n'
              '  var TGSort = window.TGSort || function(n) {\n'
              '    "use strict";\n'
              '    function r(n) { return n ? n.length : 0 }\n'
@@ -344,40 +345,51 @@ def write_html(filename, groups, headings, head_names, cfg):
             if style_name.endswith('green'):
                 head_color = HEAD_COLOR_G
                 head_color_l = HEAD_COLOR_G_L
+                head_color_d = HEAD_COLOR_G_D
+                head_color_l_d = HEAD_COLOR_G_L_D
             elif style_name.endswith('blue'):
                 head_color = HEAD_COLOR_B
                 head_color_l = HEAD_COLOR_B_L
-            else:
+                head_color_d = HEAD_COLOR_B_D
+                head_color_l_d = HEAD_COLOR_B_L_D
+            else:  # red
                 head_color = HEAD_COLOR_R
                 head_color_l = HEAD_COLOR_R_L
-            style += TABLE_MODERN.replace('@bg@', head_color)
-            style += TABLE_MODERN.replace('@bgl@', head_color_l)
+                head_color_d = HEAD_COLOR_R_D
+                head_color_l_d = HEAD_COLOR_R_L_D
+            style = style.replace('@bg@', head_color).replace('@bgl@', head_color_l).replace('@bg_d@', head_color_d).\
+                replace('@bgl_d@', head_color_l_d)
+            style += TABLE_MODERN
         else:
-            # Background is white, so we change the sorting cursor to black
-            style = style.replace('border-color:#ffffff', 'border-color:#000000')
+            # In this case the header background is the page background.
+            # Adjust the sorting arrow to be visible.
+            style = style.replace('border-color:#ffffff', 'border-color:var(--table-cl-border)')
             style += TABLE_CLASSIC
 
     with open(filename, "w") as html:
         # HTML Head
-        html.write("<html>\n")
+        html.write("<!DOCTYPE html>\n")
+        html.write('<html lang="en">\n')
         html.write("<head>\n")
         html.write(' <meta charset="UTF-8">\n')  # UTF-8 encoding for unicode support
         if cfg.html.title:
             html.write(' <title>'+cfg.html.title+'</title>\n')
         # CSS
+        html.write(SEL_THEME)
         html.write("<style>\n")
         html.write(style)
         html.write("</style>\n")
         html.write("</head>\n")
 
         html.write("<body>\n")
+        html.write(THEME_BUTTON)
         # Page Header
         img = None
         if cfg.html.logo is not None:
             if cfg.html.logo:
                 img_w, img_h, img = embed_image(cfg.html.logo)
             else:
-                img = 'data:image/png;base64,'+KIBOT_LOGO
+                img = 'data:image/png;base64,'+KIBOT_LOGO.replace('\n', '')
                 img_w = KIBOT_LOGO_W
                 img_h = KIBOT_LOGO_H
         if img or not cfg.html.hide_pcb_info or not cfg.html.hide_stats_info or cfg.html.title:
@@ -394,7 +406,7 @@ def write_html(filename, groups, headings, head_names, cfg):
             html.write(' </td>\n')
             html.write(' <td colspan="2" class="cell-title">\n')
             if cfg.html.title:
-                html.write('  <div class="title">'+cfg.html.title+'</div>\n')
+                html.write('  <div class="title"><h1>'+cfg.html.title+'</h1></div>\n')
             html.write(' </td>\n')
             html.write('</tr>\n')
             write_extra_info(html, cfg)
@@ -432,6 +444,7 @@ def write_html(filename, groups, headings, head_names, cfg):
             html.write('</table>\n')
 
         html.write(SORT_CODE)
+        html.write(THEME_LOGIC)
         html.write("</body></html>")
 
     return True

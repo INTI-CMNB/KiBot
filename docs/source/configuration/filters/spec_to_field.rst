@@ -13,12 +13,30 @@ Spec to Field
    the `bom` output. Make sure you can do this before trying to use this filter. |br|
    Usage `example <https://inti-cmnb.github.io/kibot-examples-1/spec_to_field/>`__. |br|
 
+
+.. _Spec_to_Field_comment:
+
    -  **comment** :index:`: <pair: filter - spec_to_field; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _Spec_to_Field_from_output:
+
    -  **from_output** :index:`: <pair: filter - spec_to_field; from_output>` [:ref:`string <string>`] (default: ``''``) Name of the output used to collect the specs.
       Currently this must be a `bom` output with KiCost enabled and a distributor that returns specs.
+
+.. _Spec_to_Field_name:
+
    -  **name** :index:`: <pair: filter - spec_to_field; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular filter definition.
+
+.. _Spec_to_Field_specs:
+
    -  **specs** :index:`: <pair: filter - spec_to_field; specs>`  [:ref:`SpecOptions parameters <SpecOptions_fi>`] [:ref:`list(dict) <list(dict)>` | :ref:`dict <dict>`] (default: ``[{'spec': '_voltage', 'field': '_field_voltage'}, {'spec': '_tolerance', 'field': '_field_tolerance'}, {'spec': '_power', 'field': '_field_power'}, {'spec': '_current', 'field': '_field_current'}]``) One or more specs to be copied.
+
+.. _Spec_to_Field_check_dist_coherence:
+
    -  ``check_dist_coherence`` :index:`: <pair: filter - spec_to_field; check_dist_coherence>` [:ref:`boolean <boolean>`] (default: ``true``) Check that the data we got from different distributors is equivalent.
+
+.. _Spec_to_Field_check_dist_fields:
+
    -  ``check_dist_fields`` :index:`: <pair: filter - spec_to_field; check_dist_fields>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``['_value', '_tolerance', '_power', '_current', '_voltage', '_temp_coeff']``) [:ref:`comma separated <comma_sep>`] List of fields to include in the check.
       For a full list of fields consult the `specs` option.
 

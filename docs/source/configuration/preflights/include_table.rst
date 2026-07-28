@@ -18,6 +18,9 @@ Only the width of the table is important, the height will be adjusted. |br|
    needed for the tables
 .. 
 
+
+.. _Include_Table_include_table:
+
    -  **include_table** :index:`: <pair: preflight - include_table; include_table>`  [:ref:`IncludeTableOptions parameters <IncludeTableOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
 Used dicts

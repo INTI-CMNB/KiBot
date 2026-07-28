@@ -37,8 +37,20 @@ Credits
    -  **GENCAD export for KiAuto**: Theo Hussey (@flaminggoat)
    -  **Various fixes**: Henning Kleen (@hkleen)
    -  **SCH print all-pages option**: Kevin Dong (@kevin-dong-nai-jia)
-   -  **Fancy Draw Stackup** and **Include table** preflights: Nguyen Vincent (@nguyen-v)
+   -  **README fixes**: Lesha Seletskiy (@thetazero)
+   -  **XY BoM example**: Jesper Matthiesen (@matthiesenj)
+   -  **right_digits in position**: Kevin Joly (@Kev-J)
+   -  **KiCad 7 type fix**: Flaviu Tamas (@flaviut)
+   -  **Fix for deep nested sheets**: Andrew Collins (@Andrew-Collins)
+   -  **DOCs details**: Edward Longman (@edlongman)
+   -  **Aux origin for SVG**: Peter Johanson (@petejohanson-outputs)
+   -  **Fancy Draw Stackup** and **Include table** preflights, **drill table**, **navigate_results_rb** and more: Nguyen Vincent (@nguyen-v)
    -  **BoM Labels**: Stefan Schüller (@sschueller)
+   -  **CSV sep for position**: Arif Balik (@arifbalik)
+   -  **Parser fix**: Julien Prgn (@JuPrgn)
+   -  **update_pcb_text_cache** and **fixes**: Matthijs Kooijman (@matthijskooijman)
+   -  **Warning fixes**, **board_only support**, **diff worktrees fix**: Olliver Schinagl (@oliv3r)
+   -  **Explicit commits for KiRi**: Michel Gillet (@hamletg)
 
 -  **Sources of inspiration and good ideas**:
 

@@ -223,3 +223,41 @@ def test_var_rename_kicost_footprint_1(test_dir):
     ctx.run(extra=['-g', 'variant=development'])
     ctx.compare_image(prj+'-assembly_page_01_(DEV).png', tol=DIFF_TOL, sub=True)
     ctx.clean_up()
+
+
+@pytest.mark.skipif((not context.ki9()) or context.ki10(), reason="KiCad 9 using KiCad 10 vars")
+def test_print_pcb_variant_var_ki9(test_dir):
+    """ Test printing a PCB that uses VARIANT and VARIANT_DESC in:
+        - Front copper layer
+        - Front silkscreen
+        - The worksheet itself
+        - Fields used in the worksheet
+        We try 2 variants and no variant.
+        This test uses KiCad 9 and KiBoM variants.
+        The result isn't really good because we can't currently tell to KiCad 9 about variables on-the-fly """
+    prj = 'variant_var'
+    ctx = context.TestContext(test_dir, prj, prj, 'PNG')
+    ctx.run(extra=['--variant', 'production', '--variant', 'development', '--variant', 'NONE'])
+    ctx.run()
+    ctx.compare_image(prj+'-assembly_page_01_(PROD).png', tol=DIFF_TOL, sub=True)
+    ctx.compare_image(prj+'-assembly_page_01_(DEV).png', tol=DIFF_TOL, sub=True)
+    ctx.compare_image(prj+'-assembly_page_01.png', tol=DIFF_TOL, sub=True)
+    ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad native variants")
+def test_print_pcb_variant_var_ki10(test_dir):
+    """ Test printing a PCB that uses VARIANT and VARIANT_DESC in:
+        - Front copper layer
+        - Front silkscreen
+        - The worksheet itself
+        - Fields used in the worksheet
+        We try 2 variants and no variant.
+        This test uses KiCad 10 native variants and the internal print mechanism """
+    prj = 'variant_var'
+    ctx = context.TestContext(test_dir, prj, 'variant_var_ki10', 'PNG')
+    ctx.run(extra=['--variant', 'production', '--variant', 'development', '--variant', 'NONE', 'PNG'])
+    ctx.compare_image(prj+'-assembly_page_01_production.png', tol=DIFF_TOL, sub=True)
+    ctx.compare_image(prj+'-assembly_page_01_development.png', tol=DIFF_TOL, sub=True)
+    ctx.compare_image(prj+'-assembly_page_01.png', tol=DIFF_TOL, sub=True)
+    ctx.clean_up(keep_project=True)

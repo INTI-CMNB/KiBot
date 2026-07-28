@@ -1,0 +1,166 @@
+(kicad_pcb
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(general
+		(thickness 1.6)
+		(legacy_teardrops no)
+	)
+	(paper "A4")
+	(title_block
+		(title "${VARIANT}")
+		(comment 1 "${VARIANT_DESC}")
+	)
+	(layers
+		(0 "F.Cu" signal)
+		(2 "B.Cu" signal)
+		(9 "F.Adhes" user "F.Adhesive")
+		(11 "B.Adhes" user "B.Adhesive")
+		(13 "F.Paste" user)
+		(15 "B.Paste" user)
+		(5 "F.SilkS" user "F.Silkscreen")
+		(7 "B.SilkS" user "B.Silkscreen")
+		(1 "F.Mask" user)
+		(3 "B.Mask" user)
+		(17 "Dwgs.User" user "User.Drawings")
+		(19 "Cmts.User" user "User.Comments")
+		(21 "Eco1.User" user "User.Eco1")
+		(23 "Eco2.User" user "User.Eco2")
+		(25 "Edge.Cuts" user)
+		(27 "Margin" user)
+		(31 "F.CrtYd" user "F.Courtyard")
+		(29 "B.CrtYd" user "B.Courtyard")
+		(35 "F.Fab" user)
+		(33 "B.Fab" user)
+		(39 "User.1" user)
+		(41 "User.2" user)
+		(43 "User.3" user)
+		(45 "User.4" user)
+		(47 "User.5" user)
+		(49 "User.6" user)
+		(51 "User.7" user)
+		(53 "User.8" user)
+		(55 "User.9" user)
+	)
+	(setup
+		(pad_to_mask_clearance 0)
+		(allow_soldermask_bridges_in_footprints no)
+		(tenting
+			(front yes)
+			(back yes)
+		)
+		(covering
+			(front no)
+			(back no)
+		)
+		(plugging
+			(front no)
+			(back no)
+		)
+		(capping no)
+		(filling no)
+		(pcbplotparams
+			(layerselection 0x00000000_00000000_55555555_5755f5ff)
+			(plot_on_all_layers_selection 0x00000000_00000000_00000000_00000000)
+			(disableapertmacros no)
+			(usegerberextensions no)
+			(usegerberattributes yes)
+			(usegerberadvancedattributes yes)
+			(creategerberjobfile yes)
+			(dashed_line_dash_ratio 12)
+			(dashed_line_gap_ratio 3)
+			(svgprecision 4)
+			(plotframeref no)
+			(mode 1)
+			(useauxorigin no)
+			(pdf_front_fp_property_popups yes)
+			(pdf_back_fp_property_popups yes)
+			(pdf_metadata yes)
+			(pdf_single_document no)
+			(dxfpolygonmode yes)
+			(dxfimperialunits yes)
+			(dxfusepcbnewfont yes)
+			(psnegative no)
+			(psa4output no)
+			(plot_black_and_white yes)
+			(sketchpadsonfab no)
+			(plotpadnumbers no)
+			(hidednponfab no)
+			(sketchdnponfab yes)
+			(crossoutdnponfab yes)
+			(subtractmaskfromsilk no)
+			(outputformat 1)
+			(mirror no)
+			(drillshape 1)
+			(scaleselection 1)
+			(outputdirectory "")
+		)
+	)
+	(variants
+		(variant
+			(name "development")
+			(description "Development variant")
+		)
+		(variant
+			(name "production")
+			(description "Production variant")
+		)
+	)
+	(gr_rect
+		(start 134.64 59.67)
+		(end 153.37 65.97)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(fill no)
+		(layer "Edge.Cuts")
+		(uuid "16bd1f8d-3452-445f-b270-4eca916f450d")
+	)
+	(gr_text "${VARIANT}"
+		(at 137.79 62.53 0)
+		(layer "F.Cu")
+		(uuid "a38bf4b7-6306-4054-a57e-a2b7e219f6f1")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "${VARIANT_DESC}"
+		(at 137.45 65.3 0)
+		(layer "F.SilkS")
+		(uuid "797b4e6f-ebee-4550-a66b-18781c18268f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(embedded_fonts no)
+	(embedded_files
+		(file
+			(name "variant_var.kicad_wks")
+			(type worksheet)
+			(data |KLUv/WA5CfUUANbdXiEAtxsWHGS5ac4JWlhdTV1ADhVltCCdFsc54zb0/38BIAJVAE0AWQCPPxL/
+				x2PzpH2tJ3sj5zsuFjBqzf58aEl+rVjALNp+suWX/AkAQIAUvZfTYlScKuO3oXNEsuqM38t+3UMA
+				BAoLSulVZ+2LbZl9RAAEyhCJE3qgDRECf3GHNla7xGRFq/6S//fYvLDaEzOVMnjte056zn4zBl/s
+				2bMKgVj82sW33/75Dq8IZ6+r/uvjiMHatcPriKsnpf3Z+7Kq2kfvPuh5xB+Xk+VCEX+NqBXLxm0a
+				DTNyzGJRtYRaiGZM6uC0B6cNneoq2YbJNKgBZmE9KWVYiVYsUlqXPThahuM21KAb/t4j52zK/tfB
+				NnXslyIQVptmpor1/L5v0gsQCIFComKMq16Iyrhoos6LdhWNYroeOWLHrJtKdqFYHIpIl106TYtw
+				i8VlIShZRZtsEAsBrei9bYU1qTbptk5821Ua2n73Dyc4pAThVvV7Y8adzk56F4x2yQKAgKARQYYU
+				mhopSFLIMAeARKTmqDqUaDDAcOWIIIoJCEAecpszKGXvooqHvkhFQiG28uvJM4eHQAh+709Se2SN
+				7fZmG2qbN/1QC5OEnj8ZW3lkLDPwAUK2Oq0TU672a4nDEjmEFWhklqn0WFP67FIvkQYbw2kO4q6/
+				qnWHAldYseSqixd3LE/J8NeCQI9DAc/eEQ56ASaz3qSVl0iGfyoHi20cwRsYNqCHjWUKPgIRIRMZ
+				ml8MJWGBXuZN8Fk8JDGNHD6J7nSKOp9OnHub7M4WY9jDfxY4UCDLPHrUDohbmNiJcBAR7RFexSHX
+				AgS3v8mzU7ToWk28KOCM2sWSXyLaQydtQvsmK0YepdjxERvjpVJ6VyjsER/x3hc6hGF89Co=|
+			)
+			(checksum "F47E35086DF2D1FFFBB7A2664A356353")
+		)
+	)
+)

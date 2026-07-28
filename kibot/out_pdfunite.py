@@ -52,6 +52,7 @@ class PDFUniteOptions(BaseOptions):
             """ Use the `pdfunite` tool instead of PyPDF2 Python module """
         super().__init__()
         self._expand_ext = 'pdf'
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -99,9 +100,6 @@ class PDFUniteOptions(BaseOptions):
             if len(files) == old_len:
                 logger.warning(W_NOMATCH+'No match found for `{}`'.format(f.from_output if f.from_output else f.source))
         return files
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def get_dependencies(self):
         output = self.get_targets(self.expand_filename_pcb(GS.out_dir))[0]

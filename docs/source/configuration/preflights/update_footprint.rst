@@ -9,6 +9,9 @@ Update Footprint
 Updates footprints from the libs, you must provide one or more
 references to be updated. This is useful to replace logos using freshly created versions
 
+
+.. _Update_Footprint_update_footprint:
+
    -  **update_footprint** :index:`: <pair: preflight - update_footprint; update_footprint>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) [:ref:`comma separated <comma_sep>`] One or more component references.
 
 

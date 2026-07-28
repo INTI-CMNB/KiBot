@@ -10,6 +10,9 @@ Replaces tags in the PCB. I.e. to insert the git hash or last revision date.
 This is useful for KiCad 5, use `set_text_variables` when using KiCad 6. |br|
 This preflight modifies the PCB. Even when a back-up is done use it carefully
 
+
+.. _PCB_Replace_pcb_replace:
+
    -  **pcb_replace** :index:`: <pair: preflight - pcb_replace; pcb_replace>`  [:ref:`PCB_ReplaceOptions parameters <PCB_ReplaceOptions_pre>`] [:ref:`dict <dict>`] (default: empty dict, default values used) Options for the `pcb_replace` preflight.
 
 Used dicts

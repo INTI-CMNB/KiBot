@@ -1,0 +1,20 @@
+# Used with test_v5.kicad_sch
+# Shows how to workaround the kicad-cli workaround that sets SHEETNAME to
+# an empty string for page 1. Found in KiCad 9 and 10.0.3
+# Also used to play with the title_propagate option
+kibot:
+  version: 1
+
+globals:
+  schematic_sheet_name_workaround: true
+
+outputs:
+  - name: 'print_sch'
+    comment: "Print schematic (PDF)"
+    type: pdf_sch_print
+    dir: .
+    options:
+      output: Schematic.pdf
+      title: "Forced (${SHEETNAME})"
+      # title: "Forced (Root)"
+      title_propagate: true

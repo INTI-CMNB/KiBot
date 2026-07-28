@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
-# License: GPL-3.0
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
+# License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
 Dependencies:
@@ -237,6 +237,8 @@ class PcbDrawOptions(VariantOptions):
                 Note this also affects the drill holes """
             self.show_solderpaste = True
             """ Show the solder paste layers """
+            self.show_copper = True
+            """ Show tracks and zones """
             self.resistor_remap = PcbDrawResistorRemap
             """ [list(dict)=[]] List of resistors to be remapped. You can change the value of the resistors here """
             self.resistor_flip = Optionable
@@ -254,6 +256,7 @@ class PcbDrawOptions(VariantOptions):
                 The value is how much zeros has the multiplier (1 mm = 10 power `svg_precision` units).
                 Note that for an A4 paper Firefox 91 and Chrome 105 can't handle more than 5 """
         super().__init__()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         self._filters_to_expand = False
@@ -348,9 +351,6 @@ class PcbDrawOptions(VariantOptions):
                     ext_list.append(ac.ref)
             new_list += ext_list
         return new_list
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
 
     def build_plot_components(self):
         from .PcbDraw.plot import PlotComponents, ResistorValue
@@ -449,7 +449,8 @@ class PcbDrawOptions(VariantOptions):
                     plotter.resolve_style(self._style)
                 else:
                     plotter.style = self._style
-            plotter.plot_plan = [PlotSubstrate(drill_holes=not self.no_drillholes, outline_width=mm2ki(self.outline_width))]
+            plotter.plot_plan = [PlotSubstrate(drill_holes=not self.no_drillholes, outline_width=mm2ki(self.outline_width),
+                                 copper=self.show_copper)]
             if self.show_solderpaste:
                 plotter.plot_plan.append(PlotPaste())
             if self.vcuts:
@@ -525,7 +526,9 @@ class PcbDraw(BaseOutput):  # noqa: F821
         Note that this output is fast for simple PCBs, but becomes useless for huge ones.
         You can easily create very complex PCBs using the `panelize` output.
         In this case you can use other outputs, like `render_3d`, which are slow for small
-        PCBs but can handle big ones """
+        PCBs but can handle big ones.
+        Also note that `render_3d` using `force_stackup_colors` and `orthographic` will
+        produce a better alternative and you don't need 2D models. """
     def __init__(self):
         super().__init__()
         with document:

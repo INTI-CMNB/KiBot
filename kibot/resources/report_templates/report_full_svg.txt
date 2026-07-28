@@ -130,7 +130,15 @@ Note: this is just an approximation to the theoretical value. Margins of the sol
 #?schematic_svgs
 
 #?schematic_svgs
-#schematic_svgs:![${comment}](${path}){ width=16.5cm height=11.7cm }${new_line}
+#schematic_svgs:\ ![${comment}](${path}){ width=16.5cm height=11.7cm }${new_line}
+
+
+#?schematic_pdfs and not schematic_svgs
+# Schematic
+#?schematic_pdfs and not schematic_svgs
+
+#?schematic_pdfs and not schematic_svgs
+#schematic_pdfs:\ ![${comment}](${path}){ width=16.5cm height=11.7cm }${new_line}
 
 
 #?layer_svgs
@@ -138,4 +146,12 @@ Note: this is just an approximation to the theoretical value. Margins of the sol
 #?layer_svgs
 
 #?layer_svgs
-#layer_svgs:![${comment}](${path}){ width=16.5cm height=11.7cm }${new_line}
+#layer_svgs:\ ![${comment}](${path}){ width=16.5cm height=11.7cm }${new_line}
+
+
+#?layer_pdfs and not layer_svgs
+# PCB Layers
+#?layer_pdfs and not layer_svgs
+
+#?layer_pdfs and not layer_svgs
+#layer_pdfs:\ ![${comment}](${path}){ width=16.5cm height=11.7cm }${new_line}

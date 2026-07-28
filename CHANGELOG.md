@@ -4,6 +4,118 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-07-28
+### Added
+- Support for Python 3.14 (#930)
+- CLI:
+  - --keep-temporals: to keep temporal files
+- Some limited support for the VARIANT and VARIANT_DESC variables found
+  in KiCad 10. They can be used for things like 3D and print_pcb even
+  for KiCad 6.
+- Workaround for KiCad 10 bug 14360 which prevents native QRs to be updated
+  when they use a KiCad variable.
+- Schematic:
+  - Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
+  - Support for the `jumper_pin_groups` attribute of symbols. (#942)
+  - Some support for properties defined at sheet level. (#941)
+- Globals:
+  - `schematic_sheet_name_workaround` to workaround SHEETNAME on page 1
+    (See #933)
+  - `pcb_material_color` default color for the PCB core material
+  - `solder_paste_color` default color for the solder paste
+  - `remove_3D_models_for_dnp` to disable 3D models removal from variants
+- Variants:
+  - pre_transform filter to KiCad variants
+- E/DRC:
+  - Dark mode support and icon to select it.
+- Blender Export:
+  - Added support for PCB2Blender 2.17 format
+- BoM:
+  - JSON output format. As a helper for external renderers (See #917)
+  - Dark mode support and icon to select it.
+- Diff:
+  - `tag_filter`: to select which tags are used for KIBOT_TAG
+- KiCad Site:
+  - `bom` configuration
+  - `kiri` configuration
+- KiRi:
+  - `commits` and `labels` options to include an explicit list of git
+    revisions (hashes, tags, branches, etc.) (#946)
+  - `include_dirty` to exclude the local changes. (#946)
+- Panelize:
+  - Better support for `renameref` use. Now we set the reference from the
+    PCB when global `use_pcb_fields` variable is enabled.
+- PcbDraw:
+  - `show_copper` to disable tracks and zones (from 1.2.0)
+- Render 3D:
+  - KiCad 10: support for kicad-cli interface, adds some new options but
+    has various limitations, hopping they will be fixed.
+- Report:
+  - All PDF pages are included, not just the first
+  - The full report now works with SVGs and PDFs for both (SCH and PCB),
+    SVGs have priority
+  - `remove_split_pdfs`: To control if we remove split PDFs
+  - `collect_images`: To just avoid collecting images, enabled by
+    default when generating a CSV. Avoids unintended infinite loops.
+    (See #931)
+- *SCH Print
+  - `title_propagate`: The title is not only set for page 1 but also for
+    all pages.
+
+## Fixed
+- Warnings:
+  - 11 and 148 were always filtered for CI/CD, even when using --warn-ci-cd
+  - Crash when missing basic fields, KiCad 6+
+  - Avoid warning about datasheet mismatch when creating a component from the
+    PCB.
+- CLI:
+  - When using a --variant and an specific target, it was generated for the
+    first variant in the list, not the rest
+- Filters:
+  - Applied only to the first copy of a KiKit panel with default `renameref`
+    (#937)
+- Gerber Drill:
+  - Avoid showing an error when KiCad 10 skips a drill file (See #928)
+- KiRi:
+  - `kiri_server` path to the HTML
+- *SCH Print:
+  - The list of targets now includes all schematic pages
+  - Output when the `output` option was empty
+  - DNP components when no variant is used and we set a title or replace
+    images ('kibot_image_OUTPUT') (#943)
+- PCB2Blender Tools:
+  - Crash for oblong drills
+- PCB Stats:
+  - Missing targets (See #928)
+- PDFUnite:
+  - Using just the first page when using the internal joiner (#950)
+- SCH/PCB Variant:
+  - "Exclude from bom" flag wrongly exported
+- Report:
+  - Now all SVG schematic pages are included, not just the first
+- VRML
+  - Avoid WRL files for KiCad 10 (See #928)
+- Now we clear fields created by a variant, so they don't interfere in
+  multiple variants generation.
+
+## Changed
+- E/DRC and BoM: As we now have dark mode support the CSS is more complex and
+  user defined CSSs might need some adjusts
+- Now when an output runs another outputs as dependencies the name of the
+  created output is displayed.
+- When using `pcb_print` and including tables you no longer need to run the
+  output that generates the CSV first, it gets generated on-the-fly
+- Report: the outputs that generates images no longer needs to be already
+  executed, KiBot will run them
+- More common CI/CD warnings filtered:
+  - W008 Unable to find KiCad configuration file
+  - W058 Missing KiCad main config file
+  - W058 Missing default system table
+- No more reports on PCB/SCH fields mismatch when the variants modified the
+  field
+- Avoid more than 20 levels of nested outputs, this is an infinite loop.
+- Quick Start:
+  - Use `force_stackup_colors` for `render_3d`
 
 ## [1.9.0] - 2026-05-12
 ### Added
@@ -1728,7 +1840,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Gerber job generation
 
 
-[Unreleased]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...dev
+[Unreleased]: https://github.com/INTI-CMNB/KiBot/compare/v1.9.1...dev
+[1.9.1]: https://github.com/INTI-CMNB/KiBot/compare/v1.9.0...v1.9.1
+[1.9.0]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...v1.9.0
 [1.8.5]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5
 [1.8.4]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.3...v1.8.4
 [1.8.3]: https://github.com/INTI-CMNB/KiBot/compare/v1.8.2...v1.8.3

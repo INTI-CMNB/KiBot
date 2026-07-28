@@ -8,7 +8,7 @@ import os
 import re
 import csv
 from pcbnew import (PLOT_FORMAT_HPGL, PLOT_FORMAT_POST, PLOT_FORMAT_GERBER, PLOT_FORMAT_DXF, PLOT_FORMAT_SVG,
-                    PLOT_FORMAT_PDF, wxPoint, B_Cu, F_Cu, GERBER_WRITER)
+                    PLOT_FORMAT_PDF, wxPoint, B_Cu, F_Cu, GERBER_WRITER, PAD_ATTRIB_NPTH)
 from .error import KiPlotConfigurationError
 from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT, HOLE_TYPE_DICT
 from .kiplot import run_command
@@ -138,7 +138,8 @@ class AnyDrill(VariantOptions):
             self.report = DrillReport
             """ [dict|string=''] Name of the drill report. Not generated unless a name is specified """
             self.table = DrillTable
-            """ [dict|string=''] Name of the drill table. Not generated unless a name is specified """
+            """ [dict|string=''] Name of the drill table. Not generated unless a name is specified.
+                Important: if the PCB contains no drills the file won't be generated """
             self.pth_id = None
             """ [string] Force this replacement for %i when generating PTH and unified files """
             self.npth_id = None
@@ -305,6 +306,38 @@ class AnyDrill(VariantOptions):
                 filenames[k_file] = file
         return filenames
 
+    def look_for_drills(self):
+        """ KiCad 10 skips empty gerber files """
+        if not GS.ki10 or self._ext != 'gbr':
+            return True, True
+        # Look for vias, they are PTH
+        for t in GS.board.GetTracks():
+            tclass = t.GetClass()
+            if tclass == 'PCB_VIA':
+                found_pth = True
+                break
+        else:
+            found_pth = False
+        # Look for pads
+        found_npth = False
+        for m in GS.board.GetFootprints():
+            pads = m.Pads()
+            for pad in pads:
+                dr = pad.GetDrillSize()
+                if dr.x == 0 or dr.y == 0:
+                    continue
+                is_pth = pad.GetAttribute() != PAD_ATTRIB_NPTH
+                if not is_pth:
+                    found_npth = True
+                if is_pth:
+                    found_pth = True
+                if found_pth and found_npth:
+                    break
+            if found_pth and found_npth:
+                break
+        logger.debug(f"Drills search: PTH {found_pth} NPTH {found_npth}")
+        return found_pth, found_npth
+
     def run(self, output_dir):
         super().run(output_dir)
         self.filter_pcb_components()
@@ -332,6 +365,7 @@ class AnyDrill(VariantOptions):
             # Using kicad-cli
             fname = self.save_tmp_board() if self.will_filter_pcb_components() else GS.pcb_file
             odir = output_dir  # if self.generate_drill_files else tempfile.gettempdir()
+            # No variant here
             cmd = [GS.kicad_cli, 'pcb', 'export', 'drill', '--output', odir] + drill_writer
             if gen_map:
                 logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
@@ -370,13 +404,18 @@ class AnyDrill(VariantOptions):
                     drill_writer.GenDrillReportFile(drill_report_file)
             tmp_base = None
 
+        # KiCad 10 has a feature: no files generated if the kind of drills is missing
+        has_pth, has_npth = self.look_for_drills()
+
         # Rename the files
         files = self.get_file_names(output_dir, tmp_base=tmp_base)
         for k_f, f in files.items():
             if f:
                 logger.debug(f"Renaming {k_f} -> {f}")
                 if not os.path.isfile(k_f):
-                    GS.exit_with_error(f"Missing `{k_f}` drill file, KiCad bug? please report", DONT_STOP)
+                    is_npth = 'npth' in k_f.lower()
+                    if (is_npth and has_npth) or (not is_npth and has_pth):
+                        GS.exit_with_error(f"Missing `{k_f}` drill file, KiCad bug? please report", DONT_STOP)
                 else:
                     os.replace(k_f, f)
         # Generate the drill table

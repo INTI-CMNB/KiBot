@@ -10,5 +10,8 @@ Option for `run_drc`. Ignores the unconnected nets. Useful if you didn't finish 
 It will also ignore KiCad 6 warnings when using `run_drc`. |br|
 Use the `ignore_unconnected` option from `run_drc`/`drc` instead
 
+
+.. _Ignore_Unconnected_ignore_unconnected:
+
    -  **ignore_unconnected** :index:`: <pair: preflight - ignore_unconnected; ignore_unconnected>` [:ref:`boolean <boolean>`] (default: ``false``) Enable this preflight.
 

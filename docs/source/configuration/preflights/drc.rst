@@ -11,6 +11,9 @@ You need a valid *fp-lib-table* installed. If not KiBot will try to temporarily 
 This is a replacement for the *run_drc* preflight that needs KiCad 8 or newer. |br|
 GUI exclusions and schematic parity are supported
 
+
+.. _DRC_drc:
+
    -  **drc** :index:`: <pair: preflight - drc; drc>`  [:ref:`DRCOptions parameters <DRCOptions_pre>`] [:ref:`boolean <boolean>` | :ref:`dict <dict>`] (default: ``false``) Use a boolean for simple cases or fine-tune its behavior.
 
 Used dicts

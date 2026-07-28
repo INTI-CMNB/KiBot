@@ -249,9 +249,9 @@ class BasePreFlight(Optionable, Registrable):
         """ Looks for a dependency """
         return GS.check_tool_dep(self.type, name, fatal=False)
 
-    def add_extra_options(self, cmd, dir=None):
+    def add_extra_options(self, cmd, dir=None, variant=None):
         """ KiAuto extra options (debug, record, etc.) """
-        cmd, video_remove = GS.add_extra_options(cmd)
+        cmd, video_remove = GS.add_extra_options(cmd, variant)
         if video_remove:
             self._files_to_remove.append(os.path.join(dir or cmd[-1], GS.get_kiauto_video_name(cmd)))
         return cmd

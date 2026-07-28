@@ -235,6 +235,15 @@ def _get_points(items):
     return points
 
 
+def _get_pin_groups(items):
+    groups = []
+    for i in items[1:]:
+        if not isinstance(i, list):
+            raise SchError(f'Pin group contains a group that is not a list `{i}`')
+        groups.append(i)
+    return groups
+
+
 def _get_size(items, pos, name):
     value = _check_symbol_value(items, pos, name, 'size')
     return _get_xy(value)

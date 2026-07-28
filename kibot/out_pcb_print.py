@@ -19,6 +19,10 @@ Dependencies:
     command: pcbnew_do
     role: Print the page frame in GUI mode
     version: 1.6.7
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.9
   - from: LXML
     role: mandatory
 """
@@ -289,6 +293,9 @@ class PagesOptions(Optionable):
                 You can also use it to generate pages with drill maps, in this case use `drill_pairs` here.
                 Note that in this case the `repeat_for_layer` should be some drawing layer, which might contain
                 a group used to insert the drill table (like in the `include_table` preflight).
+                Note that the drill table needs an output that generates one or more CSV files and the group in the
+                PCB must be named `kibot_table_OUTPUT_FOR_CSV_DRILLS`. See the `print_drill_table.kibot.yaml` example
+                in the repo.
                 The drill map needs KiCad 7 or newer """
             self.repeat_inherit = True
             """ If we will inherit the options of the layer we are replacing.
@@ -597,7 +604,7 @@ class PCB_PrintOptions(VariantOptions):
                 id, ext = self.get_id_and_ext(n, p.page_id)
                 files.append(self.expand_filename(out_dir, self.output, id, ext))
             return files
-        return [self._parent.expand_filename(out_dir, self.output)]
+        return self._get_targets(out_dir)
 
     def clear_layer(self, layer):
         tmp_layer = GS.board.GetLayerID(GS.global_work_layer)
@@ -653,7 +660,14 @@ class PCB_PrintOptions(VariantOptions):
         vars['SHEETPATH'] = ''  # Only relevant for an schematic
         vars['LAYER'] = p.layer_var
         vars['PAPER'] = self.pcb.paper
-        return vars
+        if self.variant:
+            vars['VARIANT'] = self.variant.name
+            vars['VARIANT_DESC'] = self.variant.comment
+            logger.debug(f"Defining the VARIANT* text variable using {self.variant}")
+        else:
+            vars['VARIANT'] = vars['VARIANT_DESC'] = ''
+        # Solve the dynamic ${VARIANT}
+        return {k: GS.expand_text_variables(v, vars) for k, v in vars.items()}
 
     def plot_frame_internal(self, pc, po, p, page, pages):
         """ Here we plot the frame manually """
@@ -1556,7 +1570,7 @@ class PCB_PrintOptions(VariantOptions):
 
         # Update all tables
         if GS.ki7 and self._include_table_output:
-            update_table(self._include_table, self)
+            update_table(self._include_table, self, allow_run=True)
 
         # Generate the output, page by page
         pages = []
@@ -1566,7 +1580,7 @@ class PCB_PrintOptions(VariantOptions):
                     g_drill_map = PCB_GROUP(GS.board)
                     self.add_drill_map_drawing(p, g_drill_map)
                     if GS.ki7 and self._include_table_output:
-                        update_table(self._include_table, self, p._drill_pair_index, True)
+                        update_table(self._include_table, self, p._drill_pair_index, True, allow_run=True)
             # Make visible only the layers we need
             # This is very important when scaling, otherwise the results are controlled by the .kicad_prl (See #407)
             if self.individual_page_scaling:

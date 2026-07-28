@@ -900,12 +900,15 @@ class SchematicComponent(object):
         self.parent_component = None
         # Position offset i.e. from the rotation filter
         self.pos_offset_x = self.pos_offset_y = None
+        # Not from a KiCad sheet
+        self.parent_sheet = None
         # KiCad 5 PCB flags (mutually exclusive)
         self.smd = False
         self.virtual = False
         self.tht = False
         # KiCad 6 SCH flags
         self.in_bom = True          # not Exclude from bill of materials
+        self.in_bom_sch = True      # back-up copy
         self.on_board = True        # not Exclude from BoM
         # KiCad 6 PCB flags
         self.in_bom_pcb = True      # not Exclude from bill of materials
@@ -913,6 +916,7 @@ class SchematicComponent(object):
         self.in_pcb_only = False    # Not in schematic
         # KiCad 7 PCB flags
         self.kicad_dnp = None       # Do Not Populate
+        self.kicad_dnp_sch = None   # back-up copy
         # KiCad 10
         self.in_pos_files = None
         self.duplicate_pin_numbers_are_jumpers = None
@@ -1070,7 +1074,8 @@ class SchematicComponent(object):
                 self.datasheet = f.value
                 basic += 1
         if basic < 4:
-            logger.warning(W_MISCFLD + 'Component `{}` without the basic fields'.format(self.f_ref))
+            ref = getattr(self, "f_ref", self.ref)
+            logger.warning(W_MISCFLD + f'Component `{ref}` without the basic fields')
 
     def _validate(self):
         for field in self.fields:
@@ -1753,7 +1758,7 @@ class Schematic(object):
                 # Adjust details using a copy
                 c = deepcopy(c)
                 c.qty = qty
-                logger.debug(c.qty)
+                # logger.debug(c.qty)
                 if c.qty > 1:
                     logger.warning(W_MULTIREF+f'multiple `{c.ref}` components, not all operations will work')
                 c.unit = min(units.keys())

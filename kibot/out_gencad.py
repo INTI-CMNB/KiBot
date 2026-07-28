@@ -8,6 +8,10 @@ Dependencies:
   - from: KiAuto
     role: mandatory
     version: 1.6.5
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.9
 """
 import os
 from .gs import GS
@@ -38,9 +42,7 @@ class GenCADOptions(VariantOptions):
         self._expand_id = 'gencad'
         self._expand_ext = 'cad'
         self.help_only_sub_pcbs()
-
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
+        self.get_targets = self._get_targets
 
     def run(self, name):
         command = self.ensure_tool('KiAuto')

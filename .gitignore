@@ -32,7 +32,7 @@ MANIFEST
 *.epr
 htmlcov/
 pp/
-output/
+/output
 .coverage
 .coverage.*
 TODO
@@ -71,7 +71,9 @@ experiments/kicad/10.0/
 experiments/kicad/Plot_Layer_CLI/
 experiments/kicad/Plotter_code/
 experiments/kicad/Sketch_Pads/
+experiments/kicad/Delete_Field/
 
 tests/.config/kicad/
 DONACIONES
 IMPORTANTE
+docs/samples/3D_Model_LCD*/run_local.sh

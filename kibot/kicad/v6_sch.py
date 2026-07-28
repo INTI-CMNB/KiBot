@@ -17,13 +17,13 @@ import re
 from ..gs import GS
 from .. import log
 from ..misc import (W_NOLIB, W_MISSCMP, W_FIELDCONF, EMBED_PREFIX, DONT_STOP, update_dict, W_UUIDSCHISSUE, W_SCHNOTIMP,
-                    W_PAGENOINT, W_PAGEDUP, W_PAGEMIS)
+                    W_PAGENOINT, W_PAGEDUP, W_PAGEMIS, KICAD_VERSION_10_0_3)
 from .error import SchError
 from .sexpdata import load, SExpData, Symbol, dumps, Sep
 from .sexp_helpers import (_check_is_symbol_list, _check_len, _check_len_total, _check_symbol, _check_hide, _check_integer,
                            _check_float, _check_str, _check_symbol_value, _check_symbol_float, _check_symbol_int,
                            _check_symbol_str, _get_offset, _get_yes_no, _get_at, _get_size, _get_xy, _get_points,
-                           _check_relaxed, Color, _symbol, _check_floats, _get_yes_no_maybe_alone)
+                           _check_relaxed, Color, _symbol, _check_floats, _get_yes_no_maybe_alone, _get_pin_groups)
 from .v5_sch import SchematicComponent, Schematic
 
 logger = log.get_logger()
@@ -844,6 +844,7 @@ class LibComponent(object):
         self.embedded_file_names = {}
         # KiCad 10
         self.body_styles = None
+        self.jumper_pin_groups = None
 
     def get_field_value(self, field):
         field = field.lower()
@@ -911,6 +912,8 @@ class LibComponent(object):
                 comp.in_pos_files = _get_yes_no(i, 1, i_type)
             elif i_type == 'duplicate_pin_numbers_are_jumpers':
                 comp.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
+            elif i_type == 'jumper_pin_groups':
+                comp.jumper_pin_groups = _get_pin_groups(i)
             elif i_type == 'power':
                 # Not yet documented
                 comp.is_power = True
@@ -1060,6 +1063,9 @@ class LibComponent(object):
             if s.duplicate_pin_numbers_are_jumpers is not None:
                 sdata.append(_symbol_yn('duplicate_pin_numbers_are_jumpers', s.duplicate_pin_numbers_are_jumpers))
         sdata.append(Sep())
+        if s.jumper_pin_groups:
+            sdata.append(_symbol('jumper_pin_groups', s.jumper_pin_groups))
+            sdata.append(Sep())
         if s.unit_name is not None:
             sdata.append(_symbol('unit_name', [s.unit_name]))
             sdata.append(Sep())
@@ -1397,7 +1403,7 @@ class SchematicComponentV6(SchematicComponent):
             elif i_type == 'exclude_from_sim':
                 comp.exclude_from_sim = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_bom':
-                comp.in_bom = _get_yes_no(i, 1, i_type)
+                comp.in_bom_sch = comp.in_bom = _get_yes_no(i, 1, i_type)
             elif i_type == 'on_board':
                 comp.on_board = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_pos_files':
@@ -1405,7 +1411,7 @@ class SchematicComponentV6(SchematicComponent):
             elif i_type == 'duplicate_pin_numbers_are_jumpers':
                 comp.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
-                comp.kicad_dnp = _get_yes_no(i, 1, i_type)
+                comp.kicad_dnp_sch = comp.kicad_dnp = _get_yes_no(i, 1, i_type)
             elif i_type == 'fields_autoplaced':
                 # Not documented
                 comp.fields_autoplaced = True
@@ -1490,7 +1496,7 @@ class SchematicComponentV6(SchematicComponent):
         lib_id = self.lib_id
         is_crossed = not (self.fitted or not self.included)
         native_cross = GS.ki7 and GS.global_cross_using_kicad
-        dnp = False if native_cross else self.kicad_dnp
+        dnp = False if native_cross and GS.variant is not None else self.kicad_dnp
         if cross and (self.lib or self.local_name) and is_crossed:
             if native_cross:
                 # Just inform KiCad we want to make it DNP
@@ -2064,7 +2070,7 @@ class Sheet(object):
         sheet.sheet_path_ori = path_join(parent_obj.sheet_path_ori, self.uuid_ori)
         sheet.sheet_path_h = path_join(parent_obj.sheet_path_h, self.name)
         parent_obj.sheet_paths[sheet.sheet_path_ori] = sheet
-        sheet.load(os.path.join(parent_dir, self.file), project, parent_obj)
+        sheet.load(os.path.join(parent_dir, self.file), project, parent_obj, local_properties=self.properties)
         # self.sheet_paths
         if self.projects is not None:
             # KiCad v7 sheet pages are here
@@ -2413,32 +2419,47 @@ class SchematicV6(Schematic):
         if not self.title:
             self.title = os.path.splitext(os.path.basename(self.fname))[0]
 
+    def _get_sheet_name(self):
+        sheet_name = self.sheet_path_h.split('/')[-1]
+        return 'Root' if not sheet_name else sheet_name
+
+    def _get_extra_vars(self, forced=False):
+        """ Returns a dict with KiCad variables that are expanded for this particular sheet.
+            We use them to expand variables in the title block.
+            The force=True argument is used for the regular use.
+            We also use it to workaround a bug in KiCad CLI that fails to correctly expand
+            SHEETNAME for page 1 (KiCad 9/10.0.3) """
+        if forced or (GS.global_schematic_sheet_name_workaround and self.sheet_path_h == '/'):
+            return {'SHEETNAME': self._get_sheet_name(), 'SHEETPATH': self.sheet_path_h, 'SHEETFILE': self.fname_rel}
+        return {}
+
     def _get_title_block(self, items):
         if not isinstance(items, list):
             raise SchError('The title block is not a list')
+        extra_vars = self._get_extra_vars(forced=True)
         for item in items:
             if not isinstance(item, list) or len(item) < 2 or not isinstance(item[0], Symbol):
                 raise SchError('Wrong title block entry ({})'.format(item))
             i_type = item[0].value()
             if i_type == 'title':
                 self.title_ori = _check_str(item, 1, i_type)
-                self.title = GS.expand_text_variables(self.title_ori)
+                self.title = GS.expand_text_variables(self.title_ori, extra_vars=extra_vars)
             elif i_type == 'date':
                 self.date_ori = _check_str(item, 1, i_type)
-                self.date = GS.expand_text_variables(self.date_ori)
+                self.date = GS.expand_text_variables(self.date_ori, extra_vars=extra_vars)
             elif i_type == 'rev':
                 self.revision_ori = _check_str(item, 1, i_type)
-                self.revision = GS.expand_text_variables(self.revision_ori)
+                self.revision = GS.expand_text_variables(self.revision_ori, extra_vars=extra_vars)
             elif i_type == 'company':
                 self.company_ori = _check_str(item, 1, i_type)
-                self.company = GS.expand_text_variables(self.company_ori)
+                self.company = GS.expand_text_variables(self.company_ori, extra_vars=extra_vars)
             elif i_type == 'comment':
                 index = _check_integer(item, 1, i_type)
                 if index < 1 or index > 9:
                     raise SchError('Unsupported comment index {} in title block'.format(index))
                 value = _check_str(item, 2, i_type)
                 self.comment_ori[index-1] = value
-                self.comment[index-1] = GS.expand_text_variables(value)
+                self.comment[index-1] = GS.expand_text_variables(value, extra_vars=extra_vars)
             else:
                 raise SchError('Unsupported entry in title block ({})'.format(item))
         self._fill_missing_title_block()
@@ -2481,7 +2502,10 @@ class SchematicV6(Schematic):
     def write_title_block(self):
         data = []
         if self.title_ori:
-            data += [_symbol('title', [self.title_ori]), Sep()]
+            # Root sheet name wrongly expanded by kicad-cli, fixed in 10.0.4 (Bug #24572)
+            do_title_workaround = GS.kicad_version_n <= KICAD_VERSION_10_0_3 and GS.global_schematic_sheet_name_workaround
+            title = self.title if do_title_workaround and self.sheet_path_h == '/' else self.title_ori
+            data += [_symbol('title', [title]), Sep()]
         if self.date_ori:
             data += [_symbol('date', [self.date_ori]), Sep()]
         if self.revision_ori:
@@ -2761,11 +2785,41 @@ class SchematicV6(Schematic):
     def get_title(self):
         return self.title_ori
 
-    def set_title(self, title):
+    def set_title(self, title, propagate=False):
         """ Used only to save a variant """
         old_title = self.title_ori
         self.title_ori = title
+        extra_vars = self._get_extra_vars()
+        self.title = GS.expand_text_variables(self.title_ori, extra_vars=extra_vars)
+        logger.debug(f"Changing title for {self.sheet_path_h}: `{old_title}` -> "
+                     f"`{self.title_ori}` [expanded `{self.title}`]")
         return old_title
+
+    def set_titles(self, title, olds=None):
+        """ Used only to save a variant """
+        old_title_ori = self.title_ori
+        old_title = self.title
+        self.title_ori = title
+        extra_vars = self._get_extra_vars()
+        self.title = GS.expand_text_variables(self.title_ori, extra_vars=extra_vars)
+        logger.debug(f"Changing title for {self.sheet_path_h}: `{old_title_ori}` -> "
+                     f"`{self.title_ori}` [expanded `{self.title}`]")
+        if olds is None:
+            olds = {}
+        olds[self.sheet_path] = (old_title, old_title_ori)
+        for sch in self.sheets:
+            sch.sch.set_titles(title, olds)
+        return olds
+
+    def restore_titles(self, olds):
+        cur_title_ori = self.title_ori
+        old_values = olds[self.sheet_path]
+        self.title_ori = old_values[1]
+        self.title = old_values[0]
+        logger.debug(f"Restoring title for {self.sheet_path_h}: `{cur_title_ori}` -> "
+                     f"`{self.title_ori}` [expanded `{self.title}`]")
+        for sch in self.sheets:
+            sch.sch.restore_titles(olds)
 
     def get_full_path(self, ori=True):
         """ Path using the UUID of the root. Used by v7 """
@@ -2839,7 +2893,7 @@ class SchematicV6(Schematic):
             if n not in defined:
                 logger.warning(W_PAGEMIS+f"Schematic page number `{n}` is not defined")
 
-    def load(self, fname, project, parent=None, mapped_uuid=None):  # noqa: C901
+    def load(self, fname, project, parent=None, mapped_uuid=None, local_properties=None):  # noqa: C901
         """ Load a v6.x KiCad Schematic.
             The caller must be sure the file exists.
             Only the schematics are loaded not the libs. """
@@ -2859,6 +2913,7 @@ class SchematicV6(Schematic):
             self.root_file_path = os.path.dirname(os.path.abspath(fname))
             self.embedded_file_names = {}
             self.used_variants = {}
+            self.sheet_properties = {}
         else:
             self.fields = parent.fields
             self.fields_lc = parent.fields_lc
@@ -2871,6 +2926,9 @@ class SchematicV6(Schematic):
             self.root_file_path = parent.root_file_path
             self.embedded_file_names = parent.embedded_file_names
             self.used_variants = parent.used_variants
+            self.sheet_properties = parent.sheet_properties.copy()
+            if local_properties is not None:
+                self.sheet_properties.update({f.name: f.value for f in local_properties})
         self.symbol_instances = []
         self.parent = parent
         self.fname = fname

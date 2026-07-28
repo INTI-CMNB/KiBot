@@ -111,6 +111,7 @@ The available values for *type* are:
 
 -  3D model:
 
+   -  ``export_3d`` 3D outputs (BREP/GLB/STL/STEP/XAO) from KiCad 9
    -  ``step`` *Standard for the Exchange of Product Data* for the PCB
    -  ``vrml`` *Virtual Reality Modeling Language* for the PCB
    -  ``render_3d`` PCB render, from the KiCad’s 3D Viewer

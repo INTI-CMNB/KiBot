@@ -31,6 +31,7 @@ class PCB_StatsOptions(VariantOptions):
             """ Subtract holes from copper areas """
         super().__init__()
         self._expand_id = 'statistics'
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -44,7 +45,7 @@ class PCB_StatsOptions(VariantOptions):
             GS.exit_with_error("`pcb_stats` needs KiCad 10+", MISSING_TOOL)
         super().run(output)
         # Make units explicit
-        # Base command
+        # Base command, no variants here
         cmd = [GS.kicad_cli, 'pcb', 'export', 'stats', '-o', output]
         if self.format != 'txt':
             cmd.extend(['--format', self.format])

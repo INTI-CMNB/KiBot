@@ -33,6 +33,7 @@ import re
 import shutil
 import logging
 import pytest
+import shlex
 import subprocess
 import json
 from . import context
@@ -722,14 +723,14 @@ def check_makefile(ctx, mkfile, prj, dbg, txt):
     assert yaml in deps
     logging.debug('- Target `drill` OK')
     # svg_sch_def
-    deps = targets['svg_sch_def'].split(' ')
-    assert len(deps) == 1, deps
+    deps = shlex.split(targets['svg_sch_def'])
+    assert len(deps) == 5, deps
     assert ctx.get_out_path(prj+'.svg') in deps
     check_test_v5_sch_deps(ctx, targets[targets['svg_sch_def']].split(' '))
     logging.debug('- Target `svg_sch_def` OK')
     # svg_sch_int
-    deps = targets['svg_sch_int'].split(' ')
-    assert len(deps) == 1, deps
+    deps = shlex.split(targets['svg_sch_int'])
+    assert len(deps) == 5, deps
     assert ctx.get_out_path(prj+'-schematic.svg') in deps
     check_test_v5_sch_deps(ctx, targets[targets['svg_sch_int']].split(' '))
     logging.debug('- Target `svg_sch_int` OK')
@@ -748,6 +749,18 @@ def check_makefile(ctx, mkfile, prj, dbg, txt):
     assert board_file in deps
     assert yaml in deps
     logging.debug('- Target `Board View Test` OK')
+    # pcb_stats
+    if context.ki10():
+        deps = targets['pcb_stats'].split(' ')
+        assert len(deps) == 1, deps
+        fname = ctx.get_out_path(prj+'-statistics.txt')
+        assert fname in deps
+        deps = targets[targets['pcb_stats']].split(' ')
+        assert len(deps) == 2
+        assert board_file in deps
+        assert yaml in deps
+        ctx.expect_out_file(os.path.basename(fname))
+        logging.debug('- Target `pcb_stats` OK')
     # pdf_sch_int
     deps = targets['pdf_sch_int'].split(' ')
     assert len(deps) == 1, deps
@@ -808,7 +821,8 @@ def check_makefile(ctx, mkfile, prj, dbg, txt):
     assert len(deps) == 1, deps
     assert ctx.get_out_path(prj+'-archive.zip') in deps
     deps = targets[targets['archive']].split(' ')
-    assert len(deps) == 18, deps
+    n_deps = 19 if context.ki10() else 18
+    assert len(deps) == n_deps, deps
     # - position
     assert ctx.get_out_path(os.path.join(POS_DIR, prj+'-top_pos.csv')) in deps
     assert ctx.get_out_path(os.path.join(POS_DIR, prj+'-bottom_pos.csv')) in deps
@@ -841,9 +855,12 @@ def check_makefile(ctx, mkfile, prj, dbg, txt):
 @pytest.mark.kicad2step
 def test_makefile_1(test_dir):
     prj = 'test_v5'
-    ctx = context.TestContext(test_dir, prj, 'makefile_1')
+    ctx = context.TestContext(test_dir, prj, 'makefile_1_ki10' if context.ki10() else 'makefile_1')
     mkfile = ctx.get_out_path('Makefile')
-    ctx.run(extra=['-s', 'all', 'archive'])
+    extra = ['-s', 'all', 'archive']
+    if context.ki10():
+        extra.append('pcb_stats')
+    ctx.run(extra=extra)
     ctx.run(extra=['-m', mkfile])
     check_makefile(ctx, mkfile, prj, '-v', r"^\t\$\(KIBOT_CMD\) -s (.*) -i$")
     ctx.clean_up()
@@ -853,9 +870,12 @@ def test_makefile_1(test_dir):
 @pytest.mark.kicad2step
 def test_makefile_2(test_dir):
     prj = 'test_v5'
-    ctx = context.TestContext(test_dir, prj, 'makefile_1')
+    ctx = context.TestContext(test_dir, prj, 'makefile_1_ki10' if context.ki10() else 'makefile_1')
     mkfile = ctx.get_out_path('Makefile')
-    ctx.run(extra=['-s', 'all', 'archive'])
+    extra = ['-s', 'all', 'archive']
+    if context.ki10():
+        extra.append('pcb_stats')
+    ctx.run(extra=extra)
     ctx.run(extra=['-m', mkfile], no_verbose=True)
     check_makefile(ctx, mkfile, prj, '', r"^\t@\$\(KIBOT_CMD\) -s (.*) -i 2>> \$\(LOGFILE\)$")
     ctx.clean_up()
@@ -1162,6 +1182,40 @@ def test_qr_lib_1(test_dir):
     if os.path.isfile(bkp):
         # Not always there, pcbnew_do can remove it
         os.remove(bkp)
+
+
+def scan_pdf(ctx, fname):
+    cmd = ['convert', '-density', '300', ctx.get_out_path(fname), '-background', 'white', '-alpha', 'remove', '-alpha',
+           'off', ctx.get_out_path('%d.png')]
+    subprocess.check_call(cmd)
+    cmd = ['zbarimg', '--nodbus', '--quiet', ctx.get_out_path('0.png')]
+    res = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode()
+    res = res.split('\n')[0]
+    if res.startswith('QR-Code:'):
+        res = res[8:]
+    return res
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Native QRs are for KiCad 10+")
+def test_qr_kicad_1(test_dir):
+    """ This test checks that we can set a text variable (using set_text_variables) that is used to generate a native QR code.
+        The PCB doesn't have it in the cache
+        This is related to KiCad bug #14360 """
+    prj = 'qr_kicad'
+    ctx = context.TestContext(test_dir, prj, prj)
+    ctx.run()
+
+    res = scan_pdf(ctx, "PCB.pdf")
+    logging.debug(res)
+
+    # Restore the original PCB, otherwise the value gets cached
+    bkp = ctx.board_file+'-bak'
+    if os.path.isfile(bkp):
+        os.rename(bkp, ctx.board_file)
+
+    ctx.clean_up(keep_project=True)
+
+    assert res == 'Hello!', res
 
 
 def test_report_simple_1(test_dir):
@@ -1562,6 +1616,42 @@ def test_diff_kiri_1(test_dir):
     ctx.expect_out_file(['_local_/_KIRI_/pcb_layers', hash+'/_KIRI_/pcb_layers',
                          '_local_/_KIRI_/sch_sheets', hash+'/_KIRI_/sch_sheets',
                          'index.html', 'commits', 'project'])
+    ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.slow
+@pytest.mark.eeschema
+def test_diff_kiri_commits(test_dir):
+    """ KiRi with an explicit list of git revisions """
+    prj = 'light_control'
+    yaml = 'kiri_commits'
+    ctx = context.TestContext(test_dir, prj, yaml)
+    git_init(ctx)
+    pcb = prj+'.kicad_pcb'
+    sch = prj+context.KICAD_SCH_EXT
+    file = ctx.get_out_path(pcb)
+    shutil.copy2(ctx.board_file, file)
+    shutil.copy2(ctx.board_file.replace('.kicad_pcb', context.KICAD_SCH_EXT),
+                 file.replace('.kicad_pcb', context.KICAD_SCH_EXT))
+    ctx.run_command(['git', 'add', pcb, sch], chdir_out=True)
+    ctx.run_command(['git', 'commit', '-m', 'Reference'], chdir_out=True)
+    ctx.run_command(['git', 'tag', '-a', 'v1', '-m', 'Tag description'], chdir_out=True)
+    hash1 = ctx.run_command(['git', 'log', '--pretty=format:%h', '-n', '1'], chdir_out=True)
+    shutil.copy2(ctx.board_file.replace(prj, prj+'_diff'), file)
+    shutil.copy2(ctx.board_file.replace(prj, prj+'_diff').replace('.kicad_pcb', context.KICAD_SCH_EXT),
+                 file.replace('.kicad_pcb', context.KICAD_SCH_EXT))
+    ctx.run_command(['git', 'add', pcb, sch], chdir_out=True)
+    ctx.run_command(['git', 'commit', '-m', 'New version'], chdir_out=True)
+    hash2 = ctx.run_command(['git', 'log', '--pretty=format:%h', '-n', '1'], chdir_out=True)
+    ctx.run(extra=['-b', file], no_board_file=True, extra_debug=True)
+    ctx.expect_out_file([hash1+'/_KIRI_/pcb_layers', hash2+'/_KIRI_/pcb_layers',
+                         hash1+'/_KIRI_/sch_sheets', hash2+'/_KIRI_/sch_sheets',
+                         'index.html', 'commits', 'project'])
+    commits_txt = ctx.get_out_path('commits')
+    with open(commits_txt, 'rt') as f:
+        commits = f.read()
+    assert 'Release v1' in commits
+    assert 'Release v2' in commits
     ctx.clean_up(keep_project=True)
 
 
@@ -2131,3 +2221,76 @@ def test_vrml_1(test_dir):
     ctx.expect_out_file(prj+'-vrml.wrl')
     ctx.search_err('Missing component in generated VRML', invert=True)
     ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki9(), reason="Just checking with modern KiCad")
+def test_panel_rotation_plain(test_dir):
+    """ This is related to #936/#937
+        We try to generate a position file from a panel with repeated references.
+        N components points to the same schematic component """
+    prj = 'panel_rotation'
+    ctx = context.TestContext(test_dir, prj, prj)
+    # Create a panel with C5, C5; J1, J1
+    ctx.run(extra=['panel_repeated'])
+    # Create the P&P
+    pcb_file = ctx.get_out_path(os.path.basename(prj+'-panel.kicad_pcb'))
+    ctx.run(extra=['-vvv', '-b', pcb_file, '-e', ctx.sch_file, 'create_pnp_jlc'], no_board_file=True)
+    # Look for the warning about repeated components
+    ctx.search_err('Repeated component in PCB, normal for a KiKit panel')
+    res, _, _ = ctx.load_csv(prj+'-panel-both_pos.csv')
+    diff = {}
+    rots = {}
+    rrots = {}
+    for r in res:
+        ref = r[0]
+        rot = float(r[4])
+        diff[ref] = rot - diff.get(ref, 0)
+        rots[ref] = rots.get(ref, '') + ' ' + r[4]
+        rrots[ref] = rot
+    logging.debug(f"Diffs: {diff}")
+    logging.debug(f"Rotations: {rots}")
+    assert not any(v != 0.0 for v in diff.values()), f'Diffs: {diff} Rotations: {rots}'
+    assert rrots == {'C5': 0.0, 'J1': 90.0, 'J2': 180.0, 'SW2': 0.0, 'U1': 0.0}
+    ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki9(), reason="Just checking with modern KiCad")
+def test_panel_rotation_renamed(test_dir):
+    """ This is related to #936/#937
+        We try to generate a position file from a panel with renamed references.
+        Here we rename the schematic components and also get new copies """
+    prj = 'panel_rotation'
+    ctx = context.TestContext(test_dir, prj, prj)
+    # Create a panel with C5, C5; J1, J1
+    ctx.run(extra=['panel_renamed'])
+    # Create the P&P
+    pcb_file = ctx.get_out_path(os.path.basename(prj+'-panel.kicad_pcb'))
+    ctx.run(extra=['-vvv', '-b', pcb_file, '-e', ctx.sch_file, 'create_pnp_jlc'], no_board_file=True)
+    # Look for the warning about repeated components
+    ctx.search_err('Reference mismatch is normal for a KiKit panel with custom `renameref`')
+    res, _, _ = ctx.load_csv(prj+'-panel-both_pos.csv')
+    diff = {}
+    rots = {}
+    rrots = {}
+    for r in res:
+        ref = r[0][:-2]  # Remove the -0 and -1
+        rot = float(r[4])
+        diff[ref] = rot - diff.get(ref, 0)
+        rots[ref] = rots.get(ref, '') + ' ' + r[4]
+        rrots[ref] = rot
+    logging.debug(f"Diffs: {diff}")
+    logging.debug(f"Rotations: {rots}")
+    assert not any(v != 0.0 for v in diff.values()), f'Diffs: {diff} Rotations: {rots}'
+    assert rrots == {'C5': 0.0, 'J1': 90.0, 'J2': 180.0, 'SW2': 0.0, 'U1': 0.0}
+    ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Just checking with modern KiCad")
+def test_wrong_sch_font(test_dir):
+    """ This is related to #948
+        Check we inform the user if fonts are missing during SCH print """
+    prj = 'wrong_font'
+    ctx = context.TestContextSCH(test_dir, prj, 'print_sch')
+    ctx.run()
+    ctx.search_err('Missing font `Ninja Naruto NO`, using')
+    ctx.clean_up()

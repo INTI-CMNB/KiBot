@@ -9,6 +9,10 @@ Dependencies:
     role: mandatory
     command: eeschema_do
     version: 2.0.0
+    version_k7: 2.2.8
+    version_k8: 2.3.2
+    version_k9: 2.3.5
+    version_k10: 2.3.9
 """
 import os
 from .gs import GS
@@ -56,19 +60,19 @@ class NetlistOptions(VariantOptions):
                 """
         super().__init__()
         self.help_only_sub_pcbs()
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
         self._expand_id, self._expand_ext = EXTENSIONS[self.format]
         self._category = 'PCB/fabrication/verification' if self.format == 'ipc' else 'PCB/export'
 
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
-
     def run_cli(self, name, format):
         super().run(name)
         sch_file = self.save_tmp_sch_if_variant()
-        cmd = [GS.kicad_cli, 'sch', 'export', 'netlist', '--format', format, '--output', name, sch_file]
+        cmd = [GS.kicad_cli, 'sch', 'export', 'netlist', '--format', format, '--output', name]
+        self.add_kicad_cli_variant(cmd)
+        cmd.append(sch_file)
         run_command(cmd)
 
     def run(self, name):

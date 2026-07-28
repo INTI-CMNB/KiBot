@@ -11,6 +11,9 @@ Avoid using it with the new *erc* and *drc* preflights. |br|
 Note that ignored errors will become KiBot warnings (i.e. `(W058) ...`). |br|
 To farther ignore these warnings use the `filters` option in the `global` section
 
+
+.. _Filters_filters:
+
    -  **filters** :index:`: <pair: preflight - filters; filters>`  [:ref:`FilterOptions parameters <FilterOptions_pre>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) One or more filters.
 
 Used dicts

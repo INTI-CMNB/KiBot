@@ -46,6 +46,7 @@ class IPC2581Options(VariantOptions):
                 Leave empty to create unique IDs """
         super().__init__()
         self._expand_id = 'IPC-2581'
+        self.get_targets = self._get_targets
 
     def config(self, parent):
         super().config(parent)
@@ -67,9 +68,6 @@ class IPC2581Options(VariantOptions):
             if val and val not in valid:
                 logger.warning(W_BADFIELD+f'Invalid column name `{val}` for `{fld}`. Valid columns are {sorted(valid)}.')
 
-    def get_targets(self, out_dir):
-        return [self._parent.expand_filename(out_dir, self.output)]
-
     def run(self, name):
         if not GS.ki9:
             GS.exit_with_error("`IPC2581` needs KiCad 9+", MISSING_TOOL)
@@ -89,6 +87,7 @@ class IPC2581Options(VariantOptions):
             cmd.extend(['--bom-col-dist', self._field_distributor])
         if self._field_internal_id:
             cmd.extend(['--bom-col-int-id', self._field_internal_id])
+        self.add_kicad_cli_variant(cmd)
         cmd.append(board_name)
         run_command(cmd)
 

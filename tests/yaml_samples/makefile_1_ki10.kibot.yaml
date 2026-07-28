@@ -1,0 +1,130 @@
+kibot:
+  version: 1
+
+preflight:
+  run_erc: true
+  run_drc: true
+  check_zone_fills: true
+  update_xml: true
+
+outputs:
+  - name: 'position'
+    comment: 'Pick & place files'
+    type: position
+    dir: positiondir
+    options:
+      format: CSV   # CSV or ASCII format
+      units: millimeters  # millimeters or inches
+      separate_files_for_front_and_back: true
+      only_smd: true
+
+  - name: 'interactive_bom'
+    comment: 'Interactive assembly guide'
+    type: ibom
+    dir: ibom
+    options:
+      netlist_file: 'tests/board_samples/kicad_5/bom.xml'
+
+  - name: 'ibom_external'
+    comment: 'Interactive assembly guide w/external name'
+    type: ibom
+    dir: ibom
+    options:
+      output: ''
+
+  - name: '3D'
+    comment: 'STEP 3D model'
+    type: step
+    dir: 3D
+
+  - name: 'kibom_internal'
+    comment: 'BoM by KiBoM using internal config'
+    type: kibom
+    dir: BoM
+    options:
+      conf:
+        hide_pcb_info: true
+
+  - name: 'kibom_external'
+    comment: 'BoM by KiBoM using external config'
+    type: kibom
+    dir: BoM2
+    options:
+      conf: tests/data/bom.ini
+      # Keep the KiBoM name
+      output: ''
+
+  - name: 'drill'
+    comment: 'Drilling data'
+    type: excellon
+    dir: gerbers
+    options:
+      report:
+        filename: '%f-%i.%x'
+      map:
+        type: pdf
+
+  - name: 'pcb_render'
+    comment: 'Top layer in SVG'
+    type: pcbdraw
+    options:
+      output: '%f-%i$.%x'
+      style: 'tests/data/html_style.css'
+
+  - name: 'print_front'
+    comment: "Print F.Cu+F.SilkS"
+    type: pdf_pcb_print
+    options:
+      scaling: 4
+      drill_marks: none
+      plot_sheet_reference: false
+      monochrome: true
+      separated: true
+      mirror: true
+    layers:
+      - layer: F.Cu
+      - layer: F.SilkS
+
+  - name: 'svg_sch_def'
+    comment: "Print schematic, default name (SVG)"
+    type: svg_sch_print
+    options:
+      output: ''
+
+  - name: 'svg_sch_int'
+    comment: "Print schematic, internal name (SVG)"
+    type: svg_sch_print
+
+  - name: 'pdf_sch_def'
+    comment: "Print schematic, default name (PDF)"
+    type: pdf_sch_print
+    options:
+      output: ''
+
+  - name: 'pdf_sch_int'
+    comment: "Print schematic, internal name (PDF)"
+    type: pdf_sch_print
+
+  - name: 'fake_sch'
+    comment: "Schematic with variants applied"
+    type: sch_variant
+
+  - name: 'Board View Test'
+    comment: "Example of board view export"
+    type: boardview
+
+  - name: 'archive'
+    comment: 'Compressed files'
+    type: compress
+    options:
+      files:
+        - from_output: 'position'
+        - from_output: 'interactive_bom'
+        - from_output: '3D'
+        - from_output: 'drill'
+        - source: '*'
+          dest: AnotherCopy
+
+  - name: 'pcb_stats'
+    comment: 'KiCad PCB Stats'
+    type: pcb_stats

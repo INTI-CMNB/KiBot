@@ -259,12 +259,16 @@ class Globals(FiltersOptions):
             self.pcb_material = 'FR4'
             """ PCB core material. Currently used for documentation and to choose default colors.
                 Currently known are FR1 to FR5 """
+            self.pcb_material_color = '#6D744BD3'
+            """ Default PCB core material color, used when the stack-up doesn't specify it """
             self.remove_solder_paste_for_dnp = True
             """ When applying filters and variants remove the solder paste for components that won't be included """
             self.remove_adhesive_for_dnp = True
             """ When applying filters and variants remove the adhesive (glue) for components that won't be included """
             self.remove_solder_mask_for_dnp = False
             """ When applying filters and variants remove the solder mask apertures for components that won't be included """
+            self.remove_3D_models_for_dnp = True
+            """ When applying filters and variants remove the 3D models for components that won't be included """
             self.always_warn_about_paste_pads = False
             """ Used to detect the use of pads just for paste """
             self.restore_project = False
@@ -308,6 +312,8 @@ class Globals(FiltersOptions):
             self.solder_mask_color_bottom = ''
             """ Color for the bottom solder mask. When not defined `solder_mask_color` is used.
                 Read `solder_mask_color` help """
+            self.solder_paste_color = 'grey'
+            """ Color for the solder paste in 3D renders """
             self.time_format = '%H-%M-%S'
             """ Format used for the time we started the script. Uses the `strftime` format """
             self.time_reformat = True
@@ -372,7 +378,10 @@ class Globals(FiltersOptions):
             self.kicad_default_variant = True
             """ For KiCad 10+ use the `Default` variant, even when no variant is specified """
             self.colored_tht_resistors = True
-            """ Try to add color bands to the 3D models of KiCad THT resistors """
+            """ Try to add color bands to the 3D models of KiCad THT resistors.
+                Important: KiCad 10 doesn't include WRL models anymore, you have to install the models for the resistors
+                you use. You can download them from KiCad 9 or from
+                [here](https://gitlab.com/kicad/libraries/kicad-packages3D/-/tree/9.0.9?ref_type=tags) """
             self.cache_3d_resistors = False
             """ Use a cache for the generated 3D models of colored resistors.
                 Will save time, but you could need to remove the cache if you need to regenerate them """
@@ -463,6 +472,11 @@ class Globals(FiltersOptions):
             self.code_page_fallback = 'latin1'
             """ Code page to use when UTF-8 decode fails. Leave empty to just use ASCII and spaces for codes
                 outside ASCII """
+            self.schematic_sheet_name_workaround = False
+            """ When printing a schematic the SHEETNAME variable is wrongly expanded for page 1.
+                This error is present in KiCad 9 and at least 10.0.3.
+                This workaround makes KiBot expand it for page 1. You must use the `title` option to set
+                the desired title, i.e. `My Project - ${SHEETNAME}` """
         self.set_doc('filters', " [list(dict)=[]] KiBot and KiCost warnings to be ignored."
                                 " Add 1000 to KiCost warnings (WCnnn) ")
         self._filter_what = 'KiBot warnings'
@@ -496,6 +510,10 @@ class Globals(FiltersOptions):
             if ly.color:
                 self.solder_mask_color_bottom = ly.color.lower()
                 logger.debug("- B.Mask color: "+ly.color)
+        elif ly.name == "B.Paste":
+            if ly.color:
+                self.solder_paste_color = ly.color.lower()
+                logger.debug("- B.Paste color: "+ly.color)
         elif ly.material:
             if not len(materials):
                 materials.add(ly.material)
@@ -503,6 +521,9 @@ class Globals(FiltersOptions):
             elif ly.material not in materials:
                 materials.add(ly.material)
                 self.pcb_material += ' / '+ly.material
+            if ly.type == 'core' and ly.color:
+                self.pcb_material_color = ly.color.lower()
+                logger.debug("- Core color: "+ly.color)
         elif ly.type == 'copper' and ly.thickness:
             if not len(thicknesses):
                 thicknesses.add(ly.thickness)

@@ -11,36 +11,66 @@
    +VARIANT includes the component only if we are using this variant
 
 .. note::
-      Don't confuse this variant style with the `kibom` output. In fact variants
-      doesn't apply to `kibom` output because it just uses the internal mechanism of
-      KiBom. Use the `bom` output instead, in this case you can use this variant style to
-      get similar results to what you get from `kibom`
+   Don't confuse this variant style with the `kibom` output. In fact variants
+   doesn't apply to `kibom` output because it just uses the internal mechanism of
+   KiBom. Use the `bom` output instead, in this case you can use this variant style to
+   get similar results to what you get from `kibom`
 .. 
 
+
+.. _KiBoM_comment:
+
    -  ``comment`` :index:`: <pair: variant - kibom; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes.
+
+.. _KiBoM_config_field:
+
    -  ``config_field`` :index:`: <pair: variant - kibom; config_field>` [:ref:`string <string>`] (default: ``'Config'``) Name of the field used to classify components.
+
+.. _KiBoM_dnc_filter:
+
    -  ``dnc_filter`` :index:`: <pair: variant - kibom; dnc_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_kibom_dnc_CONFIG_FIELD'``) Name of the filter to mark components as 'Do Not Change'.
       Use '_kibom_dnc' for the default KiBoM behavior.
+
+
+.. _KiBoM_dnf_filter:
 
    -  ``dnf_filter`` :index:`: <pair: variant - kibom; dnf_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_kibom_dnf_CONFIG_FIELD'``) Name of the filter to mark components as 'Do Not Fit'.
       Use '_kibom_dnf' for the default KiBoM behavior. |br|
       Use '_kicost_dnp'' for the default KiCost behavior.
 
+
+.. _KiBoM_exclude_filter:
+
    -  ``exclude_filter`` :index:`: <pair: variant - kibom; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_mechanical'``) Name of the filter to exclude components from BoM processing.
       Use '_mechanical' for the default KiBoM behavior.
 
+
+.. _KiBoM_file_id:
+
    -  ``file_id`` :index:`: <pair: variant - kibom; file_id>` [:ref:`string <string>`] (default: ``''``) Text to use as the replacement for %v expansion.
+
+.. _KiBoM_name:
+
    -  ``name`` :index:`: <pair: variant - kibom; name>` [:ref:`string <string>`] (default: ``''``) Used to identify this particular variant definition.
+
+.. _KiBoM_pre_transform:
+
    -  ``pre_transform`` :index:`: <pair: variant - kibom; pre_transform>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to transform fields before applying other filters.
       Use '_var_rename' to transform VARIANT:FIELD fields. |br|
       Use '_var_rename_kicost' to transform kicost.VARIANT:FIELD fields. |br|
       Use '_kicost_rename' to apply KiCost field rename rules.
+
+
+.. _KiBoM_sub_pcbs:
 
    -  ``sub_pcbs`` :index:`: <pair: variant - kibom; sub_pcbs>`  [:ref:`SubPCBOptions parameters <SubPCBOptions>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) Used for multi-board workflows as defined by KiKit.
       I don't recommend using it, for detail read
       `this <https://github.com/INTI-CMNB/KiBot/tree/master/docs/1_SCH_2_part_PCBs>`__. |br|
       But if you really need it you can define the sub-PCBs here. |br|
       Then you just use *VARIANT[SUB_PCB_NAME]* instead of just *VARIANT*.
+
+.. _KiBoM_variant:
+
    -  ``variant`` :index:`: <pair: variant - kibom; variant>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`comma separated <comma_sep>`] Board variant(s).
 
 

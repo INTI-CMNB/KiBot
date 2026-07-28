@@ -12,5 +12,8 @@ Starting with KiCad 7 you can paste a block containing board information using
 you modify anything related to it the block will be obsolete. |br|
 This preflight tries to refresh the information
 
+
+.. _Update_Stackup_update_stackup:
+
    -  **update_stackup** :index:`: <pair: preflight - update_stackup; update_stackup>` [:ref:`boolean <boolean>`] (default: ``false``) Enable this preflight.
 

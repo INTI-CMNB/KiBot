@@ -1,0 +1,49 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "515ffefb-67fc-469e-8927-514bdd5221e6")
+	(paper "A4")
+	(title_block
+		(title "${VARIANT}")
+		(comment 1 "${VARIANT_DESC}")
+		(comment 2 "${VARIANT}")
+	)
+	(lib_symbols)
+	(text "${VARIANT}\n${VARIANT_DESC}"
+		(exclude_from_sim no)
+		(at 103.124 44.196 0)
+		(effects
+			(font
+				(size 7.62 7.62)
+			)
+		)
+		(uuid "cac53220-88e4-4851-85eb-d15961bce36d")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+	(embedded_files
+		(file
+			(name "kicad_embedded_F47E35086DF2D1FFFBB7A2664A356353.kicad_wks")
+			(type worksheet)
+			(data |KLUv/WA5CfUUANbdXiEAtxsWHGS5ac4JWlhdTV1ADhVltCCdFsc54zb0/38BIAJVAE0AWQCPPxL/
+				x2PzpH2tJ3sj5zsuFjBqzf58aEl+rVjALNp+suWX/AkAQIAUvZfTYlScKuO3oXNEsuqM38t+3UMA
+				BAoLSulVZ+2LbZl9RAAEyhCJE3qgDRECf3GHNla7xGRFq/6S//fYvLDaEzOVMnjte056zn4zBl/s
+				2bMKgVj82sW33/75Dq8IZ6+r/uvjiMHatcPriKsnpf3Z+7Kq2kfvPuh5xB+Xk+VCEX+NqBXLxm0a
+				DTNyzGJRtYRaiGZM6uC0B6cNneoq2YbJNKgBZmE9KWVYiVYsUlqXPThahuM21KAb/t4j52zK/tfB
+				NnXslyIQVptmpor1/L5v0gsQCIFComKMq16Iyrhoos6LdhWNYroeOWLHrJtKdqFYHIpIl106TYtw
+				i8VlIShZRZtsEAsBrei9bYU1qTbptk5821Ua2n73Dyc4pAThVvV7Y8adzk56F4x2yQKAgKARQYYU
+				mhopSFLIMAeARKTmqDqUaDDAcOWIIIoJCEAecpszKGXvooqHvkhFQiG28uvJM4eHQAh+709Se2SN
+				7fZmG2qbN/1QC5OEnj8ZW3lkLDPwAUK2Oq0TU672a4nDEjmEFWhklqn0WFP67FIvkQYbw2kO4q6/
+				qnWHAldYseSqixd3LE/J8NeCQI9DAc/eEQ56ASaz3qSVl0iGfyoHi20cwRsYNqCHjWUKPgIRIRMZ
+				ml8MJWGBXuZN8Fk8JDGNHD6J7nSKOp9OnHub7M4WY9jDfxY4UCDLPHrUDohbmNiJcBAR7RFexSHX
+				AgS3v8mzU7ToWk28KOCM2sWSXyLaQydtQvsmK0YepdjxERvjpVJ6VyjsER/x3hc6hGF89Co=|
+			)
+			(checksum "F47E35086DF2D1FFFBB7A2664A356353")
+		)
+	)
+)

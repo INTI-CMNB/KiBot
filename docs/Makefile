@@ -17,7 +17,7 @@ samples/generic_plot.kibot.yaml: ../kibot/out_*.py ../kibot/pre_*.py ../kibot/co
 	mv example_template.kibot.yaml $@
 
 ../kibot/resources/report_templates/report_full_svg.txt: ../kibot/resources/report_templates/report_full.txt
-	sed -e 's/layer_pdfs/layer_svgs/' $< > $@
+	cp $< $@
 
 
 source/configuration/sup_outputs.rst: ../kibot/out_*.py ../kibot/config_reader.py

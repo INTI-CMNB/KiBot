@@ -77,6 +77,7 @@ Dependencies:
     version_k6: 1.5.0
     version_k7: 1.6.0
     version_k9: 1.7.0
+    version_k10: 1.8.0
   - from: KiKit
     role: Separate multiboard projects
   - name: Xvfbwrapper
@@ -915,13 +916,14 @@ GS.check_tool_dep_get_ver = check_tool_dep_get_ver
 
 class ToolDependencyRole(object):
     """ Class used to define the role of a tool """
-    def __init__(self, desc=None, version=None, output=None, max_version=None, all_versions=None):
+    def __init__(self, desc=None, version=None, output=None, max_version=None, all_versions=None, min_version=None):
         # Is this tool mandatory
         self.mandatory = desc is None
         # If not mandatory, for what?
         self.desc = desc
         # Which version is needed?
         self.version = version
+        self.min_version = min_version
         self.max_version = max_version
         self.all_versions = all_versions
         # Which output needs it?
@@ -986,6 +988,21 @@ def get_dep_version(dep):
     # Look if we have a version depending on KiCad version
     k_ver = GS.kicad_version_major
     all_versions = {kv: dep['version_k'+str(kv)] for kv in range(5, 25) if 'version_k'+str(kv) in dep}
+
+    # Minimum requirement
+    # Try a version for all KiCad versions
+    min_version = dep.get('version', None)
+    if min_version is None:
+        # Look for the smallest KiCad version
+        for i in range(5, 25):
+            n_version = 'version_k'+str(i)
+            if n_version in dep:
+                min_version = dep[n_version]
+                break
+    if min_version is not None:
+        min_version = version_str2tuple(str(min_version))
+
+    # Actually needed
     version = None
     while k_ver >= 5 and version is None:
         version = dep.get('version_k'+str(k_ver), None)
@@ -995,7 +1012,8 @@ def get_dep_version(dep):
         version = dep.get('version', None)
     if version is not None:
         version = version_str2tuple(str(version))
-    return all_versions, version
+
+    return all_versions, version, min_version
 
 
 def register_dep(context, dep):
@@ -1014,11 +1032,12 @@ def register_dep(context, dep):
     desc = dep['role']
     if desc.lower() == 'mandatory':
         desc = None
-    all_versions, version = get_dep_version(dep)
+    all_versions, version, min_version = get_dep_version(dep)
     max_version = dep.get('max_version', None)
     if max_version is not None:
         max_version = version_str2tuple(str(max_version))
-    role = ToolDependencyRole(desc=desc, version=version, max_version=max_version, all_versions=all_versions)
+    role = ToolDependencyRole(desc=desc, version=version, max_version=max_version, all_versions=all_versions,
+                              min_version=min_version)
     # Solve the URLs
     github = dep.get('github', None)
     url_def = url_down_def = None

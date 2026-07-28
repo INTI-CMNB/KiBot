@@ -66,7 +66,7 @@ def document(sentences, **kw):
                 # -Num
                 type_hint = '[number={}]'.format(-value.operand.value)
             elif is_str(value):
-                type_hint = "[string='{}']".format(value.s)
+                type_hint = "[string='{}']".format(value.value)
             elif isinstance(value, Attribute):
                 # Used for the default options. I.e. GS.def_global_option
                 val = eval(unparse(value))
@@ -86,7 +86,7 @@ def document(sentences, **kw):
                 target = Name(id=doc_id, ctx=Store())
             # Reuse the s.value Str
             help_str = s.value
-            doc_str = s.value.s.rstrip()
+            doc_str = s.value.value.rstrip()
             doc_str_2 = ' '+doc_str[2:] if doc_str.startswith(' *') else doc_str
             if type_hint and (doc_str_2.startswith(' [string') or doc_str_2.startswith(' [number') or
                               doc_str_2.startswith(' [boolean')):
@@ -97,7 +97,7 @@ def document(sentences, **kw):
                 # Move the marker to the beginning
                 doc_str = doc_str_2
                 type_hint = '*'+type_hint
-            help_str.s = type_hint+doc_str+post_hint
+            help_str.value = type_hint+doc_str+post_hint
             sentences[n] = Assign(targets=[target], value=help_str)
             # Copy the line number from the original docstring
             copy_location(target, s)
@@ -115,7 +115,8 @@ def _do_wrap_class_register(tree, mod, base_class):
         # BaseOutput.register member:
         attr = Attribute(value=Name(id=base_class, ctx=Load()), attr='register', ctx=Load())
         # Function call to it passing reg_name and name
-        do_register = Expr(value=Call(func=attr, args=[Constant(s=reg_name), Name(id=name, ctx=Load())], keywords=[]))
+        do_register = Expr(value=Call(func=attr, args=[Constant(value=reg_name, kind=None), Name(id=name, ctx=Load())],
+                           keywords=[]))
         # Create the import
         do_import = ImportFrom(module=mod, names=[alias(name=base_class, asname=None, lineno=tree.lineno,
                                col_offset=tree.col_offset)], level=1)

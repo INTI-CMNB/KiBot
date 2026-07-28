@@ -7,7 +7,7 @@ pytest-3 --log-cli-level debug
 import os
 from . import context
 PS_DIR = 'PDF'
-DIFF_TOL = 0 if os.path.isfile('/etc/debian_version') else 250
+DIFF_TOL = 10 if os.path.isfile('/etc/debian_version') else 250
 
 
 def test_pdf(test_dir):

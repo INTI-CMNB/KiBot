@@ -13,8 +13,193 @@ Changelog <https://keepachangelog.com/en/1.0.0/>`__, and this project
 adheres to `Semantic
 Versioning <https://semver.org/spec/v2.0.0.html>`__.
 
-[1.9.0] - 2026-05-12
+[1.9.1] - 2026-07-28
 --------------------
+
+Added
+~~~~~
+
+-  Support for Python 3.14 (#930)
+-  CLI:
+
+   -  –keep-temporals: to keep temporal files
+
+-  Some limited support for the VARIANT and VARIANT_DESC variables found
+   in KiCad 10. They can be used for things like 3D and print_pcb even
+   for KiCad 6.
+-  Workaround for KiCad 10 bug 14360 which prevents native QRs to be
+   updated when they use a KiCad variable.
+-  Schematic:
+
+   -  Support for SHEETNAME, SHEETFILE and SHEETPATH in the title block
+   -  Support for the ``jumper_pin_groups`` attribute of symbols. (#942)
+   -  Some support for properties defined at sheet level. (#941)
+
+-  Globals:
+
+   -  ``schematic_sheet_name_workaround`` to workaround SHEETNAME on
+      page 1 (See #933)
+   -  ``pcb_material_color`` default color for the PCB core material
+   -  ``solder_paste_color`` default color for the solder paste
+   -  ``remove_3D_models_for_dnp`` to disable 3D models removal from
+      variants
+
+-  Variants:
+
+   -  pre_transform filter to KiCad variants
+
+-  E/DRC:
+
+   -  Dark mode support and icon to select it.
+
+-  Blender Export:
+
+   -  Added support for PCB2Blender 2.17 format
+
+-  BoM:
+
+   -  JSON output format. As a helper for external renderers (See #917)
+   -  Dark mode support and icon to select it.
+
+-  Diff:
+
+   -  ``tag_filter``: to select which tags are used for KIBOT_TAG
+
+-  KiCad Site:
+
+   -  ``bom`` configuration
+   -  ``kiri`` configuration
+
+-  KiRi:
+
+   -  ``commits`` and ``labels`` options to include an explicit list of
+      git revisions (hashes, tags, branches, etc.) (#946)
+   -  ``include_dirty`` to exclude the local changes. (#946)
+
+-  Panelize:
+
+   -  Better support for ``renameref`` use. Now we set the reference
+      from the PCB when global ``use_pcb_fields`` variable is enabled.
+
+-  PcbDraw:
+
+   -  ``show_copper`` to disable tracks and zones (from 1.2.0)
+
+-  Render 3D:
+
+   -  KiCad 10: support for kicad-cli interface, adds some new options
+      but has various limitations, hopping they will be fixed.
+
+-  Report:
+
+   -  All PDF pages are included, not just the first
+   -  The full report now works with SVGs and PDFs for both (SCH and
+      PCB), SVGs have priority
+   -  ``remove_split_pdfs``: To control if we remove split PDFs
+   -  ``collect_images``: To just avoid collecting images, enabled by
+      default when generating a CSV. Avoids unintended infinite loops.
+      (See #931)
+
+-  \*SCH Print
+
+   -  ``title_propagate``: The title is not only set for page 1 but also
+      for all pages.
+
+Fixed
+-----
+
+-  Warnings:
+
+   -  11 and 148 were always filtered for CI/CD, even when using
+      –warn-ci-cd
+   -  Crash when missing basic fields, KiCad 6+
+   -  Avoid warning about datasheet mismatch when creating a component
+      from the PCB.
+
+-  CLI:
+
+   -  When using a –variant and an specific target, it was generated for
+      the first variant in the list, not the rest
+
+-  Filters:
+
+   -  Applied only to the first copy of a KiKit panel with default
+      ``renameref`` (#937)
+
+-  Gerber Drill:
+
+   -  Avoid showing an error when KiCad 10 skips a drill file (See #928)
+
+-  KiRi:
+
+   -  ``kiri_server`` path to the HTML
+
+-  \*SCH Print:
+
+   -  The list of targets now includes all schematic pages
+   -  Output when the ``output`` option was empty
+   -  DNP components when no variant is used and we set a title or
+      replace images (‘kibot_image_OUTPUT’) (#943)
+
+-  PCB2Blender Tools:
+
+   -  Crash for oblong drills
+
+-  PCB Stats:
+
+   -  Missing targets (See #928)
+
+-  PDFUnite:
+
+   -  Using just the first page when using the internal joiner (#950)
+
+-  SCH/PCB Variant:
+
+   -  “Exclude from bom” flag wrongly exported
+
+-  Report:
+
+   -  Now all SVG schematic pages are included, not just the first
+
+-  VRML
+
+   -  Avoid WRL files for KiCad 10 (See #928)
+
+-  Now we clear fields created by a variant, so they don’t interfere in
+   multiple variants generation.
+
+Changed
+-------
+
+-  E/DRC and BoM: As we now have dark mode support the CSS is more
+   complex and user defined CSSs might need some adjusts
+-  Now when an output runs another outputs as dependencies the name of
+   the created output is displayed.
+-  When using ``pcb_print`` and including tables you no longer need to
+   run the output that generates the CSV first, it gets generated
+   on-the-fly
+-  Report: the outputs that generates images no longer needs to be
+   already executed, KiBot will run them
+-  More common CI/CD warnings filtered:
+
+   -  W008 Unable to find KiCad configuration file
+   -  W058 Missing KiCad main config file
+   -  W058 Missing default system table
+
+-  No more reports on PCB/SCH fields mismatch when the variants modified
+   the field
+-  Avoid more than 20 levels of nested outputs, this is an infinite
+   loop.
+-  Quick Start:
+
+   -  Use ``force_stackup_colors`` for ``render_3d``
+
+.. _section-1:
+
+`1.9.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.5...v1.9.0>`__ - 2026-05-12
+-----------------------------------------------------------------------------------
+
+.. _added-1:
 
 Added
 ~~~~~
@@ -99,6 +284,8 @@ Added
    KiCad 10
 -  SCH Print: specify pages to be included (#907)
 
+.. _fixed-1:
+
 Fixed
 ~~~~~
 
@@ -132,6 +319,8 @@ Fixed
    internal mechanism (#903)
 -  Allow empty ``dir`` option
 
+.. _changed-1:
+
 Changed
 ~~~~~~~
 
@@ -143,12 +332,12 @@ Changed
 -  E/DRC: we now get the big OK mark when all violations are excluded
 -  BoM: by default fields defined as ``~`` are empty.
 
-.. _section-1:
+.. _section-2:
 
 `1.8.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.4...v1.8.5>`__ - 2025-11-26
 -----------------------------------------------------------------------------------
 
-.. _added-1:
+.. _added-2:
 
 Added
 ~~~~~
@@ -193,7 +382,7 @@ Added
 -  Blender Export: Support for STL/OBJ/PLY/GLTF changes in Blender 4.2
    (#880)
 
-.. _fixed-1:
+.. _fixed-2:
 
 Fixed
 ~~~~~
@@ -214,19 +403,19 @@ Fixed
 
    -  Workaround for KiCad 9.0.5 broken API to GetTextBox
 
-.. _changed-1:
+.. _changed-2:
 
 Changed
 ~~~~~~~
 
 -  Filtered KiBot warnings are informed in the debug output (See #817)
 
-.. _section-2:
+.. _section-3:
 
 `1.8.4 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.3...v1.8.4>`__ - 2025-04-03
 -----------------------------------------------------------------------------------
 
-.. _added-2:
+.. _added-3:
 
 Added
 ~~~~~
@@ -247,7 +436,7 @@ Added
    -  ``Footprint Full`` virtual field for the ``LIB:FOOTPRINT`` name
    -  ``kicad_dnp_applied`` option to overwrite the global option
 
-.. _fixed-2:
+.. _fixed-3:
 
 Fixed
 ~~~~~
@@ -257,12 +446,12 @@ Fixed
 -  3D outputs: Embedded 3D models misinterpreted as KiCad 6 aliases (See
    #802)
 
-.. _section-3:
+.. _section-4:
 
 `1.8.3 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.2...v1.8.3>`__ - 2025-03-18
 -----------------------------------------------------------------------------------
 
-.. _added-3:
+.. _added-4:
 
 Added
 ~~~~~
@@ -403,7 +592,7 @@ Added
 
    -  Default font for KiCad 9 (#691)
 
-.. _fixed-3:
+.. _fixed-4:
 
 Fixed
 ~~~~~
@@ -453,7 +642,7 @@ Fixed
    -  ``sketch_pads_on_fab_layers`` not inherited from parent when using
       layer names (See #777)
 
-.. _changed-2:
+.. _changed-3:
 
 Changed
 ~~~~~~~
@@ -471,12 +660,12 @@ Changed
       excluded from the 3D models and solder paste processing, but the
       docs says this is just for BoM (See #772)
 
-.. _section-4:
+.. _section-5:
 
 `1.8.2 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.1...v1.8.2>`__ - 2024-10-28
 -----------------------------------------------------------------------------------
 
-.. _added-4:
+.. _added-5:
 
 Added
 ~~~~~
@@ -505,7 +694,7 @@ Added
    -  ``copy_vias_on_mask`` option to workaround KiCad’s bug 18991 (See
       #703 and #704)
 
-.. _fixed-4:
+.. _fixed-5:
 
 Fixed
 ~~~~~
@@ -532,7 +721,7 @@ Fixed
 -  Expansion of internal field names. KiCad expands “VALUE”, not
    “Value”, which is what you see in the GUI
 
-.. _changed-3:
+.. _changed-4:
 
 Changed
 ~~~~~~~
@@ -549,12 +738,12 @@ Changed
 
    -  Avoid leaking DIGIKEY_CLIENT_ID and DIGIKEY_CLIENT_SECRET in logs
 
-.. _section-5:
+.. _section-6:
 
 `1.8.1 <https://github.com/INTI-CMNB/KiBot/compare/v1.8.0...v1.8.1>`__ - 2024-09-25
 -----------------------------------------------------------------------------------
 
-.. _fixed-5:
+.. _fixed-6:
 
 Fixed
 ~~~~~
@@ -572,12 +761,12 @@ Fixed
 
 -  PCB print: errors when printing a fully empty layer
 
-.. _section-6:
+.. _section-7:
 
 `1.8.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.7.0...v1.8.0>`__ - 2024-09-17
 -----------------------------------------------------------------------------------
 
-.. _added-5:
+.. _added-6:
 
 Added
 ~~~~~
@@ -635,7 +824,7 @@ Added
 
    -  Support for panels repeating the same component (See #656)
 
-.. _fixed-6:
+.. _fixed-7:
 
 Fixed:
 ~~~~~~
@@ -684,7 +873,7 @@ Fixed:
    fills, that could generate huge lines in the generated PCB, not
    supported by KiCad. (#660)
 
-.. _changed-4:
+.. _changed-5:
 
 Changed:
 ~~~~~~~~
@@ -721,12 +910,12 @@ Changed:
    -  Spec to Field: some simple defaults for the specs (voltage,
       current, power and tolerance)
 
-.. _section-7:
+.. _section-8:
 
 `1.7.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.6.5...v1.7.0>`__ - 2024-04-23
 -----------------------------------------------------------------------------------
 
-.. _added-6:
+.. _added-7:
 
 Added
 ~~~~~
@@ -789,7 +978,7 @@ Added
    -  Added options to control Eco1/Eco2/Drawings individually on KiCad
       8 (#614)
 
-.. _fixed-7:
+.. _fixed-8:
 
 Fixed
 ~~~~~
@@ -815,7 +1004,7 @@ Fixed
    -  Expansion of variables in fields could fail if the KiCad config
       wasn’t initialized
 
-.. _changed-5:
+.. _changed-6:
 
 Changed
 ~~~~~~~
@@ -826,12 +1015,12 @@ Changed
 -  PcbDraw: Now handles panelized boards much faster. Previous code was
    really slow for panels and the time increased exponentially.
 
-.. _section-8:
+.. _section-9:
 
 `1.6.5 <https://github.com/INTI-CMNB/KiBot/compare/v1.6.4...v1.6.5>`__ - 2024-03-31
 -----------------------------------------------------------------------------------
 
-.. _added-7:
+.. _added-8:
 
 Added
 ~~~~~
@@ -845,7 +1034,7 @@ Added
 -  Navigate results: A header and navigation bar (#582)
 -  BoM: support for SVG format in the logos (#383)
 
-.. _changed-6:
+.. _changed-7:
 
 Changed
 ~~~~~~~
@@ -859,7 +1048,7 @@ Changed
 -  BoardView: Skip footprints with no pads (not just REF*\*)
    (whitequark/kicad-boardview#14)
 
-.. _fixed-8:
+.. _fixed-9:
 
 Fixed
 ~~~~~
@@ -886,12 +1075,12 @@ Fixed
    (#589)
 -  Panelize: not able to use external JSON configs (#592)
 
-.. _section-9:
+.. _section-10:
 
 `1.6.4 <https://github.com/INTI-CMNB/KiBot/compare/v1.6.3...v1.6.4>`__ - 2024-02-02
 -----------------------------------------------------------------------------------
 
-.. _added-8:
+.. _added-9:
 
 Added
 ~~~~~
@@ -1042,7 +1231,7 @@ Added
    -  Added a new mode where we can control the added/removed colors
       (#551)
 
-.. _changed-7:
+.. _changed-8:
 
 Changed
 ~~~~~~~
@@ -1079,7 +1268,7 @@ Changed
    -  When *check_zone_fills* is enabled now we do a refill for the
       boards
 
-.. _fixed-9:
+.. _fixed-10:
 
 Fixed
 ~~~~~
@@ -1167,12 +1356,12 @@ Fixed
    -  Problems when creating a colored resistor, but we didn’t have a
       cache yet (i.e. no model downloaded) #553
 
-.. _section-10:
+.. _section-11:
 
 `1.6.3 <https://github.com/INTI-CMNB/KiBot/compare/v1.6.2...v1.6.3>`__ - 2023-06-26
 -----------------------------------------------------------------------------------
 
-.. _added-9:
+.. _added-10:
 
 Added
 ~~~~~
@@ -1267,7 +1456,7 @@ Added
    -  ``quote_all``: forces quotes to all values in the CSV output. (See
       #456)
 
-.. _changed-8:
+.. _changed-9:
 
 Changed
 ~~~~~~~
@@ -1297,7 +1486,7 @@ Changed
 -  JLCPCB_stencil: Is now just like JLCPCB. The only difference is the
    added layers.
 
-.. _fixed-10:
+.. _fixed-11:
 
 Fixed
 ~~~~~
@@ -1337,12 +1526,12 @@ Fixed
 
 -  KiCad user template directory autodetection for KiCad 7+
 
-.. _section-11:
+.. _section-12:
 
 `1.6.2 <https://github.com/INTI-CMNB/KiBot/compare/v1.6.1...v1.6.2>`__ - 2023-04-24
 -----------------------------------------------------------------------------------
 
-.. _added-10:
+.. _added-11:
 
 Added
 ~~~~~
@@ -1407,7 +1596,7 @@ Added
 
    -  Option to use the auxiliary origin as reference. (#420)
 
-.. _fixed-11:
+.. _fixed-12:
 
 Fixed
 ~~~~~
@@ -1447,7 +1636,7 @@ Fixed
 
    -  ref_y coordinate not used. (#419)
 
-.. _changed-9:
+.. _changed-10:
 
 Changed:
 ~~~~~~~~
@@ -1455,12 +1644,12 @@ Changed:
 -  Some R, L and C values that were rejected are accepted now. You just
    get a warning about what part of the value was discarded.
 
-.. _section-12:
+.. _section-13:
 
 `1.6.1 <https://github.com/INTI-CMNB/KiBot/compare/v1.6.0...v1.6.1>`__ - 2023-03-16
 -----------------------------------------------------------------------------------
 
-.. _added-11:
+.. _added-12:
 
 Added
 ~~~~~
@@ -1494,7 +1683,7 @@ Added
    -  ``cross_using_kicad`` global option to use KiCad to cross DNP
       components in the schematic. Enabled by default.
 
-.. _fixed-12:
+.. _fixed-13:
 
 Fixed
 ~~~~~
@@ -1504,12 +1693,12 @@ Fixed
    conditions were met.
 -  PCB Print: KiCad crashing on some complex filled zones (#396)
 
-.. _section-13:
+.. _section-14:
 
 `1.6.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.5.1...v1.6.0>`__ - 2023-02-06
 -----------------------------------------------------------------------------------
 
-.. _added-12:
+.. _added-13:
 
 Added
 ~~~~~
@@ -1623,24 +1812,24 @@ Added
    ~/.cache/kibot/3d You can change the directory using KIBOT_3D_MODELS
 -  License is now AGPL v3, since we are incorporating AGPL code.
 
-.. _section-14:
+.. _section-15:
 
 `1.5.1 <https://github.com/INTI-CMNB/KiBot/compare/v1.5.0...v1.5.1>`__ - 2022-12-16
 -----------------------------------------------------------------------------------
 
-.. _fixed-13:
+.. _fixed-14:
 
 Fixed
 ~~~~~
 
 -  System level resources look-up
 
-.. _section-15:
+.. _section-16:
 
 `1.5.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.4.0...v1.5.0>`__ - 2022-12-16
 -----------------------------------------------------------------------------------
 
-.. _added-13:
+.. _added-14:
 
 Added
 ~~~~~
@@ -1702,7 +1891,7 @@ Added
 
    -  Option to control the *SVG precision* (units scale)
 
-.. _changed-10:
+.. _changed-11:
 
 Changed
 ~~~~~~~
@@ -1715,7 +1904,7 @@ Changed
 
    -  loss tangent decimals, added one more.
 
-.. _fixed-14:
+.. _fixed-15:
 
 Fixed
 ~~~~~
@@ -1749,12 +1938,12 @@ Fixed
 -  Makefile: outputs marked as not run by default were listed in the
    ``all`` target.
 
-.. _section-16:
+.. _section-17:
 
 `1.4.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.3.0...v1.4.0>`__ - 2022-10-12
 -----------------------------------------------------------------------------------
 
-.. _added-14:
+.. _added-15:
 
 Added
 ~~~~~
@@ -1825,7 +2014,7 @@ Added
 
 -  Position: option to set the resolution for floating values (#314)
 
-.. _fixed-15:
+.. _fixed-16:
 
 Fixed
 ~~~~~
@@ -1847,7 +2036,7 @@ Fixed
 -  Position: Components wrongly separated by side when the side column
    wasn’t the last column (#313)
 
-.. _changed-11:
+.. _changed-12:
 
 Changed
 ~~~~~~~
@@ -1867,12 +2056,12 @@ Changed
 -  When importing globals now options that are lists or dicts are
    merged, not just replaced. (#291)
 
-.. _section-17:
+.. _section-18:
 
 `1.3.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.2.0...v1.3.0>`__ - 2022-09-08
 -----------------------------------------------------------------------------------
 
-.. _added-15:
+.. _added-16:
 
 Added
 ~~~~~
@@ -1915,7 +2104,7 @@ Added
 
 -  Installation checker: option to show the tool paths.
 
-.. _fixed-16:
+.. _fixed-17:
 
 Fixed
 ~~~~~
@@ -1950,7 +2139,7 @@ Fixed
    when VAR isn’t defined. The old code tried to make it an absolute
    path.
 
-.. _changed-12:
+.. _changed-13:
 
 Changed
 ~~~~~~~
@@ -1967,12 +2156,12 @@ Changed
 -  Fails to expand KiCad vars are reported once (not every time)
 -  No more warnings about missing 3D models when we can download them
 
-.. _section-18:
+.. _section-19:
 
 `1.2.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.1.0...v1.2.0>`__ - 2022-06-15
 -----------------------------------------------------------------------------------
 
-.. _added-16:
+.. _added-17:
 
 Added
 ~~~~~
@@ -1999,7 +2188,7 @@ Added
 -  GitHub discussions are now enabled. Comment about your KiBot
    experience `here <https://github.com/INTI-CMNB/KiBot/discussions>`__
 
-.. _fixed-17:
+.. _fixed-18:
 
 Fixed
 ~~~~~
@@ -2013,7 +2202,7 @@ Fixed
    orientation.
 -  svg_pcb_print: page orientation for portrait.
 
-.. _changed-13:
+.. _changed-14:
 
 Changed
 ~~~~~~~
@@ -2026,12 +2215,12 @@ Changed
    -  ``navigate_results`` and ``compress`` outputs are created after
       others
 
-.. _section-19:
+.. _section-20:
 
 `1.1.0 <https://github.com/INTI-CMNB/KiBot/compare/v1.0.0...v1.1.0>`__ - 2022-05-24
 -----------------------------------------------------------------------------------
 
-.. _added-17:
+.. _added-18:
 
 Added
 ~~~~~
@@ -2047,7 +2236,7 @@ Added
    -  Pattern and text variables expansion in the title (#198)
    -  Customizable extra info after the title (#199)
 
-.. _fixed-18:
+.. _fixed-19:
 
 Fixed
 ~~~~~
@@ -2057,12 +2246,12 @@ Fixed
 -  KiCost+Internal variants: problem with ``variant`` field
    capitalization
 
-.. _section-20:
+.. _section-21:
 
 `1.0.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.11.0...v1.0.0>`__ - 2022-05-10
 ------------------------------------------------------------------------------------
 
-.. _added-18:
+.. _added-19:
 
 Added
 ~~~~~
@@ -2173,7 +2362,7 @@ Added
 -  Support for ``--subst-models`` option for KiCad 6’s kicad2step.
    (#137)
 
-.. _changed-14:
+.. _changed-15:
 
 Changed
 ~~~~~~~
@@ -2195,7 +2384,7 @@ Changed
 -  The default output pattern now includes the ``output_id`` (%I)
 -  The ``source`` path for ``compress`` now has pattern expansion (#152)
 
-.. _fixed-19:
+.. _fixed-20:
 
 Fixed
 ~~~~~
@@ -2235,12 +2424,12 @@ Fixed
    (not imported from KiCad 5)
 -  Problems when using page layout files with relative paths. (#174)
 
-.. _section-21:
+.. _section-22:
 
 `0.11.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.10.1...v0.11.0>`__ - 2021-04-25
 --------------------------------------------------------------------------------------
 
-.. _added-19:
+.. _added-20:
 
 Added
 ~~~~~
@@ -2264,7 +2453,7 @@ Added
 -  Basic KiCost support (**experimental**).
 -  Basic internal BoM and KiCost integration (**experimental**).
 
-.. _changed-15:
+.. _changed-16:
 
 Changed
 ~~~~~~~
@@ -2277,7 +2466,7 @@ Changed
 -  Reference ranges of two elements no longer represented as ranges.
    Examples: “R1-R2” is now “R1 R2”, “R1-R3” remains unchanged.
 
-.. _fixed-20:
+.. _fixed-21:
 
 Fixed
 ~~~~~
@@ -2291,12 +2480,12 @@ Fixed
 -  The “References” (plural) column is now coloured as “Reference”
    (singular)
 
-.. _section-22:
+.. _section-23:
 
 `0.10.1 <https://github.com/INTI-CMNB/KiBot/compare/v0.10.0...v0.10.1>`__ - 2021-02-22
 --------------------------------------------------------------------------------------
 
-.. _added-20:
+.. _added-21:
 
 Added
 ~~~~~
@@ -2304,21 +2493,9 @@ Added
 -  GitLab CI workaround
 -  Verbosity level is now passed to KiAuto
 
-.. _section-23:
-
-[0.10.0-4] - 2021-02-16
------------------------
-
-.. _fixed-21:
-
-Fixed
-~~~~~
-
--  Problem using Python 3.6 (ZipFile’s compresslevel arg needs 3.7)
-
 .. _section-24:
 
-[0.10.0-3] - 2021-02-16
+[0.10.0-4] - 2021-02-16
 -----------------------
 
 .. _fixed-22:
@@ -2326,11 +2503,11 @@ Fixed
 Fixed
 ~~~~~
 
--  Problem using Python 3.6 (StreamHandler.setStream introduced in 3.7)
+-  Problem using Python 3.6 (ZipFile’s compresslevel arg needs 3.7)
 
 .. _section-25:
 
-[0.10.0-2] - 2021-02-12
+[0.10.0-3] - 2021-02-16
 -----------------------
 
 .. _fixed-23:
@@ -2338,14 +2515,26 @@ Fixed
 Fixed
 ~~~~~
 
--  Missing python3-distutils dependency on Debian package.
+-  Problem using Python 3.6 (StreamHandler.setStream introduced in 3.7)
 
 .. _section-26:
+
+[0.10.0-2] - 2021-02-12
+-----------------------
+
+.. _fixed-24:
+
+Fixed
+~~~~~
+
+-  Missing python3-distutils dependency on Debian package.
+
+.. _section-27:
 
 `0.10.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.9.0...v0.10.0>`__ - 2021-02-12
 -------------------------------------------------------------------------------------
 
-.. _added-21:
+.. _added-22:
 
 Added
 ~~~~~
@@ -2376,7 +2565,7 @@ Added
 -  KiAuto time-out control.
 -  Now you can import outputs from another config file.
 
-.. _changed-16:
+.. _changed-17:
 
 Changed
 ~~~~~~~
@@ -2391,7 +2580,7 @@ Changed
    and error messages still use stderr.
 -  Now InteractiveHtmlBom can be installed just as a plugin.
 
-.. _fixed-24:
+.. _fixed-25:
 
 Fixed
 ~~~~~
@@ -2403,12 +2592,12 @@ Fixed
    (i.e. UTF-8).
 -  Problems when using components with more than 10 subparts.
 
-.. _section-27:
+.. _section-28:
 
 `0.9.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.8.1...v0.9.0>`__ - 2021-01-04
 -----------------------------------------------------------------------------------
 
-.. _added-22:
+.. _added-23:
 
 Added
 ~~~~~
@@ -2423,7 +2612,7 @@ Added
 -  A filter to rotate footprints in the position file (#28).
 -  The step output now can download missing 3D models.
 
-.. _changed-17:
+.. _changed-18:
 
 Changed
 ~~~~~~~
@@ -2432,7 +2621,7 @@ Changed
 -  Position files in CSV format quotes only the columns that could
    contain an space. Just like KiCad does.
 
-.. _fixed-25:
+.. _fixed-26:
 
 Fixed
 ~~~~~
@@ -2441,12 +2630,12 @@ Fixed
 -  Generic filter ``include_only`` option worked only when debug
    enabled.
 
-.. _section-28:
+.. _section-29:
 
 `0.8.1 <https://github.com/INTI-CMNB/KiBot/compare/v0.8.0...v0.8.1>`__ - 2020-12-09
 -----------------------------------------------------------------------------------
 
-.. _added-23:
+.. _added-24:
 
 Added
 ~~~~~
@@ -2454,7 +2643,7 @@ Added
 -  Internal BoM HTML: highlight cell when hover.
 -  Internal BoM HTML: allow to jump to REF of row number using anchors.
 
-.. _fixed-26:
+.. _fixed-27:
 
 Fixed
 ~~~~~
@@ -2462,12 +2651,12 @@ Fixed
 -  Internal BoM separator wasn’t applied when using ``use_alt``
 -  Problems loading plug-ins when using ``pip``.
 
-.. _section-29:
+.. _section-30:
 
 `0.8.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.7.0...v0.8.0>`__ - 2020-11-06
 -----------------------------------------------------------------------------------
 
-.. _added-24:
+.. _added-25:
 
 Added
 ~~~~~
@@ -2480,7 +2669,7 @@ Added
 -  Columns in position files can be selected, renamed and sorted as you
    like.
 
-.. _fixed-27:
+.. _fixed-28:
 
 Fixed
 ~~~~~
@@ -2493,12 +2682,12 @@ Fixed
 -  Excellon drill output when using unified output and not using default
    KiCad names.
 
-.. _section-30:
+.. _section-31:
 
 `0.7.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.6.2...v0.7.0>`__ - 2020-09-11
 -----------------------------------------------------------------------------------
 
-.. _added-25:
+.. _added-26:
 
 Added
 ~~~~~
@@ -2523,7 +2712,7 @@ Added
 -  Default output file name format and default variant can be specified
    from the command line.
 
-.. _fixed-28:
+.. _fixed-29:
 
 Fixed
 ~~~~~
@@ -2531,12 +2720,12 @@ Fixed
 -  Virtual components are always excluded from position files. Note you
    can change it using the variants mechanism.
 
-.. _section-31:
+.. _section-32:
 
 `0.6.2 <https://github.com/INTI-CMNB/KiBot/compare/v0.6.1...v0.6.2>`__ - 2020-08-25
 -----------------------------------------------------------------------------------
 
-.. _changed-18:
+.. _changed-19:
 
 Changed
 ~~~~~~~
@@ -2545,7 +2734,7 @@ Changed
    creating the internal BoM. They are usually mistakes that prevents
    grouping components.
 
-.. _fixed-29:
+.. _fixed-30:
 
 Fixed
 ~~~~~
@@ -2557,26 +2746,26 @@ Fixed
 -  Problems with PcbDraw when generating PNG and JPG outputs. Now we use
    a more reliable conversion method when available.
 
-.. _section-32:
+.. _section-33:
 
 `0.6.1 <https://github.com/INTI-CMNB/KiBot/compare/v0.6.0...v0.6.1>`__ - 2020-08-20
 -----------------------------------------------------------------------------------
 
-.. _added-26:
+.. _added-27:
 
 Added
 ~~~~~
 
 -  More robust behavior on GUI dependent commands.
 
-.. _changed-19:
+.. _changed-20:
 
 Changed
 ~~~~~~~
 
 -  Incorporated mcpy, no longer a dependency.
 
-.. _fixed-30:
+.. _fixed-31:
 
 Fixed
 ~~~~~
@@ -2584,12 +2773,12 @@ Fixed
 -  Problems when using ``pip install`` without –no-compile. At least for
    user level install.
 
-.. _section-33:
+.. _section-34:
 
 `0.6.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.5.0...v0.6.0>`__ - 2020-08-18
 -----------------------------------------------------------------------------------
 
-.. _added-27:
+.. _added-28:
 
 Added
 ~~~~~
@@ -2621,7 +2810,7 @@ Added
    -  ``error_number`` -> ``number``
    -  ``regexp`` -> ``regex``
 
-.. _changed-20:
+.. _changed-21:
 
 Changed
 ~~~~~~~
@@ -2636,12 +2825,12 @@ Changed
    -  pdf_sch_print: adds -schematic
    -  IBoM: contains the project name.
 
-.. _section-34:
+.. _section-35:
 
 `0.5.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.4.0...v0.5.0>`__ - 2020-07-11
 -----------------------------------------------------------------------------------
 
-.. _changed-21:
+.. _changed-22:
 
 Changed
 ~~~~~~~
@@ -2657,7 +2846,7 @@ Changed
 -  Now we test the PCB and/or SCH only when we are doing something that
    needs them.
 
-.. _added-28:
+.. _added-29:
 
 Added
 ~~~~~
@@ -2712,7 +2901,7 @@ Added
    -  variants_blacklist
    -  dnp_field
 
-.. _fixed-31:
+.. _fixed-32:
 
 Fixed
 ~~~~~
@@ -2721,22 +2910,9 @@ Fixed
 -  ‘ignore_unconnected’ preflight wasn’t working.
 -  The report of hwo many ERC/DRC errors we found.
 
-.. _section-35:
-
-`0.4.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.3.0...v0.4.0>`__ - 2020-06-17
------------------------------------------------------------------------------------
-
-.. _added-29:
-
-Added
-~~~~~
-
--  STEP 3D model generation
--  Support for unpatched InteractiveHtmlBom
-
 .. _section-36:
 
-`0.3.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.5...v0.3.0>`__ - 2020-06-14
+`0.4.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.3.0...v0.4.0>`__ - 2020-06-17
 -----------------------------------------------------------------------------------
 
 .. _added-30:
@@ -2744,10 +2920,23 @@ Added
 Added
 ~~~~~
 
+-  STEP 3D model generation
+-  Support for unpatched InteractiveHtmlBom
+
+.. _section-37:
+
+`0.3.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.5...v0.3.0>`__ - 2020-06-14
+-----------------------------------------------------------------------------------
+
+.. _added-31:
+
+Added
+~~~~~
+
 -  Better debug information when a BoM fails to be generated.
 -  Support for compressed YAML files.
 
-.. _changed-22:
+.. _changed-23:
 
 Changed
 ~~~~~~~
@@ -2756,57 +2945,16 @@ Changed
    missing or corrupted.
 -  The ‘check_zone_fills’ option is now independent of ‘run_drc’
 
-.. _fixed-32:
+.. _fixed-33:
 
 Fixed
 ~~~~~
 
 -  Error codes that overlapped.
 
-.. _section-37:
-
-`0.2.5 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.4...v0.2.5>`__ - 2020-06-11
------------------------------------------------------------------------------------
-
-.. _added-31:
-
-Added
-~~~~~
-
--  Tolerate config files without outputs
--  Mechanism to filter ERC/DRC errors
-
-.. _fixed-33:
-
-Fixed
-~~~~~
-
--  All pcbnew plot formats generated gerber job files
--  Most formats that needed layers didn’t complain when omitted
-
 .. _section-38:
 
-`0.2.4 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.3...v0.2.4>`__ - 2020-05-19
------------------------------------------------------------------------------------
-
-.. _changed-23:
-
-Changed
-~~~~~~~
-
--  Now kicad-automation-scripts 1.3.1 or newer is needed.
-
-.. _fixed-34:
-
-Fixed
-~~~~~
-
--  Problems for kibom and print_sch outputs when the PCB name included a
-   path.
-
-.. _section-39:
-
-`0.2.3 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.2...v0.2.3>`__ - 2020-04-23
+`0.2.5 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.4...v0.2.5>`__ - 2020-06-11
 -----------------------------------------------------------------------------------
 
 .. _added-32:
@@ -2814,24 +2962,52 @@ Fixed
 Added
 ~~~~~
 
--  List available targets
+-  Tolerate config files without outputs
+-  Mechanism to filter ERC/DRC errors
 
-.. _section-40:
+.. _fixed-34:
 
-`0.2.2 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.1...v0.2.2>`__ - 2020-04-20
+Fixed
+~~~~~
+
+-  All pcbnew plot formats generated gerber job files
+-  Most formats that needed layers didn’t complain when omitted
+
+.. _section-39:
+
+`0.2.4 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.3...v0.2.4>`__ - 2020-05-19
 -----------------------------------------------------------------------------------
+
+.. _changed-24:
+
+Changed
+~~~~~~~
+
+-  Now kicad-automation-scripts 1.3.1 or newer is needed.
 
 .. _fixed-35:
 
 Fixed
 ~~~~~
 
--  KiBoM temporal files, now removed
--  preflight tasks that didn’t honor –out-dir
+-  Problems for kibom and print_sch outputs when the PCB name included a
+   path.
+
+.. _section-40:
+
+`0.2.3 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.2...v0.2.3>`__ - 2020-04-23
+-----------------------------------------------------------------------------------
+
+.. _added-33:
+
+Added
+~~~~~
+
+-  List available targets
 
 .. _section-41:
 
-`0.2.1 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.0...v0.2.1>`__ - 2020-04-18
+`0.2.2 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.1...v0.2.2>`__ - 2020-04-20
 -----------------------------------------------------------------------------------
 
 .. _fixed-36:
@@ -2839,15 +3015,28 @@ Fixed
 Fixed
 ~~~~~
 
+-  KiBoM temporal files, now removed
+-  preflight tasks that didn’t honor –out-dir
+
+.. _section-42:
+
+`0.2.1 <https://github.com/INTI-CMNB/KiBot/compare/v0.2.0...v0.2.1>`__ - 2020-04-18
+-----------------------------------------------------------------------------------
+
+.. _fixed-37:
+
+Fixed
+~~~~~
+
 -  Problem when the excellon drill target directory didn’t exist (now
    created)
 
-.. _section-42:
+.. _section-43:
 
 `0.2.0 <https://github.com/INTI-CMNB/KiBot/compare/v0.1.1...v0.2.0>`__ - 2020-03-28
 -----------------------------------------------------------------------------------
 
-.. _added-33:
+.. _added-34:
 
 Added
 ~~~~~
@@ -2865,19 +3054,19 @@ Added
 -  Progress information
 -  –version option
 
-.. _fixed-37:
+.. _fixed-38:
 
 Fixed
 ~~~~~
 
 -  Debian dependencies
 
-.. _section-43:
+.. _section-44:
 
 `0.1.1 <https://github.com/INTI-CMNB/KiBot/releases/tag/v0.1.1>`__ - 2020-03-13
 -------------------------------------------------------------------------------
 
-.. _added-34:
+.. _added-35:
 
 Added
 ~~~~~

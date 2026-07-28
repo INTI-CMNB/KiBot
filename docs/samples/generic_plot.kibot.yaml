@@ -355,7 +355,7 @@ outputs:
         solder_paste_for_populated: true
         # [string=''] Board variant to apply
         variant: ''
-        # [string='2.7'] [2.1,2.1_haschtl,2.7] Variant of the format used
+        # [string='2.7'] [2.1,2.1_haschtl,2.7,2.17] Variant of the format used
         version: '2.7'
       # [dict={}] Options to configure how Blender imports the PCB.
       # The default values are good for most cases
@@ -614,7 +614,7 @@ outputs:
       footprint_populate_values: 'no,yes'
       # [string|list(string)='SMD,THT,VIRTUAL'] {comma_sep} {L:3} Values for the `Footprint Type` column
       footprint_type_values: 'SMD,THT,VIRTUAL'
-      # [string='Auto'] [HTML,CSV,TXT,TSV,XML,XLSX,HRTXT,KICAD,Auto] format for the BoM.
+      # [string='Auto'] [HTML,CSV,TXT,TSV,XML,XLSX,HRTXT,KICAD,JSON,Auto] format for the BoM.
       # `Auto` defaults to CSV or a guess according to the options.
       # HRTXT stands for Human Readable TeXT.
       # KICAD is used to get the options from KiCad project. In KiCad you can configure CSV like options
@@ -642,7 +642,7 @@ outputs:
       group_fields_fallbacks: []
       # [boolean=false] Enable it to group fitted and not fitted components together. This is how KiCad's internal BoM behaves
       group_not_fitted: false
-      # [dict={}] Options for the HRTXT formats
+      # [dict={}] Options for the HRTXT format
       hrtxt:
         # [string='-'] Separator between the header and the data
         header_sep: '-'
@@ -705,6 +705,30 @@ outputs:
       ignore_dnf: true
       # [boolean=true] Component quantities are always expressed as integers. Using the ceil() function
       int_qtys: true
+      # [dict={}] Options for the JSON format
+      json:
+        # [string=''] {no_case} Column with links to the datasheet
+        datasheet_as_link: ''
+        # [string|list(string)=''] {no_case} Column/s containing Digi-Key part numbers, will be linked to web page
+        digikey_link: ''
+        # [string|list(string)=''] Information to put after the title and before the pcb and stats info
+        extra_info: ''
+        # [boolean=true] Generate a separated section for DNF (Do Not Fit) components
+        generate_dnf: true
+        # [boolean=true] Use a color for empty cells. Applies only when `col_colors` is `true`
+        highlight_empty: true
+        # [boolean|string|list(string)=''] {no_case} Column/s containing LCSC part numbers, will be linked to web page.
+        # Use **true** to copy the value indicated by the `field_lcsc_part` global option
+        lcsc_link: ''
+        # [string|boolean=''] PNG/SVG file to use as logo, use false to remove.
+        # Note that when using an SVG this is first converted to a PNG using `logo_width`
+        logo: ''
+        # [number=370] Used when the logo is an SVG image. This width is used to render the SVG image
+        logo_width: 370
+        # [string|list(string)=''] {no_case} Column/s containing Mouser part numbers, will be linked to web page
+        mouser_link: ''
+        # [string='KiBot Bill of Materials'] BoM title
+        title: 'KiBot Bill of Materials'
       # [string='global'] [global,yes,no] What we do with the KiCad DNP flag.
       # `global` means we apply the `kicad_dnp_applied` global option.
       # `yes` means we always remove DNP components.
@@ -1126,6 +1150,7 @@ outputs:
       # changes in the history you want to go back. A 0 is the same as `HEAD`,
       # a 1 means the last time the PCB/SCH was changed, etc.
       # Use `KIBOT_TAG-n` to search for the last tag skipping `n` tags.
+      # The tags can be filtered using `tag_filter` option.
       # Important: when using the `checkout` GitHub action you just get the
       # last commit. To clone the full repo use `fetch-depth: '0'`
       old: 'HEAD'
@@ -1148,6 +1173,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
+      # [string=''] A regular expression used to match the used tags for `KIBOT_TAG`
+      tag_filter: ''
       # [number=0] [0,1000000] Error threshold for the `stats` mode, 0 is no error. When specified a
       # difference bigger than the indicated value will make the diff fail.
       # KiBot will return error level 29 and the diff generation will be aborted
@@ -1338,6 +1365,8 @@ outputs:
       # [string=''] Text used to replace the sheet title. %VALUE expansions are allowed.
       # If it starts with `+` the text is concatenated
       title: ''
+      # [boolean=false] When enabled we also set the title for all the sub-sheets
+      title_propagate: false
       # [string=''] Board variant to apply.
       # Not fitted components are crossed
       variant: ''
@@ -1404,7 +1433,8 @@ outputs:
       right_digits: 0
       # [boolean=true] Use route command for oval holes (G00), otherwise use G85
       route_mode_for_oval_holes: true
-      # [dict|string=''] Name of the drill table. Not generated unless a name is specified
+      # [dict|string=''] Name of the drill table. Not generated unless a name is specified.
+      # Important: if the PCB contains no drills the file won't be generated
       table:
         # [list(dict)|list(string)] List of columns to display.
         # Each entry can be a dictionary with `field`, `name` or just a string (field name)
@@ -1427,17 +1457,18 @@ outputs:
       variant: ''
       # [string='DECIMAL_FORMAT'] [DECIMAL_FORMAT,SUPPRESS_LEADING,SUPPRESS_TRAILING,KEEP_ZEROS] How to handle the zeros
       zeros_format: 'DECIMAL_FORMAT'
-  # Various 3D models exports using KiCad (BREP/GLB/STL/STEP/XAO):
+  # 3D models exports of various formats using KiCad (BREP/GLB/STL/STEP/XAO):
   # Supported formats include:
   # - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
   # - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
-  #   known as WebGL Transmissions Format or WebGL TF.
+  # > known as WebGL Transmissions Format or WebGL TF.
   # - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
   # - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
   # - BRep: Part of Open CASCADE Technology (OCCT)
+  # - PLY: Polygon File Format or the Stanford Triangle Format.
   # STEP is the most common 3D format for exchange purposes
   - name: 'export_3d_example'
-    comment: 'Exports the PCB as a 3D model using KiCad 9 or newer.'
+    comment: 'Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli.'
     type: 'export_3d'
     dir: 'Example/export_3d_dir'
     options:
@@ -1471,7 +1502,7 @@ outputs:
       # [string='step'] [step,glb,stl,xao,brep,ply,u3d,pdf] 3D format used.
       # - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
       # - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
-      # known as WebGL Transmissions Format or WebGL TF.
+      # > known as WebGL Transmissions Format or WebGL TF.
       # - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
       # - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
       # - BRep: Part of Open CASCADE Technology (OCCT)
@@ -1618,7 +1649,8 @@ outputs:
         # [string=''] Name of the drill report. Not generated unless a name is specified.
         # (%i='drill_report' %x='txt')
         filename: ''
-      # [dict|string=''] Name of the drill table. Not generated unless a name is specified
+      # [dict|string=''] Name of the drill table. Not generated unless a name is specified.
+      # Important: if the PCB contains no drills the file won't be generated
       table:
         # [list(dict)|list(string)] List of columns to display.
         # Each entry can be a dictionary with `field`, `name` or just a string (field name)
@@ -1873,6 +1905,8 @@ outputs:
       # [string=''] Text used to replace the sheet title. %VALUE expansions are allowed.
       # If it starts with `+` the text is concatenated
       title: ''
+      # [boolean=false] When enabled we also set the title for all the sub-sheets
+      title_propagate: false
       # [string=''] Board variant to apply.
       # Not fitted components are crossed
       variant: ''
@@ -2252,19 +2286,31 @@ outputs:
     options:
       # [dict|list(dict)=[]] 3D assembly models
       assembly_models:
-        # [string=''] Name for the downloadable item
-        - name: '3D model'
+        # [number=0] Used when the output generates more than one file.
+        # Here you can select which one, 0 is the first.
+        # Note that negative indexes are counted from the end of the list.
+        # Using an out of range value will generate an error and show all available files
+        - index: 0
+          # [string=''] Name for the downloadable item
+          name: '3D model'
           # [string=''] Output that generates it
           output: 'export_glb'
       # [string=''] Base URL for the generated site. I.e. https://USER.github.io/PROJECT/
       # Without the version part
       base_url: ''
+      # [string=''] Name of the BoM output to use as embedded HTML. Use `None` to skip
+      bom: ''
       # [string='static'] Subdirectory where the files will be copied inside the destination `dir`
       dest_subdir: 'static'
       # [dict|list(dict)=[]] Diff resources, usually one for the PCB and another for the schematic
       diffs:
         # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
         - dir: ''
+          # [number=0] Used when the output generates more than one file.
+          # Here you can select which one, 0 is the first.
+          # Note that negative indexes are counted from the end of the list.
+          # Using an out of range value will generate an error and show all available files
+          index: 0
           # [string] Name for the diff item
           name: 'Schematic diff'
           # [string=''] Output that generates it
@@ -2273,6 +2319,11 @@ outputs:
       downloads:
         # [string=''] Internal directory to store it, leave empty to use the same as the output that generates it
         - dir: ''
+          # [number=0] Used when the output generates more than one file.
+          # Here you can select which one, 0 is the first.
+          # Note that negative indexes are counted from the end of the list.
+          # Using an out of range value will generate an error and show all available files
+          index: 0
           # [string=''] Name for the downloadable item
           name: 'Schematic (PDF)'
           # [string=''] Output that generates it
@@ -2282,6 +2333,8 @@ outputs:
       force_copy: false
       # [string=''] Name of the iBoM output. Use `None` to skip
       ibom: ''
+      # [string=''] Name of the KiRi output to use as embedded HTML. Use `None` to skip
+      kiri: ''
       # [boolean=false] List the PCB first, KiCanvas will show the PCB by default, instead of the schematic
       pcb_first: false
       # [string|list(string)=''] Name of one or more outputs providing images for the PCB
@@ -2515,6 +2568,10 @@ outputs:
       # To use the KiCad 6 default colors select `_builtin_default`.
       # Usually user colors are stored as `user`, but you can give it another name
       color_theme: '_builtin_classic'
+      # [string|list(string)] Explicit list of git revisions (commit hashes, tags, branches, etc.).
+      # When not empty this list is used as-is and `max_commits` and `revision` are ignored.
+      # The order in the list is preserved in the KiRi user interface
+      commits: []
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -2525,9 +2582,16 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
+      # [boolean=true] When false, do not add uncommitted local changes (_local_) to the commit list
+      include_dirty: true
       # [boolean=false] Avoid PCB and SCH images regeneration. Useful for incremental usage
       keep_generated: false
-      # [number=0] Maximum number of commits to include. Use 0 for all available commits
+      # [string|list(string)] Optional labels for the `commits` list. Must have the same length.
+      # When provided they replace the commit subject in the KiRi interface.
+      # Useful to show release names instead of commit messages
+      labels: []
+      # [number=0] Maximum number of commits to include. Use 0 for all available commits.
+      # Ignored when `commits` is not empty
       max_commits: 0
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -2535,7 +2599,8 @@ outputs:
       # variant
       pre_transform: '_null'
       # [string='HEAD'] Starting point for the commits, can be a branch, a hash, etc.
-      # Note that this can be a revision-range, consult the gitrevisions manual for more information
+      # Note that this can be a revision-range, consult the gitrevisions manual for more information.
+      # Ignored when `commits` is not empty
       revision: 'HEAD'
       # [string=''] Board variant to apply
       variant: ''
@@ -3578,6 +3643,9 @@ outputs:
           # You can also use it to generate pages with drill maps, in this case use `drill_pairs` here.
           # Note that in this case the `repeat_for_layer` should be some drawing layer, which might contain
           # a group used to insert the drill table (like in the `include_table` preflight).
+          # Note that the drill table needs an output that generates one or more CSV files and the group in the
+          # PCB must be named `kibot_table_OUTPUT_FOR_CSV_DRILLS`. See the `print_drill_table.kibot.yaml` example
+          # in the repo.
           # The drill map needs KiCad 7 or newer
           repeat_layers:
             # [string=''] Color used for this layer.
@@ -3701,7 +3769,11 @@ outputs:
       variant: ''
   # PCB with variant generator:
   # This copy isn't intended for development without a careful review.
-  # Can be used to export legacy variants to KiCad 10 variants
+  # Can be used to export legacy variants to KiCad 10 variants. In this case you should disable the global
+  # `cross_footprints_for_dnp`, `remove_solder_paste_for_dnp`, `remove_adhesive_for_dnp` and
+  # `remove_3D_models_for_dnp` options.
+  # Here is an [example](https://github.com/INTI-CMNB/KiBot/blob/dev/tests/yaml_samples/export_variants.kibot.yaml)
+  # configuration showing how to migrate to KiCad 10 native variants
   - name: 'pcb_variant_example'
     comment: 'Creates a copy of the PCB with all the filters and variants applied.'
     type: 'pcb_variant'
@@ -3744,7 +3816,9 @@ outputs:
   # Note that this output is fast for simple PCBs, but becomes useless for huge ones.
   # You can easily create very complex PCBs using the `panelize` output.
   # In this case you can use other outputs, like `render_3d`, which are slow for small
-  # PCBs but can handle big ones
+  # PCBs but can handle big ones.
+  # Also note that `render_3d` using `force_stackup_colors` and `orthographic` will
+  # produce a better alternative and you don't need 2D models.
   - name: 'pcbdraw_example'
     comment: 'Exports the PCB as a 2D model (SVG, PNG or JPG).'
     type: 'pcbdraw'
@@ -3836,6 +3910,8 @@ outputs:
       # You can use `_kf(FILTER)` as an element in the list to get all the components that pass the filter.
       # You can even use `_kf(FILTER1;FILTER2)` to concatenate filters
       show_components: 'none'
+      # [boolean=true] Show tracks and zones
+      show_copper: true
       # [boolean=true] Show the solder paste layers
       show_solderpaste: true
       # [string='kicad_edge'] [kicad_edge,kicad_all,svg_paths] Method used to detect the size of the resulting image.
@@ -4072,6 +4148,8 @@ outputs:
       # [string=''] Text used to replace the sheet title. %VALUE expansions are allowed.
       # If it starts with `+` the text is concatenated
       title: ''
+      # [boolean=false] When enabled we also set the title for all the sub-sheets
+      title_propagate: false
       # [string=''] Board variant to apply.
       # Not fitted components are crossed
       variant: ''
@@ -4352,6 +4430,8 @@ outputs:
       # [string=''] Text used to replace the sheet title. %VALUE expansions are allowed.
       # If it starts with `+` the text is concatenated
       title: ''
+      # [boolean=false] When enabled we also set the title for all the sub-sheets
+      title_propagate: false
       # [string=''] Board variant to apply.
       # Not fitted components are crossed
       variant: ''
@@ -4396,9 +4476,11 @@ outputs:
       use_sch_dir: true
   # 3D render of the PCB:
   # Use the Blender Export output if you want something with better quality
-  # and less dependent of the KiCad version
+  # and less dependent of the KiCad version.
+  # Enable `force_stackup_colors` if you want colors similar to what you
+  # get in the KiCad GUI
   - name: 'render_3d_example'
-    comment: "Exports the image generated by KiCad's 3D viewer. *Deprecated*"
+    comment: "Exports the image generated by KiCad's 3D viewer."
     type: 'render_3d'
     dir: 'Example/render_3d_dir'
     options:
@@ -4411,9 +4493,9 @@ outputs:
       background2: '#CCCCE5'
       # [string='#332B16'] Color for the board without copper or solder mask
       board: '#332B16'
-      # [boolean=true] Clip silkscreen at via annuli (KiCad 6+)
+      # [boolean=true] Clip silkscreen at via annuli (KiCad 6 to 9)
       clip_silk_on_via_annulus: true
-      # [string='#8b898c'] Color for the copper
+      # [string='#8b898c'] Color for the copper, both sides
       copper: '#8b898c'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -4442,6 +4524,8 @@ outputs:
       # [boolean=false] Tell KiCad to use the colors from the stackup. They are better than the unified KiBot colors.
       # Needs KiCad 6 or newer
       force_stackup_colors: false
+      # [string='png'] [png,jpg] Output format
+      format: 'png'
       # [number=720] Image height (aprox.)
       height: 720
       # [list(string)=[]] List of components to highlight. Ranges like *R5-R10* are supported
@@ -4473,8 +4557,14 @@ outputs:
       no_virtual: false
       # [boolean=false] Enable the orthographic projection mode (top view looks flat)
       orthographic: false
-      # [string='%f-%i%I%v.%x'] Name for the generated image file (%i='3D_$VIEW' %x='png'). Affected by global options
+      # [string='%f-%i%I%v.%x'] Name for the generated image file (%i='3D_$VIEW' %x='png'/'jpg'). Affected by global options
       output: '%f-%i%I%v.%x'
+      # [number=0] Set pivot point relative to the board center in centimeters, X axis. Needs KiCad 10+ using CLI
+      pivot_x: 0
+      # [number=0] Set pivot point relative to the board center in centimeters, Y axis. Needs KiCad 10+ using CLI
+      pivot_y: 0
+      # [number=0] Set pivot point relative to the board center in centimeters, Z axis. Needs KiCad 10+ using CLI
+      pivot_z: 0
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -4482,33 +4572,40 @@ outputs:
       pre_transform: '_null'
       # [boolean=false] Enable the ray tracing. Much better result, but slow, and you'll need to adjust `wait_rt`
       ray_tracing: false
-      # [boolean=true] When disabled we use the colors of the layers used by the GUI. Needs KiCad 6 or 7.
-      # Is emulated on KiCad 8
+      # [boolean=true] When disabled we use the colors of the layers used by the GUI. Needs KiCad 6, 7 or 10+.
+      # Is emulated on KiCad 8 and 9
       realistic: true
+      # [boolean=false] Instead of `steps` use degrees for rotations. Only available for KiCad 10+ using CLI
+      rotate_degrees: false
       # [number=0] Steps to rotate around the X axis, positive is clockwise.
-      # Each step is currently 10 degrees. Only for KiCad 6 or newer
+      # Each step is currently 10 degrees. Only for KiCad 6+
       rotate_x: 0
       # [number=0] Steps to rotate around the Y axis, positive is clockwise.
-      # Each step is currently 10 degrees. Only for KiCad 6 or newer
+      # Each step is currently 10 degrees. Only for KiCad 6+
       rotate_y: 0
       # [number=0] Steps to rotate around the Z axis, positive is clockwise.
-      # Each step is currently 10 degrees. Only for KiCad 6 or newer
+      # Each step is currently 10 degrees. Only for KiCad 6+
       rotate_z: 0
       # [boolean=false] Show the content of F.Adhesive/B.Adhesive layers. KiCad 6 or newer
       show_adhesive: false
       # [boolean=true] Show the PCB core material. KiCad 6 or newer
       show_board_body: true
       # [boolean=false] Show the content of the User.Comments and User.Drawings layer for KiCad 5, 6 and 7.
-      # On KiCad 8 this option controls only the User.Comments and you have a separated option for the
+      # On KiCad 8+ this option controls only the User.Comments and you have a separated option for the
       # User.Drawings called `show_drawings`
       # Note that KiCad 5/6/7 doesn't show it when `realistic` is enabled, but KiCad 8 does it.
       # Also note that KiCad 5 ray tracer shows comments outside the PCB, but newer KiCad versions
-      # doesn't
+      # doesn't.
+      # KiCad 10.0.3 ignores them
       show_comments: false
       # [list(string)|string='all'] [none,all,*] List of components to draw, can be also a string for `none` or `all`.
       # Ranges like *R5-R10* are supported.
       # Unlike the `pcbdraw` output, the default is `all`
       show_components: 'all'
+      # [boolean=true] Show copper on the bottom layer (KiCad 10+ using CLI)
+      show_copper_bottom: true
+      # [boolean=true] Show copper on the top layer (KiCad 10+ using CLI)
+      show_copper_top: true
       # [boolean=false] Show the content of the User.Drawings layer. Only available for KiCad 8 and newer.
       # Consult `show_comments` to learn when drawings are visible
       show_drawings: false
@@ -4524,35 +4621,50 @@ outputs:
       # use the `show_eco` option.
       # Consult `show_comments` to learn when drawings are visible
       show_eco2: false
+      # [boolean=true] Show plated through holes (KiCad 10+ using CLI)
+      show_plated_barrels: true
+      # [boolean=true] Show component references in the silk screen (KiCad 10+ using CLI)
+      show_references: true
       # [boolean=true] Show the silkscreen layers (KiCad 6+)
       show_silkscreen: true
       # [boolean=true] Show the solder mask layers (KiCad 6+)
       show_soldermask: true
       # [boolean=true] Show the solder paste layers (KiCad 6+)
       show_solderpaste: true
-      # [boolean=true] Show filled areas in zones (KiCad 6+)
+      # [boolean=true] Show component values in the silk screen (KiCad 10+ using CLI)
+      show_values: true
+      # [boolean=true] Show filled areas in zones (KiCad 6 to 9)
       show_zones: true
-      # [string='#d5dce4'] Color for the silk screen
+      # [string='#d5dce4'] Color for the silk screen, both sides
       silk: '#d5dce4'
-      # [string='#208b47'] Color for the solder mask
+      # [string='#208b47'] Color for the solder mask, both sides
       solder_mask: '#208b47'
       # [string='#808080'] Color for the solder paste
       solder_paste: '#808080'
-      # [boolean=true] Clip silkscreen at solder mask edges (KiCad 6+)
+      # [boolean=true] Clip silkscreen at solder mask edges (KiCad 6 to 9)
       subtract_mask_from_silk: true
       # [boolean=false] When enabled the image will be post-processed to make the background transparent.
-      # In this mode the `background1` and `background2` colors are ignored
+      # In this mode the `background1` and `background2` colors are ignored.
+      # Only available for PNGs
       transparent_background: false
-      # [string='#00ff00'] Color used for the chroma key. Adjust it if some regions of the board becomes transparent
+      # [string='#00ff00'] Only used for KiCad 9 and older.
+      # Color used for the chroma key. Adjust it if some regions of the board becomes transparent
       transparent_background_color: '#00ff00'
-      # [number=15] [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels
+      # [number=15] [0,100] Chroma key tolerance (percent). Bigger values will remove more pixels.
+      # Only used for KiCad 9 and older
       transparent_background_fuzz: 15
+      # [boolean=true] Try using `kicad-cli` for KiCad 10+. Recommended for KiCad 10.0.5 or newer.
+      # More reliable, but with some limitations, see KiCad bugs:
+      # [20126](https://gitlab.com/kicad/code/kicad/-/work_items/20126)
+      # [24599](https://gitlab.com/kicad/code/kicad/-/work_items/24599)
+      use_cli: true
       # [string=''] Board variant to apply
       variant: ''
       # [string='top'] [top,bottom,front,rear,right,left,z,Z,y,Y,x,X] Point of view
       view: 'top'
       # `wait_ray_tracing` is an alias for `wait_render`
-      # [number=-600] How many seconds we must wait before capturing the render (ray tracing or normal).
+      # [number=-600] Only used for KiCad 9 and older.
+      # How many seconds we must wait before capturing the render (ray tracing or normal).
       # Lamentably KiCad can save an unfinished image. Enlarge it if your image looks partially rendered.
       # Use negative values to enable the auto-detect using CPU load.
       # In this case the value is interpreted as a time-out.
@@ -4573,8 +4685,18 @@ outputs:
     type: 'report'
     dir: 'Example/report_dir'
     options:
-      # [number=7.4] Specific gravity of the alloy used for the solder paste, in g/cm3. Used to compute solder paste usage
+      # [number=7.4] Specific gravity of the alloy used for the solder paste, in g/cm3.
+      # The 7.4 is the standard for lead-free (i.e. SAC305) for 63 Sn/37 Pb 8.4 is standard.
+      # Used to compute solder paste usage
       alloy_specific_gravity: 7.4
+      # [string='auto'] [auto,yes,no] When enabled we look for outputs that can generate useful images.
+      # They are  `pdf_pcb_print`, `pcb_print`, `svg_pcb_print`, `pdf_sch_print`, `svg_sch_print`
+      # and may be others. They are executed in order to get their outputs and make them available
+      # using the `schematic_pdfs`, `schematic_svgs`, `layer_pdfs` and `layer_svgs` images.
+      # The problem is when a `pcb_print` output needs a table generated by a `report` output.
+      # This can lead to a 'chicken and the egg' problem.
+      # The `auto` option only enables the search when the output isn't a `csv`.
+      collect_images: 'auto'
       # [string='markdown'] Original format for the report conversion. Current templates are `markdown`. See `do_convert`
       convert_from: 'markdown'
       # [string='pdf'] Target format for the report conversion. See `do_convert`
@@ -4610,7 +4732,9 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [number=1.0] Specific gravity of the flux used for the solder paste, in g/cm3. Used to compute solder paste usage
+      # [number=1.0] Specific gravity of the flux used for the solder paste, in g/cm3.
+      # Usually between 1 and 1.1, the 1.0 is the most common case.
+      # Used to compute solder paste usage
       flux_specific_gravity: 1.0
       # [number=2] Number of digits for values expressed in inches
       in_digits: 2
@@ -4625,7 +4749,13 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
-      # [number=87.75] [0,100] Amount of metal in the solder paste (percentage). Used to compute solder paste usage
+      # [string='auto'] [auto,yes,no] When we use PDF files they are split because `pandoc` can't deal with more than
+      # one page. You can delete them after converting the output. The `auto` value will do it when
+      # `do_convert` is enabled
+      remove_split_pdfs: 'auto'
+      # [number=87.75] [0,100] Amount of metal in the solder paste (percentage).
+      # For tin-lead 90 is more common.
+      # Used to compute solder paste usage
       solder_paste_metal_amount: 87.75
       # [number=0.12] Stencil thickness in mm. Used to compute solder paste usage
       stencil_thickness: 0.12
@@ -4796,10 +4926,10 @@ outputs:
       variant: ''
   # STEP (ISO 10303-21 Clear Text Encoding of the Exchange Structure):
   # This is the most common 3D format for exchange purposes.
-  # For KiCad 9 use the `export_3d` output.
+  # For KiCad 9 use the `export_3d` output, see the `export_3d` output.
   # This output is what you get from the 'File/Export/STEP' menu in pcbnew.
   - name: 'step_example'
-    comment: 'Exports the PCB as a 3D model.'
+    comment: 'Exports the PCB as a 3D model with KiAuto.'
     type: 'step'
     dir: 'Example/step_dir'
     options:
@@ -5077,6 +5207,8 @@ outputs:
       # [string=''] Text used to replace the sheet title. %VALUE expansions are allowed.
       # If it starts with `+` the text is concatenated
       title: ''
+      # [boolean=false] When enabled we also set the title for all the sub-sheets
+      title_propagate: false
       # [string=''] Board variant to apply.
       # Not fitted components are crossed
       variant: ''

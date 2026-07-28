@@ -53,25 +53,25 @@ jobs:
         rm -f tests/.local
         ##### Experimental stuff:
         ## Remove KiAuto
-        #dpkg --remove --force-all kiauto
+        # dpkg --remove --force-all kiauto
         ## Install KiAuto@master
-        #curl https://codeload.github.com/INTI-CMNB/KiAuto/zip/refs/heads/master --output pp.zip
-        #unzip pp.zip
-        #pip3 install ${PIP_OPS} KiAuto-master/
+        # curl https://codeload.github.com/INTI-CMNB/KiAuto/zip/refs/heads/master --output pp.zip
+        # unzip pp.zip
+        # pip3 install ${PIP_OPS} KiAuto-master/
         ## Clean the downloaded stuff
-        #rm -rf KiAuto-master/ pp.zip
+        # rm -rf KiAuto-master/ pp.zip
         ## Install KiDiff@master
-        #curl https://codeload.github.com/INTI-CMNB/KiDiff/zip/refs/heads/master --output pp.zip
-        #unzip pp.zip
-        #pip3 install ${PIP_OPS} KiDiff-master/
+        # curl https://codeload.github.com/INTI-CMNB/KiDiff/zip/refs/heads/master --output pp.zip
+        # unzip pp.zip
+        # pip3 install ${PIP_OPS} KiDiff-master/
         ## Clean the downloaded stuff
-        #rm -rf KiDiff-master/ pp.zip
+        # rm -rf KiDiff-master/ pp.zip
         ## Check what we got
-        #echo $PATH
-        #ls -la /usr/bin/*_do || true
-        #ls -la /usr/local/bin/*_do || true
-        #which pcbnew_do
-        #pcbnew_do --version
+        # echo $PATH
+        # ls -la /usr/bin/*_do || true
+        # ls -la /usr/local/bin/*_do || true
+        # which pcbnew_do
+        # pcbnew_do --version
         # KiDiff tests
         #curl https://codeload.github.com/INTI-CMNB/KiDiff/zip/refs/heads/kiri_mode --output pp.zip
         #unzip pp.zip
