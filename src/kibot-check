@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2025 Salvador E. Tropea
-# Copyright (c) 2022-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
 #
@@ -1985,7 +1985,8 @@ def check_multiple_installs(command):
     other = check_tool_binary_local(command)
     if other:
         found.add(other)
-    if len(found) > 1:
+    real_files = {os.path.realpath(f) for f in found}
+    if len(real_files) > 1:
         print(do_color(f'Multiple installations for `{command}` please keep only one', 1))
         for f in found:
             print(do_color('- '+f, 1))
@@ -2325,6 +2326,7 @@ if args.show_paths:
     print('  '+str(which('python3')))
 # KiCad
 home = os.path.expanduser('~')
+is_k11 = False
 try:
     with hide_stderr():
         import pcbnew
@@ -2357,54 +2359,69 @@ except FileNotFoundError:
 except ModuleNotFoundError:
     kicad_ok = False
     if which('kicad'):
-        error("KiCad installed but the Python support is broken")
-        res = run_command(['find', '/usr/lib', '-name', 'pcbnew.py'])
-        if res:
-            cand = res.split('\n')
-            if cand:
-                cand = [x for x in cand if 'pcbnewTransition' not in x]
+        # Option 1: Is KiCad 11+
+        res = run_command(['kicad-cli', 'version'])
+        m = re.search(r'(\d+)\.(\d+)\.(\d+)', res)
+        if m is not None:
+            version = res
+            kicad_version = (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+            is_k11 = True
+            # TODO: Fill the plugins path?
+        else:
+            # Option 2: The installation is wrong
+            error("KiCad installed but the Python support is broken")
+            res = run_command(['find', '/usr/lib', '-name', 'pcbnew.py'])
+            if res:
+                cand = res.split('\n')
                 if cand:
-                    if len(cand) == 1:
-                        dname = os.path.dirname(cand[0])
-                        if dname in sys.path:
-                            error(f"The pcbnew module should be loadable, but fails to load")
+                    cand = [x for x in cand if 'pcbnewTransition' not in x]
+                    if cand:
+                        if len(cand) == 1:
+                            dname = os.path.dirname(cand[0])
+                            if dname in sys.path:
+                                error(f"The pcbnew module should be loadable, but fails to load")
+                            else:
+                                error(f"Broken Python support {dname} not in sys.path ({sys.path})")
                         else:
-                            error(f"Broken Python support {dname} not in sys.path ({sys.path})")
-                    else:
-                        error(f'Multiple pcbnew modules found: {str(cand)}')
+                            error(f'Multiple pcbnew modules found: {str(cand)}')
     else:
         error("KiCad not installed or not available in the path")
-kicad_version = (0, 0, 0)
-if kicad_ok:
-    try:
-        version = pcbnew.GetBuildVersion()
-        # KiCad version
-        m = re.search(r'(\d+)\.(\d+)\.(\d+)', version)
-        if m is None:
-            error("Unable to detect KiCad version, got: `{}`".format(version))
-        else:
-            kicad_version = (int(m.group(1)), int(m.group(2)), int(m.group(3)))
-            if kicad_version[0] >= 6 and home:
-                # KiCad 6.0 PCM
-                ver_dir = str(kicad_version[0])+'.'+str(kicad_version[1])
-                if system == 'Linux':
-                    local_share = os.path.join(home, '.local', 'share', 'kicad', ver_dir)
-                else:
-                    local_share = os.path.join(home, 'Documents', 'KiCad', ver_dir)
-                kicad_plugins_dirs.append(os.path.join(local_share, 'scripting'))
-                kicad_plugins_dirs.append(os.path.join(local_share, 'scripting', 'plugins'))
-                kicad_plugins_dirs.append(os.path.join(local_share, '3rdparty', 'plugins'))  # KiCad 6.0 PCM
-    except:
-        version = 'Older than 5.1.6'
-else:
-    version = NOT_AVAIL
+if not is_k11:
+    # Not KiCad 11, get the version from pcbnew module
+    kicad_version = (0, 0, 0)
+    if kicad_ok:
+        try:
+            version = pcbnew.GetBuildVersion()
+            # KiCad version
+            m = re.search(r'(\d+)\.(\d+)\.(\d+)', version)
+            if m is None:
+                error("Unable to detect KiCad version, got: `{}`".format(version))
+            else:
+                kicad_version = (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+                if kicad_version[0] >= 6 and home:
+                    # KiCad 6.0 PCM
+                    ver_dir = str(kicad_version[0])+'.'+str(kicad_version[1])
+                    if system == 'Linux':
+                        local_share = os.path.join(home, '.local', 'share', 'kicad', ver_dir)
+                    else:
+                        local_share = os.path.join(home, 'Documents', 'KiCad', ver_dir)
+                    kicad_plugins_dirs.append(os.path.join(local_share, 'scripting'))
+                    kicad_plugins_dirs.append(os.path.join(local_share, 'scripting', 'plugins'))
+                    kicad_plugins_dirs.append(os.path.join(local_share, '3rdparty', 'plugins'))  # KiCad 6.0 PCM
+        except:
+            version = 'Older than 5.1.6'
+    else:
+        version = NOT_AVAIL
 if kicad_version >= (5, 1, 6) and kicad_version < (10, 99):
     sev = 0
 else:
     sev = 4
 print('KiCad: '+do_color(version, sev))
-if args.show_paths and kicad_ok:
-    print('  '+pcbnew.__file__)
+if args.show_paths: # and kicad_ok:
+    if is_k11:
+        print('  '+str(which('kicad-cli')))
+    else:
+        print('  '+pcbnew.__file__)
     print('  '+str(which('kicad')))
 # KiBot version
 try:
@@ -2416,7 +2433,7 @@ except:
     version = NOT_AVAIL
     kibot_ok = False
     sev = 4
-print('Kibot: '+do_color(version, sev))
+print('KiBot: '+do_color(version, sev))
 if args.show_paths and kibot_ok:
     print('  '+kibot.__main__.__file__)
     print('  '+str(which('kibot')))
