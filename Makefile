@@ -217,7 +217,7 @@ t1k6: test_docker_local_1_ki6
 single_test:
 	rm -rf pp
 	-$(PY_COV) run src/kibot --help-list-outputs > /dev/null
-	-LANG=en_US.UTF-8 $(PYTEST) --log-cli-level debug -k "$(SINGLE_TEST)" --test_dir=pp
+	-LANG=en_US.UTF-8 $(PYTEST) --ignore=experiments --log-cli-level debug -k "$(SINGLE_TEST)" --test_dir=pp
 	@echo "********************" Output
 	#@cat pp/*/output.txt
 	@echo "********************" Error
