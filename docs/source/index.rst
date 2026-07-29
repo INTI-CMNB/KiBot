@@ -48,6 +48,7 @@ KiBot (formerly KiPlot)
 
    contributing
    credits
+   donators
 
 .. toctree::
    :maxdepth: 2
