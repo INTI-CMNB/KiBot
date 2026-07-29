@@ -1418,7 +1418,7 @@ class PCB_PrintOptions(VariantOptions):
         if len(cur_vis.CuStack()):
             return False
         for la in ['Edge.Cuts', 'F.SilkS', 'B.SilkS']:
-            if cur_vis.Contains(Layer.DEFAULT_LAYER_NAMES[la]):
+            if cur_vis.Contains(GS.DEFAULT_LAYER_NAMES[la]):
                 return False
         return True
 

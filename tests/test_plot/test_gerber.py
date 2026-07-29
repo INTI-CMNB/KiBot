@@ -11,15 +11,14 @@ import os
 import pytest
 from . import context
 from kibot.misc import PLOT_ERROR
-from kibot.layer import Layer
 from kibot.gs import GS
 from kibot.__main__ import detect_kicad
 
 
 def ki5_2_ki6(la):
     l_dot = la.replace('_', '.')
-    if l_dot in Layer.KICAD6_RENAME:
-        la = Layer.KICAD6_RENAME[l_dot].replace('.', '_')
+    if l_dot in GS.KICAD6_RENAME:
+        la = GS.KICAD6_RENAME[l_dot].replace('.', '_')
     return la
 
 

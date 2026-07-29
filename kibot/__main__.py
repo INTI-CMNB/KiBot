@@ -379,9 +379,95 @@ def get_kicad_version():
     GS.ki11 = GS.kicad_version_major >= 11 or (GS.kicad_version_major == 10 and GS.kicad_version_minor == 99)
 
 
+def get_layers_info_pn():
+    pcbnew = GS.pn
+    GS.DEFAULT_LAYER_NAMES = {
+        'F.Cu': pcbnew.F_Cu,
+        'B.Cu': pcbnew.B_Cu,
+        'F.Adhes': pcbnew.F_Adhes,
+        'B.Adhes': pcbnew.B_Adhes,
+        'F.Paste': pcbnew.F_Paste,
+        'B.Paste': pcbnew.B_Paste,
+        'F.SilkS': pcbnew.F_SilkS,
+        'B.SilkS': pcbnew.B_SilkS,
+        'F.Mask': pcbnew.F_Mask,
+        'B.Mask': pcbnew.B_Mask,
+        'Dwgs.User': pcbnew.Dwgs_User,
+        'Cmts.User': pcbnew.Cmts_User,
+        'Eco1.User': pcbnew.Eco1_User,
+        'Eco2.User': pcbnew.Eco2_User,
+        'Edge.Cuts': pcbnew.Edge_Cuts,
+        'Margin': pcbnew.Margin,
+        'F.CrtYd': pcbnew.F_CrtYd,
+        'B.CrtYd': pcbnew.B_CrtYd,
+        'F.Fab': pcbnew.F_Fab,
+        'B.Fab': pcbnew.B_Fab,
+    }
+    # Add all the Inner layers
+    for i in range(1, 31):
+        name = 'In'+str(i)+'.Cu'
+        GS.DEFAULT_INNER_LAYER_NAMES.add(name)
+        GS.DEFAULT_LAYER_NAMES[name] = (i+1)*2 if GS.ki9 else pcbnew.In1_Cu+i-1
+        GS.DEFAULT_LAYER_DESC[name] = 'Inner layer '+str(i)
+    if GS.ki6:
+        # Add all the User.N layers
+        step = 2 if GS.ki9 else 1
+        for i in range(1, 10):
+            name = 'User.'+str(i)
+            GS.DEFAULT_LAYER_NAMES[name] = pcbnew.User_1+(i-1)*step
+            GS.DEFAULT_LAYER_DESC[name] = 'User layer '+str(i)
+    GS.F_Cu = pcbnew.F_Cu
+    GS.B_Cu = pcbnew.B_Cu
+    GS.F_Adhes = pcbnew.F_Adhes
+    GS.B_Adhes = pcbnew.B_Adhes
+    GS.F_Paste = pcbnew.F_Paste
+    GS.B_Paste = pcbnew.B_Paste
+    GS.F_SilkS = pcbnew.F_SilkS
+    GS.B_SilkS = pcbnew.B_SilkS
+    GS.F_Mask = pcbnew.F_Mask
+    GS.B_Mask = pcbnew.B_Mask
+    GS.Edge_Cuts = pcbnew.Edge_Cuts
+
+
+def get_layers_info_kp():
+    kipy = GS.kp
+    for i in range(128):
+        name = kipy.util.board_layer.canonical_name(i)
+        if name == 'Unknown':
+            continue
+        GS.DEFAULT_LAYER_NAMES[name] = i
+        if name.startswith('In') and name.endswith('.Cu'):
+            GS.DEFAULT_INNER_LAYER_NAMES.add(name)
+            GS.DEFAULT_LAYER_DESC[name] = 'Inner layer '+name[2:-3]
+        elif name.startswith('User.'):
+            GS.DEFAULT_LAYER_DESC[name] = 'User layer '+name[5:]
+    GS.F_Cu = GS.DEFAULT_LAYER_NAMES['F.Cu']
+    GS.B_Cu = GS.DEFAULT_LAYER_NAMES['B.Cu']
+    GS.F_Adhes = GS.DEFAULT_LAYER_NAMES['F.Adhes']
+    GS.B_Adhes = GS.DEFAULT_LAYER_NAMES['B.Adhes']
+    GS.F_Paste = GS.DEFAULT_LAYER_NAMES['F.Paste']
+    GS.B_Paste = GS.DEFAULT_LAYER_NAMES['B.Paste']
+    GS.F_SilkS = GS.DEFAULT_LAYER_NAMES['F.SilkS']
+    GS.B_SilkS = GS.DEFAULT_LAYER_NAMES['B.SilkS']
+    GS.F_Mask = GS.DEFAULT_LAYER_NAMES['F.Mask']
+    GS.B_Mask = GS.DEFAULT_LAYER_NAMES['B.Mask']
+    GS.Edge_Cuts = GS.DEFAULT_LAYER_NAMES['Edge.Cuts']
+
+
+def get_layers_info():
+    if GS.pn is not None:
+        get_layers_info_pn()
+    else:
+        get_layers_info_kp()
+    GS.ID_2_DEFAULT_NAME = {v: k for k, v in GS.DEFAULT_LAYER_NAMES.items()}
+    for k, v in GS.KICAD6_RENAME.items():
+        GS.DEFAULT_LAYER_NAMES[v] = GS.DEFAULT_LAYER_NAMES[k]
+
+
 def detect_kicad():
     import_kicad_api()
     get_kicad_version()
+    get_layers_info()
 
     # Setup details dependent on the API version
     if GS.ki10 and GS.pn is not None:

@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2022 Salvador E. Tropea
-# Copyright (c) 2020-2022 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
-import pcbnew
 from .optionable import Optionable
 from .gs import GS
 from .misc import W_NOTASCII
@@ -13,6 +12,7 @@ from .macros import macros, document, output_class  # noqa: F401
 from . import log
 
 logger = log.get_logger()
+assert GS.F_Cu is not None, "layer.py imported before __main__ execution"
 
 
 LAYER_ORDER = ['F.Cu', 'F.Mask', 'F.SilkS', 'F.Paste', 'F.Adhes', 'F.CrtYd', 'F.Fab', 'Dwgs.User', 'Cmts.User', 'Eco1.User',
@@ -22,7 +22,6 @@ LAYER_ORDER = ['F.Cu', 'F.Mask', 'F.SilkS', 'F.Paste', 'F.Adhes', 'F.CrtYd', 'F.
                'In20.Cu', 'In21.Cu', 'In22.Cu', 'In23.Cu', 'In24.Cu', 'In25.Cu', 'In26.Cu', 'In27.Cu', 'In28.Cu', 'In29.Cu',
                'In30.Cu', 'B.Cu', 'B.Mask', 'B.SilkS', 'B.Paste', 'B.Adhes', 'B.CrtYd', 'B.Fab']
 LAYER_PRIORITY = {}
-DEFAULT_INNER_LAYER_NAMES = set()
 
 
 def create_print_priority(board):
@@ -47,98 +46,19 @@ def inner_id_in_range(id, cnt):
 
 class Layer(Optionable):
     """ A layer description """
-    # Default names
-    DEFAULT_LAYER_NAMES = {
-        'F.Cu': pcbnew.F_Cu,
-        'B.Cu': pcbnew.B_Cu,
-        'F.Adhes': pcbnew.F_Adhes,
-        'B.Adhes': pcbnew.B_Adhes,
-        'F.Paste': pcbnew.F_Paste,
-        'B.Paste': pcbnew.B_Paste,
-        'F.SilkS': pcbnew.F_SilkS,
-        'B.SilkS': pcbnew.B_SilkS,
-        'F.Mask': pcbnew.F_Mask,
-        'B.Mask': pcbnew.B_Mask,
-        'Dwgs.User': pcbnew.Dwgs_User,
-        'Cmts.User': pcbnew.Cmts_User,
-        'Eco1.User': pcbnew.Eco1_User,
-        'Eco2.User': pcbnew.Eco2_User,
-        'Edge.Cuts': pcbnew.Edge_Cuts,
-        'Margin': pcbnew.Margin,
-        'F.CrtYd': pcbnew.F_CrtYd,
-        'B.CrtYd': pcbnew.B_CrtYd,
-        'F.Fab': pcbnew.F_Fab,
-        'B.Fab': pcbnew.B_Fab,
-    }
-    # ID to default name table
-    ID_2_DEFAULT_NAME = None
-    # Default names
-    DEFAULT_LAYER_DESC = {
-        'F.Cu': 'Front copper',
-        'B.Cu': 'Bottom copper',
-        'F.Adhes': 'Front adhesive (glue)',
-        'B.Adhes': 'Bottom adhesive (glue)',
-        'F.Adhesive': 'Front adhesive (glue)',
-        'B.Adhesive': 'Bottom adhesive (glue)',
-        'F.Paste': 'Front solder paste',
-        'B.Paste': 'Bottom solder paste',
-        'F.SilkS': 'Front silkscreen (artwork)',
-        'B.SilkS': 'Bottom silkscreen (artwork)',
-        'F.Silkscreen': 'Front silkscreen (artwork)',
-        'B.Silkscreen': 'Bottom silkscreen (artwork)',
-        'F.Mask': 'Front soldermask (negative)',
-        'B.Mask': 'Bottom soldermask (negative)',
-        'Dwgs.User': 'User drawings',
-        'User.Drawings': 'User drawings',
-        'Cmts.User': 'User comments',
-        'User.Comments': 'User comments',
-        'Eco1.User': 'For user usage 1',
-        'Eco2.User': 'For user usage 2',
-        'User.Eco1': 'For user usage 1',
-        'User.Eco2': 'For user usage 2',
-        'Edge.Cuts': 'Board shape',
-        'Margin': 'Margin relative to edge cut',
-        'F.CrtYd': 'Front courtyard area',
-        'B.CrtYd': 'Bottom courtyard area',
-        'F.Courtyard': 'Front courtyard area',
-        'B.Courtyard': 'Bottom courtyard area',
-        'F.Fab': 'Front documentation',
-        'B.Fab': 'Bottom documentation',
-        'User.1': 'User layer 1',
-        'User.2': 'User layer 2',
-        'User.3': 'User layer 3',
-        'User.4': 'User layer 4',
-        'User.5': 'User layer 5',
-        'User.6': 'User layer 6',
-        'User.7': 'User layer 7',
-        'User.8': 'User layer 8',
-        'User.9': 'User layer 9',
-    }
-    KICAD6_RENAME = {
-        'F.Adhes': 'F.Adhesive',
-        'B.Adhes': 'B.Adhesive',
-        'F.SilkS': 'F.Silkscreen',
-        'B.SilkS': 'B.Silkscreen',
-        'Dwgs.User': 'User.Drawings',
-        'Cmts.User': 'User.Comments',
-        'Eco1.User': 'User.Eco1',
-        'Eco2.User': 'User.Eco2',
-        'F.CrtYd': 'F.Courtyard',
-        'B.CrtYd': 'B.Courtyard',
-    }
     # Protel extensions
     PROTEL_EXTENSIONS = {
-        pcbnew.F_Cu: 'gtl',
-        pcbnew.B_Cu: 'gbl',
-        pcbnew.F_Adhes: 'gta',
-        pcbnew.B_Adhes: 'gba',
-        pcbnew.F_Paste: 'gtp',
-        pcbnew.B_Paste: 'gbp',
-        pcbnew.F_SilkS: 'gto',
-        pcbnew.B_SilkS: 'gbo',
-        pcbnew.F_Mask: 'gts',
-        pcbnew.B_Mask: 'gbs',
-        pcbnew.Edge_Cuts: 'gm1',
+        GS.F_Cu: 'gtl',
+        GS.B_Cu: 'gbl',
+        GS.F_Adhes: 'gta',
+        GS.B_Adhes: 'gba',
+        GS.F_Paste: 'gtp',
+        GS.B_Paste: 'gbp',
+        GS.F_SilkS: 'gto',
+        GS.B_SilkS: 'gbo',
+        GS.F_Mask: 'gts',
+        GS.B_Mask: 'gbs',
+        GS.Edge_Cuts: 'gm1',
     }
     # Names from the board file
     _pcb_layers = None
@@ -252,9 +172,9 @@ class Layer(Optionable):
                     elif layer in Layer._pcb_layers:
                         ext = [cls.create_layer(layer)]
                     # Give compatibility for the KiCad 5 default names (automagically renamed by KiCad 6)
-                    elif GS.ki6 and layer in Layer.KICAD6_RENAME:
-                        ext = [cls.create_layer(Layer.KICAD6_RENAME[layer])]
-                    elif layer in Layer.DEFAULT_LAYER_NAMES:
+                    elif GS.ki6 and layer in GS.KICAD6_RENAME:
+                        ext = [cls.create_layer(GS.KICAD6_RENAME[layer])]
+                    elif layer in GS.DEFAULT_LAYER_NAMES:
                         ext = [cls.create_layer(layer)]
                     if ext is None:
                         raise KiPlotConfigurationError("Unknown layer spec: `{}`".format(layer))
@@ -269,12 +189,12 @@ class Layer(Optionable):
     @staticmethod
     def _get_inners():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().CuStack()
-                if id != pcbnew.B_Cu and id != pcbnew.F_Cu}
+                if id != GS.B_Cu and id != GS.F_Cu}
 
     @staticmethod
     def _get_outers():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().CuStack()
-                if id == pcbnew.B_Cu or id == pcbnew.F_Cu}
+                if id == GS.B_Cu or id == GS.F_Cu}
 
     @staticmethod
     def _get_technical():
@@ -310,7 +230,7 @@ class Layer(Optionable):
             layer = next(filter(lambda x: x.layer == self.layer, GS.global_layer_defaults), None)
             if layer and layer.description:
                 return layer.description
-        return Layer.DEFAULT_LAYER_DESC.get(self.layer, 'No description')
+        return GS.DEFAULT_LAYER_DESC.get(self.layer, 'No description')
 
     @classmethod
     def create_layer(cls, name):
@@ -348,9 +268,9 @@ class Layer(Optionable):
         """ Get the pcbnew layer from the string provided in the config """
         # Priority
         # 1) Internal list
-        if self.layer in Layer.DEFAULT_LAYER_NAMES:
-            self._id = Layer.DEFAULT_LAYER_NAMES[self.layer]
-            self._is_inner = self.layer in DEFAULT_INNER_LAYER_NAMES
+        if self.layer in GS.DEFAULT_LAYER_NAMES:
+            self._id = GS.DEFAULT_LAYER_NAMES[self.layer]
+            self._is_inner = self.layer in GS.DEFAULT_INNER_LAYER_NAMES
         else:
             id = Layer._pcb_layers.get(self.layer)
             if id is not None:
@@ -370,13 +290,15 @@ class Layer(Optionable):
         return self._id
 
     def is_copper(self):
-        return self._id >= pcbnew.F_Cu and self._id <= pcbnew.B_Cu
+        if GS.pn is not None:
+            return self._id >= GS.F_Cu and self._id <= GS.B_Cu
+        return GS.kp.util.board_layer.is_copper_layer(self._id)
 
     def is_top(self):
-        return self._id == pcbnew.F_Cu
+        return self._id == GS.F_Cu
 
     def is_bottom(self):
-        return self._id == pcbnew.B_Cu
+        return self._id == GS.B_Cu
 
     def __str__(self):
         if hasattr(self, '_id'):
@@ -386,23 +308,5 @@ class Layer(Optionable):
     @staticmethod
     def id2def_name(id):
         if GS.ki5:
-            return Layer.ID_2_DEFAULT_NAME[id]
-        return pcbnew.LayerName(id)
-
-
-# Add all the Inner layers
-for i in range(1, 31):
-    name = 'In'+str(i)+'.Cu'
-    DEFAULT_INNER_LAYER_NAMES.add(name)
-    Layer.DEFAULT_LAYER_NAMES[name] = (i+1)*2 if GS.ki9 else pcbnew.In1_Cu+i-1
-    Layer.DEFAULT_LAYER_DESC[name] = 'Inner layer '+str(i)
-if GS.ki6:
-    # Add all the User.N layers
-    step = 2 if GS.ki9 else 1
-    for i in range(1, 10):
-        name = 'User.'+str(i)
-        Layer.DEFAULT_LAYER_NAMES[name] = pcbnew.User_1+(i-1)*step
-        Layer.DEFAULT_LAYER_DESC[name] = 'User layer '+str(i)
-Layer.ID_2_DEFAULT_NAME = {v: k for k, v in Layer.DEFAULT_LAYER_NAMES.items()}
-for k, v in Layer.KICAD6_RENAME.items():
-    Layer.DEFAULT_LAYER_NAMES[v] = Layer.DEFAULT_LAYER_NAMES[k]
+            return GS.ID_2_DEFAULT_NAME[id]
+        return GS.pn.LayerName(id) if GS.pn is not None else GS.kp.canonical_name(id)
