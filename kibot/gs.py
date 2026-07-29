@@ -134,6 +134,9 @@ class GS(object):
     stop_flag = False
     errors_ignored = False    # We ignored at least one error
     keep_temporals = False    # Selected from command line
+    # KiCad API
+    pn = None      # pcbnew module
+    kp = None      # kipy (kicad-python) module
     # Maximum recursive replace
     MAXDEPTH = 20
     MAXDEPTH_OUTPUTS = 20
