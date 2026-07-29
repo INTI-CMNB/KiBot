@@ -168,6 +168,27 @@ def do_int(v):
     return int(v) if v is not None else 0
 
 
+def check_kipy_api():
+    """ Check if the kicad-python API is installed.
+        This is for KiCad 11 and newer.
+        The implementation in KiCad 10 is not usable. """
+    # TODO: I'm currently assuming KiCad 11 packages will contain kicad-python bundled
+    # 1. Check we can import the `kicad-python` module
+    try:
+        from kipy import KiCad
+    except Exception as e:
+        error(f"kicad-python is missing, this is needed for KiCad 11 and newer ({e})")
+        return False
+    # 2. Check we can start a headless API server and ask for the version
+    try:
+        with KiCad(headless=True) as kicad:
+            version = kicad.get_version()
+    except Exception as e:
+        error(f"Failed to connect to KiCad API ({e})")
+        return False
+    return True
+
+
 def check_tests(tests):
     global tests_ok
     global tests_msg
@@ -471,6 +492,7 @@ except ModuleNotFoundError:
             version = res
             kicad_version = (int(m.group(1)), int(m.group(2)), int(m.group(3)))
             is_k11 = True
+            kicad_ok = check_kipy_api()
             # TODO: Fill the plugins path?
         else:
             # Option 2: The installation is wrong
