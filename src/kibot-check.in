@@ -638,7 +638,7 @@ if not py_ok:
     print(RESET)
 
 if not kicad_ok:
-    print(sev2color(4)+'* Install KiCad 5.1.6 or newer')
+    print(sev2color(4)+'* Install KiCad 6.0.11 or newer')
     if debian_support:
         print('  Try `apt-get install kicad` as root')
     else:
