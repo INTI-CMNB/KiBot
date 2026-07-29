@@ -137,6 +137,7 @@ import locale
 import os
 import platform
 import re
+import subprocess
 import sys
 from sys import path as sys_path
 import warnings
@@ -166,7 +167,7 @@ from .gs import GS
 from . import dep_downloader
 from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
                    FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS, W_NOCONFIG, W_NOLIBS, W_NOKIENV, W_KIAUTO,
-                   W_NODEFSYMLIB, W_MISLIBTAB)
+                   W_NODEFSYMLIB, W_MISLIBTAB, MISSING_TOOL)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -305,16 +306,33 @@ def set_locale():
         pass
 
 
-def detect_kicad():
+def import_kicad_api():
+    GS.pn = None
+    GS.kp = None
+    # Try to import the SWIG interface (KiCad 5-10)
     try:
         import pcbnew
+        GS.pn = pcbnew
     except ImportError:
-        GS.exit_with_error(["Failed to import pcbnew Python module."
-                            " Is KiCad installed?"
-                            " Do you need to add it to PYTHONPATH?",
-                            TRY_INSTALL_CHECK], NO_PCBNEW_MODULE)
+        pass
+
+    if GS.pn is None:
+        # No SWIG interface, try kicad-python API (KiCad 11-)
+        try:
+            import kipy
+            GS.kp = kipy
+        except ImportError:
+            pass
+        if GS.kp is None:
+            GS.exit_with_error(["Failed to import the Python API."
+                                " Is KiCad installed?"
+                                " Do you need to add it to PYTHONPATH?",
+                                TRY_INSTALL_CHECK], NO_PCBNEW_MODULE)
+
+
+def get_kicad_version_pn():
     try:
-        GS.kicad_version = pcbnew.GetBuildVersion()
+        GS.kicad_version = GS.pn.GetBuildVersion()
     except AttributeError:
         logger.warning(W_NOKIVER+"Unknown KiCad version, please install KiCad 5.1.6 or newer")
         # Assume the best case
@@ -325,6 +343,22 @@ def detect_kicad():
         GS.kicad_version = GS.kicad_version[really_index+6:]
     except ValueError:
         pass
+
+
+def get_kicad_version_kp():
+    kicad_cli = 'kicad-cli-nightly' if nightly else 'kicad-cli'
+    try:
+        res = subprocess.run([kicad_cli, 'version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        GS.exit_with_error(f"Failed to execute `{kicad_cli}`, wrong KiCad installation ({e})", MISSING_TOOL)
+    GS.kicad_version = res.stdout.decode('ascii').rstrip()
+
+
+def get_kicad_version():
+    if GS.pn is not None:
+        get_kicad_version_pn()
+    else:
+        get_kicad_version_kp()
 
     m = re.search(r'(\d+)\.(\d+)\.(\d+)(?:\.(\d+))?', GS.kicad_version)
     if m is None:
@@ -342,14 +376,22 @@ def detect_kicad():
     GS.ki8 = GS.kicad_version_major >= 8
     GS.ki9 = GS.kicad_version_major >= 9
     GS.ki10 = GS.kicad_version_major >= 10
-    if GS.ki10:
+    GS.ki11 = GS.kicad_version_major >= 11 or (GS.kicad_version_major == 10 and GS.kicad_version_minor == 99)
+
+
+def detect_kicad():
+    import_kicad_api()
+    get_kicad_version()
+
+    # Setup details dependent on the API version
+    if GS.ki10 and GS.pn is not None:
         # From pcbnew/pcb_track_types.h
         # pcbnew definitions found in RC1, but not in RC2
-        if hasattr(pcbnew, 'VIATYPE_THROUGH'):
-            GS.VIATYPE_THROUGH = pcbnew.VIATYPE_THROUGH     # always a through hole vi
-            GS.VIATYPE_BLIND = pcbnew.VIATYPE_BLIND         # this via can be on internal layers
-            GS.VIATYPE_BURIED = pcbnew.VIATYPE_BURIED       # this via can be on internal layers
-            GS.VIATYPE_MICROVIA = pcbnew.VIATYPE_MICROVIA   # this via which connect from an external layer
+        if hasattr(GS.pn, 'VIATYPE_THROUGH'):
+            GS.VIATYPE_THROUGH = GS.pn.VIATYPE_THROUGH     # always a through hole via
+            GS.VIATYPE_BLIND = GS.pn.VIATYPE_BLIND         # this via can be on internal layers
+            GS.VIATYPE_BURIED = GS.pn.VIATYPE_BURIED       # this via can be on internal layers
+            GS.VIATYPE_MICROVIA = GS.pn.VIATYPE_MICROVIA   # this via which connect from an external layer
             # to the near neighbor internal layer
         else:
             GS.VIATYPE_THROUGH = 4
@@ -359,14 +401,22 @@ def detect_kicad():
     GS.footprint_gr_type = 'MGRAPHIC' if not GS.ki8 else 'PCB_SHAPE'
     GS.board_gr_type = 'DRAWSEGMENT' if GS.ki5 else 'PCB_SHAPE'
     GS.footprint_update_local_coords = GS.dummy1 if GS.ki8 else GS.footprint_update_local_coords_ki7
+
     logger.debug('Detected KiCad v{}.{}.{} ({} {})'.format(GS.kicad_version_major, GS.kicad_version_minor,
                  GS.kicad_version_patch, GS.kicad_version, GS.kicad_version_n))
+
     # Used to look for plug-ins.
     # KICAD_PATH isn't good on my system.
     # The kicad-nightly package overwrites the regular package!!
     GS.kicad_share_path = '/usr/share/kicad'
+
+    # Setup some file/paths according to the KiCad version
     if GS.ki6:
-        GS.kicad_conf_path = pcbnew.GetSettingsManager().GetUserSettingsPath()
+        if GS.ki11:
+            # TODO: Anything better?
+            GS.kicad_conf_path = os.path.expanduser(f'~/.config/kicad/{GS.kicad_version_major}.{GS.kicad_version_minor}')
+        else:
+            GS.kicad_conf_path = GS.pn.GetSettingsManager().GetUserSettingsPath()
         if nightly:
             # Nightly Debian packages uses `/usr/share/kicad-nightly/kicad-nightly.env` as an environment extension
             # This script defines KICAD_CONFIG_HOME="$HOME/.config/kicadnightly"
@@ -384,8 +434,9 @@ def detect_kicad():
         # Found in KiCad 5.1.8, 5.1.9
         # So we temporarily suppress stderr
         with hide_stderr():
-            GS.kicad_conf_path = pcbnew.GetKicadConfigPath()
+            GS.kicad_conf_path = GS.pn.GetKicadConfigPath()
         GS.pro_ext = '.pro'
+
     # Dirs to look for plugins
     GS.kicad_plugins_dirs = []
     # /usr/share/kicad/*
