@@ -146,6 +146,81 @@ class GS(object):
     VIATYPE_BLIND_BURIED = 2
     VIATYPE_MICROVIA = 1
     #
+    # KiCad layers from pcbnew or kicad-python
+    # Collected in __main__.py mainly used by layers.py
+    #
+    # Default names
+    DEFAULT_LAYER_NAMES = {}
+    # Default descriptions
+    DEFAULT_LAYER_DESC = {
+        'F.Cu': 'Front copper',
+        'B.Cu': 'Bottom copper',
+        'F.Adhes': 'Front adhesive (glue)',
+        'B.Adhes': 'Bottom adhesive (glue)',
+        'F.Adhesive': 'Front adhesive (glue)',
+        'B.Adhesive': 'Bottom adhesive (glue)',
+        'F.Paste': 'Front solder paste',
+        'B.Paste': 'Bottom solder paste',
+        'F.SilkS': 'Front silkscreen (artwork)',
+        'B.SilkS': 'Bottom silkscreen (artwork)',
+        'F.Silkscreen': 'Front silkscreen (artwork)',
+        'B.Silkscreen': 'Bottom silkscreen (artwork)',
+        'F.Mask': 'Front soldermask (negative)',
+        'B.Mask': 'Bottom soldermask (negative)',
+        'Dwgs.User': 'User drawings',
+        'User.Drawings': 'User drawings',
+        'Cmts.User': 'User comments',
+        'User.Comments': 'User comments',
+        'Eco1.User': 'For user usage 1',
+        'Eco2.User': 'For user usage 2',
+        'User.Eco1': 'For user usage 1',
+        'User.Eco2': 'For user usage 2',
+        'Edge.Cuts': 'Board shape',
+        'Margin': 'Margin relative to edge cut',
+        'F.CrtYd': 'Front courtyard area',
+        'B.CrtYd': 'Bottom courtyard area',
+        'F.Courtyard': 'Front courtyard area',
+        'B.Courtyard': 'Bottom courtyard area',
+        'F.Fab': 'Front documentation',
+        'B.Fab': 'Bottom documentation',
+        'User.1': 'User layer 1',
+        'User.2': 'User layer 2',
+        'User.3': 'User layer 3',
+        'User.4': 'User layer 4',
+        'User.5': 'User layer 5',
+        'User.6': 'User layer 6',
+        'User.7': 'User layer 7',
+        'User.8': 'User layer 8',
+        'User.9': 'User layer 9',
+    }
+    DEFAULT_INNER_LAYER_NAMES = set()
+    # ID to default (canonical) name table
+    ID_2_DEFAULT_NAME = None
+    # KiCad 6 renamed some layers, this the translation
+    KICAD6_RENAME = {
+        'F.Adhes': 'F.Adhesive',
+        'B.Adhes': 'B.Adhesive',
+        'F.SilkS': 'F.Silkscreen',
+        'B.SilkS': 'B.Silkscreen',
+        'Dwgs.User': 'User.Drawings',
+        'Cmts.User': 'User.Comments',
+        'Eco1.User': 'User.Eco1',
+        'Eco2.User': 'User.Eco2',
+        'F.CrtYd': 'F.Courtyard',
+        'B.CrtYd': 'B.Courtyard',
+    }
+    F_Cu = None
+    B_Cu = None
+    F_Adhes = None
+    B_Adhes = None
+    F_Paste = None
+    B_Paste = None
+    F_SilkS = None
+    B_SilkS = None
+    F_Mask = None
+    B_Mask = None
+    Edge_Cuts = None
+    #
     # Global defaults
     #
     # Options from command line
