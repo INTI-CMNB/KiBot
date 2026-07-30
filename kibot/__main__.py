@@ -165,9 +165,9 @@ from .banner import get_banner, BANNERS
 from .error import KiPlotConfigurationError
 from .gs import GS
 from . import dep_downloader
-from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, W_NOKIVER, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN,
-                   FAILED_EXECUTE, W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS, W_NOCONFIG, W_NOLIBS, W_NOKIENV, W_KIAUTO,
-                   W_NODEFSYMLIB, W_MISLIBTAB, MISSING_TOOL)
+from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, hide_stderr, TRY_INSTALL_CHECK, W_ONWIN, FAILED_EXECUTE,
+                   W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS, W_NOCONFIG, W_NOLIBS, W_NOKIENV, W_KIAUTO, W_NODEFSYMLIB,
+                   W_MISLIBTAB, MISSING_TOOL, MIN_KICAD_VERSION)
 from .pre_base import BasePreFlight
 from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
@@ -334,9 +334,7 @@ def get_kicad_version_pn():
     try:
         GS.kicad_version = GS.pn.GetBuildVersion()
     except AttributeError:
-        logger.warning(W_NOKIVER+"Unknown KiCad version, please install KiCad 5.1.6 or newer")
-        # Assume the best case
-        GS.kicad_version = '5.1.5'
+        GS.exit_with_error(f"Unknown KiCad version, please install KiCad {MIN_KICAD_VERSION} or newer", NO_PCBNEW_MODULE)
     try:
         # Debian sid may 2021 mess:
         really_index = GS.kicad_version.index('really')
