@@ -410,7 +410,7 @@ def get_layers_info_pn():
     if GS.ki6:
         # Add all the User.N layers
         step = 2 if GS.ki9 else 1
-        for i in range(1, 10):
+        for i in range(1, 46 if GS.ki9 else 10):
             name = 'User.'+str(i)
             GS.DEFAULT_LAYER_NAMES[name] = pcbnew.User_1+(i-1)*step
             GS.DEFAULT_LAYER_DESC[name] = 'User layer '+str(i)
