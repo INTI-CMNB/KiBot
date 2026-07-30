@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2024 Salvador E. Tropea
-# Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from base64 import b64encode
@@ -20,12 +20,6 @@ if not GS.kicad_version_n:
     # When running the regression tests we need it
     from kibot.__main__ import detect_kicad
     detect_kicad()
-if GS.ki6:
-    # New name, no alias ...
-    from pcbnew import FP_3DMODEL, LSET, ToMM, wxPoint
-else:
-    from pcbnew import wxPoint, LSET, MODULE_3D_SETTINGS, ToMM
-    FP_3DMODEL = MODULE_3D_SETTINGS
 from .registrable import RegOutput
 from .optionable import Optionable, BaseOptions
 from .fil_base import BaseFilter, apply_fitted_filter, reset_filters, apply_pre_transform, apply_exclude_filter
@@ -35,6 +29,7 @@ from .error import KiPlotConfigurationError
 from . import log
 
 logger = log.get_logger()
+assert GS.pn is not None or GS.kp is not None
 HIGHLIGHT_3D_WRL = """#VRML V2.0 utf8
 #KiBot generated highlight
 Shape {
@@ -336,7 +331,7 @@ class VariantOptions(BaseOptions):
     # Here just to avoid pulling pcbnew for this
     @staticmethod
     def to_mm(val):
-        return ToMM(val)
+        return GS.pn.ToMM(val) if GS.pn is not None else GS.kp.util.units.to_mm(val)
 
     @staticmethod
     def cross_module(m, rect, layer, angle):
@@ -347,16 +342,16 @@ class VariantOptions(BaseOptions):
         center = GS.p2v_k7(m.GetCenter())
         seg1 = GS.create_module_element(m)
         seg1.SetWidth(120000)
-        seg1.SetStart(GS.p2v_k7(wxPoint(rect.x1, rect.y1)))
-        seg1.SetEnd(GS.p2v_k7(wxPoint(rect.x2, rect.y2)))
+        seg1.SetStart(GS.p2v_k7(GS.pn.wxPoint(rect.x1, rect.y1)))
+        seg1.SetEnd(GS.p2v_k7(GS.pn.wxPoint(rect.x2, rect.y2)))
         seg1.SetLayer(layer)
         seg1.Rotate(center, GS.angle(angle))
         GS.footprint_update_local_coords(seg1)
         m.Add(seg1)
         seg2 = GS.create_module_element(m)
         seg2.SetWidth(120000)
-        seg2.SetStart(GS.p2v_k7(wxPoint(rect.x1, rect.y2)))
-        seg2.SetEnd(GS.p2v_k7(wxPoint(rect.x2, rect.y1)))
+        seg2.SetStart(GS.p2v_k7(GS.pn.wxPoint(rect.x1, rect.y2)))
+        seg2.SetEnd(GS.p2v_k7(GS.pn.wxPoint(rect.x2, rect.y1)))
         seg2.SetLayer(layer)
         seg2.Rotate(center, GS.angle(angle))
         GS.footprint_update_local_coords(seg2)
@@ -451,7 +446,7 @@ class VariantOptions(BaseOptions):
                                       GS.global_remove_solder_mask_for_dnp):
             return
         logger.debug('Removing paste, mask and/or glue')
-        exclude = LSET()
+        exclude = GS.pn.LSET()
         fpaste = board.GetLayerID('F.Paste')
         bpaste = board.GetLayerID('B.Paste')
         exclude.addLayer(fpaste)
@@ -810,7 +805,7 @@ class VariantOptions(BaseOptions):
                 # Use the courtyard as bbox
                 w = bbox.x2-bbox.x1
                 h = bbox.y2-bbox.y1
-                m_cen = wxPoint((bbox.x2+bbox.x1)/2, (bbox.y2+bbox.y1)/2)
+                m_cen = GS.pn.wxPoint((bbox.x2+bbox.x1)/2, (bbox.y2+bbox.y1)/2)
             else:
                 # No courtyard, ask KiCad
                 # Avoid including the text. KiCad 8 can return ridiculous things
@@ -822,10 +817,10 @@ class VariantOptions(BaseOptions):
                     logger.warning(W_NOCRTYD+"Missing courtyard for `{}`".format(ref))
             if extra_debug:
                 logger.debug(f'Highlight for {ref}')
-                logger.debug(f' - Position {ToMM(m_pos.x)}, {ToMM(m_pos.y)}')
+                logger.debug(f' - Position {self.to_mm(m_pos.x)}, {self.to_mm(m_pos.y)}')
                 logger.debug(f' - Orientation {rot} (Flipped: {m.IsFlipped()})')
-                logger.debug(f' - Center {ToMM(m_cen.x)} {ToMM(m_cen.y)}')
-                logger.debug(f' - w,h {ToMM(w)}, {ToMM(h)}')
+                logger.debug(f' - Center {self.to_mm(m_cen.x)} {self.to_mm(m_cen.y)}')
+                logger.debug(f' - w,h {self.to_mm(w)}, {self.to_mm(h)}')
             # Compute the offset
             off_x = m_cen.x - m_pos.x
             off_y = m_cen.y - m_pos.y
@@ -838,13 +833,13 @@ class VariantOptions(BaseOptions):
             off_xp = off_x*math.cos(rrot)+off_y*math.sin(rrot)
             off_yp = -off_x*math.sin(rrot)+off_y*math.cos(rrot)
             # Create a new 3D model for the highlight
-            hl = FP_3DMODEL()
-            hl.m_Scale.x = (ToMM(w)+self.highlight_padding)/2.54
-            hl.m_Scale.y = (ToMM(h)+self.highlight_padding)/2.54
+            hl = GS.pn.FP_3DMODEL()
+            hl.m_Scale.x = (self.to_mm(w)+self.highlight_padding)/2.54
+            hl.m_Scale.y = (self.to_mm(h)+self.highlight_padding)/2.54
             hl.m_Scale.z = z
             hl.m_Rotation.z = rot
-            hl.m_Offset.x = ToMM(off_xp)
-            hl.m_Offset.y = ToMM(off_yp)
+            hl.m_Offset.x = self.to_mm(off_xp)
+            hl.m_Offset.y = self.to_mm(off_yp)
             hl.m_Filename = self._highlight_3D_file
             # Add the model
             models.push_back(hl)
