@@ -38,7 +38,7 @@ import subprocess
 import json
 from . import context
 from kibot.misc import (EXIT_BAD_ARGS, EXIT_BAD_CONFIG, NO_PCB_FILE, NO_SCH_FILE, EXAMPLE_CFG, WONT_OVERWRITE, CORRUPTED_PCB,
-                        PCBDRAW_ERR, NO_PCBNEW_MODULE, NO_YAML_MODULE, INTERNAL_ERROR, MISSING_FILES)
+                        PCBDRAW_ERR, NO_PCBNEW_MODULE, NO_YAML_MODULE, INTERNAL_ERROR, MISSING_FILES, MIN_KICAD_VERSION)
 
 
 POS_DIR = 'positiondir'
@@ -614,15 +614,15 @@ def test_no_pcbnew(test_dir):
     ctx = context.TestContext(test_dir, 'bom', 'bom')
     cmd = [os.path.abspath(os.path.dirname(os.path.abspath(__file__))+'/force_pcbnew_error.py')]
     ctx.do_run(cmd, NO_PCBNEW_MODULE)
-    ctx.search_err('Failed to import pcbnew Python module.')
+    ctx.search_err('Failed to import the Python API')
     ctx.search_err('PYTHONPATH')
 
 
 def test_old_pcbnew(test_dir):
     ctx = context.TestContext(test_dir, 'bom', 'bom')
     cmd = [os.path.abspath(os.path.dirname(os.path.abspath(__file__))+'/force_pcbnew_error.py'), 'fake']
-    ctx.do_run(cmd)
-    ctx.search_err('Unknown KiCad version, please install KiCad 5.1.6 or newer')
+    ctx.do_run(cmd, NO_PCBNEW_MODULE)
+    ctx.search_err(f'Unknown KiCad version, please install KiCad {MIN_KICAD_VERSION} or newer')
 
 
 def test_no_yaml(test_dir):
