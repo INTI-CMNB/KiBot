@@ -414,6 +414,7 @@ def get_layers_info_pn():
             name = 'User.'+str(i)
             GS.DEFAULT_LAYER_NAMES[name] = pcbnew.User_1+(i-1)*step
             GS.DEFAULT_LAYER_DESC[name] = 'User layer '+str(i)
+    # Common layer IDs
     GS.F_Cu = pcbnew.F_Cu
     GS.B_Cu = pcbnew.B_Cu
     GS.F_Adhes = pcbnew.F_Adhes
@@ -425,6 +426,13 @@ def get_layers_info_pn():
     GS.F_Mask = pcbnew.F_Mask
     GS.B_Mask = pcbnew.B_Mask
     GS.Edge_Cuts = pcbnew.Edge_Cuts
+    # Available plotter formats
+    GS.PLOT_FORMAT_HPGL = pcbnew.PLOT_FORMAT_HPGL
+    GS.PLOT_FORMAT_GERBER = pcbnew.PLOT_FORMAT_GERBER
+    GS.PLOT_FORMAT_POST = pcbnew.PLOT_FORMAT_POST
+    GS.PLOT_FORMAT_DXF = pcbnew.PLOT_FORMAT_DXF
+    GS.PLOT_FORMAT_PDF = pcbnew.PLOT_FORMAT_PDF
+    GS.PLOT_FORMAT_SVG = pcbnew.PLOT_FORMAT_SVG
 
 
 def get_layers_info_kp():
@@ -450,6 +458,13 @@ def get_layers_info_kp():
     GS.F_Mask = GS.DEFAULT_LAYER_NAMES['F.Mask']
     GS.B_Mask = GS.DEFAULT_LAYER_NAMES['B.Mask']
     GS.Edge_Cuts = GS.DEFAULT_LAYER_NAMES['Edge.Cuts']
+    # Available plotter formats
+    GS.PLOT_FORMAT_HPGL = 0  # Not longer usable
+    GS.PLOT_FORMAT_GERBER = 1
+    GS.PLOT_FORMAT_POST = 2
+    GS.PLOT_FORMAT_DXF = 3
+    GS.PLOT_FORMAT_PDF = 4
+    GS.PLOT_FORMAT_SVG = 5
 
 
 def get_layers_info():
