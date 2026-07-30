@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot
 import os
-from pcbnew import PLOT_FORMAT_GERBER, FromMM, ToMM
 from .gs import GS
 from .kiplot import register_xmp_import
 from .misc import FONT_HELP_TEXT
@@ -49,7 +48,7 @@ class GerberOptions(AnyLayerOptions):
         # Gerbers are always 1:1
         del self.scaling
         del self.individual_page_scaling
-        self._plot_format = PLOT_FORMAT_GERBER
+        self._plot_format = GS.PLOT_FORMAT_GERBER
         if GS.global_output is not None:
             self.gerber_job_file = GS.global_output
 
@@ -63,10 +62,7 @@ class GerberOptions(AnyLayerOptions):
         po.SetIncludeGerberNetlistInfo(self.use_gerber_net_attributes)
         po.SetUseAuxOrigin(self.use_aux_axis_as_origin)
         po.SetDrillMarksType(0)
-        if GS.ki5:
-            po.SetLineWidth(FromMM(self.line_width))
-        else:
-            po.SetDisableGerberMacros(self.disable_aperture_macros)
+        po.SetDisableGerberMacros(self.disable_aperture_macros)
         po.gerber_job_file = self.gerber_job_file
 
     def read_vals_from_po(self, po):
@@ -85,12 +81,8 @@ class GerberOptions(AnyLayerOptions):
         self.subtract_mask_from_silk = po.GetSubtractMaskFromSilk()
         # useauxorigin
         self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
-        if GS.ki5:
-            # linewidth
-            self.line_width = ToMM(po.GetLineWidth())
-        else:
-            # disableapertmacros
-            self.disable_aperture_macros = po.GetDisableGerberMacros()
+        # disableapertmacros
+        self.disable_aperture_macros = po.GetDisableGerberMacros()
 
 
 @output_class
