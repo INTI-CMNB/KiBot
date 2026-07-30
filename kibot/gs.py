@@ -38,6 +38,10 @@ elif hasattr(pcbnew, 'PCB_PLOT_PARAMS'):
     NO_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.NO_DRILL_SHAPE
     SMALL_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.SMALL_DRILL_SHAPE
     FULL_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.FULL_DRILL_SHAPE
+else:
+    NO_DRILL_SHAPE = 0
+    SMALL_DRILL_SHAPE = 1
+    FULL_DRILL_SHAPE = 2
 # KiCad 6 uses IUs for SVGs, with option for SVG_Precision
 # KiCad 5 uses a very different scale based on inches
 # KiCad 7 uses mm
