@@ -8,6 +8,7 @@
 """
 Main KiBot code
 """
+import atexit
 from copy import deepcopy
 from collections import OrderedDict
 import gzip
@@ -28,7 +29,7 @@ from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, vers
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY, W_REPREF)
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY, W_REPREF, KIPY_ERROR)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -228,17 +229,64 @@ def load_board(pcb_file=None, forced=False):
     if GS.board is not None and not forced:
         # Already loaded
         return GS.board
-    import pcbnew
     if not pcb_file:
         GS.check_pcb()
         pcb_file = GS.pcb_file
+    return load_board_pn(pcb_file) if GS.pn is not None else load_board_kp(pcb_file)
+
+
+def close_kipy_pcb():
+    logger.error("Close")
+    if GS.kp_pcb is not None:
+        GS.kp_pcb.close()
+
+
+def load_board_kp(pcb_file):
+    kipy = GS.kp
+    # Check if we already have server running
+    if GS.kp_pcb is None:
+        # No API server running, run it
+        try:
+            GS.kp_pcb = kipy.KiCad(client_name=f"KiBot ({os.getpid()})", headless=True, file_path=pcb_file)
+        except Exception as e:
+            GS.exit_with_error(f"Error starting KiCad API server: {e}", KIPY_ERROR)
+        atexit
+        atexit.register(close_kipy_pcb)
+    else:
+        # Ask to load this PCB
+        try:
+            GS.kp_pcb.open_document(pcb_file, kipy.proto.common.types.DocumentType.DOCTYPE_PCB)
+        except Exception as e:
+            GS.exit_with_error(f'Error loading PCB file ({pcb_file}): {e}', CORRUPTED_PCB)
+
+    GS.board = board = GS.kp_pcb.get_board()
+
+    # Verify GS.global_work_layer
+    board.kibot_layer_ids = {board.get_layer_name(id): id for id in range(128)}
+    if GS.global_work_layer and GS.global_work_layer not in board.kibot_layer_ids:
+        raise KiPlotConfigurationError(f"Unknown layer used for the global `work_layer` option"
+                                       f" (`{GS.global_work_layer}`)")
+
+    # TODO: kipy doesn't have Get/SetProperties
+
+    if BasePreFlight.get_option('check_zone_fills'):
+        board.refill_zones(block=True)
+
+    # TODO: kipy: is the dimensions workaround needed? Is covered by a test?
+
+    logger.debug("Board loaded")
+    return board
+
+
+def load_board_pn(pcb_file):
+    pcbnew = GS.pn
     try:
         board = _load_board(pcb_file, pcbnew)
         if GS.global_work_layer and board.GetLayerID(GS.global_work_layer) < 0:
             raise KiPlotConfigurationError(f"Unknown layer used for the global `work_layer` option"
                                            f" (`{GS.global_work_layer}`)")
 
-        if (GS.global_invalidate_pcb_text_cache == 'yes' or GS.global_update_pcb_text_cache == 'yes') and GS.ki6:
+        if (GS.global_invalidate_pcb_text_cache == 'yes' or GS.global_update_pcb_text_cache == 'yes'):
             # Workaround for unexpected KiCad behavior:
             # https://gitlab.com/kicad/code/kicad/-/issues/14360
             logger.debug('Current PCB text variables cache: {}'.format(board.GetProperties().items()))
@@ -260,7 +308,7 @@ def load_board(pcb_file=None, forced=False):
                 board = _load_board(pcb_file, pcbnew)
         if BasePreFlight.get_option('check_zone_fills'):
             GS.fill_zones(board)
-        if GS.global_units and GS.ki6:
+        if GS.global_units:
             # In KiCad 6 "dimensions" has units.
             # The default value is DIM_UNITS_MODE_AUTOMATIC.
             # But this has a meaning only in the GUI where you have default units.
