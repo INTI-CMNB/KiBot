@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot
 import os
 import re
-from pcbnew import (GERBER_JOBFILE_WRITER, PLOT_CONTROLLER, IsCopperLayer, Edge_Cuts, PLOT_FORMAT_HPGL,
-                    PLOT_FORMAT_GERBER, PLOT_FORMAT_POST, PLOT_FORMAT_DXF, PLOT_FORMAT_PDF, PLOT_FORMAT_SVG, LSEQ, LSET)
 from .optionable import Optionable
 from .out_base import BaseOutput, VariantOptions
 from .error import PlotError
@@ -21,12 +19,12 @@ from . import log
 logger = log.get_logger()
 
 
-FORMAT_EXTENSIONS = {PLOT_FORMAT_HPGL: 'plt',
-                     PLOT_FORMAT_GERBER: 'gbr',
-                     PLOT_FORMAT_POST: 'ps',
-                     PLOT_FORMAT_DXF: 'dxf',
-                     PLOT_FORMAT_PDF: 'pdf',
-                     PLOT_FORMAT_SVG: 'svg'}
+FORMAT_EXTENSIONS = {GS.PLOT_FORMAT_HPGL: 'plt',
+                     GS.PLOT_FORMAT_GERBER: 'gbr',
+                     GS.PLOT_FORMAT_POST: 'ps',
+                     GS.PLOT_FORMAT_DXF: 'dxf',
+                     GS.PLOT_FORMAT_PDF: 'pdf',
+                     GS.PLOT_FORMAT_SVG: 'svg'}
 
 
 class CustomReport(Optionable):
@@ -121,7 +119,7 @@ class AnyLayerOptions(VariantOptions):
         # We'll come back to this on a per-layer basis
         po.SetSkipPlotNPTH_Pads(False)
         # Scaling/Autoscale
-        if self._plot_format != PLOT_FORMAT_GERBER:
+        if self._plot_format != GS.PLOT_FORMAT_GERBER:
             if self.scaling == AUTO_SCALE:
                 po.SetAutoScale(True)
                 po.SetScale(1)
@@ -140,7 +138,7 @@ class AnyLayerOptions(VariantOptions):
             ext = ext.replace('%n', str(index))
             ext = ext.replace('%N', str(index+1))
             filename = os.path.splitext(filename)[0]+ext
-        if id == Edge_Cuts and self.edge_cut_extension:
+        if id == GS.Edge_Cuts and self.edge_cut_extension:
             filename = os.path.splitext(filename)[0]+self.edge_cut_extension
         if self.uppercase_extensions:
             filename = os.path.splitext(filename)[0]+os.path.splitext(filename)[1].upper()
@@ -150,8 +148,8 @@ class AnyLayerOptions(VariantOptions):
         if GS.ki7 and not self.exclude_edge_layer:
             # In KiCad 7 this is not an option, but we can plot more than one layer
             # Note that this needs KiCad 7.0.1 or newer
-            seq = LSEQ()
-            seq.push_back(Edge_Cuts)
+            seq = GS.pn.LSEQ()
+            seq.push_back(GS.Edge_Cuts)
             seq.push_back(id)
             plot_ctrl.PlotLayers(seq)
             return
@@ -162,14 +160,14 @@ class AnyLayerOptions(VariantOptions):
         if GS.ki7 and GS.kicad_version_n < KICAD_VERSION_7_0_1 and not self.exclude_edge_layer:
             GS.exit_with_error("Plotting the edge layer is not supported by KiCad 7.0.0\n"
                                "Please upgrade KiCad to 7.0.1 or newer", MISSING_TOOL)
-        if GS.ki10 and self._plot_format == PLOT_FORMAT_HPGL:
+        if GS.ki10 and self._plot_format == GS.PLOT_FORMAT_HPGL:
             GS.exit_with_error("HPGL format was discontinued on KiCad 10", MISSING_TOOL)
         # Memorize the list of visible layers
         old_visible = GS.board.GetVisibleLayers()
         # Apply the variants and filters
         exclude = self.filter_pcb_components()
         # fresh plot controller
-        plot_ctrl = PLOT_CONTROLLER(GS.board)
+        plot_ctrl = GS.pn.PLOT_CONTROLLER(GS.board)
         # set up plot options for the whole output
         po = plot_ctrl.GetPlotOptions()
         if GS.global_disable_kicad_cross_on_fab and hasattr(po, "SetCrossoutDNPFPsOnFabLayers"):
@@ -179,15 +177,15 @@ class AnyLayerOptions(VariantOptions):
         # We need to assist KiCad
         create_job = po.GetCreateGerberJobFile()
         if create_job:
-            jobfile_writer = GERBER_JOBFILE_WRITER(GS.board)
+            jobfile_writer = GS.pn.GERBER_JOBFILE_WRITER(GS.board)
         plot_ctrl.SetColorMode(True)
         # Plot every layer in the output
         generated = {}
         layers = Layer.solve(layers)
         # Make visible only the layers we need
         # This is very important when scaling, otherwise the results are controlled by the .kicad_prl (See #407)
-        if self._plot_format != PLOT_FORMAT_GERBER and not self.individual_page_scaling:
-            vis_layers = LSET()
+        if self._plot_format != GS.PLOT_FORMAT_GERBER and not self.individual_page_scaling:
+            vis_layers = GS.pn.LSET()
             for la in layers:
                 vis_layers.addLayer(la._id)
             GS.board.SetVisibleLayers(vis_layers)
@@ -198,16 +196,16 @@ class AnyLayerOptions(VariantOptions):
             if not GS.board.IsLayerEnabled(id):
                 logger.warning(W_NOLAYER+f'Layer "{desc}" ({la.suffix}) isn\'t used')
                 continue
-            if self._plot_format != PLOT_FORMAT_GERBER and self.individual_page_scaling:
+            if self._plot_format != GS.PLOT_FORMAT_GERBER and self.individual_page_scaling:
                 # Only this layer is visible
-                vis_layers = LSET()
+                vis_layers = GS.pn.LSET()
                 vis_layers.addLayer(la._id)
                 GS.board.SetVisibleLayers(vis_layers)
             # Set current layer
             plot_ctrl.SetLayer(id)
             # Skipping NPTH is controlled by whether or not this is
             # a copper layer
-            is_cu = IsCopperLayer(id)
+            is_cu = GS.pn.IsCopperLayer(id)
             po.SetSkipPlotNPTH_Pads(is_cu)
             # Plot single layer to file
             logger.debug("Opening plot file for layer `{}` format `{}`".format(la, self._plot_format))
@@ -255,7 +253,7 @@ class AnyLayerOptions(VariantOptions):
         self._generated_files = generated
 
     def solve_extension(self, layer):
-        if self._plot_format == PLOT_FORMAT_GERBER and self.use_protel_extensions:
+        if self._plot_format == GS.PLOT_FORMAT_GERBER and self.use_protel_extensions:
             return layer._protel_extension
         return FORMAT_EXTENSIONS[self._plot_format]
 
@@ -271,7 +269,7 @@ class AnyLayerOptions(VariantOptions):
             if GS.debug_level > 2:
                 logger.debug('Layer id {} file name {} ({})'.format(id, filename, k_filename))
             targets.append(filename)
-        if self._plot_format == PLOT_FORMAT_GERBER and self.create_gerber_job_file:
+        if self._plot_format == GS.PLOT_FORMAT_GERBER and self.create_gerber_job_file:
             targets.append(self.expand_filename(output_dir, self.gerber_job_file, 'job', 'gbrjob'))
         for report in self.custom_reports:
             targets.append(os.path.join(output_dir, report.output))
@@ -304,7 +302,7 @@ class AnyLayerOptions(VariantOptions):
             self.sketch_pads_on_fab_layers = po.GetSketchPadsOnFabLayers()
             self.sketch_pad_line_width = po.GetSketchPadLineWidth()
         # scaleselection
-        if self._plot_format != PLOT_FORMAT_GERBER:
+        if self._plot_format != GS.PLOT_FORMAT_GERBER:
             sel = po.GetScaleSelection()
             sel = sel if sel < 0 or sel > 4 else 4
             self.scaling = (AUTO_SCALE, 1.0, 1.5, 2.0, 3.0)[sel]
