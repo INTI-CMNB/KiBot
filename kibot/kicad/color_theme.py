@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2025 Salvador E. Tropea
-# Copyright (c) 2022-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -8,7 +8,6 @@ KiCad 6 color theme loader
 """
 import os
 import json
-from pcbnew import BOARD, PCBNEW_LAYER_ID_START, PCB_LAYER_ID_COUNT
 from ..gs import GS
 from ..misc import W_COLORTHEME, W_WRONGCOLOR
 from .config import KiConf
@@ -83,8 +82,8 @@ def load_color_theme(name):
     board = data['board']
     copper = board['copper']
     extra_debug = GS.debug_level >= 3
-    for id in range(PCBNEW_LAYER_ID_START, PCBNEW_LAYER_ID_START+PCB_LAYER_ID_COUNT):
-        c_name = c_name_ori = BOARD.GetStandardLayerName(id)
+    for c_name, id in GS.DEFAULT_LAYER_NAMES.items():
+        c_name_ori = c_name
         c_name = c_name.lower()
         if c_name == 'rescue':
             continue
