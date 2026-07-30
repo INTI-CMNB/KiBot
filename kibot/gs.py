@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2025 Salvador E. Tropea
-# Copyright (c) 2020-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from contextlib import contextmanager
@@ -138,9 +138,11 @@ class GS(object):
     stop_flag = False
     errors_ignored = False    # We ignored at least one error
     keep_temporals = False    # Selected from command line
-    # KiCad API
+    # KiCad API, filled by import_kicad_api() (called by detect_kicad())
     pn = None      # pcbnew module
     kp = None      # kipy (kicad-python) module
+    # kipy details
+    kp_pcb = None  # KiCad object used to load the PCB, I hope it can be unified
     # Maximum recursive replace
     MAXDEPTH = 20
     MAXDEPTH_OUTPUTS = 20

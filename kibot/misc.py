@@ -54,6 +54,7 @@ WARN_AS_ERROR = 36
 CHECK_FIELD = 37
 IGNORED_ERRORS = 38
 GOT_WARNINGS = 39   # Not treated as errors, but using `--fail-on-warnings`
+KIPY_ERROR = 40
 error_level_to_name = ['NONE',
                        'INTERNAL_ERROR',
                        'WRONG_ARGUMENTS',
@@ -93,7 +94,8 @@ error_level_to_name = ['NONE',
                        'WARN_AS_ERROR',
                        'CHECK_FIELD',
                        'IGNORED_ERRORS',
-                       'GOT_WARNINGS'
+                       'GOT_WARNINGS',
+                       'KIPY_ERROR'
                        ]
 KICOST_SUBMODULE = '../submodules/KiCost/src/kicost'
 EXAMPLE_CFG = 'example_template.kibot.yaml'
