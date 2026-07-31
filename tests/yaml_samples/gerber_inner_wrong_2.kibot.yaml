@@ -1,0 +1,37 @@
+# Example KiBot config file for a basic 2-layer board
+kibot:
+  version: 1
+
+outputs:
+
+  - name: 'gerbers'
+    comment: "Gerbers for the Gerber god"
+    type: gerber
+    dir: gerberdir
+    options:
+      # generic layer options
+      exclude_edge_layer: false
+      exclude_pads_from_silkscreen: false
+      use_aux_axis_as_origin: false
+      plot_sheet_reference: false
+      plot_footprint_refs: true
+      plot_footprint_values: true
+      force_plot_invisible_refs_vals: false
+      tent_vias: true
+
+      # gerber options
+      line_width: 0.15
+      subtract_mask_from_silk: true
+      use_protel_extensions: false
+      gerber_precision: 4.6
+      create_gerber_job_file: true
+      use_gerber_x2_attributes: true
+      use_gerber_net_attributes: false
+
+    layers:
+      - layer: GND.Cu
+        suffix: GND_Cu
+        description: 'Ground plane'
+      - layer: Inner.6
+        suffix: Signal1
+        description: 'Inner signals 1'

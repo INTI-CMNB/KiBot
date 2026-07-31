@@ -118,6 +118,14 @@ def test_gerber_inner_wrong(test_dir):
     ctx.clean_up()
 
 
+def test_gerber_inner_wrong_2(test_dir):
+    prj = 'good-project'
+    ctx = context.TestContext(test_dir, prj, 'gerber_inner_wrong_2')
+    ctx.run(PLOT_ERROR)
+    assert ctx.search_err('is not valid for this board')
+    ctx.clean_up()
+
+
 def compose_fname(dir, prefix, layer, suffix, ext='gbr'):
     return os.path.join(dir, prefix+'-'+layer+suffix+'.'+ext)
 
