@@ -31,17 +31,12 @@ def create_print_priority(board):
     global LAYER_PRIORITY
     if len(LAYER_PRIORITY) > 0:
         return
-    LAYER_PRIORITY = {board.GetLayerID(name): c for c, name in enumerate(LAYER_ORDER)}
+    get_id = board.GetLayerID if GS.pn else GS.kp.util.board_layer.layer_from_canonical_name
+    LAYER_PRIORITY = {get_id(name): c for c, name in enumerate(LAYER_ORDER)}
 
 
 def get_priority(id):
     return LAYER_PRIORITY.get(id, 1e6)
-
-
-def inner_id_in_range(id, cnt):
-    if GS.ki9:
-        return GS.layer_is_inner(id) and int(id/2) < cnt
-    return id > 0 and id < cnt-1
 
 
 class Layer(Optionable):
@@ -122,9 +117,8 @@ class Layer(Optionable):
     @classmethod
     def solve(cls, values):
         board = GS.board
-        layer_cnt = 2
         if board:
-            layer_cnt = board.GetCopperLayerCount()
+            board.GetCopperLayerCount() if GS.pn is not None else board.get_copper_layer_count()
             create_print_priority(board)
         # Get the list of used layers from the board
         # Used for 'all' but also to validate the layer names
@@ -146,9 +140,6 @@ class Layer(Optionable):
             for layer in values:
                 if isinstance(layer, Layer):
                     layer._get_layer_id_from_name()
-                    # Check if the layer is in use
-                    if layer._is_inner and not inner_id_in_range(layer._id, layer_cnt):
-                        raise PlotError("Inner layer `{}` is not valid for this board".format(layer))
                     layer.fix_protel_ext()
                     new_vals.append(layer)
                 elif isinstance(layer, int):
@@ -183,40 +174,75 @@ class Layer(Optionable):
         raise AssertionError("Unimplemented layer type "+str(type(values)))
 
     @staticmethod
-    def _get_copper():
+    def _get_copper_pn():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().CuStack()}
 
     @staticmethod
-    def _get_inners():
+    def _get_copper_kp():
+        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+                if GS.kp.util.board_layer.is_copper_layer(id)}
+
+    @staticmethod
+    def _get_inners_pn():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().CuStack()
                 if id != GS.B_Cu and id != GS.F_Cu}
 
     @staticmethod
-    def _get_outers():
+    def _get_inners_kp():
+        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+                if id != GS.B_Cu and id != GS.F_Cu and GS.kp.util.board_layer.is_copper_layer(id)}
+
+    @staticmethod
+    def _get_outers_pn():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().CuStack()
                 if id == GS.B_Cu or id == GS.F_Cu}
 
     @staticmethod
-    def _get_technical():
-        if GS.ki9:
-            return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().AllTechMask().Seq()}
+    def _get_outers_kp():
+        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers() if id == GS.B_Cu or id == GS.F_Cu}
+
+    @staticmethod
+    def _get_technical_pn_k6():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().Technicals()}
 
     @staticmethod
-    def _get_user():
-        b = GS.board
-        enabled = b.GetEnabledLayers()
-        if GS.ki9:
-            layers = {b.GetLayerName(id): id for id in enabled.UserMask().Seq()}
-            # Applying UserDefinedLayersMask() doesn't work as expected it returns all possible user layers
-            # This is why we need the "if id ..." and this why we need to get the list in 2 steps
-            layers.update({b.GetLayerName(id): id for id in enabled.UserDefinedLayersMask().Seq() if id in enabled.Seq()})
-            return layers
+    def _get_technical_pn_k9():
+        return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().AllTechMask().Seq()}
+
+    @staticmethod
+    def _get_technical_kp():
+        # All but copper and user
+        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+                if not GS.kp.util.board_layer.is_copper_layer(id) and
+                not GS.kp.util.board_layer.canonical_name(id).startswith('User.')}
+
+    @staticmethod
+    def _get_user_pn_k6():
+        enabled = GS.board.GetEnabledLayers()
         return {GS.board.GetLayerName(id): id for id in enabled.Users()}
 
     @staticmethod
-    def _set_pcb_layers():
+    def _get_user_pn_k9():
+        b = GS.board
+        enabled = b.GetEnabledLayers()
+        layers = {b.GetLayerName(id): id for id in enabled.UserMask().Seq()}
+        # Applying UserDefinedLayersMask() doesn't work as expected it returns all possible user layers
+        # This is why we need the "if id ..." and this why we need to get the list in 2 steps
+        layers.update({b.GetLayerName(id): id for id in enabled.UserDefinedLayersMask().Seq() if id in enabled.Seq()})
+        return layers
+
+    @staticmethod
+    def _get_user_kp():
+        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+                if GS.kp.util.board_layer.canonical_name(id).startswith('User.')}
+
+    @staticmethod
+    def _set_pcb_layers_pn():
         Layer._pcb_layers = {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().Seq()}
+
+    @staticmethod
+    def _set_pcb_layers_kp():
+        Layer._pcb_layers = {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()}
 
     def get_default_suffix(self):
         if GS.global_layer_defaults:
@@ -241,7 +267,7 @@ class Layer(Optionable):
         else:
             layer._id = name
             layer._is_inner = GS.layer_is_inner(name)
-            name = GS.board.GetLayerName(name)
+            name = GS.board.GetLayerName(name) if GS.pn is not None else GS.board.get_layer_name(name)
             layer.layer = name
         layer.suffix = layer.get_default_suffix()
         layer.description = layer.get_default_description()
@@ -257,12 +283,18 @@ class Layer(Optionable):
         return layers
 
     @staticmethod
-    def _set_plot_layers():
+    def _set_plot_layers_pn():
         board = GS.board
         enabled = board.GetEnabledLayers().Seq()
         for id in board.GetPlotOptions().GetLayerSelection().Seq():
             if id in enabled:
                 Layer._plot_layers[board.GetLayerName(id)] = id
+
+    @staticmethod
+    def _set_plot_layers_kp():
+        # TODO: kipy NOT IMPLEMENTED!!!
+        # Here we just get all of them, not good
+        Layer._plot_layers = {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()}
 
     def _get_layer_id_from_name(self):
         """ Get the pcbnew layer from the string provided in the config """
@@ -281,17 +313,20 @@ class Layer(Optionable):
                 # 3) Inner.N names
                 m = match(r"^Inner\.([0-9]+)$", self.layer)
                 if not m:
-                    raise KiPlotConfigurationError("Malformed inner layer name: `{}`, use Inner.N".format(self.layer))
+                    raise KiPlotConfigurationError(f"Malformed inner layer name: `{self.layer}`, use Inner.N")
                 id = int(m.group(1))
-                self._id = (id+1)*2 if GS.ki9 else id
+                self._id = GS.ordinal_to_copper_layer(id)
+                if self._id == GS.B_Cu or self._id == GS.F_Cu:
+                    raise PlotError(f"Inner layer `{self.layer}` is not valid for this board")
                 self._is_inner = True
             else:
                 raise KiPlotConfigurationError("Unknown layer name: `{}`".format(self.layer))
         return self._id
 
-    def is_copper(self):
-        if GS.pn is not None:
-            return self._id >= GS.F_Cu and self._id <= GS.B_Cu
+    def is_copper_pn(self):
+        return self._id >= GS.F_Cu and self._id <= GS.B_Cu
+
+    def is_copper_kp(self):
         return GS.kp.util.board_layer.is_copper_layer(self._id)
 
     def is_top(self):
@@ -306,7 +341,42 @@ class Layer(Optionable):
         return "{} ('{}' {})".format(self.layer, self.description, self.suffix)
 
     @staticmethod
-    def id2def_name(id):
-        if GS.ki5:
-            return GS.ID_2_DEFAULT_NAME[id]
-        return GS.pn.LayerName(id) if GS.pn is not None else GS.kp.canonical_name(id)
+    def id2def_name_k5(id):
+        return GS.ID_2_DEFAULT_NAME[id]
+
+    @staticmethod
+    def id2def_name_k6(id):
+        return GS.pn.LayerName(id)
+
+    @staticmethod
+    def id2def_name_kp(id):
+        return GS.kp.canonical_name(id)
+
+
+if GS.pn is not None:
+    Layer._set_pcb_layers = Layer._set_pcb_layers_pn
+    Layer._get_copper = Layer._get_copper_pn
+    Layer._get_inners = Layer._get_inners_pn
+    Layer._get_outers = Layer._get_outers_pn
+    Layer._set_plot_layers = Layer._set_plot_layers_pn
+    Layer.is_copper = Layer.is_copper_pn
+    if GS.ki9:
+        Layer._get_technical = Layer._get_technical_pn_k9
+        Layer._get_user = Layer._get_user_pn_k9
+    else:
+        Layer._get_technical = Layer._get_technical_pn_k6
+        Layer._get_user = Layer._get_user_pn_k6
+    if GS.ki5:
+        Layer.id2def_name = Layer.id2def_name_k5
+    else:
+        Layer.id2def_name = Layer.id2def_name_k6
+else:
+    Layer._set_pcb_layers = Layer._set_pcb_layers_kp
+    Layer._get_copper = Layer._get_copper_kp
+    Layer._get_inners = Layer._get_inners_kp
+    Layer._get_outers = Layer._get_outers_kp
+    Layer._get_technical = Layer._get_technical_kp
+    Layer._get_user = Layer._get_user_kp
+    Layer._set_plot_layers = Layer._set_plot_layers_kp
+    Layer.is_copper = Layer.is_copper_kp
+    Layer.id2def_name = Layer.id2def_name_kp

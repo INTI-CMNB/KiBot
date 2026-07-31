@@ -1242,32 +1242,89 @@ class GS(object):
         return f'({GS.to_mm(pos.x)}, {GS.to_mm(pos.y)}) mm'
 
     @staticmethod
-    def layer_is_inner(id):
-        return pcbnew.IsInnerCopperLayer(id) if GS.ki9 else id > pcbnew.F_Cu and id < pcbnew.B_Cu
+    def set_version_pointers():
+        """ Used to setup function pointers according to the API and its version """
+        if GS.pn is not None:
+            if GS.ki9:
+                GS.layer_is_inner = GS.layer_is_inner_k9
+                GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
+                GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k9
+            else:
+                GS.layer_is_inner = GS.layer_is_inner_k5
+                GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
+                GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
+        elif GS.kp is not None:
+            GS.layer_is_inner = GS.layer_is_inner_kp
+            GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_kp
+            GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_kp
+
+    @staticmethod
+    def layer_is_inner_k5(id):
+        return id > GS.F_Cu and id < GS.B_Cu
+
+    @staticmethod
+    def layer_is_inner_k9(id):
+        return GS.pn.IsInnerCopperLayer(id)
+
+    @staticmethod
+    def layer_is_inner_kp(id):
+        return GS.kp.util.board_layer.is_copper_layer(id) and id != GS.F_Cu and id != GS.B_Cu
 
     @staticmethod
     def inner_layer_index(id):
         return int(id/2-1) if GS.ki9 else id-pcbnew.F_Cu+1
 
     @staticmethod
-    def copper_layer_to_ordinal(n):
-        if GS.ki9:
-            ordinal = pcbnew.CopperLayerToOrdinal(n)
-            # Adjust to the current PCB
-            if ordinal == pcbnew.CopperLayerToOrdinal(pcbnew.B_Cu):
-                ordinal = GS.board.GetCopperLayerCount()-1
-            return ordinal
-        # <= 8
-        return GS.board.GetCopperLayerCount()-1 if n == pcbnew.B_Cu else n
+    def copper_layer_to_ordinal_k5(n):
+        """ Converts a KiCad layer number to its position.
+            F.Cu will be 0 and B.Cu the last """
+        return GS.board.GetCopperLayerCount()-1 if n == GS.B_Cu else n
 
     @staticmethod
-    def ordinal_to_copper_layer(n):
-        # Only for KiCad 9+
-        if n == GS.board.GetCopperLayerCount()-1:
-            return pcbnew.B_Cu
-        if n == 0:
-            return pcbnew.F_Cu
+    def copper_layer_to_ordinal_k9(n):
+        """ Converts a KiCad layer number to its position.
+            F.Cu will be 0 and B.Cu the last """
+        ordinal = pcbnew.CopperLayerToOrdinal(n)
+        # Adjust to the current PCB
+        if ordinal == pcbnew.CopperLayerToOrdinal(pcbnew.B_Cu):
+            ordinal = GS.board.GetCopperLayerCount()-1
+        return ordinal
+
+    @staticmethod
+    def copper_layer_to_ordinal_kp(n):
+        """ Converts a KiCad layer number to its position.
+            F.Cu will be 0 and B.Cu the last """
+        return GS.board.get_copper_layer_count()-1 if n == GS.B_Cu else n
+
+    @staticmethod
+    def ordinal_to_copper_layer_k9(n):
+        """ From an ordinal layer position where F.Cu is 0 and B.Cu is the last
+            returns the KiCad layer number """
+        if n >= GS.board.GetCopperLayerCount()-1:
+            return GS.B_Cu
+        if n <= 0:
+            return GS.F_Cu
         return (n+1)*2
+
+    @staticmethod
+    def ordinal_to_copper_layer_k5(n):
+        """ From an ordinal layer position where F.Cu is 0 and B.Cu is the last
+            returns the KiCad layer number """
+        if n >= GS.board.GetCopperLayerCount()-1:
+            return GS.B_Cu
+        if n <= 0:
+            return GS.F_Cu
+        return n
+
+    @staticmethod
+    def ordinal_to_copper_layer_kp(n):
+        """ From an ordinal layer position where F.Cu is 0 and B.Cu is the last
+            returns the KiCad layer number """
+        if n >= GS.board.get_copper_layer_count()-1:
+            return GS.B_Cu
+        if n <= 0:
+            return GS.F_Cu
+        return GS.kp.util.board_layer.layer_from_canonical_name(f'In{n}.Cu')
 
     @staticmethod
     def get_via_width(via):

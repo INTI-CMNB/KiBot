@@ -480,6 +480,7 @@ def get_layers_info():
 def detect_kicad():
     import_kicad_api()
     get_kicad_version()
+    GS.set_version_pointers()
     get_layers_info()
 
     # Setup details dependent on the API version
