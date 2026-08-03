@@ -1321,6 +1321,8 @@ outputs:
   # DXF Schematic Print (Drawing Exchange Format):
   # This output is what you get from the 'File/Plot' menu in eeschema.
   # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
+  # Note that only for KiCad 10 and newer the `output` option controls the names of all sub-sheets.
+  # In this case %f and %F contains the project and the sub-sheet path inside the hierarchy
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'dxf_sch_print_example'
     comment: 'Exports the schematic to a format commonly used for CAD software.'
@@ -1329,17 +1331,20 @@ outputs:
     options:
       # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
-      # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
+      # [boolean=false] Use the background color from the `color_theme`
       background_color: false
-      # [string=''] Color theme used, this must exist in the KiCad config (KiCad 6)
+      # [string=''] Color theme used, this must exist in the KiCad config
       color_theme: ''
-      # [string='KiCad Font'] Name for the default font. Only for KiCad 9 and newer
+      # [string='KiCad Font'] Name for the default font (KiCad 9+)
       default_font: 'KiCad Font'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [boolean=false] Draw hop over at wire crossings (KiCad 10+)
+      # Note that you must have a project and the hop overs enabled in the GUI
+      draw_hop_over: false
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -1859,23 +1864,26 @@ outputs:
   # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'hpgl_sch_print_example'
-    comment: 'Exports the schematic to the most common plotter format.'
+    comment: 'Exports the schematic to the most common plotter format, only for KiCad 9 and older.'
     type: 'hpgl_sch_print'
     dir: 'Example/hpgl_sch_print_dir'
     options:
       # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
-      # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
+      # [boolean=false] Use the background color from the `color_theme`
       background_color: false
-      # [string=''] Color theme used, this must exist in the KiCad config (KiCad 6)
+      # [string=''] Color theme used, this must exist in the KiCad config
       color_theme: ''
-      # [string='KiCad Font'] Name for the default font. Only for KiCad 9 and newer
+      # [string='KiCad Font'] Name for the default font (KiCad 9+)
       default_font: 'KiCad Font'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [boolean=false] Draw hop over at wire crossings (KiCad 10+)
+      # Note that you must have a project and the hop overs enabled in the GUI
+      draw_hop_over: false
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -1885,13 +1893,13 @@ outputs:
       frame: true
       # [boolean=false] Generate a monochromatic output
       monochrome: false
-      # [string='bottom_left'] [bottom_left,centered,page_fit,content_fit] Origin and scale
+      # [string='bottom_left'] [bottom_left,centered,page_fit,content_fit] Origin and scale (Not for KiCad 10+)
       origin: 'bottom_left'
       # [string='%f-%i%I%v.%x'] Filename for the output HPGL (%i=schematic, %x=plt). Affected by global options
       output: '%f-%i%I%v.%x'
       # [string=''] List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3`
       pages: ''
-      # [number=0.4826] Pen size (diameter) [mm]
+      # [number=0.4826] Pen size (diameter) [mm] (Not for KiCad 10+)
       pen_size: 0.4826
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -4112,22 +4120,35 @@ outputs:
     options:
       # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
-      # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
+      # [string=''] Override the AUTHOR KiCad variable, used for PDF metadata.
+      # If blank the KiCad text variable is used
+      author: ''
+      # [boolean=false] Use the background color from the `color_theme`
       background_color: false
-      # [string=''] Color theme used, this must exist in the KiCad config (KiCad 6)
+      # [string=''] Color theme used, this must exist in the KiCad config
       color_theme: ''
-      # [string='KiCad Font'] Name for the default font. Only for KiCad 9 and newer
+      # [string='KiCad Font'] Name for the default font (KiCad 9+)
       default_font: 'KiCad Font'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [boolean=false] Draw hop over at wire crossings (KiCad 10+)
+      # Note that you must have a project and the hop overs enabled in the GUI
+      draw_hop_over: false
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
+      # [boolean=false] Do not generate clickable links for hierarchical elements (KiCad 10+)
+      exclude_hierarchical_links: false
+      # [boolean=false] Do not generate metadata from AUTHOR and SUBJECT KiCad variables.
+      # You can also use the `author` and `subject` options to define the metadata (KiCad 10+)
+      exclude_metadata: false
+      # [boolean=false] Do not generate property popups (KiCad 10+)
+      exclude_property_popups: false
       # [boolean=true] Include the frame and title block
       frame: true
       # [boolean=false] Generate a monochromatic output
@@ -4145,6 +4166,9 @@ outputs:
       # This option works only when you print the toplevel sheet of a project and the project
       # file is available
       sheet_reference_layout: ''
+      # [string=''] Override the SUBJECT KiCad variable, used for PDF metadata.
+      # If blank the KiCad text variable is used
+      subject: ''
       # [string=''] Text used to replace the sheet title. %VALUE expansions are allowed.
       # If it starts with `+` the text is concatenated
       title: ''
@@ -4386,6 +4410,8 @@ outputs:
   # PS Schematic Print (Postscript):
   # This output is what you get from the 'File/Plot' menu in eeschema.
   # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
+  # Note that only for KiCad 10 and newer the `output` option controls the names of all sub-sheets.
+  # In this case %f and %F contains the project and the sub-sheet path inside the hierarchy
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'ps_sch_print_example'
     comment: 'Exports the schematic in postscript. Suitable for printing.'
@@ -4394,17 +4420,20 @@ outputs:
     options:
       # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
-      # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
+      # [boolean=false] Use the background color from the `color_theme`
       background_color: false
-      # [string=''] Color theme used, this must exist in the KiCad config (KiCad 6)
+      # [string=''] Color theme used, this must exist in the KiCad config
       color_theme: ''
-      # [string='KiCad Font'] Name for the default font. Only for KiCad 9 and newer
+      # [string='KiCad Font'] Name for the default font (KiCad 9+)
       default_font: 'KiCad Font'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [boolean=false] Draw hop over at wire crossings (KiCad 10+)
+      # Note that you must have a project and the hop overs enabled in the GUI
+      draw_hop_over: false
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
@@ -5162,7 +5191,9 @@ outputs:
   # SVG Schematic Print:
   # This is a format to document your schematic.
   # This output is what you get from the 'File/Plot' menu in eeschema.
-  # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
+  # Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable.
+  # Note that only for KiCad 10 and newer the `output` option controls the names of all sub-sheets.
+  # In this case %f and %F contains the project and the sub-sheet path inside the hierarchy
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'svg_sch_print_example'
     comment: 'Exports the schematic in a vectorized graphics format.'
@@ -5171,17 +5202,20 @@ outputs:
     options:
       # [boolean=true] Generate with all hierarchical sheets, unless `pages` is specified
       all_pages: true
-      # [boolean=false] Use the background color from the `color_theme` (KiCad 6)
+      # [boolean=false] Use the background color from the `color_theme`
       background_color: false
-      # [string=''] Color theme used, this must exist in the KiCad config (KiCad 6)
+      # [string=''] Color theme used, this must exist in the KiCad config
       color_theme: ''
-      # [string='KiCad Font'] Name for the default font. Only for KiCad 9 and newer
+      # [string='KiCad Font'] Name for the default font (KiCad 9+)
       default_font: 'KiCad Font'
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [boolean=false] Draw hop over at wire crossings (KiCad 10+)
+      # Note that you must have a project and the hop overs enabled in the GUI
+      draw_hop_over: false
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

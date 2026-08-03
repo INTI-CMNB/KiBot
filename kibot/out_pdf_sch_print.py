@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -25,6 +25,19 @@ class PDF_SCH_PrintOptions(Any_SCH_PrintOptions):
         with document:
             self.output = GS.def_global_output
             """ Filename for the output PDF (%i=schematic, %x=pdf)"""
+            self.exclude_property_popups = False
+            """ Do not generate property popups (KiCad 10+) """
+            self.exclude_hierarchical_links = False
+            """ Do not generate clickable links for hierarchical elements (KiCad 10+) """
+            self.exclude_metadata = False
+            """ Do not generate metadata from AUTHOR and SUBJECT KiCad variables.
+                You can also use the `author` and `subject` options to define the metadata (KiCad 10+) """
+            self.author = ''
+            """ Override the AUTHOR KiCad variable, used for PDF metadata.
+                If blank the KiCad text variable is used """
+            self.subject = ''
+            """ Override the SUBJECT KiCad variable, used for PDF metadata.
+                If blank the KiCad text variable is used """
         super().__init__()
         self._expand_ext = 'pdf'
         self._exit_error = PDF_SCH_PRINT

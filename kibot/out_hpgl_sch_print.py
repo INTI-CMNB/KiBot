@@ -26,9 +26,9 @@ class HPGL_SCH_PrintOptions(Any_SCH_PrintOptions):
             self.output = GS.def_global_output
             """ Filename for the output HPGL (%i=schematic, %x=plt)"""
             self.origin = 'bottom_left'
-            """ [bottom_left,centered,page_fit,content_fit] Origin and scale """
+            """ [bottom_left,centered,page_fit,content_fit] Origin and scale (Not for KiCad 10+) """
             self.pen_size = 0.4826
-            """ Pen size (diameter) [mm] """
+            """ Pen size (diameter) [mm] (Not for KiCad 10+) """
         super().__init__()
         self._expand_ext = 'plt'
         self._exit_error = HPGL_SCH_PRINT
@@ -41,7 +41,7 @@ class HPGL_SCH_PrintOptions(Any_SCH_PrintOptions):
 @output_class
 class HPGL_SCH_Print(BaseOutput):  # noqa: F821
     """ HPGL Schematic Print (Hewlett & Packard Graphics Language)
-        Exports the schematic to the most common plotter format.
+        Exports the schematic to the most common plotter format, only for KiCad 9 and older.
         This output is what you get from the 'File/Plot' menu in eeschema.
         Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable """
     __doc__ += FONT_HELP_TEXT

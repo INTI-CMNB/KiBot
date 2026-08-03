@@ -9,6 +9,8 @@ DXF Schematic Print (Drawing Exchange Format)
 Exports the schematic to a format commonly used for CAD software.
 This output is what you get from the 'File/Plot' menu in eeschema. |br|
 Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
+Note that only for KiCad 10 and newer the `output` option controls the names of all sub-sheets. |br|
+In this case %f and %F contains the project and the sub-sheet path inside the hierarchy
 
 .. note::
    If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|

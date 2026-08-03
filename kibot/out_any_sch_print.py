@@ -4,10 +4,13 @@
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 import os
+import re
+from shutil import move
 from .error import KiPlotConfigurationError
 from .gs import GS
+from .kiplot import run_command
 from .out_base import VariantOptions
-from .misc import EMBED_PREFIX
+from .misc import EMBED_PREFIX, MISSING_TOOL
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 
@@ -114,9 +117,9 @@ class Any_SCH_PrintOptions(VariantOptions):
             self.pages = ''
             """ List of comma separarted pages to print. Ranges are allowed i.e.: `3-5` or `3-` or `-3` """
             self.color_theme = ''
-            """ Color theme used, this must exist in the KiCad config (KiCad 6) """
+            """ Color theme used, this must exist in the KiCad config """
             self.background_color = False
-            """ Use the background color from the `color_theme` (KiCad 6) """
+            """ Use the background color from the `color_theme` """
             self.title = ''
             """ Text used to replace the sheet title. %VALUE expansions are allowed.
                 If it starts with `+` the text is concatenated """
@@ -127,7 +130,10 @@ class Any_SCH_PrintOptions(VariantOptions):
                 This option works only when you print the toplevel sheet of a project and the project
                 file is available """
             self.default_font = 'KiCad Font'
-            """ Name for the default font. Only for KiCad 9 and newer """
+            """ Name for the default font (KiCad 9+) """
+            self.draw_hop_over = False
+            """ Draw hop over at wire crossings (KiCad 10+)
+                Note that you must have a project and the hop overs enabled in the GUI """
         super().__init__()
         self.add_to_doc('variant', "Not fitted components are crossed")
         self._expand_id = 'schematic'
@@ -168,11 +174,100 @@ class Any_SCH_PrintOptions(VariantOptions):
         except ValueError as e:
             raise KiPlotConfigurationError('Error parsing list of pages: '+str(e))
 
+    def run_kiauto(self, command, fmt, sch_file, name):
+        cmd = [command, 'export', '--file_format', fmt, '-o', name]
+        if self.monochrome:
+            cmd.append('--monochrome')
+        if not self.frame:
+            cmd.append('--no_frame')
+        if self._pages:
+            cmd.append('--pages')
+            cmd.append(self._pages)
+        elif self.all_pages:
+            cmd.append('--all_pages')
+        if self.color_theme:
+            cmd.extend(['--color_theme', self.color_theme])
+        if self.background_color:
+            cmd.append('--background_color')
+        if hasattr(self, '_origin'):
+            cmd.extend(['--hpgl_origin', str(self._origin)])
+        if hasattr(self, 'pen_size'):
+            cmd.extend(['--hpgl_pen_size', str(self.pen_size)])
+        if self.default_font:
+            cmd.extend(['--default_font', self.default_font])
+        cmd.extend([sch_file, os.path.dirname(name)])
+        self.exec_with_retry(self.add_extra_options(cmd), self._exit_error)
+
+    def run_kicad_cli(self, command, fmt, sch_file, name):
+        cmd = [command, 'sch', 'export', fmt, '-o', name if fmt == 'pdf' else os.path.dirname(name)]
+        if self.monochrome:
+            cmd.append('--black-and-white')
+        if not self.frame:
+            cmd.append('--exclude-drawing-sheet')
+        if self._pages:
+            cmd.append('--pages')
+            cmd.append(self._pages)
+        elif not self.all_pages:
+            cmd.append('--pages')
+            cmd.append('1')
+        elif self.color_theme:
+            cmd.extend(['--theme', self.color_theme])
+        if not self.background_color and fmt != 'dxf':
+            cmd.append('--no-background-color')
+        if self.default_font:
+            cmd.extend(['--default-font', self.default_font])
+        ki_variant = self.kicad_variant_name()
+        if ki_variant:
+            cmd.extend('--variant', ki_variant)
+        if self.draw_hop_over:
+            cmd.append('--draw-hop-over')
+        if fmt == 'pdf':
+            if self.exclude_property_popups:
+                cmd.append('--exclude-pdf-property-popups')
+            if self.exclude_hierarchical_links:
+                cmd.append('--exclude-pdf-hierarchical-links')
+            if self.exclude_metadata:
+                cmd.append('--exclude-pdf-metadata')
+            if self.author:
+                cmd.extend(['--define-var', 'AUTHOR='+self.author])
+            if self.subject:
+                cmd.extend(['--define-var', 'SUBJECT='+self.subject])
+        cmd.append(sch_file)
+        res = run_command(cmd, err_lvl=self._exit_error)
+        # Look for messages about missing fonts
+        for match in re.finditer(r"Font '(.*)' not found; substituting '(.*)'", res):
+            logger.warning(f'Missing font `{match.group(1)}`, using `{match.group(2)}`')
+        # For most formats the output names are imposed by KiCad
+        if fmt != 'pdf':
+            files = [match.group(1) for match in re.finditer(r"Plotted to '(.*)'\.", res)]
+            # We always have at least one output
+            if not len(files):
+                raise KiPlotConfigurationError("Unable to find generated file names")
+            # Rename the root
+            logger.debug(f"Root: {files[0]} -> {name}")
+            move(files[0], name)
+            # Now rename the rest
+            if len(files) > 1:
+                sch_file = GS.sch_file
+                for f in files[1:]:
+                    GS.set_sch(f)
+                    target = self.expand_filename_both(self.output, is_sch=True)
+                    target = os.path.realpath(os.path.join(self._parent.output_dir, target))
+                    if target == f:
+                        logger.debug(f"Same name: {f}")
+                    if target == name:
+                        logger.warning(f"Multiple sheets printed with the same name: {target}")
+                        os.remove(f)
+                        continue
+                    logger.debug(f"Sub-sheet: {f} -> {target}")
+                    move(f, target)
+                GS.set_sch(sch_file)
+
     def run(self, name):
         if not self.output:
             name = os.path.join(name, GS.sch_basename+'.'+self._expand_ext)
         super().run(name)
-        command = self.ensure_tool('KiAuto')
+        command = self.ensure_tool('KiAuto') if not GS.ki10 else GS.kicad_cli
 
         # This code has two purposes:
         # 1. Allow specifying a different worksheet
@@ -204,28 +299,14 @@ class Any_SCH_PrintOptions(VariantOptions):
                 self.set_title(self.title, sch=True, propagate=self.title_propagate)
             sch_file = self.save_tmp_sch_if_variant(force=self.title or replaced_images)
             fmt = 'hpgl' if self._expand_ext == 'plt' else self._expand_ext
-            cmd = [command, 'export', '--file_format', fmt, '-o', name]
-            if self.monochrome:
-                cmd.append('--monochrome')
-            if not self.frame:
-                cmd.append('--no_frame')
-            if self._pages:
-                cmd.append('--pages')
-                cmd.append(self._pages)
-            elif self.all_pages:
-                cmd.append('--all_pages')
-            if self.color_theme:
-                cmd.extend(['--color_theme', self.color_theme])
-            if self.background_color:
-                cmd.append('--background_color')
-            if hasattr(self, '_origin'):
-                cmd.extend(['--hpgl_origin', str(self._origin)])
-            if hasattr(self, 'pen_size'):
-                cmd.extend(['--hpgl_pen_size', str(self.pen_size)])
-            if self.default_font:
-                cmd.extend(['--default_font', self.default_font])
-            cmd.extend([sch_file, os.path.dirname(name)])
-            self.exec_with_retry(self.add_extra_options(cmd), self._exit_error)
+
+            if GS.ki10:
+                if fmt == 'hpgl':
+                    GS.exit_with_error("HPGL format was discontinued on KiCad 10", MISSING_TOOL)
+                self.run_kicad_cli(command, fmt, sch_file, name)
+            else:
+                self.run_kiauto(command, fmt, sch_file, name)
+
             if self.title:
                 self.restore_title(sch=True)
             if replaced_images:

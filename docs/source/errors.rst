@@ -43,3 +43,4 @@ Supported error levels
 - 37: CHECK_FIELD
 - 38: IGNORED_ERRORS
 - 39: GOT_WARNINGS
+- 40: KIPY_ERROR

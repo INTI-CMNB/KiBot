@@ -14,7 +14,7 @@ Dependencies:
 """
 from .gs import GS
 from .out_any_sch_print import Any_SCH_PrintOptions
-from .misc import SVG_SCH_PRINT, FONT_HELP_TEXT
+from .misc import SVG_SCH_PRINT, FONT_HELP_TEXT, MULTI_SCH_NAME
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 
@@ -37,8 +37,8 @@ class SVG_SCH_Print(BaseOutput):  # noqa: F821
         Exports the schematic in a vectorized graphics format.
         This is a format to document your schematic.
         This output is what you get from the 'File/Plot' menu in eeschema.
-        Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable """
-    __doc__ += FONT_HELP_TEXT
+        Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable. """
+    __doc__ += MULTI_SCH_NAME+FONT_HELP_TEXT
 
     def __init__(self):
         super().__init__()

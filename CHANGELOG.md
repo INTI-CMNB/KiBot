@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [1.9.2] - Unreleased
+### Added
+- *SCH Print:
+  - 'draw_hop_over` to draw it at wire crossings
+  - Better sub-sheet names handling for KiCad 10+
+- PDF SCH Print:
+  - 'exclude_property_popups': no properties popups (smaller size)
+  - 'exclude_hierarchical_links': no links to sub-sheets
+  - 'exclude_metadata': no metadata
+  - 'author': overrides the AUTHOR
+  - 'subject': overrides the SUBJECT
+
 ## Fixed
 - Quick Start: avoid including HPGL for KiCad 10
 - KiBot Check:

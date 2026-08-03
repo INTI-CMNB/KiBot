@@ -1,5 +1,5 @@
-56 outputs types with a total of 2274 different parameters
-Single type parameters: 2083 (92 %)
+56 outputs types with a total of 2284 different parameters
+Single type parameters: 2093 (92 %)
 Multi type parameters: 191 (8 %)
 Average parameters: 41
 Maximum number of parameters: 218
@@ -7,8 +7,8 @@ Minimum number of parameters: 14
 Histogram:
   0-  9: 
  10- 19: *****
- 20- 29: ************************
- 30- 39: **********
+ 20- 29: **********************
+ 30- 39: ************
  40- 49: *********
  50- 59: *
  60- 69: **
@@ -45,20 +45,20 @@ Outputs sorted by parameters:
 - compress: 26
 - ipc2581: 26
 - stencil_3d: 26
-- dxf_sch_print: 27
 - kikit_present: 27
 - navigate_results: 27
 - navigate_results_rb: 27
-- pdf_sch_print: 27
-- ps_sch_print: 27
 - step: 27
-- svg_sch_print: 27
 - bom_labels: 28
+- dxf_sch_print: 28
+- ps_sch_print: 28
 - stencil_for_jig: 28
-- hpgl_sch_print: 29
+- svg_sch_print: 28
 - kiri: 29
+- hpgl_sch_print: 30
 - copy_files: 31
 - pdf_pcb_print: 31
+- pdf_sch_print: 33
 - position: 33
 - svg_pcb_print: 33
 - gerb_drill: 34
@@ -153,8 +153,8 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  978
--            Boolean:  580
+-             String:  980
+-            Boolean:  588
 -             Number:  310
 - ListStringSingular:  309
 -             Choice:  115
@@ -169,8 +169,8 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  810 
--            Boolean:  510 
+-             String:  812 
+-            Boolean:  518 
 - ListStringSingular:  305 
 -             Number:  216 
 -             Choice:  112 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2673 different parameters
-Single type parameters: 2456 (92 %)
+97 totals types with a total of 2683 different parameters
+Single type parameters: 2466 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -423,8 +423,8 @@ Minimum number of parameters: 1
 Histogram:
   0-  9: **************************
  10- 19: *************
- 20- 29: ******************************
- 30- 39: ***********
+ 20- 29: ****************************
+ 30- 39: *************
  40- 49: *********
  50- 59: *
  60- 69: **
@@ -501,20 +501,20 @@ Totals sorted by parameters:
 - compress: 26
 - ipc2581: 26
 - stencil_3d: 26
-- dxf_sch_print: 27
 - kikit_present: 27
 - navigate_results: 27
 - navigate_results_rb: 27
-- pdf_sch_print: 27
-- ps_sch_print: 27
 - step: 27
-- svg_sch_print: 27
 - bom_labels: 28
+- dxf_sch_print: 28
+- ps_sch_print: 28
 - stencil_for_jig: 28
-- hpgl_sch_print: 29
+- svg_sch_print: 28
 - kiri: 29
+- hpgl_sch_print: 30
 - copy_files: 31
 - pdf_pcb_print: 31
+- pdf_sch_print: 33
 - position: 33
 - svg_pcb_print: 33
 - gerb_drill: 34
@@ -651,8 +651,8 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1147
--            Boolean:  683
+-             String: 1149
+-            Boolean:  691
 -             Number:  363
 - ListStringSingular:  340
 -             Choice:  147
@@ -667,8 +667,8 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  961 
--            Boolean:  603 
+-             String:  963 
+-            Boolean:  611 
 - ListStringSingular:  336 
 -             Number:  254 
 -             Choice:  144 

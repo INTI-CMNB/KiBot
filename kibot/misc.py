@@ -449,6 +449,8 @@ KIKIT_UNIT_ALIASES = {'millimeters': 'mm', 'inches': 'inch', 'mils': 'mil'}
 UNITS_2_KICAD = {'millimeters': 'mm', 'inches': 'in', 'mils': 'mils'}
 FONT_HELP_TEXT = ('\n        Important: If you use custom fonts and/or colors please consult the `resources_dir` '
                   'global variable.')
+MULTI_SCH_NAME = ('\nNote that only for KiCad 10 and newer the `output` option controls the names of all sub-sheets.'
+                  '\nIn this case %f and %F contains the project and the sub-sheet path inside the hierarchy')
 # CSS style for HTML tables used by BoM and E/DRC
 # Light colors
 BG_GEN = "#DCF5E4"

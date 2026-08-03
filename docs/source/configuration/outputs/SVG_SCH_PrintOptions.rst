@@ -17,15 +17,15 @@ SVG_SCH_PrintOptions parameters
 
 .. _SVG_SCH_PrintOptions_background_color:
 
--  ``background_color`` :index:`: <pair: output - svg_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme` (KiCad 6).
+-  ``background_color`` :index:`: <pair: output - svg_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme`.
 
 .. _SVG_SCH_PrintOptions_color_theme:
 
--  ``color_theme`` :index:`: <pair: output - svg_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config (KiCad 6).
+-  ``color_theme`` :index:`: <pair: output - svg_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config.
 
 .. _SVG_SCH_PrintOptions_default_font:
 
--  ``default_font`` :index:`: <pair: output - svg_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font. Only for KiCad 9 and newer.
+-  ``default_font`` :index:`: <pair: output - svg_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font (KiCad 9+).
 
 .. _SVG_SCH_PrintOptions_dnf_filter:
 
@@ -34,6 +34,11 @@ SVG_SCH_PrintOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _SVG_SCH_PrintOptions_draw_hop_over:
+
+-  ``draw_hop_over`` :index:`: <pair: output - svg_sch_print - options; draw_hop_over>` [:ref:`boolean <boolean>`] (default: ``false``) Draw hop over at wire crossings (KiCad 10+)
+   Note that you must have a project and the hop overs enabled in the GUI.
 
 .. _SVG_SCH_PrintOptions_exclude_filter:
 

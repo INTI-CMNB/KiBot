@@ -17,15 +17,15 @@ HPGL_SCH_PrintOptions parameters
 
 .. _HPGL_SCH_PrintOptions_background_color:
 
--  ``background_color`` :index:`: <pair: output - hpgl_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme` (KiCad 6).
+-  ``background_color`` :index:`: <pair: output - hpgl_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme`.
 
 .. _HPGL_SCH_PrintOptions_color_theme:
 
--  ``color_theme`` :index:`: <pair: output - hpgl_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config (KiCad 6).
+-  ``color_theme`` :index:`: <pair: output - hpgl_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config.
 
 .. _HPGL_SCH_PrintOptions_default_font:
 
--  ``default_font`` :index:`: <pair: output - hpgl_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font. Only for KiCad 9 and newer.
+-  ``default_font`` :index:`: <pair: output - hpgl_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font (KiCad 9+).
 
 .. _HPGL_SCH_PrintOptions_dnf_filter:
 
@@ -34,6 +34,11 @@ HPGL_SCH_PrintOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _HPGL_SCH_PrintOptions_draw_hop_over:
+
+-  ``draw_hop_over`` :index:`: <pair: output - hpgl_sch_print - options; draw_hop_over>` [:ref:`boolean <boolean>`] (default: ``false``) Draw hop over at wire crossings (KiCad 10+)
+   Note that you must have a project and the hop overs enabled in the GUI.
 
 .. _HPGL_SCH_PrintOptions_exclude_filter:
 
@@ -49,7 +54,7 @@ HPGL_SCH_PrintOptions parameters
 
 .. _HPGL_SCH_PrintOptions_origin:
 
--  ``origin`` :index:`: <pair: output - hpgl_sch_print - options; origin>` [:ref:`string <string>`] (default: ``'bottom_left'``) (choices: "bottom_left", "centered", "page_fit", "content_fit") Origin and scale.
+-  ``origin`` :index:`: <pair: output - hpgl_sch_print - options; origin>` [:ref:`string <string>`] (default: ``'bottom_left'``) (choices: "bottom_left", "centered", "page_fit", "content_fit") Origin and scale (Not for KiCad 10+).
 
 .. _HPGL_SCH_PrintOptions_output:
 
@@ -61,7 +66,7 @@ HPGL_SCH_PrintOptions parameters
 
 .. _HPGL_SCH_PrintOptions_pen_size:
 
--  ``pen_size`` :index:`: <pair: output - hpgl_sch_print - options; pen_size>` [:ref:`number <number>`] (default: ``0.4826``) Pen size (diameter) [mm].
+-  ``pen_size`` :index:`: <pair: output - hpgl_sch_print - options; pen_size>` [:ref:`number <number>`] (default: ``0.4826``) Pen size (diameter) [mm] (Not for KiCad 10+).
 
 .. _HPGL_SCH_PrintOptions_pre_transform:
 

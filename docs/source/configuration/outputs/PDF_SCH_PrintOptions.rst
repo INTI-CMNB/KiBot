@@ -15,17 +15,22 @@ PDF_SCH_PrintOptions parameters
 
 -  ``all_pages`` :index:`: <pair: output - pdf_sch_print - options; all_pages>` [:ref:`boolean <boolean>`] (default: ``true``) Generate with all hierarchical sheets, unless `pages` is specified.
 
+.. _PDF_SCH_PrintOptions_author:
+
+-  ``author`` :index:`: <pair: output - pdf_sch_print - options; author>` [:ref:`string <string>`] (default: ``''``) Override the AUTHOR KiCad variable, used for PDF metadata.
+   If blank the KiCad text variable is used.
+
 .. _PDF_SCH_PrintOptions_background_color:
 
--  ``background_color`` :index:`: <pair: output - pdf_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme` (KiCad 6).
+-  ``background_color`` :index:`: <pair: output - pdf_sch_print - options; background_color>` [:ref:`boolean <boolean>`] (default: ``false``) Use the background color from the `color_theme`.
 
 .. _PDF_SCH_PrintOptions_color_theme:
 
--  ``color_theme`` :index:`: <pair: output - pdf_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config (KiCad 6).
+-  ``color_theme`` :index:`: <pair: output - pdf_sch_print - options; color_theme>` [:ref:`string <string>`] (default: ``''``) Color theme used, this must exist in the KiCad config.
 
 .. _PDF_SCH_PrintOptions_default_font:
 
--  ``default_font`` :index:`: <pair: output - pdf_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font. Only for KiCad 9 and newer.
+-  ``default_font`` :index:`: <pair: output - pdf_sch_print - options; default_font>` [:ref:`string <string>`] (default: ``'KiCad Font'``) Name for the default font (KiCad 9+).
 
 .. _PDF_SCH_PrintOptions_dnf_filter:
 
@@ -35,6 +40,11 @@ PDF_SCH_PrintOptions parameters
    variant.
 
 
+.. _PDF_SCH_PrintOptions_draw_hop_over:
+
+-  ``draw_hop_over`` :index:`: <pair: output - pdf_sch_print - options; draw_hop_over>` [:ref:`boolean <boolean>`] (default: ``false``) Draw hop over at wire crossings (KiCad 10+)
+   Note that you must have a project and the hop overs enabled in the GUI.
+
 .. _PDF_SCH_PrintOptions_exclude_filter:
 
 -  ``exclude_filter`` :index:`: <pair: output - pdf_sch_print - options; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to exclude components from processing.
@@ -42,6 +52,19 @@ PDF_SCH_PrintOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _PDF_SCH_PrintOptions_exclude_hierarchical_links:
+
+-  ``exclude_hierarchical_links`` :index:`: <pair: output - pdf_sch_print - options; exclude_hierarchical_links>` [:ref:`boolean <boolean>`] (default: ``false``) Do not generate clickable links for hierarchical elements (KiCad 10+).
+
+.. _PDF_SCH_PrintOptions_exclude_metadata:
+
+-  ``exclude_metadata`` :index:`: <pair: output - pdf_sch_print - options; exclude_metadata>` [:ref:`boolean <boolean>`] (default: ``false``) Do not generate metadata from AUTHOR and SUBJECT KiCad variables.
+   You can also use the `author` and `subject` options to define the metadata (KiCad 10+).
+
+.. _PDF_SCH_PrintOptions_exclude_property_popups:
+
+-  ``exclude_property_popups`` :index:`: <pair: output - pdf_sch_print - options; exclude_property_popups>` [:ref:`boolean <boolean>`] (default: ``false``) Do not generate property popups (KiCad 10+).
 
 .. _PDF_SCH_PrintOptions_monochrome:
 
@@ -68,6 +91,11 @@ PDF_SCH_PrintOptions parameters
 -  ``sheet_reference_layout`` :index:`: <pair: output - pdf_sch_print - options; sheet_reference_layout>` [:ref:`string <string>`] (default: ``''``) Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project.
    This option works only when you print the toplevel sheet of a project and the project
    file is available.
+
+.. _PDF_SCH_PrintOptions_subject:
+
+-  ``subject`` :index:`: <pair: output - pdf_sch_print - options; subject>` [:ref:`string <string>`] (default: ``''``) Override the SUBJECT KiCad variable, used for PDF metadata.
+   If blank the KiCad text variable is used.
 
 .. _PDF_SCH_PrintOptions_title:
 

@@ -3448,6 +3448,13 @@
           null
         ],
         [
+          "draw_hop_over",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"
@@ -5305,6 +5312,13 @@
           "default_font",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "draw_hop_over",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -12463,6 +12477,41 @@
           null
         ],
         [
+          "exclude_property_popups",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "exclude_hierarchical_links",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "exclude_metadata",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "author",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "subject",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "monochrome",
           [
             "DataTypeBoolean"
@@ -12529,6 +12578,13 @@
           "default_font",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "draw_hop_over",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -13590,6 +13646,13 @@
           "default_font",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "draw_hop_over",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -16088,6 +16151,13 @@
           "default_font",
           [
             "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "draw_hop_over",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],

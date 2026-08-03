@@ -6,7 +6,7 @@
 HPGL Schematic Print (Hewlett & Packard Graphics Language)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Exports the schematic to the most common plotter format.
+Exports the schematic to the most common plotter format, only for KiCad 9 and older.
 This output is what you get from the 'File/Plot' menu in eeschema. |br|
 Supports the image replacement using the prefix indicated by the `sch_image_prefix` global variable
 
