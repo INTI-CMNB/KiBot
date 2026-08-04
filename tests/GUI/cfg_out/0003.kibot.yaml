@@ -192,7 +192,8 @@ outputs:
     - output: output.hpgl.options.dict.custom_reports.dict
 - name: output.hpgl_sch_print
   type: hpgl_sch_print
-  comment: Exports the schematic to the most common plotter format
+  comment: Exports the schematic to the most common plotter format, only for KiCad
+    9 and older
   options:
     output: output.hpgl_sch_print.options.dict
 - name: output.ibom
