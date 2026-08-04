@@ -218,7 +218,7 @@ class Any_SCH_PrintOptions(VariantOptions):
             cmd.extend(['--default-font', self.default_font])
         ki_variant = self.kicad_variant_name()
         if ki_variant:
-            cmd.extend('--variant', ki_variant)
+            cmd.extend(['--variant', ki_variant])
         if self.draw_hop_over:
             cmd.append('--draw-hop-over')
         if fmt == 'pdf':
