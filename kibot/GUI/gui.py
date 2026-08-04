@@ -1091,7 +1091,7 @@ class OutputsPanel(DictPanel):
             n += 1
         # Create an object for this kind
         obj.type = kind
-        desc = get_doc_lines(obj)[1]
+        desc = get_doc_lines(obj)[1].strip()
         if desc[-1] == '.':
             desc = desc[:-1]
         obj._tree = {'name': name, 'comment': desc}
@@ -1423,7 +1423,7 @@ class FiltersPanel(DictPanel):
     def new_obj(self, kind):
         # Create a new object of the selected type
         cls = RegFilter.get_class_for(kind)
-        desc = get_doc_lines(cls)[0]
+        desc = get_doc_lines(cls)[0].strip()
         if desc[-1] == '.':
             desc = desc[:-1]
         obj = create_new_optionable(cls, None, extra={'name': 'new_filter', 'type': kind, 'comment': desc})
