@@ -473,22 +473,6 @@ class GS(object):
         return d
 
     @staticmethod
-    def get_pcb_comment(title_block, num):
-        if GS.ki6:
-            # Backward compatibility ... what's this?
-            # Also: Maintaining the same numbers used before (and found in the file) is asking too much?
-            return title_block.GetComment(num)
-        if num == 0:
-            return title_block.GetComment1()
-        if num == 1:
-            return title_block.GetComment2()
-        if num == 2:
-            return title_block.GetComment3()
-        if num == 3:
-            return title_block.GetComment4()
-        return ''
-
-    @staticmethod
     def p2v_k7(point):
         """ KiCad v7 changed various wxPoint args to VECTOR2I.
             This helper changes the types accordingly """
@@ -657,21 +641,35 @@ class GS(object):
         GS.pcb_date = ''
         GS.pcb_rev = ''
         GS.pcb_comp = ''
-        # This is based on InterativeHtmlBom expansion
-        title_block = GS.board.GetTitleBlock()
-        GS.pcb_date = GS.format_date(GS.expand_text_variables(title_block.GetDate()), GS.pcb_file, 'PCB')
-        GS.pcb_title = GS.expand_text_variables(title_block.GetTitle())
+
+        if GS.pn:
+            title_block = GS.board.GetTitleBlock()
+            date = title_block.GetDate()
+            title = title_block.GetTitle()
+            revision = title_block.GetRevision()
+            company = title_block.GetCompany()
+            comments = {num: title_block.GetComment(num) for num in range(9)}
+        else:
+            title_block = GS.board.get_title_block_info()
+            date = title_block.date
+            title = title_block.title
+            revision = title_block.revision
+            company = title_block.company
+            comments = title_block.comments
+
+        GS.pcb_date = GS.format_date(GS.expand_text_variables(date), GS.pcb_file, 'PCB')
+        GS.pcb_title = GS.expand_text_variables(title)
         if not GS.pcb_title:
             GS.pcb_title = GS.pcb_basename
-        GS.pcb_rev = GS.expand_text_variables(title_block.GetRevision())
-        GS.pcb_comp = GS.expand_text_variables(title_block.GetCompany())
+        GS.pcb_rev = GS.expand_text_variables(revision)
+        GS.pcb_comp = GS.expand_text_variables(company)
         for num in range(9):
-            GS.pcb_com[num] = GS.expand_text_variables(GS.get_pcb_comment(title_block, num))
+            GS.pcb_com[num] = GS.expand_text_variables(comments.get(num, ''))
         logger.debug("PCB title: `{}`".format(GS.pcb_title))
         logger.debug("PCB date: `{}`".format(GS.pcb_date))
         logger.debug("PCB revision: `{}`".format(GS.pcb_rev))
         logger.debug("PCB company: `{}`".format(GS.pcb_comp))
-        for num in range(4 if GS.ki5 else 9):
+        for num in range(9):
             logger.debug("PCB comment {}: `{}`".format(num+1, GS.pcb_com[num]))
 
     @staticmethod
