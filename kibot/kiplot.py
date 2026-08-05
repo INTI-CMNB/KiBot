@@ -236,7 +236,6 @@ def load_board(pcb_file=None, forced=False):
 
 
 def close_kipy_pcb():
-    logger.error("Close")
     if GS.kp_pcb is not None:
         GS.kp_pcb.close()
 
@@ -250,7 +249,6 @@ def load_board_kp(pcb_file):
             GS.kp_pcb = kipy.KiCad(client_name=f"KiBot ({os.getpid()})", headless=True, file_path=pcb_file)
         except Exception as e:
             GS.exit_with_error(f"Error starting KiCad API server: {e}", KIPY_ERROR)
-        atexit
         atexit.register(close_kipy_pcb)
     else:
         # Ask to load this PCB
