@@ -349,7 +349,7 @@ class Layer(Optionable):
 
     @staticmethod
     def id2def_name_kp(id):
-        return GS.kp.canonical_name(id)
+        return GS.kp.util.board_layer.canonical_name(id)
 
 
 if GS.pn is not None:
