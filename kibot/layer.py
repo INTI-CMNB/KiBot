@@ -118,7 +118,6 @@ class Layer(Optionable):
     def solve(cls, values):
         board = GS.board
         if board:
-            board.GetCopperLayerCount() if GS.pn is not None else board.get_copper_layer_count()
             create_print_priority(board)
         # Get the list of used layers from the board
         # Used for 'all' but also to validate the layer names
