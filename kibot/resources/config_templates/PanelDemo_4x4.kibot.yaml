@@ -38,6 +38,11 @@ outputs:
             type: railstb
             width: 5
             space: 3
+            # Give the top-left and top-right corners a bigger flat area so
+            # pick-and-place photoelectric sensors can reliably detect the rail
+            widenercorners: [tl, tr]
+            widenerwidth: 5
+            widenerlength: 15
           copperfill:
             type: hatched
             clearance: 2
