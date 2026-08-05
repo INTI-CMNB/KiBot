@@ -262,7 +262,7 @@ class AnyLayerOptions(VariantOptions):
         layers = Layer.solve(layers)
         for la in layers:
             id = la.id
-            if not GS.board.IsLayerEnabled(id):
+            if not GS.is_layer_enabled(id):
                 continue
             k_filename = self.expand_filename(output_dir, '%f-%i.%x', la.suffix, self.solve_extension(la))
             filename = self.compute_name(k_filename, output_dir, self.output, id, la.suffix)

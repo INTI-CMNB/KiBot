@@ -258,6 +258,7 @@ def load_board_kp(pcb_file):
             GS.exit_with_error(f'Error loading PCB file ({pcb_file}): {e}', CORRUPTED_PCB)
 
     GS.board = board = GS.kp_pcb.get_board()
+    GS.enabled_layers = set(board.get_enabled_layers())
 
     # Verify GS.global_work_layer
     board.kibot_layer_ids = {board.get_layer_name(id): id for id in range(128)}
