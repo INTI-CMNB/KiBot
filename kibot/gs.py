@@ -143,6 +143,7 @@ class GS(object):
     kp = None      # kipy (kicad-python) module
     # kipy details
     kp_pcb = None  # KiCad object used to load the PCB, I hope it can be unified
+    enabled_layers = set()  # List of layers enabled in the last loaded PCB
     # Maximum recursive replace
     MAXDEPTH = 20
     MAXDEPTH_OUTPUTS = 20
@@ -632,6 +633,14 @@ class GS(object):
             if GS.debug_level > 3:
                 logger.debug('Replacing KiCad text variables: {} -> {}'.format(text, new_text))
         return new_text
+
+    @staticmethod
+    def is_layer_enabled_k5(id):
+        return GS.board.IsLayerEnabled(id)
+
+    @staticmethod
+    def is_layer_enabled_kp(id):
+        return id in GS.enabled_layers
 
     @staticmethod
     def load_pcb_title_block():
@@ -1251,10 +1260,12 @@ class GS(object):
                 GS.layer_is_inner = GS.layer_is_inner_k5
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
                 GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
+            GS.is_layer_enabled = GS.is_layer_enabled_k5
         elif GS.kp is not None:
             GS.layer_is_inner = GS.layer_is_inner_kp
             GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_kp
             GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_kp
+            GS.is_layer_enabled = GS.is_layer_enabled_kp
 
     @staticmethod
     def layer_is_inner_k5(id):

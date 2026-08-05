@@ -178,7 +178,7 @@ class Layer(Optionable):
 
     @staticmethod
     def _get_copper_kp():
-        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+        return {GS.board.get_layer_name(id): id for id in GS.enabled_layers
                 if GS.kp.util.board_layer.is_copper_layer(id)}
 
     @staticmethod
@@ -188,7 +188,7 @@ class Layer(Optionable):
 
     @staticmethod
     def _get_inners_kp():
-        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+        return {GS.board.get_layer_name(id): id for id in GS.enabled_layers
                 if id != GS.B_Cu and id != GS.F_Cu and GS.kp.util.board_layer.is_copper_layer(id)}
 
     @staticmethod
@@ -198,7 +198,7 @@ class Layer(Optionable):
 
     @staticmethod
     def _get_outers_kp():
-        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers() if id == GS.B_Cu or id == GS.F_Cu}
+        return {GS.board.get_layer_name(id): id for id in GS.enabled_layers if id == GS.B_Cu or id == GS.F_Cu}
 
     @staticmethod
     def _get_technical_pn_k6():
@@ -211,7 +211,7 @@ class Layer(Optionable):
     @staticmethod
     def _get_technical_kp():
         # All but copper and user
-        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+        return {GS.board.get_layer_name(id): id for id in GS.enabled_layers
                 if not GS.kp.util.board_layer.is_copper_layer(id) and
                 not GS.kp.util.board_layer.canonical_name(id).startswith('User.')}
 
@@ -232,7 +232,7 @@ class Layer(Optionable):
 
     @staticmethod
     def _get_user_kp():
-        return {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()
+        return {GS.board.get_layer_name(id): id for id in GS.enabled_layers
                 if GS.kp.util.board_layer.canonical_name(id).startswith('User.')}
 
     @staticmethod
@@ -241,7 +241,7 @@ class Layer(Optionable):
 
     @staticmethod
     def _set_pcb_layers_kp():
-        Layer._pcb_layers = {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()}
+        Layer._pcb_layers = {GS.board.get_layer_name(id): id for id in GS.enabled_layers}
 
     def get_default_suffix(self):
         if GS.global_layer_defaults:
@@ -293,7 +293,7 @@ class Layer(Optionable):
     def _set_plot_layers_kp():
         # TODO: kipy NOT IMPLEMENTED!!!
         # Here we just get all of them, not good
-        Layer._plot_layers = {GS.board.get_layer_name(id): id for id in GS.board.get_enabled_layers()}
+        Layer._plot_layers = {GS.board.get_layer_name(id): id for id in GS.enabled_layers}
 
     def _get_layer_id_from_name(self):
         """ Get the pcbnew layer from the string provided in the config """
