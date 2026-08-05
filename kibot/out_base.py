@@ -1188,7 +1188,9 @@ class VariantOptions(BaseOptions):
                 logger.debug("Not setting VARIANT*")
             if GS.ki10 and GS.board:
                 logger.debug("Switching the PCB to 'Default' variant")
-                GS.board.SetCurrentVariant('')
+                if GS.pn is not None:
+                    GS.board.SetCurrentVariant('')
+                # TODO: kipy implementation, lacks it
 
     # The following 5 members are used by 2D and 3D renderers
     def setup_renderer(self, components, active_components):
