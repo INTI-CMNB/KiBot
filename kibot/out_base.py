@@ -1114,6 +1114,9 @@ class VariantOptions(BaseOptions):
         return new_list
 
     def remove_temporals(self):
+        self._highlight_3D_file = None
+        if not self._files_to_remove:
+            return
         action = 'Keeping' if GS.keep_temporals else 'Removing'
         logger.debug(f'{action} temporal files')
         for f in self._files_to_remove:
@@ -1126,7 +1129,6 @@ class VariantOptions(BaseOptions):
                 if not GS.keep_temporals:
                     rmtree(f)
         self._files_to_remove = []
-        self._highlight_3D_file = None
 
     def add_extra_options(self, cmd, dir=None):
         cmd, video_remove = GS.add_extra_options(cmd, self.kicad_variant_name())
