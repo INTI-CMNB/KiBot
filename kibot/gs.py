@@ -1256,16 +1256,19 @@ class GS(object):
                 GS.layer_is_inner = GS.layer_is_inner_k9
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
                 GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k9
+                GS.inner_layer_index = GS.inner_layer_index_k9
             else:
                 GS.layer_is_inner = GS.layer_is_inner_k5
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
                 GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
+                GS.inner_layer_index = GS.inner_layer_index_k5
             GS.is_layer_enabled = GS.is_layer_enabled_k5
         elif GS.kp is not None:
             GS.layer_is_inner = GS.layer_is_inner_kp
             GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_kp
             GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_kp
             GS.is_layer_enabled = GS.is_layer_enabled_kp
+            GS.inner_layer_index = GS.inner_layer_index_kp
 
     @staticmethod
     def layer_is_inner_k5(id):
@@ -1280,8 +1283,16 @@ class GS(object):
         return GS.kp.util.board_layer.is_copper_layer(id) and id != GS.F_Cu and id != GS.B_Cu
 
     @staticmethod
-    def inner_layer_index(id):
-        return int(id/2-1) if GS.ki9 else id-pcbnew.F_Cu+1
+    def inner_layer_index_k5(id):
+        return id-GS.F_Cu+1
+
+    @staticmethod
+    def inner_layer_index_k9(id):
+        return int(id/2-1)
+
+    @staticmethod
+    def inner_layer_index_kp(id):
+        return id-GS.F_Cu
 
     @staticmethod
     def copper_layer_to_ordinal_k5(n):
