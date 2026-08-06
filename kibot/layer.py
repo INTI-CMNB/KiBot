@@ -106,7 +106,10 @@ class Layer(Optionable):
             # Already set, keep it
             return
         if self._is_inner:
-            self._protel_extension = 'g'+str(GS.inner_layer_index(self.id))
+            index = GS.inner_layer_index(self.id)
+            if not GS.ki9:
+                index += 1
+            self._protel_extension = 'g'+str(index)
             return
         if self.id in Layer.PROTEL_EXTENSIONS:
             self._protel_extension = Layer.PROTEL_EXTENSIONS[self.id]
