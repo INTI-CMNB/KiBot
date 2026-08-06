@@ -1284,7 +1284,7 @@ class GS(object):
 
     @staticmethod
     def inner_layer_index_k5(id):
-        return id-GS.F_Cu+1
+        return id
 
     @staticmethod
     def inner_layer_index_k9(id):
