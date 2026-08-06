@@ -134,7 +134,7 @@ class AnyLayerOptions(VariantOptions):
             filename = k_filename
         if GS.layer_is_inner(id) and self.inner_extension_pattern:
             ext = self.inner_extension_pattern
-            index = int(id/2-1) if GS.ki9 else id
+            index = GS.inner_layer_index(id)
             ext = ext.replace('%n', str(index))
             ext = ext.replace('%N', str(index+1))
             filename = os.path.splitext(filename)[0]+ext
@@ -154,6 +154,26 @@ class AnyLayerOptions(VariantOptions):
             plot_ctrl.PlotLayers(seq)
             return
         plot_ctrl.PlotLayer()
+
+    def create_custom_reports(self, output_dir, generated):
+        regex_fname = re.compile(r'\$\{filename\(.*\)\}')
+        for report in self.custom_reports:
+            filename = report.output
+            content = report.content
+            # Replace special white spaces
+            content = content.replace('\\r', chr(13))
+            content = content.replace('\\n', chr(10))
+            content = content.replace('\\t', chr(9))
+            # Replace file names, compatible with gerber_zipper_action
+            content = content.replace('${basename}', GS.pcb_basename)
+            for name, file in generated.items():
+                content = content.replace('${filename('+name+')}', file)
+            # Replace unused layers
+            content = regex_fname.sub('', content)
+            # Create the report
+            logger.debug('Creating custom report `'+filename+'`')
+            with open(os.path.join(output_dir, filename), 'wt') as f:
+                f.write(content)
 
     def run(self, output_dir, layers):
         super().run(output_dir)
@@ -227,24 +247,7 @@ class AnyLayerOptions(VariantOptions):
         if create_job:
             jobfile_writer.CreateJobFile(self.expand_filename(output_dir, po.gerber_job_file, 'job', 'gbrjob'))
         # Custom reports
-        regex_fname = re.compile(r'\$\{filename\(.*\)\}')
-        for report in self.custom_reports:
-            filename = report.output
-            content = report.content
-            # Replace special white spaces
-            content = content.replace('\\r', chr(13))
-            content = content.replace('\\n', chr(10))
-            content = content.replace('\\t', chr(9))
-            # Replace file names, compatible with gerber_zipper_action
-            content = content.replace('${basename}', GS.pcb_basename)
-            for name, file in generated.items():
-                content = content.replace('${filename('+name+')}', file)
-            # Replace unused layers
-            content = regex_fname.sub('', content)
-            # Create the report
-            logger.debug('Creating custom report `'+filename+'`')
-            with open(os.path.join(output_dir, filename), 'wt') as f:
-                f.write(content)
+        self.create_custom_reports(output_dir, generated)
         # Restore the eliminated layers
         if exclude:
             self.unfilter_pcb_components()
