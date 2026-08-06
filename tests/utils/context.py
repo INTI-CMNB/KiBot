@@ -47,8 +47,11 @@ ng_ver = os.environ.get('KIAUS_USE_NIGHTLY')
 if ng_ver:
     # Path to the Python module
     sys.path.insert(0, '/usr/lib/kicad-nightly/lib/python3/dist-packages')
-import pcbnew
-build_version = pcbnew.GetBuildVersion()
+try:
+    import pcbnew
+    build_version = pcbnew.GetBuildVersion()
+except ModuleNotFoundError:
+    build_version = subprocess.run(['kicad-cli', 'version'], check=True, capture_output=True).stdout.decode().strip()
 m = re.search(r'(\d+)\.(\d+)\.(\d+)', build_version)
 logging.debug(build_version)
 kicad_major = int(m.group(1))
