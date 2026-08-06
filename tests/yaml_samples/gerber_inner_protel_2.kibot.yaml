@@ -30,6 +30,8 @@ outputs:
       inner_extension_pattern: '.gin%n'
       edge_cut_extension: '.e_cut'
       uppercase_extensions: true
+      sketch_pad_numbers: true
+      sketch_pads_on_fab_layers: true
       custom_reports:
         - output: 'Report.txt'
           content: 'Top layer: ${filename(F.Cu)}\nBasename: ${basename}\n'

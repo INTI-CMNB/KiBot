@@ -164,7 +164,8 @@ class GerberOptions(AnyLayerOptions):
             cmd.append('--include-border-title')
         if self.sketch_pads_on_fab_layers:
             cmd.append('--sketch-pads-on-fab-layers')
-        # TODO: kipy --sketch-pad-numbers
+        if self.sketch_pad_numbers:
+            cmd.append('--sketch-pad-numbers')
         if self.subtract_mask_from_silk:
             cmd.append('--subtract-soldermask')
         if self.use_aux_axis_as_origin:
