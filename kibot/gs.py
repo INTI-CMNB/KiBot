@@ -1314,7 +1314,7 @@ class GS(object):
     def copper_layer_to_ordinal_kp(n):
         """ Converts a KiCad layer number to its position.
             F.Cu will be 0 and B.Cu the last """
-        return GS.board.get_copper_layer_count()-1 if n == GS.B_Cu else n
+        return GS.board.get_copper_layer_count()-1 if n == GS.B_Cu else n-GS.F_Cu
 
     @staticmethod
     def ordinal_to_copper_layer_k9(n):
