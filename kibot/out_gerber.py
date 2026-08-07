@@ -26,8 +26,6 @@ class GerberOptions(AnyLayerOptions):
         with document:
             self.use_aux_axis_as_origin = False
             """ Use the auxiliary axis as origin for coordinates """
-            self.line_width = 0.1
-            """ [0.02,2] Line_width for objects without width [mm] (KiCad 5 only) """
             self.use_protel_extensions = False
             """ *Use legacy Protel file extensions.
                 Important: Inner layers numbering is different for KiCad 8 and 9. KiCad 8 starts numbering inner
