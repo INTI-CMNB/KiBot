@@ -149,6 +149,7 @@
 .. _Globals_disable_kicad_cross_on_fab:
 
       -  ``disable_kicad_cross_on_fab`` :index:`: <pair: global options; disable_kicad_cross_on_fab>` [:ref:`boolean <boolean>`] (default: ``true``) Disable KiCad cross on Fab layers, so only KiBot does it (KiCad 9+).
+         Note that you can also select other actions when using KiCad 11+, see :ref:`kicad_cross_mechanism <Globals_kicad_cross_mechanism>`.
 
 .. _Globals_dnp_cross_bottom_layer:
 
@@ -396,6 +397,11 @@
 .. _Globals_kiauto_wait_start:
 
       -  ``kiauto_wait_start`` :index:`: <pair: global options; kiauto_wait_start>` [:ref:`number <number>`] (default: ``0``) Time to wait for KiCad in KiAuto operations.
+
+.. _Globals_kicad_cross_mechanism:
+
+      -  ``kicad_cross_mechanism`` :index:`: <pair: global options; kicad_cross_mechanism>` [:ref:`string <string>`] (default: ``'crossout'``) (choices: "crossout", "hide", "sketch") Preferred mechanism to mark DNP/DNF components when using KiCad internal mechanism.
+         This needs KiCas 11+ and only applies when available. See :ref:`disable_kicad_cross_on_fab <Globals_disable_kicad_cross_on_fab>`.
 
 .. _Globals_kicad_default_variant:
 

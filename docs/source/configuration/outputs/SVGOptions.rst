@@ -139,6 +139,10 @@ SVGOptions parameters
 -  ``sketch_pad_line_width`` :index:`: <pair: output - svg - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <SVGOptions_sketch_pads_on_fab_layers>` (KiCad 6+)
    Note that this value is currently ignored by KiCad (6.0.9).
 
+.. _SVGOptions_sketch_pad_numbers:
+
+-  ``sketch_pad_numbers`` :index:`: <pair: output - svg - options; sketch_pad_numbers>` [:ref:`boolean <boolean>`] (default: ``false``) Plot pad numbers on top of sketched pads on the \\*.Fab layers (KiCad 11+).
+
 .. _SVGOptions_sketch_pads_on_fab_layers:
 
 -  ``sketch_pads_on_fab_layers`` :index:`: <pair: output - svg - options; sketch_pads_on_fab_layers>` [:ref:`boolean <boolean>`] (default: ``false``) Draw only the outline of the pads on the \\*.Fab layers (KiCad 6+).

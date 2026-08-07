@@ -1304,6 +1304,8 @@ outputs:
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
+      # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
+      sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
       # [boolean=false] Don't fill objects, just draw the outline
@@ -1694,7 +1696,7 @@ outputs:
         - content: ''
           # [string='Custom_report.txt'] File name for the custom report
           output: 'Custom_report.txt'
-      # [boolean=false] Disable aperture macros (workaround for buggy CAM software) (KiCad 6)
+      # [boolean=false] Disable aperture macros (workaround for buggy CAM software) (KiCad 6+)
       disable_aperture_macros: false
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -1725,7 +1727,7 @@ outputs:
       # Important: this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
       # isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1
       inner_extension_pattern: ''
-      # [number=0.1] [0.02,2] Line_width for objects without width [mm] (KiCad 5)
+      # [number=0.1] [0.02,2] Line_width for objects without width [mm] (KiCad 5 only)
       line_width: 0.1
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
       # Important: KiCad will always create the file using its own name and then we can rename it.
@@ -1748,6 +1750,8 @@ outputs:
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
+      # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
+      sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
       # [boolean=false] Subtract the solder mask from the silk screen
@@ -1847,6 +1851,8 @@ outputs:
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
+      # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
+      sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
       # [boolean=false] Don't fill objects, just draw the outline
@@ -4041,6 +4047,8 @@ outputs:
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
+      # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
+      sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.
@@ -4392,6 +4400,8 @@ outputs:
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
+      # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
+      sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
       # [boolean=false] Don't fill objects, just draw the outline (KiCad older than 10)
@@ -5112,6 +5122,8 @@ outputs:
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
+      # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
+      sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
       # [number=4] [0,6] Scale factor used to represent 1 mm in the SVG (KiCad 6).

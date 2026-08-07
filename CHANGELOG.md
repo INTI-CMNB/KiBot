@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 'exclude_metadata': no metadata
   - 'author': overrides the AUTHOR
   - 'subject': overrides the SUBJECT
+- KiCad 11:
+  - Global:
+    - `kicad_cross_mechanism`: selects cross/hide/sketch when using KiCad's
+      internal mechanism for crossing components in Fab layers
+  - Gerber:
+    - 'sketch_pad_numbers': when sketching the pads in Fab layers also add the
+      pad number
 
 ## Fixed
 - Quick Start: avoid including HPGL for KiCad 10

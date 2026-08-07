@@ -57,7 +57,7 @@ GerberOptions parameters
 
 .. _GerberOptions_disable_aperture_macros:
 
--  ``disable_aperture_macros`` :index:`: <pair: output - gerber - options; disable_aperture_macros>` [:ref:`boolean <boolean>`] (default: ``false``) Disable aperture macros (workaround for buggy CAM software) (KiCad 6).
+-  ``disable_aperture_macros`` :index:`: <pair: output - gerber - options; disable_aperture_macros>` [:ref:`boolean <boolean>`] (default: ``false``) Disable aperture macros (workaround for buggy CAM software) (KiCad 6+).
 
 .. _GerberOptions_dnf_filter:
 
@@ -114,7 +114,7 @@ GerberOptions parameters
 
 .. _GerberOptions_line_width:
 
--  ``line_width`` :index:`: <pair: output - gerber - options; line_width>` [:ref:`number <number>`] (default: ``0.1``) (range: 0.02 to 2) Line_width for objects without width [mm] (KiCad 5).
+-  ``line_width`` :index:`: <pair: output - gerber - options; line_width>` [:ref:`number <number>`] (default: ``0.1``) (range: 0.02 to 2) Line_width for objects without width [mm] (KiCad 5 only).
 
 .. _GerberOptions_plot_footprint_refs:
 
@@ -136,6 +136,10 @@ GerberOptions parameters
 
 -  ``sketch_pad_line_width`` :index:`: <pair: output - gerber - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <GerberOptions_sketch_pads_on_fab_layers>` (KiCad 6+)
    Note that this value is currently ignored by KiCad (6.0.9).
+
+.. _GerberOptions_sketch_pad_numbers:
+
+-  ``sketch_pad_numbers`` :index:`: <pair: output - gerber - options; sketch_pad_numbers>` [:ref:`boolean <boolean>`] (default: ``false``) Plot pad numbers on top of sketched pads on the \\*.Fab layers (KiCad 11+).
 
 .. _GerberOptions_sketch_pads_on_fab_layers:
 

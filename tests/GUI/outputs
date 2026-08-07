@@ -3199,6 +3199,13 @@
           null
         ],
         [
+          "sketch_pad_numbers",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
@@ -4787,6 +4794,13 @@
           null
         ],
         [
+          "sketch_pad_numbers",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
@@ -5040,6 +5054,13 @@
         ],
         [
           "sketch_pads_on_fab_layers",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sketch_pad_numbers",
           [
             "DataTypeBoolean"
           ],
@@ -11806,6 +11827,13 @@
       null
     ],
     [
+      "sketch_pad_numbers",
+      [
+        "DataTypeBoolean"
+      ],
+      null
+    ],
+    [
       "sketch_pad_line_width",
       [
         "DataTypeNumber"
@@ -12076,6 +12104,13 @@
         ],
         [
           "sketch_pads_on_fab_layers",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sketch_pad_numbers",
           [
             "DataTypeBoolean"
           ],
@@ -13367,6 +13402,13 @@
         ],
         [
           "sketch_pads_on_fab_layers",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sketch_pad_numbers",
           [
             "DataTypeBoolean"
           ],
@@ -15605,6 +15647,13 @@
         ],
         [
           "sketch_pads_on_fab_layers",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sketch_pad_numbers",
           [
             "DataTypeBoolean"
           ],

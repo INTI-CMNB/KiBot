@@ -1,5 +1,5 @@
-56 outputs types with a total of 2284 different parameters
-Single type parameters: 2093 (92 %)
+56 outputs types with a total of 2291 different parameters
+Single type parameters: 2100 (92 %)
 Multi type parameters: 191 (8 %)
 Average parameters: 41
 Maximum number of parameters: 218
@@ -70,15 +70,15 @@ Outputs sorted by parameters:
 - diff: 42
 - excellon: 42
 - export_3d: 42
-- dxf: 43
-- hpgl: 44
+- dxf: 44
+- hpgl: 45
 - kibom: 45
-- gerber: 46
-- ps: 47
+- gerber: 47
 - ibom: 48
-- svg: 51
+- ps: 48
+- svg: 52
 - pcbdraw: 60
-- pdf: 65
+- pdf: 67
 - blender_export: 78
 - render_3d: 79
 - pcb_print: 117
@@ -154,7 +154,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String:  980
--            Boolean:  588
+-            Boolean:  595
 -             Number:  310
 - ListStringSingular:  309
 -             Choice:  115
@@ -170,7 +170,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  812 
--            Boolean:  518 
+-            Boolean:  525 
 - ListStringSingular:  305 
 -             Number:  216 
 -             Choice:  112 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2683 different parameters
-Single type parameters: 2466 (92 %)
+97 totals types with a total of 2690 different parameters
+Single type parameters: 2473 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -527,15 +527,15 @@ Totals sorted by parameters:
 - diff: 42
 - excellon: 42
 - export_3d: 42
-- dxf: 43
-- hpgl: 44
+- dxf: 44
+- hpgl: 45
 - kibom: 45
-- gerber: 46
-- ps: 47
+- gerber: 47
 - ibom: 48
-- svg: 51
+- ps: 48
+- svg: 52
 - pcbdraw: 60
-- pdf: 65
+- pdf: 67
 - blender_export: 78
 - render_3d: 79
 - pcb_print: 117
@@ -652,7 +652,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1149
--            Boolean:  691
+-            Boolean:  698
 -             Number:  363
 - ListStringSingular:  340
 -             Choice:  147
@@ -668,7 +668,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  963 
--            Boolean:  611 
+-            Boolean:  618 
 - ListStringSingular:  336 
 -             Number:  254 
 -             Choice:  144 
