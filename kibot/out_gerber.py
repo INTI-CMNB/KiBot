@@ -28,8 +28,6 @@ class GerberOptions(AnyLayerOptions):
             """ Use the auxiliary axis as origin for coordinates """
             self.line_width = 0.1
             """ [0.02,2] Line_width for objects without width [mm] (KiCad 5 only) """
-            self.subtract_mask_from_silk = False
-            """ *Subtract the solder mask from the silk screen """
             self.use_protel_extensions = False
             """ *Use legacy Protel file extensions.
                 Important: Inner layers numbering is different for KiCad 8 and 9. KiCad 8 starts numbering inner
@@ -58,7 +56,6 @@ class GerberOptions(AnyLayerOptions):
     def _configure_plot_ctrl(self, po, output_dir):
         """ Called by AnyLayerOptions.run to set the plot options """
         super()._configure_plot_ctrl(po, output_dir)
-        po.SetSubtractMaskFromSilk(self.subtract_mask_from_silk)
         po.SetUseGerberProtelExtensions(self.use_protel_extensions)
         po.SetGerberPrecision(5 if self.gerber_precision == 4.5 else 6)
         po.SetCreateGerberJobFile(self.create_gerber_job_file)
@@ -83,8 +80,6 @@ class GerberOptions(AnyLayerOptions):
         self.create_gerber_job_file = po.GetCreateGerberJobFile()
         # gerberprecision
         self.gerber_precision = 4.0 + po.GetGerberPrecision()/10.0
-        # subtractmaskfromsilk
-        self.subtract_mask_from_silk = po.GetSubtractMaskFromSilk()
         # useauxorigin
         self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
         # disableapertmacros
@@ -97,7 +92,6 @@ class GerberOptions(AnyLayerOptions):
     def _configure_plot_settings(self, plot, layers):
         """ KiPy plot settings specific for gerbers """
         super()._configure_plot_settings(plot, layers)
-        plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk  # Gerber
         plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
 
     def rename_files_in_job_file(self, job_file, renamed):
