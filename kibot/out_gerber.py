@@ -11,7 +11,7 @@ import os
 from shutil import move
 from .error import PlotError
 from .gs import GS
-from .kiplot import register_xmp_import, run_command
+from .kiplot import register_xmp_import
 from .layer import Layer
 from .misc import FONT_HELP_TEXT, W_NOLAYER, W_GRBJOB
 from .optionable import Optionable
@@ -146,47 +146,56 @@ class GerberOptions(AnyLayerOptions):
             if not GS.is_layer_enabled(la.id):
                 logger.warning(W_NOLAYER+f'Layer "{la.description}" ({la.suffix}) isn\'t used')
                 continue
-            enabled_layers.append(Layer.id2def_name(la.id))
+            enabled_layers.append(la.id)
         logger.debug(f"List of selected and enabled layers: {enabled_layers}")
 
-        # Create the command line
-        cmd = [GS.kicad_cli, 'pcb', 'export', 'gerbers', '--output', tmp_dir, '--layers', ','.join(enabled_layers),
-               '--precision', str(int((self.gerber_precision-4.0)*10.0))]
-        if self.disable_aperture_macros:
-            cmd.append('--disable-aperture-macros')
+        plot = GS.kp.board_jobs.PlotSettings()
+        plot.layers = enabled_layers
         if not self.exclude_edge_layer:
-            cmd.extend(['--common-layers', 'Edge.Cuts'])
-        if not self.plot_footprint_refs:
-            cmd.append('--exclude-refdes')
-        if not self.plot_footprint_values:
-            cmd.append('--exclude-value')
-        if self.plot_sheet_reference:
-            cmd.append('--include-border-title')
-        if self.sketch_pads_on_fab_layers:
-            cmd.append('--sketch-pads-on-fab-layers')
-        if self.sketch_pad_numbers:
-            cmd.append('--sketch-pad-numbers')
-        if self.subtract_mask_from_silk:
-            cmd.append('--subtract-soldermask')
-        if self.use_aux_axis_as_origin:
-            cmd.append('--use-drill-file-origin')
-        if not self.use_gerber_net_attributes:
-            cmd.append('--no-netlist')
-        if not self.use_gerber_x2_attributes:
-            cmd.append('--no-x2')
-        if not self.use_protel_extensions:
-            cmd.append('--no-protel-ext')
+            plot.common_layers = [GS.Edge_Cuts]
+
+        plot.plot_reference_designators = self.plot_footprint_refs
+        plot.plot_footprint_values = self.plot_footprint_values
+        plot.plot_drawing_sheet = self.plot_sheet_reference
+        plot.sketch_pads_on_fab_layers = self.sketch_pads_on_fab_layers
+        plot.plot_pad_numbers = self.sketch_pad_numbers
+        plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk
+        plot.use_drill_origin = self.use_aux_axis_as_origin
+
+        plot.crossout_dnp_footprints_on_fab_layers = False
+        plot.hide_dnp_footprints_on_fab_layers = False
+        plot.sketch_dnp_footprints_on_fab_layers = False
         if not GS.global_disable_kicad_cross_on_fab:
-            cmd.append(f'--{GS.global_kicad_cross_mechanism}-DNP-footprints-on-fab-layers')
-        self.add_kicad_cli_variant(cmd)
+            if GS.global_kicad_cross_mechanism == 'crossout':
+                plot.crossout_dnp_footprints_on_fab_layers = True
+            elif GS.global_kicad_cross_mechanism == 'hide':
+                plot.hide_dnp_footprints_on_fab_layers = True
+            elif GS.global_kicad_cross_mechanism == 'sketch':
+                plot.sketch_dnp_footprints_on_fab_layers = True
+        kicad_variant = self.kicad_variant_name()
+        if kicad_variant:
+            plot.variant = kicad_variant
+
+        if self.gerber_precision == 4.5:
+            precision = GS.kp.proto.board.board_jobs_pb2.GerberPrecision.GP_5
+        else:
+            precision = GS.kp.proto.board.board_jobs_pb2.GerberPrecision.GP_6
 
         try:
-            board_name = self.save_tmp_board_if_variant()
-            cmd.append(board_name)
-            run_command(cmd)
+            self.filter_pcb_components()
+            GS.board.export_gerbers(tmp_dir,
+                                    plot_settings=plot,
+                                    use_board_plot_params=False,
+                                    create_gerber_job_file=self.create_gerber_job_file,
+                                    include_netlist_attributes=self.use_gerber_net_attributes,
+                                    use_x2_format=self.use_gerber_x2_attributes,
+                                    disable_aperture_macros=self.disable_aperture_macros,
+                                    use_protel_file_extensions=self.use_protel_extensions,
+                                    precision=precision)
+            self.unfilter_pcb_components()
 
             # Rename the files
-            board_name_no_ext = os.path.splitext(os.path.basename(board_name))[0]
+            board_name_no_ext = GS.pcb_basename
             kicad_output_base_name = os.path.join(tmp_dir, board_name_no_ext)
             generated = {}
             renamed = {}
@@ -209,21 +218,16 @@ class GerberOptions(AnyLayerOptions):
                 generated[la.layer] = filename_no_path
                 renamed[os.path.basename(k_filename)] = filename_no_path
 
-            # Gerber Job file is always created
-            job_file_name_kicad = kicad_output_base_name+'-job.gbrjob'
-            if not os.path.isfile(job_file_name_kicad):
-                raise PlotError(f"Missing gerber job file `{job_file_name_kicad}`")
             if self.create_gerber_job_file:
+                job_file_name_kicad = kicad_output_base_name+'-job.gbrjob'
+                if not os.path.isfile(job_file_name_kicad):
+                    raise PlotError(f"Missing gerber job file `{job_file_name_kicad}`")
                 # Rename it
                 job_file_name = self.expand_filename(output_dir, self.gerber_job_file, 'job', 'gbrjob')
                 logger.debug(f"{job_file_name_kicad} -> {job_file_name}")
                 move(job_file_name_kicad, job_file_name)
                 if changed_names:
                     self.rename_files_in_job_file(job_file_name, renamed)
-            else:
-                # Remove it
-                logger.debug(f"Removing {job_file_name_kicad}")
-                os.remove(job_file_name_kicad)
         finally:
             self.remove_temporals()
 
