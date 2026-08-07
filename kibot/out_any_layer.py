@@ -285,6 +285,17 @@ class AnyLayerOptions(VariantOptions):
         plot.sketch_pads_on_fab_layers = self.sketch_pads_on_fab_layers
         plot.plot_pad_numbers = self.sketch_pad_numbers
 
+        plot.crossout_dnp_footprints_on_fab_layers = False
+        plot.hide_dnp_footprints_on_fab_layers = False
+        plot.sketch_dnp_footprints_on_fab_layers = False
+        if not GS.global_disable_kicad_cross_on_fab:
+            if GS.global_kicad_cross_mechanism == 'crossout':
+                plot.crossout_dnp_footprints_on_fab_layers = True
+            elif GS.global_kicad_cross_mechanism == 'hide':
+                plot.hide_dnp_footprints_on_fab_layers = True
+            elif GS.global_kicad_cross_mechanism == 'sketch':
+                plot.sketch_dnp_footprints_on_fab_layers = True
+
         kicad_variant = self.kicad_variant_name()
         if kicad_variant:
             plot.variant = kicad_variant
