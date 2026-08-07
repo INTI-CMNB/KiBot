@@ -283,6 +283,7 @@ class GS(object):
     global_update_pcb_text_cache = None
     global_kiauto_time_out_scale = None
     global_kiauto_wait_start = None
+    global_kicad_cross_mechanism = None
     global_layer_defaults = None
     global_include_components_from_pcb = None
     global_use_pcb_fields = None
