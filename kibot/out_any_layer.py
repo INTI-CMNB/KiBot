@@ -49,8 +49,6 @@ class AnyLayerOptions(VariantOptions):
         with document:
             self.exclude_edge_layer = True
             """ Do not include the PCB edge layer """
-            self.exclude_pads_from_silkscreen = False
-            """ Do not plot the component pads in the silk screen (KiCad 5.x only) """
             self.plot_sheet_reference = False
             """ *Include the frame and title block. Only available for KiCad 6+ and you get a poor result
                 (i.e. always the default worksheet style, also problems expanding text variables).
@@ -105,7 +103,7 @@ class AnyLayerOptions(VariantOptions):
     def _configure_plot_ctrl(self, po, output_dir):
         logger.debug("Configuring plot controller for output")
         po.SetOutputDirectory(output_dir)
-        po.SetPlotFrameRef(self.plot_sheet_reference and (not GS.ki5))
+        po.SetPlotFrameRef(self.plot_sheet_reference)
         po.SetPlotReference(self.plot_footprint_refs)
         po.SetPlotValue(self.plot_footprint_values)
         po.SetSubtractMaskFromSilk(self.subtract_mask_from_silk)
@@ -113,11 +111,8 @@ class AnyLayerOptions(VariantOptions):
             po.SetPlotInvisibleText(self.force_plot_invisible_refs_vals)
         # Edge layer included or not
         GS.SetExcludeEdgeLayer(po, self.exclude_edge_layer)
-        if GS.ki5:
-            po.SetPlotPadsOnSilkLayer(not self.exclude_pads_from_silkscreen)
-        else:
-            po.SetSketchPadsOnFabLayers(self.sketch_pads_on_fab_layers)
-            po.SetSketchPadLineWidth(self.sketch_pad_line_width)
+        po.SetSketchPadsOnFabLayers(self.sketch_pads_on_fab_layers)
+        po.SetSketchPadLineWidth(self.sketch_pad_line_width)
         if not GS.ki9:
             # Now controlled for each via
             po.SetPlotViaOnMaskLayer(not self.tent_vias)
@@ -197,7 +192,7 @@ class AnyLayerOptions(VariantOptions):
             self._run_kp(output_dir, layers)
 
     def _run_pn(self, output_dir, layers):
-        """ pcbnew implementation (KiCad 5 to 10) """
+        """ pcbnew implementation (KiCad 6 to 10) """
         if GS.ki7 and GS.kicad_version_n < KICAD_VERSION_7_0_1 and not self.exclude_edge_layer:
             GS.exit_with_error("Plotting the edge layer is not supported by KiCad 7.0.0\n"
                                "Please upgrade KiCad to 7.0.1 or newer", MISSING_TOOL)
@@ -411,12 +406,8 @@ class AnyLayerOptions(VariantOptions):
         self.subtract_mask_from_silk = po.GetSubtractMaskFromSilk()
         # viasonmask
         self.tent_vias = True if GS.ki9 else not po.GetPlotViaOnMaskLayer()
-        if GS.ki5:
-            # padsonsilk
-            self.exclude_pads_from_silkscreen = not po.GetPlotPadsOnSilkLayer()
-        else:
-            self.sketch_pads_on_fab_layers = po.GetSketchPadsOnFabLayers()
-            self.sketch_pad_line_width = po.GetSketchPadLineWidth()
+        self.sketch_pads_on_fab_layers = po.GetSketchPadsOnFabLayers()
+        self.sketch_pad_line_width = po.GetSketchPadLineWidth()
         # scaleselection
         if self._plot_format != GS.PLOT_FORMAT_GERBER:
             sel = po.GetScaleSelection()
