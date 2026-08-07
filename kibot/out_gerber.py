@@ -5,18 +5,15 @@
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot
-import glob
 import json
 import os
 from shutil import move
 from .error import PlotError
 from .gs import GS
 from .kiplot import register_xmp_import
-from .layer import Layer
-from .misc import FONT_HELP_TEXT, W_NOLAYER, W_GRBJOB
+from .misc import FONT_HELP_TEXT, W_GRBJOB
 from .optionable import Optionable
 from .out_any_layer import AnyLayer, AnyLayerOptions
-from .out_base import VariantOptions
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 
@@ -93,12 +90,26 @@ class GerberOptions(AnyLayerOptions):
         # disableapertmacros
         self.disable_aperture_macros = po.GetDisableGerberMacros()
 
-    def compute_kicad_name(self, kicad_output_base_name, layer):
-        extension = layer._protel_extension if self.use_protel_extensions else 'gbr'
-        file = kicad_output_base_name+'-'+GS.board.get_layer_name(layer.id).replace('.', '_')+'.'+extension
-        if not os.path.isfile(file):
-            raise PlotError(f"Missing gerber file `{file}` available: {glob.glob(kicad_output_base_name+'*')}")
-        return file
+    # #########################################################################
+    # KiPy implementation
+    # #########################################################################
+
+    def _configure_plot_settings(self, plot, layers):
+        """ KiPy plot settings specific for gerbers """
+        super()._configure_plot_settings(plot, layers)
+        plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk  # Gerber
+        plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
+
+        plot.crossout_dnp_footprints_on_fab_layers = False
+        plot.hide_dnp_footprints_on_fab_layers = False
+        plot.sketch_dnp_footprints_on_fab_layers = False
+        if not GS.global_disable_kicad_cross_on_fab:
+            if GS.global_kicad_cross_mechanism == 'crossout':
+                plot.crossout_dnp_footprints_on_fab_layers = True
+            elif GS.global_kicad_cross_mechanism == 'hide':
+                plot.hide_dnp_footprints_on_fab_layers = True
+            elif GS.global_kicad_cross_mechanism == 'sketch':
+                plot.sketch_dnp_footprints_on_fab_layers = True
 
     def rename_files_in_job_file(self, job_file, renamed):
         with open(job_file, 'rt') as f:
@@ -126,115 +137,35 @@ class GerberOptions(AnyLayerOptions):
         with open(job_file, 'wt') as f:
             f.write(json.dumps(data, indent=2))
 
-    def run(self, output_dir, layers):
-        """ Gerbers generation using KiPy, for pcbnew we call the AnyLayerOptions implementation """
-        if GS.pn is not None:
-            super().run(output_dir, layers)
+    def _do_extra_rename(self, output_dir, kicad_output_base_name, changed_names, renamed):
+        """ KiPy: Called after generating all layers and before removing the temporal output dir.
+                  Renamed the job file and adjusts it. """
+        if not self.create_gerber_job_file:
             return
-        # Skip AnyLayerOptions altogether, we implement all by CLI
-        VariantOptions.run(self, output_dir)
+        job_file_name_kicad = kicad_output_base_name+'-job.gbrjob'
+        if not os.path.isfile(job_file_name_kicad):
+            raise PlotError(f"Missing gerber job file `{job_file_name_kicad}`")
+        # Rename it
+        job_file_name = self.expand_filename(output_dir, self.gerber_job_file, 'job', 'gbrjob')
+        logger.debug(f"{job_file_name_kicad} -> {job_file_name}")
+        move(job_file_name_kicad, job_file_name)
+        if changed_names:
+            self.rename_files_in_job_file(job_file_name, renamed)
 
-        # Validate the layers
-        layers = Layer.solve(layers)
-
-        # Work in a temporal dir to avoid issues (i.e. overwrite files)
-        tmp_dir = GS.mkdtemp('gerber')
-        self._files_to_remove.append(tmp_dir)
-
-        enabled_layers = []
-        for la in layers:
-            if not GS.is_layer_enabled(la.id):
-                logger.warning(W_NOLAYER+f'Layer "{la.description}" ({la.suffix}) isn\'t used')
-                continue
-            enabled_layers.append(la.id)
-        logger.debug(f"List of selected and enabled layers: {enabled_layers}")
-
-        plot = GS.kp.board_jobs.PlotSettings()
-        plot.layers = enabled_layers
-        if not self.exclude_edge_layer:
-            plot.common_layers = [GS.Edge_Cuts]
-
-        plot.plot_reference_designators = self.plot_footprint_refs
-        plot.plot_footprint_values = self.plot_footprint_values
-        plot.plot_drawing_sheet = self.plot_sheet_reference
-        plot.sketch_pads_on_fab_layers = self.sketch_pads_on_fab_layers
-        plot.plot_pad_numbers = self.sketch_pad_numbers
-        plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk
-        plot.use_drill_origin = self.use_aux_axis_as_origin
-
-        plot.crossout_dnp_footprints_on_fab_layers = False
-        plot.hide_dnp_footprints_on_fab_layers = False
-        plot.sketch_dnp_footprints_on_fab_layers = False
-        if not GS.global_disable_kicad_cross_on_fab:
-            if GS.global_kicad_cross_mechanism == 'crossout':
-                plot.crossout_dnp_footprints_on_fab_layers = True
-            elif GS.global_kicad_cross_mechanism == 'hide':
-                plot.hide_dnp_footprints_on_fab_layers = True
-            elif GS.global_kicad_cross_mechanism == 'sketch':
-                plot.sketch_dnp_footprints_on_fab_layers = True
-        kicad_variant = self.kicad_variant_name()
-        if kicad_variant:
-            plot.variant = kicad_variant
-
+    def _run_export_job(self, tmp_dir, plot):
         if self.gerber_precision == 4.5:
             precision = GS.kp.proto.board.board_jobs_pb2.GerberPrecision.GP_5
         else:
             precision = GS.kp.proto.board.board_jobs_pb2.GerberPrecision.GP_6
-
-        try:
-            self.filter_pcb_components()
-            GS.board.export_gerbers(tmp_dir,
-                                    plot_settings=plot,
-                                    use_board_plot_params=False,
-                                    create_gerber_job_file=self.create_gerber_job_file,
-                                    include_netlist_attributes=self.use_gerber_net_attributes,
-                                    use_x2_format=self.use_gerber_x2_attributes,
-                                    disable_aperture_macros=self.disable_aperture_macros,
-                                    use_protel_file_extensions=self.use_protel_extensions,
-                                    precision=precision)
-            self.unfilter_pcb_components()
-
-            # Rename the files
-            board_name_no_ext = GS.pcb_basename
-            kicad_output_base_name = os.path.join(tmp_dir, board_name_no_ext)
-            generated = {}
-            renamed = {}
-            changed_names = False
-            for la in layers:
-                id = la.id
-                if not GS.is_layer_enabled(id):
-                    continue
-                suffix = la.suffix
-                # desc = la.description
-                # Compute the current file name and the one we want
-                k_filename = self.compute_kicad_name(kicad_output_base_name, la)
-                filename = self.compute_name(k_filename, output_dir, self.output, id, suffix)
-                logger.debug(f"Moving {k_filename} -> {filename}")
-                move(k_filename, filename)
-                filename_no_path = os.path.basename(filename)
-                if not changed_names:
-                    k_filename_no_path = os.path.basename(k_filename)
-                    changed_names = filename_no_path != k_filename_no_path
-                generated[la.layer] = filename_no_path
-                renamed[os.path.basename(k_filename)] = filename_no_path
-
-            if self.create_gerber_job_file:
-                job_file_name_kicad = kicad_output_base_name+'-job.gbrjob'
-                if not os.path.isfile(job_file_name_kicad):
-                    raise PlotError(f"Missing gerber job file `{job_file_name_kicad}`")
-                # Rename it
-                job_file_name = self.expand_filename(output_dir, self.gerber_job_file, 'job', 'gbrjob')
-                logger.debug(f"{job_file_name_kicad} -> {job_file_name}")
-                move(job_file_name_kicad, job_file_name)
-                if changed_names:
-                    self.rename_files_in_job_file(job_file_name, renamed)
-        finally:
-            self.remove_temporals()
-
-        # Custom reports
-        self.create_custom_reports(output_dir, generated)
-
-        self._generated_files = generated
+        GS.board.export_gerbers(tmp_dir,
+                                plot_settings=plot,
+                                use_board_plot_params=False,
+                                create_gerber_job_file=self.create_gerber_job_file,
+                                include_netlist_attributes=self.use_gerber_net_attributes,
+                                use_x2_format=self.use_gerber_x2_attributes,
+                                disable_aperture_macros=self.disable_aperture_macros,
+                                use_protel_file_extensions=self.use_protel_extensions,
+                                precision=precision)
 
 
 @output_class

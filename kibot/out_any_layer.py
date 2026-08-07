@@ -5,8 +5,10 @@
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot
+import glob
 import os
 import re
+from shutil import move
 from .optionable import Optionable
 from .out_base import BaseOutput, VariantOptions
 from .error import PlotError
@@ -146,6 +148,13 @@ class AnyLayerOptions(VariantOptions):
             filename = os.path.splitext(filename)[0]+os.path.splitext(filename)[1].upper()
         return filename
 
+    def compute_kicad_name(self, kicad_output_base_name, layer):
+        extension = self.solve_extension(layer)
+        file = kicad_output_base_name+'-'+GS.board.get_layer_name(layer.id).replace('.', '_')+'.'+extension
+        if not os.path.isfile(file):
+            raise PlotError(f"Missing gerber file `{file}` available: {glob.glob(kicad_output_base_name+'*')}")
+        return file
+
     def plot_layer(self, plot_ctrl, id):
         if GS.ki7 and not self.exclude_edge_layer:
             # In KiCad 7 this is not an option, but we can plot more than one layer
@@ -179,6 +188,13 @@ class AnyLayerOptions(VariantOptions):
 
     def run(self, output_dir, layers):
         super().run(output_dir)
+        if GS.pn:
+            self._run_pn(output_dir, layers)
+        else:
+            self._run_kp(output_dir, layers)
+
+    def _run_pn(self, output_dir, layers):
+        """ pcbnew implementation (KiCad 5 to 10) """
         if GS.ki7 and GS.kicad_version_n < KICAD_VERSION_7_0_1 and not self.exclude_edge_layer:
             GS.exit_with_error("Plotting the edge layer is not supported by KiCad 7.0.0\n"
                                "Please upgrade KiCad to 7.0.1 or newer", MISSING_TOOL)
@@ -255,6 +271,84 @@ class AnyLayerOptions(VariantOptions):
             self.unfilter_pcb_components()
         # Restore the list of visible layers
         GS.board.SetVisibleLayers(old_visible)
+        self._generated_files = generated
+
+    def _configure_plot_settings(self, plot, layers):
+        """ KiPy PlotSettings common to all """
+        plot.layers = layers
+        if not self.exclude_edge_layer:
+            plot.common_layers = [GS.Edge_Cuts]
+
+        plot.plot_reference_designators = self.plot_footprint_refs
+        plot.plot_footprint_values = self.plot_footprint_values
+        plot.plot_drawing_sheet = self.plot_sheet_reference
+        plot.sketch_pads_on_fab_layers = self.sketch_pads_on_fab_layers
+        plot.plot_pad_numbers = self.sketch_pad_numbers
+
+        kicad_variant = self.kicad_variant_name()
+        if kicad_variant:
+            plot.variant = kicad_variant
+
+    def _do_extra_rename(self, output_dir, kicad_output_base_name, changed_names, renamed):
+        """ KiPy hook called after layers creation, but before removing the output dir """
+        return
+
+    def _run_kp(self, output_dir, layers):
+        """ KiPy implementation """
+        # Validate the layers
+        layers = Layer.solve(layers)
+
+        enabled_layers = []
+        for la in layers:
+            if not GS.is_layer_enabled(la.id):
+                logger.warning(W_NOLAYER+f'Layer "{la.description}" ({la.suffix}) isn\'t used')
+                continue
+            enabled_layers.append(la.id)
+        logger.debug(f"List of selected and enabled layers: {enabled_layers}")
+
+        plot = GS.kp.board_jobs.PlotSettings()
+        self._configure_plot_settings(plot, enabled_layers)
+
+        # Work in a temporal dir to avoid issues (i.e. overwrite files)
+        tmp_dir = GS.mkdtemp(self._parent.type)
+        self._files_to_remove.append(tmp_dir)
+
+        try:
+            self.filter_pcb_components()
+            self._run_export_job(tmp_dir, plot)
+            self.unfilter_pcb_components()
+
+            # Rename the files
+            board_name_no_ext = GS.pcb_basename
+            kicad_output_base_name = os.path.join(tmp_dir, board_name_no_ext)
+            generated = {}
+            renamed = {}
+            changed_names = False
+            for la in layers:
+                id = la.id
+                if not GS.is_layer_enabled(id):
+                    continue
+                suffix = la.suffix
+                # desc = la.description
+                # Compute the current file name and the one we want
+                k_filename = self.compute_kicad_name(kicad_output_base_name, la)
+                filename = self.compute_name(k_filename, output_dir, self.output, id, suffix)
+                logger.debug(f"Moving {k_filename} -> {filename}")
+                move(k_filename, filename)
+                filename_no_path = os.path.basename(filename)
+                if not changed_names:
+                    k_filename_no_path = os.path.basename(k_filename)
+                    changed_names = filename_no_path != k_filename_no_path
+                generated[la.layer] = filename_no_path
+                renamed[os.path.basename(k_filename)] = filename_no_path
+
+            self._do_extra_rename(output_dir, kicad_output_base_name, changed_names, renamed)
+        finally:
+            self.remove_temporals()
+
+        # Custom reports
+        self.create_custom_reports(output_dir, generated)
+
         self._generated_files = generated
 
     def solve_extension(self, layer):
