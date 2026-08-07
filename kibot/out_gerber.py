@@ -177,7 +177,7 @@ class GerberOptions(AnyLayerOptions):
         if not self.use_protel_extensions:
             cmd.append('--no-protel-ext')
         if not GS.global_disable_kicad_cross_on_fab:
-            cmd.append('--crossout-DNP-footprints-on-fab-layers')
+            cmd.append(f'--{GS.global_kicad_cross_mechanism}-DNP-footprints-on-fab-layers')
         self.add_kicad_cli_variant(cmd)
 
         try:
