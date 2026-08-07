@@ -5,7 +5,6 @@
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot
-from pcbnew import PLOT_FORMAT_POST, FromMM, ToMM, SKETCH, FILLED
 from .out_any_layer import AnyLayer
 from .drill_marks import DrillMarks
 from .misc import FONT_HELP_TEXT
@@ -34,7 +33,7 @@ class PSOptions(DrillMarks):
                 Only used to plot pads and tracks """
             self.a4_output = True
             """ Force A4 paper size """
-        self._plot_format = PLOT_FORMAT_POST
+        self._plot_format = GS.PLOT_FORMAT_POST
 
     def _configure_plot_ctrl(self, po, output_dir):
         super()._configure_plot_ctrl(po, output_dir)
@@ -43,9 +42,7 @@ class PSOptions(DrillMarks):
         po.SetFineScaleAdjustX(self.scale_adjust_y)
         po.SetA4Output(self.a4_output)
         if not GS.ki10:
-            po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
-        if GS.ki5:
-            po.SetLineWidth(FromMM(self.line_width))
+            po.SetPlotMode(GS.pn.SKETCH if self.sketch_plot else GS.pn.FILLED)
         po.SetNegative(self.negative_plot)
         po.SetMirror(self.mirror_plot)
 
@@ -56,9 +53,7 @@ class PSOptions(DrillMarks):
         self.scale_adjust_y = po.GetFineScaleAdjustX()
         self.a4_output = po.GetA4Output()
         if not GS.ki10:
-            self.sketch_plot = po.GetPlotMode() == SKETCH
-        if GS.ki5:
-            self.line_width = ToMM(po.GetLineWidth())
+            self.sketch_plot = po.GetPlotMode() == GS.pn.SKETCH
         self.negative_plot = po.GetNegative()
         self.mirror_plot = po.GetMirror()
 
