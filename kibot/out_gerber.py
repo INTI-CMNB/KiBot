@@ -100,17 +100,6 @@ class GerberOptions(AnyLayerOptions):
         plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk  # Gerber
         plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
 
-        plot.crossout_dnp_footprints_on_fab_layers = False
-        plot.hide_dnp_footprints_on_fab_layers = False
-        plot.sketch_dnp_footprints_on_fab_layers = False
-        if not GS.global_disable_kicad_cross_on_fab:
-            if GS.global_kicad_cross_mechanism == 'crossout':
-                plot.crossout_dnp_footprints_on_fab_layers = True
-            elif GS.global_kicad_cross_mechanism == 'hide':
-                plot.hide_dnp_footprints_on_fab_layers = True
-            elif GS.global_kicad_cross_mechanism == 'sketch':
-                plot.sketch_dnp_footprints_on_fab_layers = True
-
     def rename_files_in_job_file(self, job_file, renamed):
         with open(job_file, 'rt') as f:
             text = f.read()
