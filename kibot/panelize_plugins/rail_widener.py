@@ -37,7 +37,7 @@ options (see PanelizeFraming.config() in kibot/out_panelize.py), which set
 `framing.type: plugin` and point `code`/`arg` at this class.
 """
 import json
-from shapely.geometry import box, Point
+from shapely.geometry import box, LineString, Point
 from shapely.ops import unary_union
 from kikit.plugin import FramingPlugin
 from kikit.panelize_ui_impl import buildFraming as kikit_build_framing
@@ -50,6 +50,49 @@ _CORNER_SIGN = {'tl': (1, 1), 'tr': (-1, 1), 'bl': (1, -1), 'br': (-1, -1)}
 _DEPTH_AXIS = {'railstb': 'y', 'railslr': 'x', 'frame': 'y', 'tightframe': 'y'}
 
 
+def _extendCornerCuts(cuts, corner, sx, sy, railWidth, vExtent, hExtent):
+    """
+    KiKit's own `frame`/`tightframe` framing builds its corner-separation
+    cuts (the mouse-bite lines that let the milled-out frame come apart into
+    4 separate rail pieces) sized to the plain rail `width` only - they have
+    no idea the widener is about to grow material past that at this corner.
+    Left alone, mouse bites on those cuts stop after `width` worth of length,
+    well short of the widener patch, so the widened corner never actually
+    gets separated from its neighbour along its full extent.
+
+    Stretch whichever of the two cuts meeting at this corner touches it (one
+    runs along `corner.y`/vertical, the other along `corner.x`/horizontal),
+    keeping the endpoint away from the corner fixed and pushing the near
+    endpoint out to the patch's true (unclipped) far edge. Over-extending
+    past where the patch actually ends (e.g. clipped short by `gap` near a
+    board) is harmless: makeMouseBites() only drills where a point lands on
+    real substrate, so any excess length simply yields no extra holes.
+    """
+    extended = []
+    for cut in cuts:
+        (x0, y0), (x1, y1) = cut.coords[0], cut.coords[-1]
+        isVertical = abs(x0 - x1) < 1
+        isHorizontal = abs(y0 - y1) < 1
+        if isVertical:
+            near, far = (y0, y1) if abs(y0 - corner.y) < abs(y1 - corner.y) else (y1, y0)
+            touchesCorner = abs(x0 - corner.x) <= vExtent + railWidth and abs(near - corner.y) <= railWidth * 1.5
+            sameSide = (far - near) * sy >= 0
+            if touchesCorner and sameSide:
+                newFar = corner.y + sy * vExtent
+                if abs(newFar - near) > abs(far - near):
+                    cut = LineString([(x0, near), (x0, newFar)])
+        elif isHorizontal:
+            near, far = (x0, x1) if abs(x0 - corner.x) < abs(x1 - corner.x) else (x1, x0)
+            touchesCorner = abs(y0 - corner.y) <= hExtent + railWidth and abs(near - corner.x) <= railWidth * 1.5
+            sameSide = (far - near) * sx >= 0
+            if touchesCorner and sameSide:
+                newFar = corner.x + sx * hExtent
+                if abs(newFar - near) > abs(far - near):
+                    cut = LineString([(near, y0), (newFar, y0)])
+        extended.append(cut)
+    return extended
+
+
 class RailWidenerFramingPlugin(FramingPlugin):
     def __init__(self, preset, userArg):
         super().__init__(preset, userArg)
@@ -57,8 +100,18 @@ class RailWidenerFramingPlugin(FramingPlugin):
 
     def buildDummyFramingSubstrates(self, substrates):
         # The widener only adds material at the outer corners, it doesn't
-        # affect where tabs/partition lines should be computed
-        return substrates
+        # change where the rail/frame itself sits - so delegate to KiKit's
+        # own dummy-substrate builder for the underlying base type (same
+        # inner_preset trick as buildFraming below). Returning `substrates`
+        # unchanged here collapses the virtual frame onto the board edges
+        # themselves, which starves buildTabAnnotationsFixed() of any
+        # boundary to grow tabs towards - it silently builds zero tabs, so
+        # cuts (incl. mouse bites) disappear entirely.
+        from kikit.panelize_ui_impl import dummyFramingSubstrate
+        inner_preset = dict(self.preset)
+        inner_preset['framing'] = dict(self.preset['framing'])
+        inner_preset['framing']['type'] = self.arg['type']
+        return dummyFramingSubstrate(substrates, inner_preset)
 
     def buildFraming(self, panel):
         framingPreset = self.preset['framing']
@@ -100,6 +153,14 @@ class RailWidenerFramingPlugin(FramingPlugin):
             else:
                 dx = depth
                 dy = min(length, panel_h / 2)
+            # vExtent/hExtent are the same dx/dy used to size the patch, just
+            # named for which cut orientation they stretch (see
+            # _extendCornerCuts) rather than which physical dimension
+            # (depth/length) they represent, since that mapping flips with
+            # axis_y
+            vExtent, hExtent = (dy, dx) if axis_y else (dx, dy)
+            cuts = _extendCornerCuts(cuts, corner, sx, sy, rail_width, vExtent, hExtent)
+
             x0, x1 = sorted((corner.x, corner.x + sx * dx))
             y0, y1 = sorted((corner.y, corner.y + sy * dy))
             patch = box(x0, y0, x1, y1)
