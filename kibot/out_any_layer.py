@@ -89,6 +89,8 @@ class AnyLayerOptions(VariantOptions):
             self.sketch_pad_line_width = 0.1
             """ Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
                 Note that this value is currently ignored by KiCad (6.0.9) """
+            self.subtract_mask_from_silk = False
+            """ *Subtract the solder mask from the silk screen """
             self.scaling = 1
             """ *Scale factor (0 means autoscaling) """
             self.individual_page_scaling = True
@@ -106,6 +108,7 @@ class AnyLayerOptions(VariantOptions):
         po.SetPlotFrameRef(self.plot_sheet_reference and (not GS.ki5))
         po.SetPlotReference(self.plot_footprint_refs)
         po.SetPlotValue(self.plot_footprint_values)
+        po.SetSubtractMaskFromSilk(self.subtract_mask_from_silk)
         if GS.kicad_version_n < KICAD_VERSION_9_0_1:
             po.SetPlotInvisibleText(self.force_plot_invisible_refs_vals)
         # Edge layer included or not
@@ -284,6 +287,7 @@ class AnyLayerOptions(VariantOptions):
         plot.plot_drawing_sheet = self.plot_sheet_reference
         plot.sketch_pads_on_fab_layers = self.sketch_pads_on_fab_layers
         plot.plot_pad_numbers = self.sketch_pad_numbers
+        plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk
 
         plot.crossout_dnp_footprints_on_fab_layers = False
         plot.hide_dnp_footprints_on_fab_layers = False
@@ -403,6 +407,8 @@ class AnyLayerOptions(VariantOptions):
         self.plot_footprint_values = po.GetPlotValue()
         # plotinvisibletext
         self.force_plot_invisible_refs_vals = po.GetPlotInvisibleText() if GS.kicad_version_n < KICAD_VERSION_9_0_1 else False
+        # subtractmaskfromsilk
+        self.subtract_mask_from_silk = po.GetSubtractMaskFromSilk()
         # viasonmask
         self.tent_vias = True if GS.ki9 else not po.GetPlotViaOnMaskLayer()
         if GS.ki5:
