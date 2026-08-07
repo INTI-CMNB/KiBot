@@ -270,6 +270,7 @@ def load_board_kp(pcb_file):
 
     if BasePreFlight.get_option('check_zone_fills'):
         board.refill_zones(block=True)
+        # Gerber can do it by itself
 
     # TODO: kipy: is the dimensions workaround needed? Is covered by a test?
 
