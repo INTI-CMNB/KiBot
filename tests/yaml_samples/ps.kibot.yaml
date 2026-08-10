@@ -8,8 +8,6 @@ outputs:
     dir: PS
     options:
       exclude_edge_layer: false
-      exclude_pads_from_silkscreen: false
-      use_aux_axis_as_origin: false
       plot_sheet_reference: false
       plot_footprint_refs: true
       plot_footprint_values: true
@@ -19,7 +17,6 @@ outputs:
       sketch_pad_line_width: 0.1
 
       # PS options
-      line_width: 0.15
       drill_marks: full
       scaling: 2
       sketch_plot: false
