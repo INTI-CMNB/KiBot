@@ -133,20 +133,21 @@ class GerberOptions(AnyLayerOptions):
         if changed_names:
             self.rename_files_in_job_file(job_file_name, renamed)
 
-    def _run_export_job(self, tmp_dir, plot):
+    def _run_export_job(self, destination, plot):
         if self.gerber_precision == 4.5:
             precision = GS.kp.proto.board.board_jobs_pb2.GerberPrecision.GP_5
         else:
             precision = GS.kp.proto.board.board_jobs_pb2.GerberPrecision.GP_6
-        GS.board.export_gerbers(tmp_dir,
-                                plot_settings=plot,
-                                use_board_plot_params=False,
-                                create_gerber_job_file=self.create_gerber_job_file,
-                                include_netlist_attributes=self.use_gerber_net_attributes,
-                                use_x2_format=self.use_gerber_x2_attributes,
-                                disable_aperture_macros=self.disable_aperture_macros,
-                                use_protel_file_extensions=self.use_protel_extensions,
-                                precision=precision)
+        res = GS.board.export_gerbers(destination,
+                                      plot_settings=plot,
+                                      use_board_plot_params=False,
+                                      create_gerber_job_file=self.create_gerber_job_file,
+                                      include_netlist_attributes=self.use_gerber_net_attributes,
+                                      use_x2_format=self.use_gerber_x2_attributes,
+                                      disable_aperture_macros=self.disable_aperture_macros,
+                                      use_protel_file_extensions=self.use_protel_extensions,
+                                      precision=precision)
+        self.check_job_ok(res)
 
 
 @output_class

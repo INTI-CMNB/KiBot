@@ -3,7 +3,7 @@
 # Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
 # License: GPL-3.0
 # Project: KiBot (formerly KiPlot)
-from .gs import NO_DRILL_SHAPE, SMALL_DRILL_SHAPE, FULL_DRILL_SHAPE
+from .gs import GS
 from .out_any_layer import AnyLayerOptions
 from . import log
 
@@ -11,15 +11,15 @@ logger = log.get_logger()
 
 # Mappings to KiCad values
 DRILL_MARKS_MAP = {
-                   'none': NO_DRILL_SHAPE,
-                   'small': SMALL_DRILL_SHAPE,
-                   'full': FULL_DRILL_SHAPE,
+                   'none': GS.NO_DRILL_SHAPE,
+                   'small': GS.SMALL_DRILL_SHAPE,
+                   'full': GS.FULL_DRILL_SHAPE,
                   }
 # Mappings from KiCad values
 DRILL_MARKS_REV_MAP = {
-                       NO_DRILL_SHAPE: 'none',
-                       SMALL_DRILL_SHAPE: 'small',
-                       FULL_DRILL_SHAPE: 'full',
+                       GS.NO_DRILL_SHAPE: 'none',
+                       GS.SMALL_DRILL_SHAPE: 'small',
+                       GS.FULL_DRILL_SHAPE: 'full',
                       }
 
 
@@ -48,3 +48,8 @@ class DrillMarks(AnyLayerOptions):
     def read_vals_from_po(self, po):
         super().read_vals_from_po(po)
         self.drill_marks = DRILL_MARKS_REV_MAP[po.GetDrillMarksType()]
+
+    def _configure_plot_settings(self, plot, layers):
+        """ KiPy plot settings for drill marks """
+        super()._configure_plot_settings(plot, layers)
+        plot.drill_marks = self.drill_marks

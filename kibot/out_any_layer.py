@@ -150,7 +150,7 @@ class AnyLayerOptions(VariantOptions):
         extension = self.solve_extension(layer)
         file = kicad_output_base_name+'-'+GS.board.get_layer_name(layer.id).replace('.', '_')+'.'+extension
         if not os.path.isfile(file):
-            raise PlotError(f"Missing gerber file `{file}` available: {glob.glob(kicad_output_base_name+'*')}")
+            raise PlotError(f"Missing {self._parent.type} file `{file}` available: {glob.glob(kicad_output_base_name+'*')}")
         return file
 
     def plot_layer(self, plot_ctrl, id):
@@ -271,11 +271,23 @@ class AnyLayerOptions(VariantOptions):
         GS.board.SetVisibleLayers(old_visible)
         self._generated_files = generated
 
+    def is_single_file(self):
+        return hasattr(self, 'single_file') and self.single_file
+
+    def is_single_file_and_page(self):
+        return self.is_single_file() and (not hasattr(self, 'single_page') or self.single_page)
+
     def _configure_plot_settings(self, plot, layers):
         """ KiPy PlotSettings common to all """
         plot.layers = layers
         if not self.exclude_edge_layer:
-            plot.common_layers = [GS.Edge_Cuts]
+            # When we have one file and one page we must add the edge cuts to the main list
+            if self.is_single_file_and_page():
+                layers.append(GS.Edge_Cuts)   # We can't just append to plot.layers
+                plot.layers = layers
+            else:
+                # Repeat the edge in all files/pages
+                plot.common_layers = [GS.Edge_Cuts]
 
         plot.plot_reference_designators = self.plot_footprint_refs
         plot.plot_footprint_values = self.plot_footprint_values
@@ -303,6 +315,12 @@ class AnyLayerOptions(VariantOptions):
         """ KiPy hook called after layers creation, but before removing the output dir """
         return
 
+    def check_job_ok(self, res):
+        if res.succeeded:
+            # res.output_paths contains a list of generated files
+            return
+        raise PlotError(res.message)
+
     def _run_kp(self, output_dir, layers):
         """ KiPy implementation """
         # Validate the layers
@@ -319,40 +337,54 @@ class AnyLayerOptions(VariantOptions):
         plot = GS.kp.board_jobs.PlotSettings()
         self._configure_plot_settings(plot, enabled_layers)
 
-        # Work in a temporal dir to avoid issues (i.e. overwrite files)
-        tmp_dir = GS.mkdtemp(self._parent.type)
-        self._files_to_remove.append(tmp_dir)
+        # Most formats supports a single file output
+        single_file = self.is_single_file()
+
+        if single_file:
+            # KiCad and User file name for a single output
+            k_single_filename = os.path.join(output_dir, GS.pcb_basename)+'.'+FORMAT_EXTENSIONS[self._plot_format]
+            destination = self.compute_name(k_single_filename, output_dir, self.output, 0, self._parent.type)
+        else:
+            # Work in a temporal dir to avoid issues (i.e. overwrite files)
+            destination = GS.mkdtemp(self._parent.type)
+            self._files_to_remove.append(destination)
 
         try:
             self.filter_pcb_components()
-            self._run_export_job(tmp_dir, plot)
+            self._run_export_job(destination, plot)
             self.unfilter_pcb_components()
 
             # Rename the files
-            board_name_no_ext = GS.pcb_basename
-            kicad_output_base_name = os.path.join(tmp_dir, board_name_no_ext)
             generated = {}
             renamed = {}
             changed_names = False
-            for la in layers:
-                id = la.id
-                if not GS.is_layer_enabled(id):
-                    continue
-                suffix = la.suffix
-                # desc = la.description
-                # Compute the current file name and the one we want
-                k_filename = self.compute_kicad_name(kicad_output_base_name, la)
-                filename = self.compute_name(k_filename, output_dir, self.output, id, suffix)
-                logger.debug(f"Moving {k_filename} -> {filename}")
-                move(k_filename, filename)
-                filename_no_path = os.path.basename(filename)
-                if not changed_names:
-                    k_filename_no_path = os.path.basename(k_filename)
-                    changed_names = filename_no_path != k_filename_no_path
-                generated[la.layer] = filename_no_path
-                renamed[os.path.basename(k_filename)] = filename_no_path
 
-            self._do_extra_rename(output_dir, kicad_output_base_name, changed_names, renamed)
+            if single_file:
+                single_filename_no_path = os.path.basename(destination)
+                for la in layers:
+                    generated[la.layer] = single_filename_no_path
+            else:
+                # Multiple files
+                kicad_output_base_name = os.path.join(destination, GS.pcb_basename)
+                for la in layers:
+                    id = la.id
+                    if not GS.is_layer_enabled(id):
+                        continue
+                    suffix = la.suffix
+                    # desc = la.description
+                    # Compute the current file name and the one we want
+                    k_filename = self.compute_kicad_name(kicad_output_base_name, la)
+                    filename = self.compute_name(k_filename, output_dir, self.output, id, suffix)
+                    logger.debug(f"Moving {k_filename} -> {filename}")
+                    move(k_filename, filename)
+                    filename_no_path = os.path.basename(filename)
+                    if not changed_names:
+                        k_filename_no_path = os.path.basename(k_filename)
+                        changed_names = filename_no_path != k_filename_no_path
+                    generated[la.layer] = filename_no_path
+                    renamed[os.path.basename(k_filename)] = filename_no_path
+
+                self._do_extra_rename(output_dir, kicad_output_base_name, changed_names, renamed)
         finally:
             self.remove_temporals()
 
@@ -367,6 +399,10 @@ class AnyLayerOptions(VariantOptions):
         return FORMAT_EXTENSIONS[self._plot_format]
 
     def get_targets(self, output_dir, layers):
+        if self.is_single_file():
+            k_filename = os.path.join(output_dir, GS.pcb_basename)+'.'+FORMAT_EXTENSIONS[self._plot_format]
+            filename = self.compute_name(k_filename, output_dir, self.output, 0, self._parent.type)
+            return [filename]
         targets = []
         layers = Layer.solve(layers)
         for la in layers:

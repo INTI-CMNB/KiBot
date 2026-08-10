@@ -465,6 +465,10 @@ def get_layers_info_kp():
     GS.PLOT_FORMAT_DXF = 3
     GS.PLOT_FORMAT_PDF = 4
     GS.PLOT_FORMAT_SVG = 5
+    # Drill Marks
+    GS.NO_DRILL_SHAPE = kipy.proto.board.board_jobs_pb2.PlotDrillMarks.PDM_NONE
+    GS.SMALL_DRILL_SHAPE = kipy.proto.board.board_jobs_pb2.PlotDrillMarks.PDM_SMALL
+    GS.FULL_DRILL_SHAPE = kipy.proto.board.board_jobs_pb2.PlotDrillMarks.PDM_FULL
 
 
 def get_layers_info():
