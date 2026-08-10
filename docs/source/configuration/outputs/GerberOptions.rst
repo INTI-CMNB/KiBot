@@ -83,10 +83,6 @@ GerberOptions parameters
    variant.
 
 
-.. _GerberOptions_exclude_pads_from_silkscreen:
-
--  ``exclude_pads_from_silkscreen`` :index:`: <pair: output - gerber - options; exclude_pads_from_silkscreen>` [:ref:`boolean <boolean>`] (default: ``false``) Do not plot the component pads in the silk screen (KiCad 5.x only).
-
 .. _GerberOptions_force_plot_invisible_refs_vals:
 
 -  ``force_plot_invisible_refs_vals`` :index:`: <pair: output - gerber - options; force_plot_invisible_refs_vals>` [:ref:`boolean <boolean>`] (default: ``false``) Include references and values even when they are marked as invisible.
@@ -111,10 +107,6 @@ GerberOptions parameters
    isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1. |br|
 ..
 
-
-.. _GerberOptions_line_width:
-
--  ``line_width`` :index:`: <pair: output - gerber - options; line_width>` [:ref:`number <number>`] (default: ``0.1``) (range: 0.02 to 2) Line_width for objects without width [mm] (KiCad 5 only).
 
 .. _GerberOptions_plot_footprint_refs:
 

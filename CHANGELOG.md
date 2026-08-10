@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 'exclude_metadata': no metadata
   - 'author': overrides the AUTHOR
   - 'subject': overrides the SUBJECT
+- PS:
+  - `monochrome` and `color_theme`: to generate color PSs (KiCad 11)
+  - `single_file`: to plot all layers to a single file (KiCad 11)
 - KiCad 11:
   - Global:
     - `kicad_cross_mechanism`: selects cross/hide/sketch when using KiCad's
@@ -31,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 - Navigate Results:
   - Rotated PostScript for the PCB Print output
+
+# Changed
+- Gerber/PS/PDF/SVG/DXF:
+  - `exclude_pads_from_silkscreen` is no longer valid (just warning) was for
+    KiCad 5
+- Gerber/PS:
+  - `line_width` is no longer valid (just warning) was for KiCad 5
+
 
 ## [1.9.1] - 2026-07-28
 ### Added

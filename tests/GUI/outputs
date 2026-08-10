@@ -3100,13 +3100,6 @@
           null
         ],
         [
-          "exclude_pads_from_silkscreen",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
@@ -3209,6 +3202,13 @@
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "subtract_mask_from_silk",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -4625,20 +4625,6 @@
           null
         ],
         [
-          "line_width",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
-          "subtract_mask_from_silk",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "use_protel_extensions",
           [
             "DataTypeBoolean"
@@ -4689,13 +4675,6 @@
         ],
         [
           "exclude_edge_layer",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
-          "exclude_pads_from_silkscreen",
           [
             "DataTypeBoolean"
           ],
@@ -4804,6 +4783,13 @@
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "subtract_mask_from_silk",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -4961,13 +4947,6 @@
           null
         ],
         [
-          "exclude_pads_from_silkscreen",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
@@ -5070,6 +5049,13 @@
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "subtract_mask_from_silk",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -11728,13 +11714,6 @@
       null
     ],
     [
-      "exclude_pads_from_silkscreen",
-      [
-        "DataTypeBoolean"
-      ],
-      null
-    ],
-    [
       "plot_sheet_reference",
       [
         "DataTypeBoolean"
@@ -11837,6 +11816,13 @@
       "sketch_pad_line_width",
       [
         "DataTypeNumber"
+      ],
+      null
+    ],
+    [
+      "subtract_mask_from_silk",
+      [
+        "DataTypeBoolean"
       ],
       null
     ],
@@ -12011,13 +11997,6 @@
           null
         ],
         [
-          "exclude_pads_from_silkscreen",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
@@ -12120,6 +12099,13 @@
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "subtract_mask_from_silk",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -13309,13 +13295,6 @@
           null
         ],
         [
-          "exclude_pads_from_silkscreen",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
@@ -13422,6 +13401,13 @@
           null
         ],
         [
+          "subtract_mask_from_silk",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "scaling",
           [
             "DataTypeNumber"
@@ -13471,13 +13457,6 @@
           null
         ],
         [
-          "line_width",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
           "mirror_plot",
           [
             "DataTypeBoolean"
@@ -13523,6 +13502,27 @@
           "a4_output",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "single_file",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "monochrome",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "color_theme",
+          [
+            "DataTypeString"
           ],
           null
         ]
@@ -15554,13 +15554,6 @@
           null
         ],
         [
-          "exclude_pads_from_silkscreen",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
@@ -15663,6 +15656,13 @@
           "sketch_pad_line_width",
           [
             "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "subtract_mask_from_silk",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],

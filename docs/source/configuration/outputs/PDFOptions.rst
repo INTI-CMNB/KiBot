@@ -28,6 +28,10 @@ PDFOptions parameters
 
 -  **scaling** :index:`: <pair: output - pdf - options; scaling>` [:ref:`number <number>`] (default: ``1``) Scale factor (0 means autoscaling).
 
+.. _PDFOptions_subtract_mask_from_silk:
+
+-  **subtract_mask_from_silk** :index:`: <pair: output - pdf - options; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``false``) Subtract the solder mask from the silk screen.
+
 .. _PDFOptions_custom_reports:
 
 -  ``custom_reports`` :index:`: <pair: output - pdf - options; custom_reports>`  [:ref:`CustomReport parameters <CustomReport>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A list of customized reports for the manufacturer.
@@ -59,10 +63,6 @@ PDFOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
-
-.. _PDFOptions_exclude_pads_from_silkscreen:
-
--  ``exclude_pads_from_silkscreen`` :index:`: <pair: output - pdf - options; exclude_pads_from_silkscreen>` [:ref:`boolean <boolean>`] (default: ``false``) Do not plot the component pads in the silk screen (KiCad 5.x only).
 
 .. _PDFOptions_force_plot_invisible_refs_vals:
 

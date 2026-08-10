@@ -28,9 +28,17 @@ PSOptions parameters
 
 -  **scaling** :index:`: <pair: output - ps - options; scaling>` [:ref:`number <number>`] (default: ``1``) Scale factor (0 means autoscaling).
 
+.. _PSOptions_subtract_mask_from_silk:
+
+-  **subtract_mask_from_silk** :index:`: <pair: output - ps - options; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``false``) Subtract the solder mask from the silk screen.
+
 .. _PSOptions_a4_output:
 
 -  ``a4_output`` :index:`: <pair: output - ps - options; a4_output>` [:ref:`boolean <boolean>`] (default: ``true``) Force A4 paper size.
+
+.. _PSOptions_color_theme:
+
+-  ``color_theme`` :index:`: <pair: output - ps - options; color_theme>` [:ref:`string <string>`] (default: ``'_builtin_classic'``) Selects the color theme (KiCad 11+).
 
 .. _PSOptions_custom_reports:
 
@@ -64,10 +72,6 @@ PSOptions parameters
    variant.
 
 
-.. _PSOptions_exclude_pads_from_silkscreen:
-
--  ``exclude_pads_from_silkscreen`` :index:`: <pair: output - ps - options; exclude_pads_from_silkscreen>` [:ref:`boolean <boolean>`] (default: ``false``) Do not plot the component pads in the silk screen (KiCad 5.x only).
-
 .. _PSOptions_force_plot_invisible_refs_vals:
 
 -  ``force_plot_invisible_refs_vals`` :index:`: <pair: output - ps - options; force_plot_invisible_refs_vals>` [:ref:`boolean <boolean>`] (default: ``false``) Include references and values even when they are marked as invisible.
@@ -90,13 +94,13 @@ PSOptions parameters
 ..
 
 
-.. _PSOptions_line_width:
-
--  ``line_width`` :index:`: <pair: output - ps - options; line_width>` [:ref:`number <number>`] (default: ``0.15``) (range: 0.02 to 2) For objects without width [mm] (KiCad 5).
-
 .. _PSOptions_mirror_plot:
 
 -  ``mirror_plot`` :index:`: <pair: output - ps - options; mirror_plot>` [:ref:`boolean <boolean>`] (default: ``false``) Plot mirrored.
+
+.. _PSOptions_monochrome:
+
+-  ``monochrome`` :index:`: <pair: output - ps - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``true``) Black and white output (KiCad 11+).
 
 .. _PSOptions_negative_plot:
 
@@ -125,6 +129,10 @@ PSOptions parameters
 .. _PSOptions_scale_adjust_y:
 
 -  ``scale_adjust_y`` :index:`: <pair: output - ps - options; scale_adjust_y>` [:ref:`number <number>`] (default: ``1.0``) Fine grain adjust for the Y scale (floating point multiplier).
+
+.. _PSOptions_single_file:
+
+-  ``single_file`` :index:`: <pair: output - ps - options; single_file>` [:ref:`boolean <boolean>`] (default: ``false``) Plot all the pages to a single file, in a single page (KiCad 11+).
 
 .. _PSOptions_sketch_pad_line_width:
 

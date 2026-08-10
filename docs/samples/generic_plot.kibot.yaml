@@ -1262,8 +1262,6 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [boolean=false] Do not plot the component pads in the silk screen (KiCad 5.x only)
-      exclude_pads_from_silkscreen: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
@@ -1310,6 +1308,8 @@ outputs:
       sketch_pads_on_fab_layers: false
       # [boolean=false] Don't fill objects, just draw the outline
       sketch_plot: false
+      # [boolean=false] Subtract the solder mask from the silk screen
+      subtract_mask_from_silk: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.
       # Warning: KiCad 8 has a bug that ignores this option. Set it from KiCad GUI
       tent_vias: true
@@ -1712,8 +1712,6 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [boolean=false] Do not plot the component pads in the silk screen (KiCad 5.x only)
-      exclude_pads_from_silkscreen: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
@@ -1727,8 +1725,6 @@ outputs:
       # Important: this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
       # isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1
       inner_extension_pattern: ''
-      # [number=0.1] [0.02,2] Line_width for objects without width [mm] (KiCad 5 only)
-      line_width: 0.1
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
       # Important: KiCad will always create the file using its own name and then we can rename it.
       # For this reason you must avoid generating two variants at the same directory when one of
@@ -1806,8 +1802,6 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [boolean=false] Do not plot the component pads in the silk screen (KiCad 5.x only)
-      exclude_pads_from_silkscreen: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
@@ -1857,6 +1851,8 @@ outputs:
       sketch_pads_on_fab_layers: false
       # [boolean=false] Don't fill objects, just draw the outline
       sketch_plot: false
+      # [boolean=false] Subtract the solder mask from the silk screen
+      subtract_mask_from_silk: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.
       # Warning: KiCad 8 has a bug that ignores this option. Set it from KiCad GUI
       tent_vias: true
@@ -4004,8 +4000,6 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [boolean=false] Do not plot the component pads in the silk screen (KiCad 5.x only)
-      exclude_pads_from_silkscreen: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
@@ -4051,6 +4045,8 @@ outputs:
       sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
+      # [boolean=false] Subtract the solder mask from the silk screen
+      subtract_mask_from_silk: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.
       # Warning: KiCad 8 has a bug that ignores this option. Set it from KiCad GUI
       tent_vias: true
@@ -4322,6 +4318,7 @@ outputs:
   # PS (Postscript):
   # This output is what you get from the File/Plot menu in pcbnew.
   # The `pcb_print` is usually a better alternative.
+  # Affected by https://gitlab.com/kicad/code/kicad/-/work_items/23275
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'ps_example'
     comment: 'Exports the PCB to a format suitable for printing.'
@@ -4330,6 +4327,8 @@ outputs:
     options:
       # [boolean=true] Force A4 paper size
       a4_output: true
+      # [string='_builtin_classic'] Selects the color theme (KiCad 11+)
+      color_theme: '_builtin_classic'
       # [list(dict)=[]] A list of customized reports for the manufacturer
       custom_reports:
         # [string=''] Content for the report. Use ``${basename}`` for the project name without extension.
@@ -4353,8 +4352,6 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [boolean=false] Do not plot the component pads in the silk screen (KiCad 5.x only)
-      exclude_pads_from_silkscreen: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
@@ -4367,10 +4364,10 @@ outputs:
       # Important: this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
       # isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1
       inner_extension_pattern: ''
-      # [number=0.15] [0.02,2] For objects without width [mm] (KiCad 5)
-      line_width: 0.15
       # [boolean=false] Plot mirrored
       mirror_plot: false
+      # [boolean=true] Black and white output (KiCad 11+)
+      monochrome: true
       # [boolean=false] Invert black and white
       negative_plot: false
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
@@ -4397,6 +4394,8 @@ outputs:
       scale_adjust_y: 1.0
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
+      single_file: false
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
@@ -4406,6 +4405,8 @@ outputs:
       sketch_pads_on_fab_layers: false
       # [boolean=false] Don't fill objects, just draw the outline (KiCad older than 10)
       sketch_plot: false
+      # [boolean=false] Subtract the solder mask from the silk screen
+      subtract_mask_from_silk: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.
       # Warning: KiCad 8 has a bug that ignores this option. Set it from KiCad GUI
       tent_vias: true
@@ -5057,8 +5058,6 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
-      # [boolean=false] Do not plot the component pads in the silk screen (KiCad 5.x only)
-      exclude_pads_from_silkscreen: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
@@ -5126,6 +5125,8 @@ outputs:
       sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
+      # [boolean=false] Subtract the solder mask from the silk screen
+      subtract_mask_from_silk: false
       # [number=4] [0,6] Scale factor used to represent 1 mm in the SVG (KiCad 6).
       # The value is how much zeros has the multiplier (1 mm = 10 power `svg_precision` units).
       # Note that for an A4 paper Firefox 91 and Chrome 105 can't handle more than 5
