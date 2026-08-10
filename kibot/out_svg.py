@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # Copyright (c) 2018 John Beard
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Adapted from: https://github.com/johnbeard/kiplot
 import os
-from pcbnew import PLOT_FORMAT_SVG, FromMM, ToMM
 from .drill_marks import DrillMarks
 from .gs import GS
 from .kicad.patch_svg import change_svg_viewbox
@@ -23,8 +22,6 @@ class SVGOptions(DrillMarks):
     def __init__(self):
         super().__init__()
         with document:
-            self.line_width = 0.25
-            """ [0.02,2] For objects without width [mm] (KiCad 5) """
             self.mirror_plot = False
             """ Plot mirrored """
             self.negative_plot = False
@@ -49,21 +46,17 @@ class SVGOptions(DrillMarks):
             """ [number|dict=0] Margin around the view box [mm].
                 Using a number the margin is the same in the four directions.
                 See `limit_viewbox` option """
-        self._plot_format = PLOT_FORMAT_SVG
+        self._plot_format = GS.PLOT_FORMAT_SVG
 
     def _configure_plot_ctrl(self, po, output_dir):
         super()._configure_plot_ctrl(po, output_dir)
         po.SetMirror(self.mirror_plot)
-        if GS.ki5:
-            po.SetLineWidth(FromMM(self.line_width))
         po.SetUseAuxOrigin(self.use_aux_axis_as_origin)
         po.SetNegative(self.negative_plot)
         GS.SetSvgPrecision(po, self.svg_precision)
 
     def read_vals_from_po(self, po):
         super().read_vals_from_po(po)
-        if GS.ki5:
-            self.line_width = ToMM(po.GetLineWidth())
         self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
         self.negative_plot = po.GetNegative()
         self.mirror_plot = po.GetMirror()
@@ -86,8 +79,8 @@ class SVGOptions(DrillMarks):
         bbox = (bbox[0]-self._margin[0], bbox[1]-self._margin[2],
                 bbox[2]+self._margin[0]+self._margin[1], bbox[3]+self._margin[2]+self._margin[3])
         # Width/height of the used area in cm
-        width = ToMM(bbox[2])*0.1
-        height = ToMM(bbox[3])*0.1
+        width = GS.to_mm(bbox[2])*0.1
+        height = GS.to_mm(bbox[3])*0.1
         # Scale factor to convert KiCad IU to the SVG units
         bbox = GS.iu_to_svg(bbox, self.svg_precision)
         logger.debug('Adjusting SVG viewBox to {} for width {} cm and height {} cm'.format(bbox, width, height))
