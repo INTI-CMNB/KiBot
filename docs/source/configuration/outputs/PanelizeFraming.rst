@@ -103,6 +103,33 @@ PanelizeFraming parameters
 
 -  ``vspace`` :index:`: <pair: output - panelize - options - configs - framing; vspace>` [:ref:`number <number>` | :ref:`string <string>`] (default: ``2``) Specify the vertical space between PCB and the frame/rail.
 
+.. _PanelizeFraming_widenercorners:
+
+-  ``widenercorners`` :index:`: <pair: output - panelize - options - configs - framing; widenercorners>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``''``) [:ref:`comma separated <comma_sep>`] [tl,tr,bl,br] List of rail/frame outer corners where a rail widener
+   patch is added. A widener is a solid patch of extra rail material used to give pick-and-place
+   photoelectric sensors a bigger flat target. It never grows the panel's outer outline and never overlaps
+   an actual board: the patch is clipped against the board outline(s) if it would otherwise reach that far. |br|
+   Only valid for `type` *railstb*, *railslr*, *frame* and *tightframe*. Implemented as a `plugin`: setting
+   this option makes KiBot overwrite `type`, `code` and `arg` with its own values, so none of them can be
+   explicitly specified (i.e. you can't combine the widener with another custom `plugin`).
+
+
+.. _PanelizeFraming_widenergap:
+
+-  ``widenergap`` :index:`: <pair: output - panelize - options - configs - framing; widenergap>` [:ref:`number <number>` | :ref:`string <string>`] (default: ``0``) Minimum gap kept between the rail widener patch and the board(s). When 0 (the default)
+   the frame's own `hspace`/`vspace` (whichever applies to the widener's growth direction) is used instead. |br|
+   Automatically increased by `tabs.fillet` internally, to counteract KiKit's own reverse-tab-fillet pass
+   which would otherwise round the patch into the board and eat into this gap.
+
+.. _PanelizeFraming_widenerlength:
+
+-  ``widenerlength`` :index:`: <pair: output - panelize - options - configs - framing; widenerlength>` [:ref:`number <number>` | :ref:`string <string>`] (default: ``0``) Length of the rail widener patch along the rail edge.
+
+.. _PanelizeFraming_widenerwidth:
+
+-  ``widenerwidth`` :index:`: <pair: output - panelize - options - configs - framing; widenerwidth>` [:ref:`number <number>` | :ref:`string <string>`] (default: ``0``) Depth of the rail widener patch, i.e. how far it reaches from the panel's outer edge
+   towards the board. Can exceed the rail/frame `width`; it's only clipped if it would overlap a board.
+
 .. _PanelizeFraming_width:
 
 -  ``width`` :index:`: <pair: output - panelize - options - configs - framing; width>` [:ref:`number <number>` | :ref:`string <string>`] (default: ``5``) Specify with of the rails or frame.

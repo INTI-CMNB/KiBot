@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Panelize:
+  - `framing.widenercorners`/`widenerwidth`/`widenerlength` to add a rail
+    widener: a solid patch of extra rail material at chosen outer panel
+    corners, to give pick-and-place photoelectric sensors a bigger flat
+    target without growing the panel's outer outline
+
+### Fixed
+- Panelize:
+  - `framing.widenercorners` leaking KiBot-only options into the preset
+    passed to KiKit, making it fail
+
 ## [1.9.1] - 2026-07-28
 ### Added
 - Support for Python 3.14 (#930)
