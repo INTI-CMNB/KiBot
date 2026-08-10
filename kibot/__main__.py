@@ -433,6 +433,19 @@ def get_layers_info_pn():
     GS.PLOT_FORMAT_DXF = pcbnew.PLOT_FORMAT_DXF
     GS.PLOT_FORMAT_PDF = pcbnew.PLOT_FORMAT_PDF
     GS.PLOT_FORMAT_SVG = pcbnew.PLOT_FORMAT_SVG
+    # Drill Marks
+    if hasattr(pcbnew, 'DRILL_MARKS_NO_DRILL_SHAPE'):
+        GS.NO_DRILL_SHAPE = pcbnew.DRILL_MARKS_NO_DRILL_SHAPE
+        GS.SMALL_DRILL_SHAPE = pcbnew.DRILL_MARKS_SMALL_DRILL_SHAPE
+        GS.FULL_DRILL_SHAPE = pcbnew.DRILL_MARKS_FULL_DRILL_SHAPE
+    elif hasattr(pcbnew, 'PCB_PLOT_PARAMS'):
+        GS.NO_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.NO_DRILL_SHAPE
+        GS.SMALL_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.SMALL_DRILL_SHAPE
+        GS.FULL_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.FULL_DRILL_SHAPE
+    else:
+        GS.NO_DRILL_SHAPE = 0
+        GS.SMALL_DRILL_SHAPE = 1
+        GS.FULL_DRILL_SHAPE = 2
 
 
 def get_layers_info_kp():

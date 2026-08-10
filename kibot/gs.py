@@ -30,18 +30,6 @@ if hasattr(pcbnew, 'IU_PER_MM'):
 else:
     IU_PER_MM = pcbnew.pcbIUScale.IU_PER_MM
     IU_PER_MILS = pcbnew.pcbIUScale.IU_PER_MILS
-if hasattr(pcbnew, 'DRILL_MARKS_NO_DRILL_SHAPE'):
-    NO_DRILL_SHAPE = pcbnew.DRILL_MARKS_NO_DRILL_SHAPE
-    SMALL_DRILL_SHAPE = pcbnew.DRILL_MARKS_SMALL_DRILL_SHAPE
-    FULL_DRILL_SHAPE = pcbnew.DRILL_MARKS_FULL_DRILL_SHAPE
-elif hasattr(pcbnew, 'PCB_PLOT_PARAMS'):
-    NO_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.NO_DRILL_SHAPE
-    SMALL_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.SMALL_DRILL_SHAPE
-    FULL_DRILL_SHAPE = pcbnew.PCB_PLOT_PARAMS.FULL_DRILL_SHAPE
-else:
-    NO_DRILL_SHAPE = 0
-    SMALL_DRILL_SHAPE = 1
-    FULL_DRILL_SHAPE = 2
 # KiCad 6 uses IUs for SVGs, with option for SVG_Precision
 # KiCad 5 uses a very different scale based on inches
 # KiCad 7 uses mm
