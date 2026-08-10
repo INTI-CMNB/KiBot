@@ -2023,6 +2023,17 @@ def test_panelize_1(test_dir):
     ctx.clean_up(keep_project=True)
 
 
+@pytest.mark.slow
+@pytest.mark.skipif(context.ki5(), reason="KiKit is v6+")
+def test_panelize_widener_1(test_dir):
+    prj = 'simple_2layer'
+    ctx = context.TestContext(test_dir, prj, 'panelize_widener_1')
+    ctx.run(extra=[])
+    if is_debian:
+        ctx.compare_image(prj+'-panel.png', tol=100)
+    ctx.clean_up(keep_project=True)
+
+
 @pytest.mark.skipif(not context.ki7(), reason="Uses fonts")
 def test_font_and_colors_1(test_dir):
     prj = 'font_and_colors'

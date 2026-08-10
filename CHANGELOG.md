@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     corners, to give pick-and-place photoelectric sensors a bigger flat
     target without growing the panel's outer outline
 
+### Fixed
+- Panelize:
+  - `framing.widenercorners` leaking KiBot-only options into the preset
+    passed to KiKit, making it fail
+
 ## [1.9.1] - 2026-07-28
 ### Added
 - Support for Python 3.14 (#930)

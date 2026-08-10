@@ -340,7 +340,9 @@ class PanelizeFraming(PanelOptionsWithPlugin):
                 patch is added. A widener is a solid patch of extra rail material used to give pick-and-place
                 photoelectric sensors a bigger flat target. It never grows the panel's outer outline and never overlaps
                 an actual board: the patch is clipped against the board outline(s) if it would otherwise reach that far.
-                Only valid for `type` *railstb*, *railslr*, *frame* and *tightframe* """
+                Only valid for `type` *railstb*, *railslr*, *frame* and *tightframe*. Implemented as a `plugin`: setting
+                this option makes KiBot overwrite `type`, `code` and `arg` with its own values, so none of them can be
+                explicitly specified (i.e. you can't combine the widener with another custom `plugin`) """
             self.widenerwidth = 0
             """ [number|string=0] Depth of the rail widener patch, i.e. how far it reaches from the panel's outer edge
                 towards the board. Can exceed the rail/frame `width`; it's only clipped if it would overlap a board """
@@ -363,6 +365,9 @@ class PanelizeFraming(PanelOptionsWithPlugin):
             if self.type not in ('railstb', 'railslr', 'frame', 'tightframe'):
                 raise KiPlotConfigurationError('`widenercorners` needs a `type` of railstb, railslr, frame or '
                                                 f'tightframe, not `{self.type}`')
+            if self.get_user_defined('code') or self.get_user_defined('arg'):
+                raise KiPlotConfigurationError('`widenercorners` can\'t be combined with an explicit `code`/`arg`, '
+                                                'it needs both to implement the widener')
             self.add_units(('widenerwidth', 'widenerlength', 'widenergap'), convert=True)
             self.add_units(('hspace', 'vspace'), convert=True)
             gap = self._widenergap if self.get_user_defined('widenergap') else \
@@ -373,6 +378,10 @@ class PanelizeFraming(PanelOptionsWithPlugin):
             self.type = 'plugin'
             for k in ('type', 'code', 'arg'):
                 self.set_user_defined(k)
+            # These are KiBot-only knobs, already folded into `arg` above. KiKit's own preset schema doesn't know
+            # them, so they must not leak into the JSON preset we hand to the `kikit` CLI
+            for k in ('widenercorners', 'widenerwidth', 'widenerlength', 'widenergap'):
+                setattr(self, '_{}_user_defined'.format(k), False)
 
 
 class PanelizeTooling(PanelOptionsWithPlugin):

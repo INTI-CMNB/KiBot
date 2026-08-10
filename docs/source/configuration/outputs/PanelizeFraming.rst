@@ -109,7 +109,9 @@ PanelizeFraming parameters
    patch is added. A widener is a solid patch of extra rail material used to give pick-and-place
    photoelectric sensors a bigger flat target. It never grows the panel's outer outline and never overlaps
    an actual board: the patch is clipped against the board outline(s) if it would otherwise reach that far. |br|
-   Only valid for `type` *railstb*, *railslr*, *frame* and *tightframe*.
+   Only valid for `type` *railstb*, *railslr*, *frame* and *tightframe*. Implemented as a `plugin`: setting
+   this option makes KiBot overwrite `type`, `code` and `arg` with its own values, so none of them can be
+   explicitly specified (i.e. you can't combine the widener with another custom `plugin`).
 
 
 .. _PanelizeFraming_widenergap:
