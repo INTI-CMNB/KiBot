@@ -46,6 +46,12 @@ class SVGOptions(DrillMarks):
             """ [number|dict=0] Margin around the view box [mm].
                 Using a number the margin is the same in the four directions.
                 See `limit_viewbox` option """
+            self.single_file = False
+            """ Plot all the pages to a single file, in a single page (KiCad 11+) """
+            self.monochrome = True
+            """ Black and white output (KiCad 11+) """
+            self.color_theme = '_builtin_classic'
+            """ Selects the color theme (KiCad 11+) """
         self._plot_format = GS.PLOT_FORMAT_SVG
 
     def _configure_plot_ctrl(self, po, output_dir):
@@ -73,8 +79,20 @@ class SVGOptions(DrillMarks):
         if self.scaling != 1:
             logger.warning(W_ESCINV+"Scaling and view port limit can't be mixed")
             return
+
         # Limit the view box of the SVG
-        bbox = GS.get_rect_for(GS.board.ComputeBoundingBox(self.size_detection == 'kicad_edge'))
+        if GS.pn is not None:
+            bbox = GS.get_rect_for(GS.board.ComputeBoundingBox(self.size_detection == 'kicad_edge'))
+        else:  # KiPy
+            if self.size_detection == 'kicad_edge':
+                bbox = GS.compute_pcb_boundary(GS.board)
+            else:
+                bbox = GS.compute_pcb_full_boundary_kp(GS.board)
+            # Make it pos/size
+            bbox = list(bbox)
+            bbox[2] = bbox[2]-bbox[0]
+            bbox[3] = bbox[3]-bbox[1]
+
         # Apply the margin (left right top bottom)
         bbox = (bbox[0]-self._margin[0], bbox[1]-self._margin[2],
                 bbox[2]+self._margin[0]+self._margin[1], bbox[3]+self._margin[2]+self._margin[3])
@@ -89,6 +107,32 @@ class SVGOptions(DrillMarks):
             logger.debugl(2, '- '+f)
             change_svg_viewbox(fname, bbox, width, height)
 
+    # #########################################################################
+    # KiPy implementation
+    # #########################################################################
+
+    def _configure_plot_settings(self, plot, layers):
+        """ KiPy plot settings specific for gerbers """
+        super()._configure_plot_settings(plot, layers)
+        plot.mirror = self.mirror_plot
+        plot.negative = self.negative_plot
+        plot.scale = self.scaling
+        plot.black_and_white = self.monochrome
+        plot.color_theme = self.color_theme
+        plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
+
+    def _run_export_job(self, destination, plot):
+        if self.single_file:
+            page_mode = GS.kp.proto.board.board_jobs_pb2.BoardJobPaginationMode.BJPM_ALL_LAYERS_ONE_PAGE
+        else:  # multiple files
+            page_mode = GS.kp.proto.board.board_jobs_pb2.BoardJobPaginationMode.BJPM_EACH_LAYER_OWN_FILE
+        res = GS.board.export_svg(destination,
+                                  plot_settings=plot,
+                                  precision=self.svg_precision,
+                                  fit_page_to_board=False,  # We have `limit_viewbox` but also `size_detection` and `margin`
+                                  page_mode=page_mode)
+        self.check_job_ok(res)
+
 
 @output_class
 class SVG(AnyLayer):
@@ -96,7 +140,8 @@ class SVG(AnyLayer):
         Exports the PCB to a format suitable for 2D graphics software.
         Unlike bitmaps SVG drawings can be scaled without losing resolution.
         This output is what you get from the File/Plot menu in pcbnew.
-        The `pcb_print` is usually a better alternative. """
+        The `pcb_print` is usually a better alternative.
+        Affected by https://gitlab.com/kicad/code/kicad/-/work_items/23275 """
     __doc__ += FONT_HELP_TEXT
 
     def __init__(self):
