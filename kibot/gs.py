@@ -485,16 +485,20 @@ class GS(object):
         return ang.AsDegrees()
 
     @staticmethod
-    def get_modules():
-        if GS.ki6:
-            return GS.board.GetFootprints()
-        return GS.board.GetModules()
+    def get_modules_k6():
+        return GS.board.GetFootprints()
 
     @staticmethod
-    def get_modules_board(board):
-        if GS.ki6:
-            return board.GetFootprints()
-        return board.GetModules()
+    def get_modules_board_k6(board):
+        return board.GetFootprints()
+
+    @staticmethod
+    def get_modules_kp():
+        return GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_FOOTPRINT)
+
+    @staticmethod
+    def get_modules_board_kp(board):
+        return board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_FOOTPRINT)
 
     @staticmethod
     def get_aux_origin():
@@ -545,16 +549,28 @@ class GS(object):
 #         return 'in'
 
     @staticmethod
-    def to_mm(val):
+    def to_mm_k5(val):
         return float(val)/IU_PER_MM
 
     @staticmethod
-    def from_mm(val):
+    def from_mm_k5(val):
         return int(val*IU_PER_MM)
 
     @staticmethod
-    def to_mils(val):
+    def to_mils_k5(val):
         return val/IU_PER_MILS
+
+    @staticmethod
+    def to_mm_kp(val):
+        return GS.kp.util.units.to_mm(val)
+
+    @staticmethod
+    def from_mm_kp(val):
+        return GS.kp.util.units.from_mm(val)
+
+    @staticmethod
+    def to_mils_kp(val):
+        return GS.kp.util.units.to_mils(val)
 
 #     @staticmethod
 #     def to_global_units(val):
@@ -1125,7 +1141,7 @@ class GS(object):
         return x1, y1, x2, y2
 
     @staticmethod
-    def compute_pcb_boundary(board):
+    def compute_pcb_boundary_k5(board):
         edge_layer = board.GetLayerID('Edge.Cuts')
         x1 = y1 = x2 = y2 = None
         for d in board.GetDrawings():
@@ -1157,6 +1173,40 @@ class GS(object):
                         x1 = min(x1, p.x)
                         y1 = min(y1, p.y)
         return x1, y1, x2, y2
+
+    @staticmethod
+    def compute_pcb_boundary_kp(board):
+        edge_layer = GS.Edge_Cuts
+        # Look for all shapes in the Edge Cuts
+        shapes = [d for d in board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_SHAPE) if d.layer == edge_layer]
+        # Also inside footprints
+        for m in GS.get_modules():
+            for gi in m.definition.items:
+                if isinstance(gi, GS.kp.board_types.BoardShape) and gi.layer == edge_layer:
+                    shapes.append(gi)
+        if not len(shapes):
+            return 0, 0, 0, 0
+        boxes = board.get_item_bounding_box(shapes)
+        bb = GS.kp.geometry.Box2.from_pos_size(boxes[0].pos, boxes[0].size)
+        if len(boxes) > 1:
+            for b in boxes[1:]:
+                bb.merge(b)
+        return bb.pos.x, bb.pos.y, bb.pos.x+bb.size.x, bb.pos.y+bb.size.y
+
+    @staticmethod
+    def compute_pcb_full_boundary_kp(board):
+        kot = GS.kp.proto.common.types.KiCadObjectType
+        shapes = board.get_items([kot.KOT_PCB_SHAPE, kot.KOT_PCB_FOOTPRINT, kot.KOT_PCB_PAD, kot.KOT_PCB_TRACE,
+                                  kot.KOT_PCB_VIA, kot.KOT_PCB_TEXT, kot.KOT_PCB_TEXTBOX, kot.KOT_PCB_TABLE,
+                                  kot.KOT_PCB_TABLECELL, kot.KOT_PCB_ARC, kot.KOT_PCB_DIMENSION, kot.KOT_PCB_ZONE])
+        if not len(shapes):
+            return 0, 0, 0, 0
+        boxes = board.get_item_bounding_box(shapes)
+        bb = GS.kp.geometry.Box2.from_pos_size(boxes[0].pos, boxes[0].size)
+        if len(boxes) > 1:
+            for b in boxes[1:]:
+                bb.merge(b)
+        return bb.pos.x, bb.pos.y, bb.pos.x+bb.size.x, bb.pos.y+bb.size.y
 
     @staticmethod
     def tmp_file(content=None, prefix=None, suffix=None, dir=None, what=None, a_logger=None, binary=False, indent=False):
@@ -1236,28 +1286,6 @@ class GS(object):
     def module_position(m):
         pos = GS.get_center(m)
         return f'({GS.to_mm(pos.x)}, {GS.to_mm(pos.y)}) mm'
-
-    @staticmethod
-    def set_version_pointers():
-        """ Used to setup function pointers according to the API and its version """
-        if GS.pn is not None:
-            if GS.ki9:
-                GS.layer_is_inner = GS.layer_is_inner_k9
-                GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
-                GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k9
-                GS.inner_layer_index = GS.inner_layer_index_k9
-            else:
-                GS.layer_is_inner = GS.layer_is_inner_k5
-                GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
-                GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
-                GS.inner_layer_index = GS.inner_layer_index_k5
-            GS.is_layer_enabled = GS.is_layer_enabled_k5
-        elif GS.kp is not None:
-            GS.layer_is_inner = GS.layer_is_inner_kp
-            GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_kp
-            GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_kp
-            GS.is_layer_enabled = GS.is_layer_enabled_kp
-            GS.inner_layer_index = GS.inner_layer_index_kp
 
     @staticmethod
     def layer_is_inner_k5(id):
@@ -1376,3 +1404,37 @@ class GS(object):
     @staticmethod
     def kicad_variant_name(variant):
         return variant.name if variant and variant.type == 'kicad' and GS.ki10 else None
+
+    @staticmethod
+    def set_version_pointers():
+        """ Used to setup function pointers according to the API and its version """
+        if GS.pn is not None:
+            if GS.ki9:
+                GS.layer_is_inner = GS.layer_is_inner_k9
+                GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
+                GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k9
+                GS.inner_layer_index = GS.inner_layer_index_k9
+            else:
+                GS.layer_is_inner = GS.layer_is_inner_k5
+                GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
+                GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
+                GS.inner_layer_index = GS.inner_layer_index_k5
+            GS.is_layer_enabled = GS.is_layer_enabled_k5
+            GS.get_modules = GS.get_modules_k6
+            GS.get_modules_board = GS.get_modules_board_k6
+            GS.compute_pcb_boundary = GS.compute_pcb_boundary_k5
+            GS.to_mm = GS.to_mm_k5
+            GS.from_mm = GS.from_mm_k5
+            GS.to_mils = GS.to_mils_k5
+        elif GS.kp is not None:
+            GS.layer_is_inner = GS.layer_is_inner_kp
+            GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_kp
+            GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_kp
+            GS.is_layer_enabled = GS.is_layer_enabled_kp
+            GS.inner_layer_index = GS.inner_layer_index_kp
+            GS.get_modules = GS.get_modules_kp
+            GS.get_modules_board = GS.get_modules_board_kp
+            GS.compute_pcb_boundary = GS.compute_pcb_boundary_kp
+            GS.to_mm = GS.to_mm_kp
+            GS.from_mm = GS.from_mm_kp
+            GS.to_mils = GS.to_mils_kp
