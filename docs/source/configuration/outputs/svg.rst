@@ -10,6 +10,7 @@ Exports the PCB to a format suitable for 2D graphics software.
 Unlike bitmaps SVG drawings can be scaled without losing resolution. |br|
 This output is what you get from the File/Plot menu in pcbnew. |br|
 The `pcb_print` is usually a better alternative. |br|
+Affected by https://gitlab.com/kicad/code/kicad/-/work_items/23275
 
 .. note::
    If you use custom fonts and/or colors please consult the `resources_dir` global variable. |br|

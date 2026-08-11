@@ -5029,12 +5029,15 @@ outputs:
   # Unlike bitmaps SVG drawings can be scaled without losing resolution.
   # This output is what you get from the File/Plot menu in pcbnew.
   # The `pcb_print` is usually a better alternative.
+  # Affected by https://gitlab.com/kicad/code/kicad/-/work_items/23275
   #         Important: If you use custom fonts and/or colors please consult the `resources_dir` global variable.
   - name: 'svg_example'
     comment: 'Exports the PCB to a format suitable for 2D graphics software.'
     type: 'svg'
     dir: 'Example/svg_dir'
     options:
+      # [string='_builtin_classic'] Selects the color theme (KiCad 11+)
+      color_theme: '_builtin_classic'
       # [list(dict)=[]] A list of customized reports for the manufacturer
       custom_reports:
         # [string=''] Content for the report. Use ``${basename}`` for the project name without extension.
@@ -5073,8 +5076,6 @@ outputs:
       # [boolean=false] When enabled the view box is limited to a selected area.
       # This option can't be enabled when using a scale
       limit_viewbox: false
-      # [number=0.25] [0.02,2] For objects without width [mm] (KiCad 5)
-      line_width: 0.25
       # [number|dict=0] Margin around the view box [mm].
       # Using a number the margin is the same in the four directions.
       # See `limit_viewbox` option
@@ -5089,6 +5090,8 @@ outputs:
         top: 0
       # [boolean=false] Plot mirrored
       mirror_plot: false
+      # [boolean=true] Black and white output (KiCad 11+)
+      monochrome: true
       # [boolean=false] Invert black and white
       negative_plot: false
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
@@ -5111,6 +5114,8 @@ outputs:
       pre_transform: '_null'
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
+      single_file: false
       # [string='kicad_edge'] [kicad_edge,kicad_all] Method used to detect the size of the view box.
       # The `kicad_edge` method uses the size of the board as reported by KiCad,
       # components that extend beyond the PCB limit will be cropped. You can manually

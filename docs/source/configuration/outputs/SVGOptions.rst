@@ -32,6 +32,10 @@ SVGOptions parameters
 
 -  **subtract_mask_from_silk** :index:`: <pair: output - svg - options; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``false``) Subtract the solder mask from the silk screen.
 
+.. _SVGOptions_color_theme:
+
+-  ``color_theme`` :index:`: <pair: output - svg - options; color_theme>` [:ref:`string <string>`] (default: ``'_builtin_classic'``) Selects the color theme (KiCad 11+).
+
 .. _SVGOptions_custom_reports:
 
 -  ``custom_reports`` :index:`: <pair: output - svg - options; custom_reports>`  [:ref:`CustomReport parameters <CustomReport>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A list of customized reports for the manufacturer.
@@ -91,10 +95,6 @@ SVGOptions parameters
 -  ``limit_viewbox`` :index:`: <pair: output - svg - options; limit_viewbox>` [:ref:`boolean <boolean>`] (default: ``false``) When enabled the view box is limited to a selected area.
    This option can't be enabled when using a scale.
 
-.. _SVGOptions_line_width:
-
--  ``line_width`` :index:`: <pair: output - svg - options; line_width>` [:ref:`number <number>`] (default: ``0.25``) (range: 0.02 to 2) For objects without width [mm] (KiCad 5).
-
 .. _SVGOptions_margin:
 
 -  ``margin`` :index:`: <pair: output - svg - options; margin>`  [:ref:`PcbMargin parameters <PcbMargin>`] [:ref:`number <number>` | :ref:`dict <dict>`] (default: ``0``) Margin around the view box [mm].
@@ -104,6 +104,10 @@ SVGOptions parameters
 .. _SVGOptions_mirror_plot:
 
 -  ``mirror_plot`` :index:`: <pair: output - svg - options; mirror_plot>` [:ref:`boolean <boolean>`] (default: ``false``) Plot mirrored.
+
+.. _SVGOptions_monochrome:
+
+-  ``monochrome`` :index:`: <pair: output - svg - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``true``) Black and white output (KiCad 11+).
 
 .. _SVGOptions_negative_plot:
 
@@ -124,6 +128,10 @@ SVGOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _SVGOptions_single_file:
+
+-  ``single_file`` :index:`: <pair: output - svg - options; single_file>` [:ref:`boolean <boolean>`] (default: ``false``) Plot all the pages to a single file, in a single page (KiCad 11+).
 
 .. _SVGOptions_size_detection:
 

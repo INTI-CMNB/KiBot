@@ -1,5 +1,5 @@
-56 outputs types with a total of 2291 different parameters
-Single type parameters: 2100 (92 %)
+56 outputs types with a total of 2293 different parameters
+Single type parameters: 2102 (92 %)
 Multi type parameters: 191 (8 %)
 Average parameters: 41
 Maximum number of parameters: 218
@@ -76,7 +76,7 @@ Outputs sorted by parameters:
 - kibom: 45
 - ibom: 48
 - ps: 50
-- svg: 52
+- svg: 54
 - pcbdraw: 60
 - pdf: 67
 - blender_export: 78
@@ -153,10 +153,10 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  981
--            Boolean:  596
+-             String:  982
+-            Boolean:  598
 - ListStringSingular:  309
--             Number:  308
+-             Number:  307
 -             Choice:  115
 -               Dict:   92
 -   ListDictOrString:   24
@@ -169,10 +169,10 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  813 
--            Boolean:  526 
+-             String:  814 
+-            Boolean:  528 
 - ListStringSingular:  305 
--             Number:  214 
+-             Number:  213 
 -             Choice:  112 
 -               Dict:   79 
 -           ListDict:   20 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2690 different parameters
-Single type parameters: 2473 (92 %)
+97 totals types with a total of 2692 different parameters
+Single type parameters: 2475 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -533,7 +533,7 @@ Totals sorted by parameters:
 - kibom: 45
 - ibom: 48
 - ps: 50
-- svg: 52
+- svg: 54
 - pcbdraw: 60
 - pdf: 67
 - blender_export: 78
@@ -651,9 +651,9 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1150
--            Boolean:  699
--             Number:  361
+-             String: 1151
+-            Boolean:  701
+-             Number:  360
 - ListStringSingular:  340
 -             Choice:  147
 -               Dict:  103
@@ -667,10 +667,10 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  964 
--            Boolean:  619 
+-             String:  965 
+-            Boolean:  621 
 - ListStringSingular:  336 
--             Number:  252 
+-             Number:  251 
 -             Choice:  144 
 -               Dict:   82 
 -           ListDict:   30 

@@ -32,7 +32,7 @@ Added
    -  ‘author’: overrides the AUTHOR
    -  ‘subject’: overrides the SUBJECT
 
--  PS:
+-  PS/SVG:
 
    -  ``monochrome`` and ``color_theme``: to generate color PSs (KiCad
       11)

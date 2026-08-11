@@ -15716,13 +15716,6 @@
           null
         ],
         [
-          "line_width",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
           "mirror_plot",
           [
             "DataTypeBoolean"
@@ -15800,6 +15793,27 @@
               null
             ]
           ]
+        ],
+        [
+          "single_file",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "monochrome",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "color_theme",
+          [
+            "DataTypeString"
+          ],
+          null
         ]
       ]
     ]

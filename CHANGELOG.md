@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 'exclude_metadata': no metadata
   - 'author': overrides the AUTHOR
   - 'subject': overrides the SUBJECT
-- PS:
+- PS/SVG:
   - `monochrome` and `color_theme`: to generate color PSs (KiCad 11)
   - `single_file`: to plot all layers to a single file (KiCad 11)
 - KiCad 11:
