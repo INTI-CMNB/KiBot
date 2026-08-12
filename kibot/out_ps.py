@@ -22,6 +22,11 @@ class PSOptions(DrillMarks):
             """ Invert black and white """
             self.sketch_plot = False
             """ Don't fill objects, just draw the outline (KiCad older than 10) """
+            self.scaling = 1
+            """ *Scale factor (0 means autoscaling) """
+            self.individual_page_scaling = True
+            """ Tell KiCad to apply the scaling for each layer as a separated entity.
+                Disabling it the pages are coherent and can be superposed (KiCad <11) """
             self.scale_adjust_x = 1.0
             """ Fine grain adjust for the X scale (floating point multiplier) """
             self.scale_adjust_y = 1.0
