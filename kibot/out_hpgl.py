@@ -3,7 +3,6 @@
 # Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
-from pcbnew import PLOT_FORMAT_HPGL, SKETCH, FILLED
 from .gs import GS
 from .out_any_layer import AnyLayer
 from .drill_marks import DrillMarks
@@ -27,7 +26,7 @@ class HPGLOptions(DrillMarks):
             """ [1,99] Pen speed """
             self.pen_width = 15
             """ [0,100] Pen diameter in MILS, useful to fill areas. However, it is in mm in HPGL files """
-        self._plot_format = PLOT_FORMAT_HPGL
+        self._plot_format = GS.PLOT_FORMAT_HPGL
 
     def _configure_plot_ctrl(self, po, output_dir):
         super()._configure_plot_ctrl(po, output_dir)
@@ -36,7 +35,7 @@ class HPGLOptions(DrillMarks):
         po.SetHPGLPenDiameter(self.pen_width)
         po.SetHPGLPenNum(self.pen_number)
         po.SetHPGLPenSpeed(self.pen_speed)
-        po.SetPlotMode(SKETCH if self.sketch_plot else FILLED)
+        po.SetPlotMode(GS.pn.SKETCH if self.sketch_plot else GS.pn.FILLED)
         po.SetMirror(self.mirror_plot)
 
     def read_vals_from_po(self, po):
@@ -46,7 +45,7 @@ class HPGLOptions(DrillMarks):
         self.pen_width = po.GetHPGLPenDiameter()
         self.pen_number = po.GetHPGLPenNum()
         self.pen_speed = po.GetHPGLPenSpeed()
-        self.sketch_plot = po.GetPlotMode() == SKETCH
+        self.sketch_plot = po.GetPlotMode() == GS.pn.SKETCH
         self.mirror_plot = po.GetMirror()
 
 
