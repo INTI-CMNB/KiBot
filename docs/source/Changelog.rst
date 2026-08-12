@@ -60,6 +60,8 @@ Added
    -  ``monochrome`` and ``color_theme``: to generate color PSs (KiCad
       11)
    -  ``single_file``: to plot all layers to a single file (KiCad 11)
+   -  ``mirror``: alias for ``mirror_plot``
+   -  ``negative``: alias for ``negative_plot``
 
 -  KiCad 11:
 

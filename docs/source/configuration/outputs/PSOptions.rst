@@ -94,6 +94,10 @@ PSOptions parameters
 ..
 
 
+.. _PSOptions_mirror:
+
+-  *mirror* :index:`: <pair: output - ps - options; mirror>` Alias for mirror_plot.
+
 .. _PSOptions_mirror_plot:
 
 -  ``mirror_plot`` :index:`: <pair: output - ps - options; mirror_plot>` [:ref:`boolean <boolean>`] (default: ``false``) Plot mirrored.
@@ -101,6 +105,10 @@ PSOptions parameters
 .. _PSOptions_monochrome:
 
 -  ``monochrome`` :index:`: <pair: output - ps - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``true``) Black and white output (KiCad 11+).
+
+.. _PSOptions_negative:
+
+-  *negative* :index:`: <pair: output - ps - options; negative>` Alias for negative_plot.
 
 .. _PSOptions_negative_plot:
 

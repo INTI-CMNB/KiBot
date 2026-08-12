@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PS/SVG/PDF:
   - `monochrome` and `color_theme`: to generate color PSs (KiCad 11)
   - `single_file`: to plot all layers to a single file (KiCad 11)
+  - `mirror`: alias for `mirror_plot`
+  - `negative`: alias for `negative_plot`
 - KiCad 11:
   - Global:
     - `kicad_cross_mechanism`: selects cross/hide/sketch when using KiCad's

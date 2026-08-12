@@ -101,6 +101,10 @@ SVGOptions parameters
    Using a number the margin is the same in the four directions. |br|
    See :ref:`limit_viewbox <SVGOptions_limit_viewbox>` option.
 
+.. _SVGOptions_mirror:
+
+-  *mirror* :index:`: <pair: output - svg - options; mirror>` Alias for mirror_plot.
+
 .. _SVGOptions_mirror_plot:
 
 -  ``mirror_plot`` :index:`: <pair: output - svg - options; mirror_plot>` [:ref:`boolean <boolean>`] (default: ``false``) Plot mirrored.
@@ -108,6 +112,10 @@ SVGOptions parameters
 .. _SVGOptions_monochrome:
 
 -  ``monochrome`` :index:`: <pair: output - svg - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``true``) Black and white output (KiCad 11+).
+
+.. _SVGOptions_negative:
+
+-  *negative* :index:`: <pair: output - svg - options; negative>` Alias for negative_plot.
 
 .. _SVGOptions_negative_plot:
 

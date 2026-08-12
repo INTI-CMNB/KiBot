@@ -4030,10 +4030,12 @@ outputs:
       # Important: this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
       # isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1
       inner_extension_pattern: ''
+      # `mirror` is an alias for `mirror_plot`
       # [boolean=false] Plot mirrored
       mirror_plot: false
       # [boolean=true] Black and white output (KiCad 11+)
       monochrome: true
+      # `negative` is an alias for `negative_plot`
       # [boolean=false] Invert black and white
       negative_plot: false
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
@@ -4390,10 +4392,12 @@ outputs:
       # Important: this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
       # isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1
       inner_extension_pattern: ''
+      # `mirror` is an alias for `mirror_plot`
       # [boolean=false] Plot mirrored
       mirror_plot: false
       # [boolean=true] Black and white output (KiCad 11+)
       monochrome: true
+      # `negative` is an alias for `negative_plot`
       # [boolean=false] Invert black and white
       negative_plot: false
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
@@ -5115,10 +5119,12 @@ outputs:
         right: 0
         # [number=0] Top margin [mm]
         top: 0
+      # `mirror` is an alias for `mirror_plot`
       # [boolean=false] Plot mirrored
       mirror_plot: false
       # [boolean=true] Black and white output (KiCad 11+)
       monochrome: true
+      # `negative` is an alias for `negative_plot`
       # [boolean=false] Invert black and white
       negative_plot: false
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.

@@ -112,6 +112,10 @@ PDFOptions parameters
 ..
 
 
+.. _PDFOptions_mirror:
+
+-  *mirror* :index:`: <pair: output - pdf - options; mirror>` Alias for mirror_plot.
+
 .. _PDFOptions_mirror_plot:
 
 -  ``mirror_plot`` :index:`: <pair: output - pdf - options; mirror_plot>` [:ref:`boolean <boolean>`] (default: ``false``) Plot mirrored.
@@ -119,6 +123,10 @@ PDFOptions parameters
 .. _PDFOptions_monochrome:
 
 -  ``monochrome`` :index:`: <pair: output - pdf - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``true``) Black and white output (KiCad 11+).
+
+.. _PDFOptions_negative:
+
+-  *negative* :index:`: <pair: output - pdf - options; negative>` Alias for negative_plot.
 
 .. _PDFOptions_negative_plot:
 
