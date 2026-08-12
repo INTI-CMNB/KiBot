@@ -186,6 +186,8 @@ class AnyLayerOptions(VariantOptions):
 
     def run(self, output_dir, layers):
         super().run(output_dir)
+        if GS.ki10 and self._plot_format == GS.PLOT_FORMAT_HPGL:
+            GS.exit_with_error("HPGL format was discontinued on KiCad 10", MISSING_TOOL)
         if GS.pn:
             self._run_pn(output_dir, layers)
         else:
@@ -196,8 +198,6 @@ class AnyLayerOptions(VariantOptions):
         if GS.ki7 and GS.kicad_version_n < KICAD_VERSION_7_0_1 and not self.exclude_edge_layer:
             GS.exit_with_error("Plotting the edge layer is not supported by KiCad 7.0.0\n"
                                "Please upgrade KiCad to 7.0.1 or newer", MISSING_TOOL)
-        if GS.ki10 and self._plot_format == GS.PLOT_FORMAT_HPGL:
-            GS.exit_with_error("HPGL format was discontinued on KiCad 10", MISSING_TOOL)
         # Memorize the list of visible layers
         old_visible = GS.board.GetVisibleLayers()
         # Apply the variants and filters
