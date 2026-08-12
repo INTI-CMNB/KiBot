@@ -446,6 +446,16 @@ def get_layers_info_pn():
         GS.NO_DRILL_SHAPE = 0
         GS.SMALL_DRILL_SHAPE = 1
         GS.FULL_DRILL_SHAPE = 2
+    # DXF Units
+    if hasattr(pcbnew, 'DXF_UNITS_MM'):
+        GS.DXF_UNITS_MILLIMETERS = pcbnew.DXF_UNITS_MM
+        GS.DXF_UNITS_INCHES = pcbnew.DXF_UNITS_INCH
+    elif hasattr(pcbnew, 'DXF_UNITS_MILLIMETERS'):
+        GS.DXF_UNITS_MILLIMETERS = pcbnew.DXF_UNITS_MILLIMETERS
+        GS.DXF_UNITS_INCHES = pcbnew.DXF_UNITS_INCHES
+    else:
+        GS.DXF_UNITS_MILLIMETERS = 1
+        GS.DXF_UNITS_INCHES = 0
 
 
 def get_layers_info_kp():
