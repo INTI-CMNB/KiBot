@@ -8,7 +8,6 @@ outputs:
     dir: PDF
     options:
       exclude_edge_layer: false
-      exclude_pads_from_silkscreen: false
       plot_sheet_reference: false
       plot_footprint_refs: true
       plot_footprint_values: true
@@ -19,7 +18,6 @@ outputs:
       drill_marks: small
       mirror_plot: false
       negative_plot: false
-      line_width: 0.02
     layers:
       - layer: F.Cu
         suffix: F_Cu
