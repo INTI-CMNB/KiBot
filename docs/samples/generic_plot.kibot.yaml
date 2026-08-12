@@ -1266,7 +1266,7 @@ outputs:
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
       # [boolean=true] Tell KiCad to apply the scaling for each layer as a separated entity.
-      # Disabling it the pages are coherent and can be superposed
+      # Disabling it the pages are coherent and can be superposed (KiCad <11)
       individual_page_scaling: true
       # [string=''] Used to change the Protel style extensions for inner layers.
       # The replacement pattern can contain %n for the inner layer number and %N for the layer number.
@@ -1300,8 +1300,7 @@ outputs:
       scaling: 1
       # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
       single_file: false
-      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-      # Note that this value is currently ignored by KiCad (6.0.9)
+      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
       sketch_pad_numbers: false
@@ -1744,8 +1743,7 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
-      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-      # Note that this value is currently ignored by KiCad (6.0.9)
+      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
       sketch_pad_numbers: false
@@ -1807,7 +1805,7 @@ outputs:
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
       # [boolean=true] Tell KiCad to apply the scaling for each layer as a separated entity.
-      # Disabling it the pages are coherent and can be superposed
+      # Disabling it the pages are coherent and can be superposed (KiCad <11)
       individual_page_scaling: true
       # [string=''] Used to change the Protel style extensions for inner layers.
       # The replacement pattern can contain %n for the inner layer number and %N for the layer number.
@@ -1843,8 +1841,7 @@ outputs:
       pre_transform: '_null'
       # [number=0] Scale factor (0 means autoscaling)
       scaling: 0
-      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-      # Note that this value is currently ignored by KiCad (6.0.9)
+      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
       sketch_pad_numbers: false
@@ -4019,7 +4016,7 @@ outputs:
       # [boolean=true] Include footprint property popups for the front side (KiCad 11+)
       front_footprint_property_popups: true
       # [boolean=true] Tell KiCad to apply the scaling for each layer as a separated entity.
-      # Disabling it the pages are coherent and can be superposed
+      # Disabling it the pages are coherent and can be superposed (KiCad <11)
       individual_page_scaling: true
       # [string=''] Used to change the Protel style extensions for inner layers.
       # The replacement pattern can contain %n for the inner layer number and %N for the layer number.
@@ -4057,8 +4054,7 @@ outputs:
       single_file: false
       # [boolean=false] Plot all the layers in a single page when `single_file` is enabled (KiCad 11+)
       single_page: false
-      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-      # Note that this value is currently ignored by KiCad (6.0.9)
+      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
       sketch_pad_numbers: false
@@ -4378,7 +4374,7 @@ outputs:
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
       # [boolean=true] Tell KiCad to apply the scaling for each layer as a separated entity.
-      # Disabling it the pages are coherent and can be superposed
+      # Disabling it the pages are coherent and can be superposed (KiCad <11)
       individual_page_scaling: true
       # [string=''] Used to change the Protel style extensions for inner layers.
       # The replacement pattern can contain %n for the inner layer number and %N for the layer number.
@@ -4418,8 +4414,7 @@ outputs:
       scaling: 1
       # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
       single_file: false
-      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-      # Note that this value is currently ignored by KiCad (6.0.9)
+      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
       sketch_pad_numbers: false
@@ -5087,7 +5082,7 @@ outputs:
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
       # [boolean=true] Tell KiCad to apply the scaling for each layer as a separated entity.
-      # Disabling it the pages are coherent and can be superposed
+      # Disabling it the pages are coherent and can be superposed (KiCad <11)
       individual_page_scaling: true
       # [string=''] Used to change the Protel style extensions for inner layers.
       # The replacement pattern can contain %n for the inner layer number and %N for the layer number.
@@ -5145,8 +5140,7 @@ outputs:
       # The `kicad_all` method uses the whole size reported by KiCad. Usually includes extra space.
       # See `limit_viewbox` option
       size_detection: 'kicad_edge'
-      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-      # Note that this value is currently ignored by KiCad (6.0.9)
+      # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
       sketch_pad_numbers: false

@@ -126,8 +126,7 @@ GerberOptions parameters
 
 .. _GerberOptions_sketch_pad_line_width:
 
--  ``sketch_pad_line_width`` :index:`: <pair: output - gerber - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <GerberOptions_sketch_pads_on_fab_layers>` (KiCad 6+)
-   Note that this value is currently ignored by KiCad (6.0.9).
+-  ``sketch_pad_line_width`` :index:`: <pair: output - gerber - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <GerberOptions_sketch_pads_on_fab_layers>` (KiCad 6.0.0 to 6.0.8).
 
 .. _GerberOptions_sketch_pad_numbers:
 

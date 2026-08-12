@@ -59,10 +59,6 @@ Parameters:
    (i.e. always the default worksheet style, also problems expanding text variables). |br|
    The `pcb_print` output can do a better job for PDF, SVG, PS, EPS and PNG outputs.
 
-.. _PDF_scaling:
-
--  **scaling** :index:`: <pair: output - pdf; scaling>` [:ref:`number <number>`] (default: ``1``) Scale factor (0 means autoscaling).
-
 .. _PDF_subtract_mask_from_silk:
 
 -  **subtract_mask_from_silk** :index:`: <pair: output - pdf; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``false``) Subtract the solder mask from the silk screen.
@@ -135,11 +131,6 @@ Parameters:
    needed.
 
 
-.. _PDF_individual_page_scaling:
-
--  ``individual_page_scaling`` :index:`: <pair: output - pdf; individual_page_scaling>` [:ref:`boolean <boolean>`] (default: ``true``) Tell KiCad to apply the scaling for each layer as a separated entity.
-   Disabling it the pages are coherent and can be superposed.
-
 .. _PDF_inner_extension_pattern:
 
 -  ``inner_extension_pattern`` :index:`: <pair: output - pdf; inner_extension_pattern>` [:ref:`string <string>`] (default: ``''``) Used to change the Protel style extensions for inner layers.
@@ -183,8 +174,7 @@ Parameters:
 
 .. _PDF_sketch_pad_line_width:
 
--  ``sketch_pad_line_width`` :index:`: <pair: output - pdf; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <PDF_sketch_pads_on_fab_layers>` (KiCad 6+)
-   Note that this value is currently ignored by KiCad (6.0.9).
+-  ``sketch_pad_line_width`` :index:`: <pair: output - pdf; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <PDF_sketch_pads_on_fab_layers>` (KiCad 6.0.0 to 6.0.8).
 
 .. _PDF_sketch_pad_numbers:
 

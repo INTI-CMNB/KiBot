@@ -3213,20 +3213,6 @@
           null
         ],
         [
-          "scaling",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
-          "individual_page_scaling",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "variant",
           [
             "DataTypeString"
@@ -3258,6 +3244,20 @@
           "drill_marks",
           [
             "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "scaling",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "individual_page_scaling",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -5067,20 +5067,6 @@
           null
         ],
         [
-          "scaling",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
-          "individual_page_scaling",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "variant",
           [
             "DataTypeString"
@@ -5112,6 +5098,20 @@
           "drill_marks",
           [
             "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "scaling",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "individual_page_scaling",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -11834,20 +11834,6 @@
       null
     ],
     [
-      "scaling",
-      [
-        "DataTypeNumber"
-      ],
-      null
-    ],
-    [
-      "individual_page_scaling",
-      [
-        "DataTypeBoolean"
-      ],
-      null
-    ],
-    [
       "variant",
       [
         "DataTypeString"
@@ -12117,20 +12103,6 @@
           null
         ],
         [
-          "scaling",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
-          "individual_page_scaling",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "variant",
           [
             "DataTypeString"
@@ -12162,6 +12134,20 @@
           "drill_marks",
           [
             "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "scaling",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "individual_page_scaling",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],
@@ -13478,20 +13464,6 @@
           null
         ],
         [
-          "scaling",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
-          "individual_page_scaling",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "variant",
           [
             "DataTypeString"
@@ -13542,6 +13514,20 @@
         ],
         [
           "sketch_plot",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "scaling",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "individual_page_scaling",
           [
             "DataTypeBoolean"
           ],
@@ -15737,20 +15723,6 @@
           null
         ],
         [
-          "scaling",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
-          "individual_page_scaling",
-          [
-            "DataTypeBoolean"
-          ],
-          null
-        ],
-        [
           "variant",
           [
             "DataTypeString"
@@ -15782,6 +15754,20 @@
           "drill_marks",
           [
             "DataTypeChoice"
+          ],
+          null
+        ],
+        [
+          "scaling",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "individual_page_scaling",
+          [
+            "DataTypeBoolean"
           ],
           null
         ],

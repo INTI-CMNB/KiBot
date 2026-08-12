@@ -80,7 +80,7 @@ PSOptions parameters
 .. _PSOptions_individual_page_scaling:
 
 -  ``individual_page_scaling`` :index:`: <pair: output - ps - options; individual_page_scaling>` [:ref:`boolean <boolean>`] (default: ``true``) Tell KiCad to apply the scaling for each layer as a separated entity.
-   Disabling it the pages are coherent and can be superposed.
+   Disabling it the pages are coherent and can be superposed (KiCad <11).
 
 .. _PSOptions_inner_extension_pattern:
 
@@ -136,8 +136,7 @@ PSOptions parameters
 
 .. _PSOptions_sketch_pad_line_width:
 
--  ``sketch_pad_line_width`` :index:`: <pair: output - ps - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <PSOptions_sketch_pads_on_fab_layers>` (KiCad 6+)
-   Note that this value is currently ignored by KiCad (6.0.9).
+-  ``sketch_pad_line_width`` :index:`: <pair: output - ps - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <PSOptions_sketch_pads_on_fab_layers>` (KiCad 6.0.0 to 6.0.8).
 
 .. _PSOptions_sketch_pad_numbers:
 
