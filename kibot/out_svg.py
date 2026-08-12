@@ -29,8 +29,12 @@ class SVGOptions(DrillMarks):
                 Disabling it the pages are coherent and can be superposed (KiCad <11) """
             self.mirror_plot = False
             """ Plot mirrored """
+            self.mirror = None
+            """ {mirror_plot} """
             self.negative_plot = False
             """ Invert black and white """
+            self.negative = None
+            """ {negative_plot} """
             self.svg_precision = 4
             """ [0,6] Scale factor used to represent 1 mm in the SVG (KiCad 6).
                 The value is how much zeros has the multiplier (1 mm = 10 power `svg_precision` units).

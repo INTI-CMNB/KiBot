@@ -18,8 +18,12 @@ class PSOptions(DrillMarks):
         with document:
             self.mirror_plot = False
             """ Plot mirrored """
+            self.mirror = None
+            """ {mirror_plot} """
             self.negative_plot = False
             """ Invert black and white """
+            self.negative = None
+            """ {negative_plot} """
             self.sketch_plot = False
             """ Don't fill objects, just draw the outline (KiCad older than 10) """
             self.scaling = 1

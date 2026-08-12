@@ -26,8 +26,12 @@ class PDFOptions(DrillMarks):
                 Disabling it the pages are coherent and can be superposed (KiCad <11) """
             self.mirror_plot = False
             """ Plot mirrored """
+            self.mirror = None
+            """ {mirror_plot} """
             self.negative_plot = False
             """ Invert black and white """
+            self.negative = None
+            """ {negative_plot} """
             self.exclude_metadata = False
             """ Do not generate metadata from AUTHOR and SUBJECT KiCad variables.
                 You can also use the `author` and `subject` options to define the metadata (KiCad 11+) """
