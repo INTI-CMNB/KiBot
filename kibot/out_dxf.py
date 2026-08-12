@@ -3,6 +3,7 @@
 # Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+# Note: A good viewer is python3-ezdxf, then use `ezdxf view file`
 from .out_any_layer import AnyLayer
 from .drill_marks import DrillMarks
 from .gs import GS
@@ -17,12 +18,13 @@ class DXFOptions(DrillMarks):
             self.use_aux_axis_as_origin = False
             """ Use the auxiliary axis as origin for coordinates """
             self.polygon_mode = True
-            """ Plot using the contour, instead of the center line.
-                You must disable it to get the dimensions (See https://gitlab.com/kicad/code/kicad/-/issues/11901) """
+            """ Plot using the contour, instead of the center line """
             self.metric_units = False
             """ Use mm instead of inches """
             self.sketch_plot = False
             """ Don't fill objects, just draw the outline """
+            self.single_file = False
+            """ Plot all the pages to a single file, in a single page (KiCad 11+) """
         self._plot_format = GS.PLOT_FORMAT_DXF
 
     def _configure_plot_ctrl(self, po, output_dir):
@@ -42,6 +44,35 @@ class DXFOptions(DrillMarks):
         plot_mode = po.GetDXFPlotMode() if GS.ki10 else po.GetPlotMode()
         self.sketch_plot = plot_mode == GS.pn.SKETCH
         self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
+
+    # #########################################################################
+    # KiPy implementation
+    # #########################################################################
+
+    def _configure_plot_settings(self, plot, layers):
+        """ KiPy plot settings specific for gerbers """
+        super()._configure_plot_settings(plot, layers)
+        plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
+
+    def _run_export_job(self, destination, plot):
+        # Pagination
+        if self.single_file:
+            page_mode = GS.kp.proto.board.board_jobs_pb2.BoardJobPaginationMode.BJPM_ALL_LAYERS_ONE_PAGE
+        else:  # multiple files
+            page_mode = GS.kp.proto.board.board_jobs_pb2.BoardJobPaginationMode.BJPM_EACH_LAYER_OWN_FILE
+        # Units
+        if self.metric_units:
+            units = GS.kp.proto.common.types.enums_pb2.Units.U_MM
+        else:
+            units = GS.kp.proto.common.types.enums_pb2.Units.U_INCH
+
+        res = GS.board.export_dxf(destination,
+                                  plot_settings=plot,
+                                  plot_graphic_items_using_contours=self.sketch_plot,
+                                  polygon_mode=self.polygon_mode,
+                                  units=units,
+                                  page_mode=page_mode)
+        self.check_job_ok(res)
 
 
 @output_class
