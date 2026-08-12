@@ -32,6 +32,23 @@ PDFOptions parameters
 
 -  **subtract_mask_from_silk** :index:`: <pair: output - pdf - options; subtract_mask_from_silk>` [:ref:`boolean <boolean>`] (default: ``false``) Subtract the solder mask from the silk screen.
 
+.. _PDFOptions_author:
+
+-  ``author`` :index:`: <pair: output - pdf - options; author>` [:ref:`string <string>`] (default: ``''``) Override the AUTHOR KiCad variable, used for PDF metadata. (KiCad 11+)
+   If blank the KiCad text variable is used.
+
+.. _PDFOptions_back_footprint_property_popups:
+
+-  ``back_footprint_property_popups`` :index:`: <pair: output - pdf - options; back_footprint_property_popups>` [:ref:`boolean <boolean>`] (default: ``true``) Include footprint property popups for the back side (KiCad 11+).
+
+.. _PDFOptions_background_color:
+
+-  ``background_color`` :index:`: <pair: output - pdf - options; background_color>` [:ref:`string <string>`] (default: ``''``) Color for the background (KiCad 11+).
+
+.. _PDFOptions_color_theme:
+
+-  ``color_theme`` :index:`: <pair: output - pdf - options; color_theme>` [:ref:`string <string>`] (default: ``'_builtin_classic'``) Selects the color theme (KiCad 11+).
+
 .. _PDFOptions_custom_reports:
 
 -  ``custom_reports`` :index:`: <pair: output - pdf - options; custom_reports>`  [:ref:`CustomReport parameters <CustomReport>`] [:ref:`list(dict) <list(dict)>`] (default: ``[]``) A list of customized reports for the manufacturer.
@@ -64,10 +81,19 @@ PDFOptions parameters
    variant.
 
 
+.. _PDFOptions_exclude_metadata:
+
+-  ``exclude_metadata`` :index:`: <pair: output - pdf - options; exclude_metadata>` [:ref:`boolean <boolean>`] (default: ``false``) Do not generate metadata from AUTHOR and SUBJECT KiCad variables.
+   You can also use the `author` and `subject` options to define the metadata (KiCad 11+).
+
 .. _PDFOptions_force_plot_invisible_refs_vals:
 
 -  ``force_plot_invisible_refs_vals`` :index:`: <pair: output - pdf - options; force_plot_invisible_refs_vals>` [:ref:`boolean <boolean>`] (default: ``false``) Include references and values even when they are marked as invisible.
    Not available on KiCad 9.0.1 and newer.
+
+.. _PDFOptions_front_footprint_property_popups:
+
+-  ``front_footprint_property_popups`` :index:`: <pair: output - pdf - options; front_footprint_property_popups>` [:ref:`boolean <boolean>`] (default: ``true``) Include footprint property popups for the front side (KiCad 11+).
 
 .. _PDFOptions_individual_page_scaling:
 
@@ -86,13 +112,13 @@ PDFOptions parameters
 ..
 
 
-.. _PDFOptions_line_width:
-
--  ``line_width`` :index:`: <pair: output - pdf - options; line_width>` [:ref:`number <number>`] (default: ``0.1``) (range: 0.02 to 2) For objects without width [mm] (KiCad 5).
-
 .. _PDFOptions_mirror_plot:
 
 -  ``mirror_plot`` :index:`: <pair: output - pdf - options; mirror_plot>` [:ref:`boolean <boolean>`] (default: ``false``) Plot mirrored.
+
+.. _PDFOptions_monochrome:
+
+-  ``monochrome`` :index:`: <pair: output - pdf - options; monochrome>` [:ref:`boolean <boolean>`] (default: ``true``) Black and white output (KiCad 11+).
 
 .. _PDFOptions_negative_plot:
 
@@ -114,6 +140,14 @@ PDFOptions parameters
    variant.
 
 
+.. _PDFOptions_single_file:
+
+-  ``single_file`` :index:`: <pair: output - pdf - options; single_file>` [:ref:`boolean <boolean>`] (default: ``false``) Plot all the pages to a single file, see :ref:`single_page <PDFOptions_single_page>` (KiCad 11+).
+
+.. _PDFOptions_single_page:
+
+-  ``single_page`` :index:`: <pair: output - pdf - options; single_page>` [:ref:`boolean <boolean>`] (default: ``false``) Plot all the layers in a single page when `single_file` is enabled (KiCad 11+).
+
 .. _PDFOptions_sketch_pad_line_width:
 
 -  ``sketch_pad_line_width`` :index:`: <pair: output - pdf - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <PDFOptions_sketch_pads_on_fab_layers>` (KiCad 6+)
@@ -126,6 +160,11 @@ PDFOptions parameters
 .. _PDFOptions_sketch_pads_on_fab_layers:
 
 -  ``sketch_pads_on_fab_layers`` :index:`: <pair: output - pdf - options; sketch_pads_on_fab_layers>` [:ref:`boolean <boolean>`] (default: ``false``) Draw only the outline of the pads on the \\*.Fab layers (KiCad 6+).
+
+.. _PDFOptions_subject:
+
+-  ``subject`` :index:`: <pair: output - pdf - options; subject>` [:ref:`string <string>`] (default: ``''``) Override the SUBJECT KiCad variable, used for PDF metadata. (KiCad 11+)
+   If blank the KiCad text variable is used.
 
 .. _PDFOptions_tent_vias:
 

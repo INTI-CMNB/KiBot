@@ -3977,6 +3977,15 @@ outputs:
     type: 'pdf'
     dir: 'Example/pdf_dir'
     options:
+      # [string=''] Override the AUTHOR KiCad variable, used for PDF metadata. (KiCad 11+)
+      # If blank the KiCad text variable is used
+      author: ''
+      # [boolean=true] Include footprint property popups for the back side (KiCad 11+)
+      back_footprint_property_popups: true
+      # [string=''] Color for the background (KiCad 11+)
+      background_color: ''
+      # [string='_builtin_classic'] Selects the color theme (KiCad 11+)
+      color_theme: '_builtin_classic'
       # [list(dict)=[]] A list of customized reports for the manufacturer
       custom_reports:
         # [string=''] Content for the report. Use ``${basename}`` for the project name without extension.
@@ -4000,9 +4009,14 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
+      # [boolean=false] Do not generate metadata from AUTHOR and SUBJECT KiCad variables.
+      # You can also use the `author` and `subject` options to define the metadata (KiCad 11+)
+      exclude_metadata: false
       # [boolean=false] Include references and values even when they are marked as invisible.
       # Not available on KiCad 9.0.1 and newer
       force_plot_invisible_refs_vals: false
+      # [boolean=true] Include footprint property popups for the front side (KiCad 11+)
+      front_footprint_property_popups: true
       # [boolean=true] Tell KiCad to apply the scaling for each layer as a separated entity.
       # Disabling it the pages are coherent and can be superposed
       individual_page_scaling: true
@@ -4012,10 +4026,10 @@ outputs:
       # Important: this numbering is consistent and the first inner layer is %n = 1 and %N = 2. Which
       # isn't true for KiCad. KiCad 8 uses 2 for the first inner and KiCad 9 uses 1
       inner_extension_pattern: ''
-      # [number=0.1] [0.02,2] For objects without width [mm] (KiCad 5)
-      line_width: 0.1
       # [boolean=false] Plot mirrored
       mirror_plot: false
+      # [boolean=true] Black and white output (KiCad 11+)
+      monochrome: true
       # [boolean=false] Invert black and white
       negative_plot: false
       # [string='%f-%i%I%v.%x'] Output file name, the default KiCad name if empty.
@@ -4038,6 +4052,10 @@ outputs:
       pre_transform: '_null'
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [boolean=false] Plot all the pages to a single file, see `single_page` (KiCad 11+)
+      single_file: false
+      # [boolean=false] Plot all the layers in a single page when `single_file` is enabled (KiCad 11+)
+      single_page: false
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1
@@ -4045,6 +4063,9 @@ outputs:
       sketch_pad_numbers: false
       # [boolean=false] Draw only the outline of the pads on the *.Fab layers (KiCad 6+)
       sketch_pads_on_fab_layers: false
+      # [string=''] Override the SUBJECT KiCad variable, used for PDF metadata. (KiCad 11+)
+      # If blank the KiCad text variable is used
+      subject: ''
       # [boolean=false] Subtract the solder mask from the silk screen
       subtract_mask_from_silk: false
       # [boolean=true] Cover the vias. Usable for KiCad versions older than 9.

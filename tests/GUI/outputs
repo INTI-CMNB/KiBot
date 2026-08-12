@@ -12159,13 +12159,6 @@
           null
         ],
         [
-          "line_width",
-          [
-            "DataTypeNumber"
-          ],
-          null
-        ],
-        [
           "mirror_plot",
           [
             "DataTypeBoolean"
@@ -12176,6 +12169,76 @@
           "negative_plot",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "exclude_metadata",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "author",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "subject",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "single_file",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "single_page",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "front_footprint_property_popups",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "back_footprint_property_popups",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "monochrome",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "color_theme",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "background_color",
+          [
+            "DataTypeString"
           ],
           null
         ]

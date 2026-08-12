@@ -1,5 +1,5 @@
-56 outputs types with a total of 2293 different parameters
-Single type parameters: 2102 (92 %)
+56 outputs types with a total of 2302 different parameters
+Single type parameters: 2111 (92 %)
 Multi type parameters: 191 (8 %)
 Average parameters: 41
 Maximum number of parameters: 218
@@ -11,8 +11,8 @@ Histogram:
  30- 39: ************
  40- 49: ********
  50- 59: **
- 60- 69: **
- 70- 79: **
+ 60- 69: *
+ 70- 79: ***
  80- 89: 
  90- 99: 
 100-109: 
@@ -78,7 +78,7 @@ Outputs sorted by parameters:
 - ps: 50
 - svg: 54
 - pcbdraw: 60
-- pdf: 67
+- pdf: 76
 - blender_export: 78
 - render_3d: 79
 - pcb_print: 117
@@ -153,10 +153,10 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String:  982
--            Boolean:  598
+-             String:  986
+-            Boolean:  604
 - ListStringSingular:  309
--             Number:  307
+-             Number:  306
 -             Choice:  115
 -               Dict:   92
 -   ListDictOrString:   24
@@ -169,10 +169,10 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  814 
--            Boolean:  528 
+-             String:  818 
+-            Boolean:  534 
 - ListStringSingular:  305 
--             Number:  213 
+-             Number:  212 
 -             Choice:  112 
 -               Dict:   79 
 -           ListDict:   20 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2692 different parameters
-Single type parameters: 2475 (92 %)
+97 totals types with a total of 2701 different parameters
+Single type parameters: 2484 (92 %)
 Multi type parameters: 217 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -427,8 +427,8 @@ Histogram:
  30- 39: *************
  40- 49: ********
  50- 59: **
- 60- 69: **
- 70- 79: **
+ 60- 69: *
+ 70- 79: ***
  80- 89: 
  90- 99: 
 100-109: 
@@ -535,7 +535,7 @@ Totals sorted by parameters:
 - ps: 50
 - svg: 54
 - pcbdraw: 60
-- pdf: 67
+- pdf: 76
 - blender_export: 78
 - render_3d: 79
 - pcb_print: 117
@@ -651,9 +651,9 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1151
--            Boolean:  701
--             Number:  360
+-             String: 1155
+-            Boolean:  707
+-             Number:  359
 - ListStringSingular:  340
 -             Choice:  147
 -               Dict:  103
@@ -667,10 +667,10 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  965 
--            Boolean:  621 
+-             String:  969 
+-            Boolean:  627 
 - ListStringSingular:  336 
--             Number:  251 
+-             Number:  250 
 -             Choice:  144 
 -               Dict:   82 
 -           ListDict:   30 

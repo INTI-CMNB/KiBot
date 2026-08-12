@@ -24,15 +24,28 @@ Added
    -  ’draw_hop_over\` to draw it at wire crossings
    -  Better sub-sheet names handling for KiCad 10+
 
+-  PDF:
+
+   -  ``single_page``: used with ``single_file`` to get just one page
+      (KiCad 11)
+   -  ``background_color``: to select a particular background color
+      (KiCad 11)
+   -  ``exclude_metadata``: no metadata (KiCad 11)
+   -  ``author``: overrides the AUTHOR (KiCad 11)
+   -  ``subject``: overrides the SUBJECT (KiCad 11)
+   -  ``front_footprint_property_popups`` and
+      ``back_footprint_property_popups``: To control information about
+      the footprints (KiCad 11)
+
 -  PDF SCH Print:
 
-   -  ‘exclude_property_popups’: no properties popups (smaller size)
-   -  ‘exclude_hierarchical_links’: no links to sub-sheets
-   -  ‘exclude_metadata’: no metadata
-   -  ‘author’: overrides the AUTHOR
-   -  ‘subject’: overrides the SUBJECT
+   -  ``exclude_property_popups``: no properties popups (smaller size)
+   -  ``exclude_hierarchical_links``: no links to sub-sheets
+   -  ``exclude_metadata``: no metadata
+   -  ``author``: overrides the AUTHOR
+   -  ``subject``: overrides the SUBJECT
 
--  PS/SVG:
+-  PS/SVG/PDF:
 
    -  ``monochrome`` and ``color_theme``: to generate color PSs (KiCad
       11)
@@ -48,7 +61,7 @@ Added
 
    -  Gerber:
 
-      -  ‘sketch_pad_numbers’: when sketching the pads in Fab layers
+      -  ``sketch_pad_numbers``: when sketching the pads in Fab layers
          also add the pad number
 
 Fixed
@@ -72,7 +85,7 @@ Changed
    -  ``exclude_pads_from_silkscreen`` is no longer valid (just warning)
       was for KiCad 5
 
--  Gerber/PS:
+-  Gerber/PS/PDF/SVG:
 
    -  ``line_width`` is no longer valid (just warning) was for KiCad 5
 
@@ -206,7 +219,7 @@ Fixed
    -  The list of targets now includes all schematic pages
    -  Output when the ``output`` option was empty
    -  DNP components when no variant is used and we set a title or
-      replace images (‘kibot_image_OUTPUT’) (#943)
+      replace images (``kibot_image_OUTPUT``) (#943)
 
 -  PCB2Blender Tools:
 
@@ -376,8 +389,8 @@ Fixed
 
 -  DRC:
 
-   -  No schematic parity check when using ‘check_zone_fills’ and not
-      ‘fill_zones’ (#920)
+   -  No schematic parity check when using ``check_zone_fills`` and not
+      ``fill_zones`` (#920)
 
 -  Panelize:
 
