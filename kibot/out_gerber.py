@@ -89,9 +89,9 @@ class GerberOptions(AnyLayerOptions):
     # KiPy implementation
     # #########################################################################
 
-    def _configure_plot_settings(self, plot, layers):
+    def _configure_plot_settings(self, plot, layers, common_layers):
         """ KiPy plot settings specific for gerbers """
-        super()._configure_plot_settings(plot, layers)
+        super()._configure_plot_settings(plot, layers, common_layers)
         plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
 
     def rename_files_in_job_file(self, job_file, renamed):

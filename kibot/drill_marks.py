@@ -51,7 +51,7 @@ class DrillMarks(AnyLayerOptions):
         self.drill_marks = DRILL_MARKS_REV_MAP[marks]
         return po
 
-    def _configure_plot_settings(self, plot, layers):
+    def _configure_plot_settings(self, plot, layers, common_layers):
         """ KiPy plot settings for drill marks """
-        super()._configure_plot_settings(plot, layers)
+        super()._configure_plot_settings(plot, layers, common_layers)
         plot.drill_marks = self.drill_marks

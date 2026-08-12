@@ -59,9 +59,9 @@ class DXFOptions(DrillMarks):
     # KiPy implementation
     # #########################################################################
 
-    def _configure_plot_settings(self, plot, layers):
+    def _configure_plot_settings(self, plot, layers, common_layers):
         """ KiPy plot settings specific for gerbers """
-        super()._configure_plot_settings(plot, layers)
+        super()._configure_plot_settings(plot, layers, common_layers)
         plot.use_drill_origin = self.use_aux_axis_as_origin  # Gerber, DXF, SVG
 
     def _run_export_job(self, destination, plot):
