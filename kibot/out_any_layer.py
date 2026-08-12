@@ -146,10 +146,10 @@ class AnyLayerOptions(VariantOptions):
             filename = os.path.splitext(filename)[0]+os.path.splitext(filename)[1].upper()
         return filename
 
-    def compute_kicad_name(self, kicad_output_base_name, layer):
+    def compute_kicad_name(self, kicad_output_base_name, layer, check=True):
         extension = self.solve_extension(layer)
         file = kicad_output_base_name+'-'+GS.board.get_layer_name(layer.id).replace('.', '_')+'.'+extension
-        if not os.path.isfile(file):
+        if check and not os.path.isfile(file):
             raise PlotError(f"Missing {self._parent.type} file `{file}` available: {glob.glob(kicad_output_base_name+'*')}")
         return file
 
@@ -317,7 +317,7 @@ class AnyLayerOptions(VariantOptions):
 
     def check_job_ok(self, res):
         if res.succeeded:
-            # res.output_paths contains a list of generated files
+            logger.debug(f'KiCad job generated files: {res.output_paths}')
             return
         raise PlotError(res.message)
 
@@ -366,6 +366,7 @@ class AnyLayerOptions(VariantOptions):
             else:
                 # Multiple files
                 kicad_output_base_name = os.path.join(destination, GS.pcb_basename)
+                kicad_output_base_name_output_dir = os.path.join(output_dir, GS.pcb_basename)
                 for la in layers:
                     id = la.id
                     if not GS.is_layer_enabled(id):
@@ -374,7 +375,8 @@ class AnyLayerOptions(VariantOptions):
                     # desc = la.description
                     # Compute the current file name and the one we want
                     k_filename = self.compute_kicad_name(kicad_output_base_name, la)
-                    filename = self.compute_name(k_filename, output_dir, self.output, id, suffix)
+                    k_filename_at_output_dir = self.compute_kicad_name(kicad_output_base_name_output_dir, la, check=False)
+                    filename = self.compute_name(k_filename_at_output_dir, output_dir, self.output, id, suffix)
                     logger.debug(f"Moving {k_filename} -> {filename}")
                     move(k_filename, filename)
                     filename_no_path = os.path.basename(filename)
