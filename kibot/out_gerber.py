@@ -61,24 +61,29 @@ class GerberOptions(AnyLayerOptions):
         po.SetDisableGerberMacros(self.disable_aperture_macros)
         po.gerber_job_file = self.gerber_job_file
 
-    def read_vals_from_po(self, po):
+    def read_vals_from_po(self):
         """ Used to generate an example configuration.
             Called by print_example_options (config_reader.py) """
-        super().read_vals_from_po(po)
-        # usegerberattributes
-        self.use_gerber_x2_attributes = po.GetUseGerberX2format()
-        # usegerberextensions
-        self.use_protel_extensions = po.GetUseGerberProtelExtensions()
-        # usegerberadvancedattributes
-        self.use_gerber_net_attributes = po.GetIncludeGerberNetlistInfo()
-        # creategerberjobfile
-        self.create_gerber_job_file = po.GetCreateGerberJobFile()
-        # gerberprecision
-        self.gerber_precision = 4.0 + po.GetGerberPrecision()/10.0
-        # useauxorigin
-        self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
-        # disableapertmacros
-        self.disable_aperture_macros = po.GetDisableGerberMacros()
+        po = super().read_vals_from_po()
+        if GS.pn is not None:
+            # usegerberattributes
+            self.use_gerber_x2_attributes = po.GetUseGerberX2format()
+            # usegerberextensions
+            self.use_protel_extensions = po.GetUseGerberProtelExtensions()
+            # usegerberadvancedattributes
+            self.use_gerber_net_attributes = po.GetIncludeGerberNetlistInfo()
+            # creategerberjobfile
+            self.create_gerber_job_file = po.GetCreateGerberJobFile()
+            # gerberprecision
+            self.gerber_precision = 4.0 + po.GetGerberPrecision()/10.0
+            # useauxorigin
+            self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
+            # disableapertmacros
+            self.disable_aperture_macros = po.GetDisableGerberMacros()
+        else:
+            self.use_aux_axis_as_origin = po.use_drill_origin
+            # TODO: The rest are missing
+        return po
 
     # #########################################################################
     # KiPy implementation

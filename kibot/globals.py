@@ -205,7 +205,7 @@ class Globals(FiltersOptions):
             """ Disable KiCad cross on Fab layers, so only KiBot does it (KiCad 9+).
                 Note that you can also select other actions when using KiCad 11+, see `kicad_cross_mechanism` """
             self.kicad_cross_mechanism = 'crossout'
-            """ [crossout,hide,sketch] Preferred mechanism to mark DNP/DNF components when using KiCad internal mechanism.
+            """ [crossout,hide] Preferred mechanism to mark DNP/DNF components when using KiCad internal mechanism.
                 This needs KiCas 11+ and only applies when available. See `disable_kicad_cross_on_fab` """
             self.cross_no_body = False
             """ Cross components even when they don't have a body. Only for KiCad 6 and internal cross (Schematic) """

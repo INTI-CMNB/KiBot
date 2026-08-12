@@ -774,7 +774,7 @@ class BaseOptions(Optionable):
     def __init__(self):
         super().__init__()
 
-    def read_vals_from_po(self, po):
+    def read_vals_from_po(self):
         """ Set attributes from a PCB_PLOT_PARAMS (plot options) """
         return
 

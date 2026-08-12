@@ -55,16 +55,25 @@ class PSOptions(DrillMarks):
         po.SetNegative(self.negative_plot)
         po.SetMirror(self.mirror_plot)
 
-    def read_vals_from_po(self, po):
-        super().read_vals_from_po(po)
-        self.width_adjust = po.GetWidthAdjust()
-        self.scale_adjust_x = po.GetFineScaleAdjustX()
-        self.scale_adjust_y = po.GetFineScaleAdjustX()
-        self.a4_output = po.GetA4Output()
-        if not GS.ki10:
-            self.sketch_plot = po.GetPlotMode() == GS.pn.SKETCH
-        self.negative_plot = po.GetNegative()
-        self.mirror_plot = po.GetMirror()
+    def read_vals_from_po(self):
+        po = super().read_vals_from_po()
+        if GS.pn is not None:
+            self.width_adjust = po.GetWidthAdjust()
+            self.scale_adjust_x = po.GetFineScaleAdjustX()
+            self.scale_adjust_y = po.GetFineScaleAdjustX()
+            self.a4_output = po.GetA4Output()
+            if not GS.ki10:
+                self.sketch_plot = po.GetPlotMode() == GS.pn.SKETCH
+            self.negative_plot = po.GetNegative()
+            self.mirror_plot = po.GetMirror()
+        else:
+            self.mirror_plot = po.mirror
+            self.negative_plot = po.negative
+            self.scaling = po.scale
+            self.monochrome = po.black_and_white
+            self.color_theme = po.color_theme
+            # TODO: The rest are missing
+        return po
 
     # #########################################################################
     # KiPy implementation

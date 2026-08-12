@@ -42,13 +42,18 @@ class DXFOptions(DrillMarks):
             po.SetPlotMode(GS.pn.SKETCH if self.sketch_plot else GS.pn.FILLED)
         po.SetUseAuxOrigin(self.use_aux_axis_as_origin)
 
-    def read_vals_from_po(self, po):
-        super().read_vals_from_po(po)
-        self.polygon_mode = po.GetDXFPlotPolygonMode()
-        self.metric_units = po.GetDXFPlotUnits() == 1
-        plot_mode = po.GetDXFPlotMode() if GS.ki10 else po.GetPlotMode()
-        self.sketch_plot = plot_mode == GS.pn.SKETCH
-        self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
+    def read_vals_from_po(self):
+        po = super().read_vals_from_po()
+        if GS.pn is not None:
+            self.polygon_mode = po.GetDXFPlotPolygonMode()
+            self.metric_units = po.GetDXFPlotUnits() == 1
+            plot_mode = po.GetDXFPlotMode() if GS.ki10 else po.GetPlotMode()
+            self.sketch_plot = plot_mode == GS.pn.SKETCH
+            self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
+        else:
+            self.use_aux_axis_as_origin = po.use_drill_origin  # Gerber, DXF, SVG
+            # TODO: The rest are missing
+        return po
 
     # #########################################################################
     # KiPy implementation
