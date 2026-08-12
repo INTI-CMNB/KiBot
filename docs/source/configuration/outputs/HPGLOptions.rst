@@ -118,6 +118,10 @@ HPGLOptions parameters
 
 -  ``scaling`` :index:`: <pair: output - hpgl - options; scaling>` [:ref:`number <number>`] (default: ``0``) Scale factor (0 means autoscaling).
 
+.. _HPGLOptions_sheet_reference_layout:
+
+-  ``sheet_reference_layout`` :index:`: <pair: output - hpgl - options; sheet_reference_layout>` [:ref:`string <string>`] (default: ``''``) Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+).
+
 .. _HPGLOptions_sketch_pad_line_width:
 
 -  ``sketch_pad_line_width`` :index:`: <pair: output - hpgl - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <HPGLOptions_sketch_pads_on_fab_layers>` (KiCad 6.0.0 to 6.0.8).

@@ -110,6 +110,10 @@ DXFOptions parameters
    variant.
 
 
+.. _DXFOptions_sheet_reference_layout:
+
+-  ``sheet_reference_layout`` :index:`: <pair: output - dxf - options; sheet_reference_layout>` [:ref:`string <string>`] (default: ``''``) Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+).
+
 .. _DXFOptions_single_file:
 
 -  ``single_file`` :index:`: <pair: output - dxf - options; single_file>` [:ref:`boolean <boolean>`] (default: ``false``) Plot all the pages to a single file, in a single page (KiCad 11+).

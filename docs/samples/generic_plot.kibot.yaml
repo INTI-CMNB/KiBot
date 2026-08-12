@@ -1298,6 +1298,8 @@ outputs:
       pre_transform: '_null'
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [string=''] Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+)
+      sheet_reference_layout: ''
       # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
       single_file: false
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
@@ -1743,6 +1745,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
+      # [string=''] Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+)
+      sheet_reference_layout: ''
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
@@ -1841,6 +1845,8 @@ outputs:
       pre_transform: '_null'
       # [number=0] Scale factor (0 means autoscaling)
       scaling: 0
+      # [string=''] Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+)
+      sheet_reference_layout: ''
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
       sketch_pad_line_width: 0.1
       # [boolean=false] Plot pad numbers on top of sketched pads on the *.Fab layers (KiCad 11+)
@@ -4050,6 +4056,8 @@ outputs:
       pre_transform: '_null'
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [string=''] Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+)
+      sheet_reference_layout: ''
       # [boolean=false] Plot all the pages to a single file, see `single_page` (KiCad 11+)
       single_file: false
       # [boolean=false] Plot all the layers in a single page when `single_file` is enabled (KiCad 11+)
@@ -4412,6 +4420,8 @@ outputs:
       scale_adjust_y: 1.0
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [string=''] Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+)
+      sheet_reference_layout: ''
       # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
       single_file: false
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8)
@@ -5131,6 +5141,8 @@ outputs:
       pre_transform: '_null'
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [string=''] Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+)
+      sheet_reference_layout: ''
       # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
       single_file: false
       # [string='kicad_edge'] [kicad_edge,kicad_all] Method used to detect the size of the view box.

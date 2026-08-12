@@ -124,6 +124,10 @@ GerberOptions parameters
    variant.
 
 
+.. _GerberOptions_sheet_reference_layout:
+
+-  ``sheet_reference_layout`` :index:`: <pair: output - gerber - options; sheet_reference_layout>` [:ref:`string <string>`] (default: ``''``) Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+).
+
 .. _GerberOptions_sketch_pad_line_width:
 
 -  ``sketch_pad_line_width`` :index:`: <pair: output - gerber - options; sketch_pad_line_width>` [:ref:`number <number>`] (default: ``0.1``) Line width for the sketched pads [mm], see :ref:`sketch_pads_on_fab_layers <GerberOptions_sketch_pads_on_fab_layers>` (KiCad 6.0.0 to 6.0.8).

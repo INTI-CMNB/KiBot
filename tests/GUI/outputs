@@ -3087,6 +3087,36 @@
       ]
     ],
     [
+      "common_layers",
+      [
+        "DataTypeListDictOrString",
+        "DataTypeCombo"
+      ],
+      [
+        [
+          "layer",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "suffix",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "description",
+          [
+            "DataTypeString"
+          ],
+          null
+        ]
+      ]
+    ],
+    [
       "options",
       [
         "DataTypeDict"
@@ -3103,6 +3133,13 @@
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sheet_reference_layout",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -4619,6 +4656,36 @@
       ]
     ],
     [
+      "common_layers",
+      [
+        "DataTypeListDictOrString",
+        "DataTypeCombo"
+      ],
+      [
+        [
+          "layer",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "suffix",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "description",
+          [
+            "DataTypeString"
+          ],
+          null
+        ]
+      ]
+    ],
+    [
       "options",
       [
         "DataTypeDict"
@@ -4691,6 +4758,13 @@
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sheet_reference_layout",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -4941,6 +5015,36 @@
       ]
     ],
     [
+      "common_layers",
+      [
+        "DataTypeListDictOrString",
+        "DataTypeCombo"
+      ],
+      [
+        [
+          "layer",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "suffix",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "description",
+          [
+            "DataTypeString"
+          ],
+          null
+        ]
+      ]
+    ],
+    [
       "options",
       [
         "DataTypeDict"
@@ -4957,6 +5061,13 @@
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sheet_reference_layout",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -11728,6 +11839,13 @@
       null
     ],
     [
+      "sheet_reference_layout",
+      [
+        "DataTypeString"
+      ],
+      null
+    ],
+    [
       "plot_footprint_refs",
       [
         "DataTypeBoolean"
@@ -11977,6 +12095,36 @@
       ]
     ],
     [
+      "common_layers",
+      [
+        "DataTypeListDictOrString",
+        "DataTypeCombo"
+      ],
+      [
+        [
+          "layer",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "suffix",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "description",
+          [
+            "DataTypeString"
+          ],
+          null
+        ]
+      ]
+    ],
+    [
       "options",
       [
         "DataTypeDict"
@@ -11993,6 +12141,13 @@
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sheet_reference_layout",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -13338,6 +13493,36 @@
       ]
     ],
     [
+      "common_layers",
+      [
+        "DataTypeListDictOrString",
+        "DataTypeCombo"
+      ],
+      [
+        [
+          "layer",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "suffix",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "description",
+          [
+            "DataTypeString"
+          ],
+          null
+        ]
+      ]
+    ],
+    [
       "options",
       [
         "DataTypeDict"
@@ -13354,6 +13539,13 @@
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sheet_reference_layout",
+          [
+            "DataTypeString"
           ],
           null
         ],
@@ -15597,6 +15789,36 @@
       ]
     ],
     [
+      "common_layers",
+      [
+        "DataTypeListDictOrString",
+        "DataTypeCombo"
+      ],
+      [
+        [
+          "layer",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "suffix",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "description",
+          [
+            "DataTypeString"
+          ],
+          null
+        ]
+      ]
+    ],
+    [
       "options",
       [
         "DataTypeDict"
@@ -15613,6 +15835,13 @@
           "plot_sheet_reference",
           [
             "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
+          "sheet_reference_layout",
+          [
+            "DataTypeString"
           ],
           null
         ],

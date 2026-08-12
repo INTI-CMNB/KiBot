@@ -26,6 +26,13 @@ Parameters:
 
 -  **comment** :index:`: <pair: output - pdf; comment>` [:ref:`string <string>`] (default: ``''``) A comment for documentation purposes. It helps to identify the output.
 
+.. _PDF_common_layers:
+
+-  **common_layers** :index:`: <pair: output - pdf; common_layers>`  [:ref:`Layer parameters <Layer>`] [:ref:`list(dict) <list(dict)>` | :ref:`list(string) <list(string)>` | :ref:`string <string>`] (default: ``'all'``) (choices: "all", "selected", "copper", "technical", "user", "inners", "outers") (also accepts any string) List
+   of PCB layers to plot on each page/file. For the most common case, the edge cuts, you don't need
+   to use it. |br|
+   The edge cut is automatically added unless `exclude_edge_layer` is enabled (KiCad 11+).
+
 .. _PDF_dir:
 
 -  **dir** :index:`: <pair: output - pdf; dir>` [:ref:`string <string>`] (default: ``'./'``) Output directory for the generated files.
@@ -171,6 +178,10 @@ Parameters:
 .. _PDF_run_by_default:
 
 -  ``run_by_default`` :index:`: <pair: output - pdf; run_by_default>` [:ref:`boolean <boolean>`] (default: ``true``) When enabled this output will be created when no specific outputs are requested.
+
+.. _PDF_sheet_reference_layout:
+
+-  ``sheet_reference_layout`` :index:`: <pair: output - pdf; sheet_reference_layout>` [:ref:`string <string>`] (default: ``''``) Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+).
 
 .. _PDF_sketch_pad_line_width:
 

@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - *SCH Print:
   - 'draw_hop_over` to draw it at wire crossings
   - Better sub-sheet names handling for KiCad 10+
+- Gerber/DXF/PDF/PS/SVG:
+  - `sheet_reference_layout`: to specify another worksheet (KiCad 11)
+  - `common_layers`: list of layers to use on every page (KiCad 11)
 - DXF:
   - `single_file`: to plot all layers to a single file (KiCad 11)
 - PDF:

@@ -400,7 +400,7 @@
 
 .. _Globals_kicad_cross_mechanism:
 
-      -  ``kicad_cross_mechanism`` :index:`: <pair: global options; kicad_cross_mechanism>` [:ref:`string <string>`] (default: ``'crossout'``) (choices: "crossout", "hide", "sketch") Preferred mechanism to mark DNP/DNF components when using KiCad internal mechanism.
+      -  ``kicad_cross_mechanism`` :index:`: <pair: global options; kicad_cross_mechanism>` [:ref:`string <string>`] (default: ``'crossout'``) (choices: "crossout", "hide") Preferred mechanism to mark DNP/DNF components when using KiCad internal mechanism.
          This needs KiCas 11+ and only applies when available. See :ref:`disable_kicad_cross_on_fab <Globals_disable_kicad_cross_on_fab>`.
 
 .. _Globals_kicad_default_variant:
