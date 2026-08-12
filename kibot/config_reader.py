@@ -1369,7 +1369,7 @@ def print_example_options(f, cls, name, indent, po, is_list=False):
     obj = cls()
     first = True
     if po:
-        obj.read_vals_from_po(po)
+        obj.read_vals_from_po()
     for k, _ in sorted(obj.get_attrs_gen(), key=lambda x: x[0]):
         help, alias, is_alias = obj.get_doc(k, no_basic=True)
         if is_alias:
@@ -1442,6 +1442,26 @@ def create_example(pcb_file, out_dir, copy_options, copy_expand):
         f.write("# This file is useful to know all the available options.\n")
         f.write("# Try using `--quick-start` for a functional example.\n")
         f.write('kibot:\n  version: 1\n')
+
+        if pcb_file:
+            GS.load_board(pcb_file)
+
+        if GS.kp and GS.board:
+            po = GS.board.get_plot_settings()
+            if po.sketch_dnp_footprints_on_fab_layers or po.variant:
+                f.write('\nglobals:\n')
+            if po.sketch_dnp_footprints_on_fab_layers:
+                f.write('  disable_kicad_cross_on_fab: false\n')
+                mode = 'crossout' if po.crossout_dnp_footprints_on_fab_layers else 'hide'
+                f.write(f'  kicad_cross_mechanism: {mode}\n')
+            if po.variant:
+                # TODO: not working on 2026/08/09
+                f.write(f'  variant: {po.variant}\n')
+            # TODO: not working on 2026/08/09
+            GS.check_zone_fills_example = po.check_zones_before_plot
+        else:
+            GS.check_zone_fills_example = True
+
         # Preflights
         f.write('\npreflight:\n')
         prefs = BasePreFlight.get_registered()
@@ -1463,15 +1483,14 @@ def create_example(pcb_file, out_dir, copy_options, copy_expand):
         outs = RegOutput.get_registered()
         f.write('\noutputs:\n')
         # List of layers
-        po = None
+        po = False
         layers = 'all'
         if pcb_file:
             # We have a PCB to take as reference
-            board = GS.load_board(pcb_file)
             if copy_options or copy_expand:
                 # Layers and plot options from the PCB
                 layers = 'selected'
-                po = board.GetPlotOptions()
+                po = True
         for n, cls in OrderedDict(sorted(outs.items())).items():
             lines = trim(cls.__doc__)
             if len(lines) == 0:

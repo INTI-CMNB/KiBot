@@ -229,6 +229,8 @@ class GS(object):
     class_for_global_opts = None
     # The last tree we used to configure it
     globals_tree = None
+    # The value we use for the check_zone_fills example
+    check_zone_fills_example = True
     # Global options
     global_allow_component_ranges = None
     global_always_warn_about_paste_pads = None

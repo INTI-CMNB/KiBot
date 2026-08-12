@@ -45,9 +45,11 @@ class DrillMarks(AnyLayerOptions):
         # How we draw drill marks
         po.SetDrillMarksType(self.drill_marks)
 
-    def read_vals_from_po(self, po):
-        super().read_vals_from_po(po)
-        self.drill_marks = DRILL_MARKS_REV_MAP[po.GetDrillMarksType()]
+    def read_vals_from_po(self):
+        po = super().read_vals_from_po()
+        marks = po.GetDrillMarksType() if GS.pn is not None else po.drill_marks
+        self.drill_marks = DRILL_MARKS_REV_MAP[marks]
+        return po
 
     def _configure_plot_settings(self, plot, layers):
         """ KiPy plot settings for drill marks """

@@ -66,11 +66,21 @@ class SVGOptions(DrillMarks):
         po.SetNegative(self.negative_plot)
         GS.SetSvgPrecision(po, self.svg_precision)
 
-    def read_vals_from_po(self, po):
-        super().read_vals_from_po(po)
-        self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
-        self.negative_plot = po.GetNegative()
-        self.mirror_plot = po.GetMirror()
+    def read_vals_from_po(self):
+        po = super().read_vals_from_po()
+        if GS.pn is not None:
+            self.use_aux_axis_as_origin = po.GetUseAuxOrigin()
+            self.negative_plot = po.GetNegative()
+            self.mirror_plot = po.GetMirror()
+        else:
+            self.mirror_plot = po.mirror
+            self.negative_plot = po.negative
+            self.scaling = po.scale
+            self.monochrome = po.black_and_white
+            self.color_theme = po.color_theme
+            self.use_aux_axis_as_origin = po.use_drill_origin  # Gerber, DXF, SVG
+            # TODO: The rest are missing
+        return po
 
     def config(self, parent):
         super().config(parent)

@@ -294,12 +294,13 @@ class AnyLayerOptions(VariantOptions):
         plot.hide_dnp_footprints_on_fab_layers = False
         plot.sketch_dnp_footprints_on_fab_layers = False
         if not GS.global_disable_kicad_cross_on_fab:
+            plot.sketch_dnp_footprints_on_fab_layers = True
+            plot.crossout_dnp_footprints_on_fab_layers = False
+            plot.hide_dnp_footprints_on_fab_layers = False
             if GS.global_kicad_cross_mechanism == 'crossout':
                 plot.crossout_dnp_footprints_on_fab_layers = True
             elif GS.global_kicad_cross_mechanism == 'hide':
                 plot.hide_dnp_footprints_on_fab_layers = True
-            elif GS.global_kicad_cross_mechanism == 'sketch':
-                plot.sketch_dnp_footprints_on_fab_layers = True
 
         kicad_variant = self.kicad_variant_name()
         if kicad_variant:
@@ -416,7 +417,26 @@ class AnyLayerOptions(VariantOptions):
             targets.append(os.path.join(output_dir, report.output))
         return targets
 
-    def read_vals_from_po(self, po):
+    def read_vals_from_po(self):
+        if GS.pn is not None:
+            return self._read_vals_from_po_pn()
+        return self._read_vals_from_po_kp()
+
+    def _read_vals_from_po_kp(self):
+        po = GS.board.get_plot_settings()
+        # common_layers: not currently used
+        # drawing_sheet: not currently used
+        self.plot_sheet_reference = po.plot_drawing_sheet
+        self.plot_footprint_values = po.plot_footprint_values
+        self.sketch_pad_numbers = po.plot_pad_numbers
+        self.plot_footprint_refs = po.plot_reference_designators
+        self.sketch_pads_on_fab_layers = po.sketch_pads_on_fab_layers
+        self.subtract_mask_from_silk = po.subtract_solder_mask_from_silk
+        self.exclude_edge_layer = GS.Edge_Cuts not in po.common_layers
+        return po
+
+    def _read_vals_from_po_pn(self):
+        po = GS.board.GetPlotOptions()
         # excludeedgelayer
         if GS.ki7:
             if GS.kicad_version_n < KICAD_VERSION_9_0_1:
@@ -445,6 +465,7 @@ class AnyLayerOptions(VariantOptions):
             sel = po.GetScaleSelection()
             sel = sel if sel < 0 or sel > 4 else 4
             self.scaling = (AUTO_SCALE, 1.0, 1.5, 2.0, 3.0)[sel]
+        return po
 
 
 class AnyLayer(BaseOutput):

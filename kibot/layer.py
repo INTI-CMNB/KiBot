@@ -294,9 +294,8 @@ class Layer(Optionable):
 
     @staticmethod
     def _set_plot_layers_kp():
-        # TODO: kipy NOT IMPLEMENTED!!!
-        # Here we just get all of them, not good
-        Layer._plot_layers = {GS.board.get_layer_name(id): id for id in GS.enabled_layers}
+        Layer._plot_layers = {GS.board.get_layer_name(id): id for id in GS.board.get_plot_settings().layers
+                              if id in GS.enabled_layers}
 
     def _get_layer_id_from_name(self):
         """ Get the pcbnew layer from the string provided in the config """

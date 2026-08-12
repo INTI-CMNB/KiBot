@@ -3,6 +3,7 @@
 # Copyright (c) 2020-2024 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+from .gs import GS
 from .macros import macros, document, pre_class  # noqa: F401
 
 
@@ -20,3 +21,6 @@ class Check_Zone_Fills(BasePreFlight):  # noqa: F821
 
     def apply(self):
         BasePreFlight._set_option('check_zone_fills', self._enabled)  # noqa: F821
+
+    def get_example():
+        return str(GS.check_zone_fills_example).lower()

@@ -43,15 +43,16 @@ class HPGLOptions(DrillMarks):
         po.SetPlotMode(GS.pn.SKETCH if self.sketch_plot else GS.pn.FILLED)
         po.SetMirror(self.mirror_plot)
 
-    def read_vals_from_po(self, po):
-        super().read_vals_from_po(po)
+    def read_vals_from_po(self):
+        po = super().read_vals_from_po()
         if GS.ki10:
-            return
+            return po
         self.pen_width = po.GetHPGLPenDiameter()
         self.pen_number = po.GetHPGLPenNum()
         self.pen_speed = po.GetHPGLPenSpeed()
         self.sketch_plot = po.GetPlotMode() == GS.pn.SKETCH
         self.mirror_plot = po.GetMirror()
+        return po
 
 
 @output_class

@@ -63,10 +63,19 @@ class PDFOptions(DrillMarks):
         po.SetMirror(self.mirror_plot)
         po.SetNegative(self.negative_plot)
 
-    def read_vals_from_po(self, po):
-        super().read_vals_from_po(po)
-        self.mirror_plot = po.GetMirror()
-        self.negative_plot = po.GetNegative()
+    def read_vals_from_po(self):
+        po = super().read_vals_from_po()
+        if GS.pn is not None:
+            self.mirror_plot = po.GetMirror()
+            self.negative_plot = po.GetNegative()
+        else:
+            self.mirror_plot = po.mirror
+            self.negative_plot = po.negative
+            self.scaling = po.scale
+            self.monochrome = po.black_and_white
+            self.color_theme = po.color_theme
+            # TODO: The rest are missing
+        return po
 
     # #########################################################################
     # KiPy implementation
