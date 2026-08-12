@@ -190,14 +190,14 @@ class AnyLayerOptions(VariantOptions):
             with open(os.path.join(output_dir, filename), 'wt') as f:
                 f.write(content)
 
-    def run(self, output_dir, layers):
+    def run(self, output_dir, layers, common_layers):
         super().run(output_dir)
         if GS.ki10 and self._plot_format == GS.PLOT_FORMAT_HPGL:
             GS.exit_with_error("HPGL format was discontinued on KiCad 10", MISSING_TOOL)
         if GS.pn:
             self._run_pn(output_dir, layers)
         else:
-            self._run_kp(output_dir, layers)
+            self._run_kp(output_dir, layers, common_layers)
 
     def _run_pn(self, output_dir, layers):
         """ pcbnew implementation (KiCad 6 to 10) """
@@ -283,17 +283,22 @@ class AnyLayerOptions(VariantOptions):
     def is_single_file_and_page(self):
         return self.is_single_file() and (not hasattr(self, 'single_page') or self.single_page)
 
-    def _configure_plot_settings(self, plot, layers):
+    def _configure_plot_settings(self, plot, layers, common_layers):
         """ KiPy PlotSettings common to all """
-        plot.layers = layers
+        layers = layers.copy()
         if not self.exclude_edge_layer:
             # When we have one file and one page we must add the edge cuts to the main list
             if self.is_single_file_and_page():
-                layers.append(GS.Edge_Cuts)   # We can't just append to plot.layers
-                plot.layers = layers
+                layers = common_layers+[GS.Edge_Cuts]+layers
             else:
                 # Repeat the edge in all files/pages
-                plot.common_layers = [GS.Edge_Cuts]
+                plot.common_layers = common_layers+[GS.Edge_Cuts]
+        else:  # No extra Edge Cuts
+            if self.is_single_file_and_page():
+                layers.extend(common_layers)
+            else:
+                plot.common_layers = common_layers
+        plot.layers = layers
 
         plot.plot_reference_designators = self.plot_footprint_refs
         plot.plot_footprint_values = self.plot_footprint_values
@@ -330,10 +335,11 @@ class AnyLayerOptions(VariantOptions):
             return
         raise PlotError(res.message)
 
-    def _run_kp(self, output_dir, layers):
+    def _run_kp(self, output_dir, layers, common_layers):
         """ KiPy implementation """
         # Validate the layers
         layers = Layer.solve(layers)
+        common_layers = Layer.solve(common_layers)
 
         enabled_layers = []
         for la in layers:
@@ -343,8 +349,16 @@ class AnyLayerOptions(VariantOptions):
             enabled_layers.append(la.id)
         logger.debug(f"List of selected and enabled layers: {enabled_layers}")
 
+        enabled_common_layers = []
+        for la in common_layers:
+            if not GS.is_layer_enabled(la.id):
+                logger.warning(W_NOLAYER+f'Layer "{la.description}" ({la.suffix}) isn\'t used')
+                continue
+            enabled_common_layers.append(la.id)
+        logger.debug(f"List of common and enabled layers: {enabled_common_layers}")
+
         plot = GS.kp.board_jobs.PlotSettings()
-        self._configure_plot_settings(plot, enabled_layers)
+        self._configure_plot_settings(plot, enabled_layers, enabled_common_layers)
 
         # Most formats supports a single file output
         single_file = self.is_single_file()
@@ -438,7 +452,6 @@ class AnyLayerOptions(VariantOptions):
 
     def _read_vals_from_po_kp(self):
         po = GS.board.get_plot_settings()
-        # common_layers: not currently used
         self.sheet_reference_layout = po.drawing_sheet
         self.plot_sheet_reference = po.plot_drawing_sheet
         self.plot_footprint_values = po.plot_footprint_values
@@ -446,7 +459,15 @@ class AnyLayerOptions(VariantOptions):
         self.plot_footprint_refs = po.plot_reference_designators
         self.sketch_pads_on_fab_layers = po.sketch_pads_on_fab_layers
         self.subtract_mask_from_silk = po.subtract_solder_mask_from_silk
-        self.exclude_edge_layer = GS.Edge_Cuts not in po.common_layers
+        if len(po.common_layers) == 0:
+            self.exclude_edge_layer = True
+            self.common_layers = []
+        elif len(po.common_layers) == 1 and po.common_layers[0] == GS.Edge_Cuts:
+            self.exclude_edge_layer = False
+            self.common_layers = []
+        else:
+            self.exclude_edge_layer = True
+            self.common_layers = [Layer.id2def_name(id) for id in po.common_layers]
         return po
 
     def _read_vals_from_po_pn(self):
@@ -489,6 +510,11 @@ class AnyLayer(BaseOutput):
             self.layers = Layer
             """ *[list(dict)|list(string)|string='all'] [all,selected,copper,technical,user,inners,outers,*] List
                 of PCB layers to plot """
+            self.common_layers = Layer
+            """ *[list(dict)|list(string)|string='all'] [all,selected,copper,technical,user,inners,outers,*] List
+                of PCB layers to plot on each page/file. For the most common case, the edge cuts, you don't need
+                to use it.
+                The edge cut is automatically added unless `exclude_edge_layer` is enabled (KiCad 11+) """
 
     def get_targets(self, out_dir):
         return self.options.get_targets(out_dir, self.layers)
@@ -512,4 +538,4 @@ class AnyLayer(BaseOutput):
         return outs
 
     def run(self, output_dir):
-        self.options.run(output_dir, self.layers)
+        self.options.run(output_dir, self.layers, self.common_layers)

@@ -79,9 +79,9 @@ class PSOptions(DrillMarks):
     # KiPy implementation
     # #########################################################################
 
-    def _configure_plot_settings(self, plot, layers):
+    def _configure_plot_settings(self, plot, layers, common_layers):
         """ KiPy plot settings specific for gerbers """
-        super()._configure_plot_settings(plot, layers)
+        super()._configure_plot_settings(plot, layers, common_layers)
         plot.mirror = self.mirror_plot
         plot.negative = self.negative_plot
         plot.scale = self.scaling
