@@ -3288,6 +3288,13 @@
             "DataTypeBoolean"
           ],
           null
+        ],
+        [
+          "single_file",
+          [
+            "DataTypeBoolean"
+          ],
+          null
         ]
       ]
     ]

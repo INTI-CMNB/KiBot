@@ -101,7 +101,6 @@ DXFOptions parameters
 .. _DXFOptions_polygon_mode:
 
 -  ``polygon_mode`` :index:`: <pair: output - dxf - options; polygon_mode>` [:ref:`boolean <boolean>`] (default: ``true``) Plot using the contour, instead of the center line.
-   You must disable it to get the dimensions (See https://gitlab.com/kicad/code/kicad/-/issues/11901).
 
 .. _DXFOptions_pre_transform:
 
@@ -110,6 +109,10 @@ DXFOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _DXFOptions_single_file:
+
+-  ``single_file`` :index:`: <pair: output - dxf - options; single_file>` [:ref:`boolean <boolean>`] (default: ``false``) Plot all the pages to a single file, in a single page (KiCad 11+).
 
 .. _DXFOptions_sketch_pad_line_width:
 

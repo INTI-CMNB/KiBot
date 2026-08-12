@@ -1289,8 +1289,7 @@ outputs:
       # (i.e. always the default worksheet style, also problems expanding text variables).
       # The `pcb_print` output can do a better job for PDF, SVG, PS, EPS and PNG outputs
       plot_sheet_reference: false
-      # [boolean=true] Plot using the contour, instead of the center line.
-      # You must disable it to get the dimensions (See https://gitlab.com/kicad/code/kicad/-/issues/11901)
+      # [boolean=true] Plot using the contour, instead of the center line
       polygon_mode: true
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
@@ -1299,6 +1298,8 @@ outputs:
       pre_transform: '_null'
       # [number=1] Scale factor (0 means autoscaling)
       scaling: 1
+      # [boolean=false] Plot all the pages to a single file, in a single page (KiCad 11+)
+      single_file: false
       # [number=0.1] Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
       # Note that this value is currently ignored by KiCad (6.0.9)
       sketch_pad_line_width: 0.1

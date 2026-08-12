@@ -24,6 +24,10 @@ Added
    -  ’draw_hop_over\` to draw it at wire crossings
    -  Better sub-sheet names handling for KiCad 10+
 
+-  DXF:
+
+   -  ``single_file``: to plot all layers to a single file (KiCad 11)
+
 -  PDF:
 
    -  ``single_page``: used with ``single_file`` to get just one page

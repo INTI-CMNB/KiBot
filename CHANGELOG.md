@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - *SCH Print:
   - 'draw_hop_over` to draw it at wire crossings
   - Better sub-sheet names handling for KiCad 10+
+- DXF:
+  - `single_file`: to plot all layers to a single file (KiCad 11)
 - PDF:
   - `single_page`: used with `single_file` to get just one page (KiCad 11)
   - `background_color`: to select a particular background color (KiCad 11)
