@@ -85,15 +85,9 @@ class AnyLayerOptions(VariantOptions):
             self.sketch_pad_numbers = False
             r""" Plot pad numbers on top of sketched pads on the \*.Fab layers (KiCad 11+) """
             self.sketch_pad_line_width = 0.1
-            """ Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6+)
-                Note that this value is currently ignored by KiCad (6.0.9) """
+            """ Line width for the sketched pads [mm], see `sketch_pads_on_fab_layers` (KiCad 6.0.0 to 6.0.8) """
             self.subtract_mask_from_silk = False
             """ *Subtract the solder mask from the silk screen """
-            self.scaling = 1
-            """ *Scale factor (0 means autoscaling) """
-            self.individual_page_scaling = True
-            """ Tell KiCad to apply the scaling for each layer as a separated entity.
-                Disabling it the pages are coherent and can be superposed """
         super().__init__()
 
     def config(self, parent):

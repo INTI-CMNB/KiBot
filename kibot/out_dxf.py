@@ -15,6 +15,11 @@ class DXFOptions(DrillMarks):
     def __init__(self):
         super().__init__()
         with document:
+            self.scaling = 1
+            """ *Scale factor (0 means autoscaling) """
+            self.individual_page_scaling = True
+            """ Tell KiCad to apply the scaling for each layer as a separated entity.
+                Disabling it the pages are coherent and can be superposed (KiCad <11) """
             self.use_aux_axis_as_origin = False
             """ Use the auxiliary axis as origin for coordinates """
             self.polygon_mode = True
