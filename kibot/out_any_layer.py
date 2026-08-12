@@ -11,7 +11,7 @@ import re
 from shutil import move
 from .optionable import Optionable
 from .out_base import BaseOutput, VariantOptions
-from .error import PlotError
+from .error import PlotError, KiPlotConfigurationError
 from .layer import Layer
 from .gs import GS
 from .misc import W_NOLAYER, KICAD_VERSION_7_0_1, MISSING_TOOL, AUTO_SCALE, KICAD_VERSION_9_0_1
@@ -53,6 +53,8 @@ class AnyLayerOptions(VariantOptions):
             """ *Include the frame and title block. Only available for KiCad 6+ and you get a poor result
                 (i.e. always the default worksheet style, also problems expanding text variables).
                 The `pcb_print` output can do a better job for PDF, SVG, PS, EPS and PNG outputs """
+            self.sheet_reference_layout = ''
+            """ Worksheet file (.kicad_wks) to use. Leave empty to use the one specified in the project. (KiCad 11+) """
             self.plot_footprint_refs = True
             """ Include the footprint references """
             self.plot_footprint_values = True
@@ -90,9 +92,19 @@ class AnyLayerOptions(VariantOptions):
             """ *Subtract the solder mask from the silk screen """
         super().__init__()
 
+    def look_relative_wks(self):
+        if os.path.isfile(self.sheet_reference_layout):
+            return self.sheet_reference_layout
+        rel_to_pcb = os.path.join(GS.pcb_dir, self.sheet_reference_layout)
+        if os.path.isfile(rel_to_pcb):
+            return rel_to_pcb
+        return None
+
     def config(self, parent):
         super().config(parent)
         self.sketch_pad_line_width = GS.from_mm(self.sketch_pad_line_width)
+        if self.sheet_reference_layout and self.look_relative_wks() is None:
+            raise KiPlotConfigurationError("Missing page layout file: "+self._sheet_reference_layout)
 
     def _configure_plot_ctrl(self, po, output_dir):
         logger.debug("Configuring plot controller for output")
@@ -289,6 +301,8 @@ class AnyLayerOptions(VariantOptions):
         plot.sketch_pads_on_fab_layers = self.sketch_pads_on_fab_layers
         plot.plot_pad_numbers = self.sketch_pad_numbers
         plot.subtract_solder_mask_from_silk = self.subtract_mask_from_silk
+        if self.sheet_reference_layout:
+            plot.drawing_sheet = self.look_relative_wks()
 
         plot.crossout_dnp_footprints_on_fab_layers = False
         plot.hide_dnp_footprints_on_fab_layers = False
@@ -425,7 +439,7 @@ class AnyLayerOptions(VariantOptions):
     def _read_vals_from_po_kp(self):
         po = GS.board.get_plot_settings()
         # common_layers: not currently used
-        # drawing_sheet: not currently used
+        self.sheet_reference_layout = po.drawing_sheet
         self.plot_sheet_reference = po.plot_drawing_sheet
         self.plot_footprint_values = po.plot_footprint_values
         self.sketch_pad_numbers = po.plot_pad_numbers
