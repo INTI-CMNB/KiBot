@@ -91,8 +91,8 @@ class SVGOptions(DrillMarks):
         # Margin
         self._margin, self.margin = PcbMargin.solve(self.margin)
 
-    def run(self, output_dir, layers):
-        super().run(output_dir, layers)
+    def run(self, output_dir, layers, common_layers):
+        super().run(output_dir, layers, common_layers)
         if not self.limit_viewbox:
             return
         if self.scaling != 1:
