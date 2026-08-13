@@ -1245,7 +1245,8 @@ class PcbPlotter():
             plotter.render(self)
         remove_empty_elems(self._document.getroot())
         remove_inkscape_annotation(self._document.getroot())
-        self._shrink_svg(self._document, self.margin, self.compute_bbox)
+        self._shrink_svg(self._document, self.margin, compute_bbox=self.compute_bbox,
+                         mirrored=self.render_back ^ self.mirror)
         return self._document
 
 
@@ -1451,36 +1452,54 @@ class PcbPlotter():
     def _ki2svg_v7(self, x: int) -> float:
         return float(pcbnew.ToMM(x))
 
-    def _shrink_svg(self, svg: etree.ElementTree, margin: tuple, compute_bbox: bool=False) -> None:
+    def _shrink_svg(self, svg: etree.ElementTree, margin: tuple, compute_bbox: bool=False, mirrored: bool = False) -> None:
         """
         Shrink the SVG canvas to the size of the drawing. Add margin in
         KiCAD units.
         """
         root = svg.getroot()
         if compute_bbox:
-            # Compute the bbox using the SVG drawings, so things outside the PCB
-            # outline are counted.
             # We have to overcome the limitation of different base types between
             # PcbDraw and svgpathtools
             from xml.etree.ElementTree import fromstring as xmlParse
 
             from lxml.etree import tostring as serializeXml # type: ignore
-            from . import svgpathtools # type: ignore
-            paths = svgpathtools.document.flattened_paths(xmlParse(serializeXml(svg)))
+            tree = xmlParse(serializeXml(svg))
 
-            if len(paths) == 0:
-                return
-            bbox = paths[0].bbox()
-            for x in paths:
-                b = x.bbox()
-                if hack_is_valid_bbox(b):
-                    bbox = b
-                    break
+            # As we cannot interpret mask cropping, we cannot simply take all paths
+            # from source document (as e.g., silkscreen outside PCB) would enlarge
+            # the canvas. Instead, we take bounding box of the substrate and
+            # components separately
+            from . import svgpathtools # type: ignore
+            paths = []
+            components = tree.find(".//*[@id='componentContainer']")
+            if components is not None:
+                paths += svgpathtools.document.flattened_paths(components)
+            substrate = tree.find(".//*[@id='cut-off']")
+            substrate_paths = []
+            if substrate is not None:
+                substrate_paths = svgpathtools.document.flattened_paths(substrate)
+
+            boxes = []
             for x in paths:
                 box = x.bbox()
                 if not hack_is_valid_bbox(box):
-                    # This is a hack due to instability in svpathtools
                     continue
+                boxes.append(box)
+            for x in substrate_paths:
+                box = x.bbox()
+                if not hack_is_valid_bbox(box):
+                    continue
+                if mirrored:
+                    # The substrate is in <defs> and not affected by the group
+                    # scale(-1,1) transform, so mirror its x-range to match.
+                    box = (-box[1], -box[0], box[2], box[3])
+                boxes.append(box)
+
+            if len(boxes) == 0:
+                return
+            bbox = boxes[0]
+            for box in boxes[1:]:
                 bbox = merge_bbox(bbox, box)
             bbox = list(bbox)
         else:
