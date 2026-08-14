@@ -863,6 +863,10 @@ class GS(object):
         return pad.GetOrientation().AsRadians() if GS.ki7 else pad.GetOrientationRadians()
 
     @staticmethod
+    def get_footprint_orientation_in_radians(footprint):
+        return footprint.GetOrientation().AsRadians() if GS.ki7 else footprint.GetOrientationRadians()
+
+    @staticmethod
     def get_pad_orientation_in_degrees(pad):
         return pad.GetOrientation().AsDegrees() if GS.ki7 else pad.GetOrientationDegrees()
 
