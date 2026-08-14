@@ -18,7 +18,7 @@ from typing import Callable, Dict, List, Optional, Set, Tuple, Union, Any
 
 from .unit import read_resistance
 from lxml import etree, objectify # type: ignore
-from .pcbnew_transition import isV5, isV6, isV7, pcbnew # type: ignore
+from .pcbnew_transition import pcbnew # type: ignore
 from ..gs import GS
 
 try:
@@ -37,8 +37,6 @@ Matrix = List[List[float]]
 PKG_BASE = os.path.dirname(__file__)
 
 etree.register_namespace("xlink", "http://www.w3.org/1999/xlink")
-
-LEGACY_KICAD = isV5()
 
 default_style = {
     "copper": "#417e5a",
@@ -110,9 +108,9 @@ class SvgPathItem:
         dx = p1[0] - p2[0]
         dy = p1[1] - p2[1]
         pseudo_distance = dx*dx + dy*dy
-        if isV5() or isV6():
-            return pseudo_distance < 100 ** 2
-        return pseudo_distance < 0.01 ** 2
+        if GS.ki7:
+            return pseudo_distance < 0.01 ** 2
+        return pseudo_distance < 100 ** 2  # KiCad 5 and 6
 
     def format(self, first: bool) -> str:
         ret = ""
@@ -365,12 +363,6 @@ def find_data_file(name: str, extension: str, data_paths: List[str], subdir: Opt
         if os.path.isfile(fname):
             return fname
     return None
-
-def ki2dmil(val: int) -> float:
-    return val // 2540
-
-def dmil2ki(val: float) -> int:
-    return int(val * 2540)
 
 def ki2mm(val: int) -> float:
     return val / 1000000.0
@@ -790,7 +782,7 @@ def collect_holes(board: pcbnew.BOARD) -> List[Hole]:
                 orientation=pad.GetOrientation(),
                 drillsize=(drs.x, drs.y)
             ))
-    via_type = 'VIA' if LEGACY_KICAD else 'PCB_VIA'
+    via_type = 'PCB_VIA'
     for track in board.GetTracks():
         if track.GetClass() != via_type:
             continue
@@ -1229,15 +1221,12 @@ class PcbPlotter():
 
         self.yield_warning: Callable[[str, str], None] = lambda tag, msg: None # Handle warnings
 
-        if isV5():
-            self.ki2svg = self._ki2svg_v5
-            self.svg2ki = self._svg2ki_v5
-        elif isV6():
-            self.ki2svg = self._ki2svg_v6
-            self.svg2ki = self._svg2ki_v6
-        else:
+        if GS.ki7:
             self.ki2svg = self._ki2svg_v7
             self.svg2ki = self._svg2ki_v7
+        else:  # Only KiCad 6
+            self.ki2svg = self._ki2svg_v6
+            self.svg2ki = self._svg2ki_v6
 
     @property
     def svg_precision(self) -> int:
@@ -1290,12 +1279,11 @@ class PcbPlotter():
             lib = str(footprint.GetFPID().GetLibNickname()).strip()
             name = str(footprint.GetFPID().GetLibItemName()).strip()
             value = footprint.GetValue().strip()
-            if not LEGACY_KICAD:
-                # Look for a tolerance in the properties
-                prop = GS.get_fields(footprint)
-                tol = next(filter(lambda x: x, map(prop.get, GS.global_field_tolerance)), None)
-                if tol:
-                    value = value+' '+tol.strip()
+            # Look for a tolerance in the properties
+            prop = GS.get_fields(footprint)
+            tol = next(filter(lambda x: x, map(prop.get, GS.global_field_tolerance)), None)
+            if tol:
+                value = value+' '+tol.strip()
             ref = footprint.GetReference().strip()
             center = footprint.GetPosition()
             orient = math.radians(footprint.GetOrientation().AsDegrees())
@@ -1424,10 +1412,10 @@ class PcbPlotter():
                 # Method does not exist in older versions of KiCad
                 pass
             popt.SetTextMode(pcbnew.PLOT_TEXT_MODE_STROKE)
-            if isV6():
-                popt.SetSvgPrecision(self.svg_precision, False)
-            elif not isV5():
+            if GS.ki7:
                 popt.SetSvgPrecision(self.svg_precision)
+            else:  # KiCad 6
+                popt.SetSvgPrecision(self.svg_precision, False)
             for action in to_plot:
                 if len(action.layers) == 0:
                     continue
@@ -1459,12 +1447,6 @@ class PcbPlotter():
         use self.svg_precision.
         """
         return int(x * self._svg_divider)
-
-    def _ki2svg_v5(self, x: int) -> float:
-        return ki2dmil(x)
-
-    def _svg2ki_v5(self, x: float) -> int:
-        return dmil2ki(x)
 
     def _svg2ki_v7(self, x: float) -> int:
         return int(pcbnew.FromMM(x))
