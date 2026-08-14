@@ -1222,8 +1222,8 @@ class PcbPlotter():
         self.yield_warning: Callable[[str, str], None] = lambda tag, msg: None # Handle warnings
 
         if GS.ki7:
-            self.ki2svg = self._ki2svg_v7
-            self.svg2ki = self._svg2ki_v7
+            self.ki2svg = GS.to_mm
+            self.svg2ki = GS.from_mm
         else:  # Only KiCad 6
             self.ki2svg = self._ki2svg_v6
             self.svg2ki = self._svg2ki_v6
@@ -1447,12 +1447,6 @@ class PcbPlotter():
         use self.svg_precision.
         """
         return int(x * self._svg_divider)
-
-    def _svg2ki_v7(self, x: float) -> int:
-        return int(pcbnew.FromMM(x))
-
-    def _ki2svg_v7(self, x: int) -> float:
-        return float(pcbnew.ToMM(x))
 
     def _shrink_svg(self, svg: etree.ElementTree, margin: tuple, compute_bbox: bool=False, mirrored: bool = False) -> None:
         """
