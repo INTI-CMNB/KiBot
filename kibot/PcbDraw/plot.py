@@ -887,7 +887,6 @@ class PlotSubstrate(PlotInterface):
             if not strip_style_svg(element, keys=["fill", "stroke", "stroke-width"],
                                    forbidden_colors=["#ffffff"]):
                 layer.append(element)
-        # TODO
         for hole in collect_holes(self._plotter.board):
             position = [self._plotter.ki2svg(coord) for coord in hole.position]
             size = [self._plotter.ki2svg(coord) for coord in hole.drillsize]
@@ -1487,6 +1486,10 @@ class PcbPlotter():
         """
         root = svg.getroot()
         if compute_bbox:
+            # compute_bbox is the mechanism used by upstream.
+            # The KiBot option is size_detection = 'svg_paths'
+            # Is slow and prone to errors, this is the fixed v1.4.0 code
+
             # We have to overcome the limitation of different base types between
             # PcbDraw and svgpathtools
             from xml.etree.ElementTree import fromstring as xmlParse
@@ -1531,6 +1534,10 @@ class PcbPlotter():
                 bbox = merge_bbox(bbox, box)
             bbox = list(bbox)
         else:
+            # This is for the size_detection = 'kicad_*' KiBot option
+            # Here we just let KiCad compute the bbox instead of computing it using the SVG elements
+            # Faster, any error is a KiCad bug
+
             # Get the current viewBox
             # This is computed by KiCad using the PCB edge
             x, y, vw, vh = [float(x) for x in root.attrib["viewBox"].split()]
