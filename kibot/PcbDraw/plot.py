@@ -1285,7 +1285,7 @@ class PcbPlotter():
                 value = value+' '+tol.strip()
             ref = footprint.GetReference().strip()
             center = footprint.GetPosition()
-            orient = math.radians(footprint.GetOrientation().AsDegrees())
+            orient = GS.get_footprint_orientation_in_radians(footprint)
             pos = (center.x, center.y, orient)
             callback(lib, name, ref, value, pos)
 
