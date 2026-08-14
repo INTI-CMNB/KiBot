@@ -801,13 +801,13 @@ class PlotInterface:
 
 
 SUBSTRATE_ELEMENTS = {
-    "board": (pcbnew.Edge_Cuts, pcbnew.Edge_Cuts),
-    "clad": (pcbnew.F_Mask, pcbnew.B_Mask),
-    "copper": (pcbnew.F_Cu, pcbnew.B_Cu),
-    "pads": (pcbnew.F_Cu, pcbnew.B_Cu),
-    "pads-mask": (pcbnew.F_Mask, pcbnew.B_Mask),
-    "silk": (pcbnew.F_SilkS, pcbnew.B_SilkS),
-    "outline": (pcbnew.Edge_Cuts, pcbnew.Edge_Cuts)
+    "board": (GS.Edge_Cuts, GS.Edge_Cuts),
+    "clad": (GS.F_Mask, GS.B_Mask),
+    "copper": (GS.F_Cu, GS.B_Cu),
+    "pads": (GS.F_Cu, GS.B_Cu),
+    "pads-mask": (GS.F_Mask, GS.B_Mask),
+    "silk": (GS.F_SilkS, GS.B_SilkS),
+    "outline": (GS.Edge_Cuts, GS.Edge_Cuts)
 }
 ELEMENTS_USED = (
     # Normal plot, all the elements
@@ -1153,7 +1153,7 @@ class PlotPlaceholders(PlotInterface):
 
 @dataclass
 class PlotVCuts(PlotInterface):
-    layer: int = pcbnew.Cmts_User
+    layer: int = GS.Cmts_User
 
     def render(self, plotter: PcbPlotter) -> None:
         self._plotter = plotter
@@ -1175,9 +1175,9 @@ class PlotPaste(PlotInterface):
     def render(self, plotter: PcbPlotter) -> None:
         plan: List[PlotAction] = []
         if plotter.render_back:
-            plan = [PlotAction("paste", [pcbnew.B_Paste], self._process_paste)]
+            plan = [PlotAction("paste", [GS.B_Paste], self._process_paste)]
         else:
-            plan = [PlotAction("paste", [pcbnew.F_Paste], self._process_paste)]
+            plan = [PlotAction("paste", [GS.F_Paste], self._process_paste)]
         self._plotter = plotter
         self._plotter.execute_plot_plan(plan)
 

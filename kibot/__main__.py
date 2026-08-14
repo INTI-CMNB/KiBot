@@ -426,6 +426,7 @@ def get_layers_info_pn():
     GS.F_Mask = pcbnew.F_Mask
     GS.B_Mask = pcbnew.B_Mask
     GS.Edge_Cuts = pcbnew.Edge_Cuts
+    GS.Cmts_User = pcbnew.Cmts_User
     # Available plotter formats
     GS.PLOT_FORMAT_HPGL = pcbnew.PLOT_FORMAT_HPGL
     GS.PLOT_FORMAT_GERBER = pcbnew.PLOT_FORMAT_GERBER
@@ -481,6 +482,7 @@ def get_layers_info_kp():
     GS.F_Mask = GS.DEFAULT_LAYER_NAMES['F.Mask']
     GS.B_Mask = GS.DEFAULT_LAYER_NAMES['B.Mask']
     GS.Edge_Cuts = GS.DEFAULT_LAYER_NAMES['Edge.Cuts']
+    GS.Cmts_User = GS.DEFAULT_LAYER_NAMES['Cmts.User']
     # Available plotter formats
     GS.PLOT_FORMAT_HPGL = 0  # Not longer usable
     GS.PLOT_FORMAT_GERBER = 1
