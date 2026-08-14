@@ -733,7 +733,7 @@ def remove_inkscape_annotation(tree: etree.Element) -> None:
 @dataclass
 class Hole:
     position: Tuple[int, int]
-    orientation: pcbnew.EDA_ANGLE
+    orientation: float
     drillsize: Tuple[int, int]
 
     def get_svg_path_d(self, ki2svg: Callable[[int], float]) -> str:
@@ -769,7 +769,7 @@ class ResistorValue:
     flip_bands: bool=False
 
 
-def collect_holes(board: pcbnew.BOARD) -> List[Hole]:
+def collect_holes(board) -> List[Hole]:
     holes: List[Hole] = [] # Tuple: position, orientation, drillsize
     for module in board.GetFootprints():
         if module.GetPadCount() == 0:
@@ -779,7 +779,7 @@ def collect_holes(board: pcbnew.BOARD) -> List[Hole]:
             drs = pad.GetDrillSize()
             holes.append(Hole(
                 position=(pos[0], pos[1]),
-                orientation=pad.GetOrientation(),
+                orientation=GS.get_pad_orientation_in_degrees(pad),
                 drillsize=(drs.x, drs.y)
             ))
     via_type = 'PCB_VIA'
@@ -789,7 +789,7 @@ def collect_holes(board: pcbnew.BOARD) -> List[Hole]:
         pos = track.GetPosition()
         holes.append(Hole(
             position=(pos[0], pos[1]),
-            orientation=pcbnew.EDA_ANGLE(0, pcbnew.DEGREES_T),
+            orientation=0.0,
             drillsize=(track.GetDrillValue(), track.GetDrillValue())
         ))
     return holes
@@ -886,7 +886,7 @@ class PlotSubstrate(PlotInterface):
             el = etree.SubElement(layer, "path")
             el.attrib["d"] = hole.get_svg_path_d(self._plotter.ki2svg)
             el.attrib["transform"] = "translate({} {}) rotate({})".format(
-                position[0], position[1], -hole.orientation.AsDegrees())
+                position[0], position[1], -hole.orientation)
 
     def _process_baselayer(self, name: str, source_filename: str) -> None:
         clipPath = self._plotter.get_def_slot(tag_name="clipPath", id="cut-off")
@@ -951,7 +951,7 @@ class PlotSubstrate(PlotInterface):
                 el.attrib["stroke-width"] = str(stroke)
                 el.attrib["points"] = points
                 el.attrib["transform"] = "translate({} {}) rotate({})".format(
-                    position[0], position[1], -hole.orientation.AsDegrees())
+                    position[0], position[1], -hole.orientation)
 
 @dataclass
 class PlacedComponentInfo:
@@ -1197,7 +1197,7 @@ class PcbPlotter():
     mainly serves as a builder (to step-by-step specify all options) and also to
     avoid passing many arguments between auxiliary functions
     """
-    def __init__(self, boardFile: pcbnew.BOARD):
+    def __init__(self, boardFile):
         self._unique_counter: int = 1
         self.board = boardFile
         self.render_back: bool = False

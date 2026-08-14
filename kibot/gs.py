@@ -863,6 +863,10 @@ class GS(object):
         return pad.GetOrientation().AsRadians() if GS.ki7 else pad.GetOrientationRadians()
 
     @staticmethod
+    def get_pad_orientation_in_degrees(pad):
+        return pad.GetOrientation().AsDegrees() if GS.ki7 else pad.GetOrientationDegrees()
+
+    @staticmethod
     def iu_to_svg(values, svg_precision):
         """ Converts 1 or more values from KiCad internal IUs to the units used for SVGs.
             For tuples we assume the result is SVG coordinates, for 1 value a scale """
