@@ -18,7 +18,6 @@ from typing import Callable, Dict, List, Optional, Set, Tuple, Union, Any
 
 from .unit import read_resistance
 from lxml import etree, objectify # type: ignore
-from .pcbnew_transition import pcbnew # type: ignore
 from ..gs import GS
 
 try:
@@ -1398,6 +1397,8 @@ class PcbPlotter():
         Given a plotting plan, plots the layers and invokes a post-processing
         callback on the generated files
         """
+        assert GS.pn is not None, "No pcbnew support"
+        pcbnew = GS.pn
         with tempfile.TemporaryDirectory() as tmp:
             pctl = pcbnew.PLOT_CONTROLLER(self.board)
             popt = pctl.GetPlotOptions()
@@ -1439,7 +1440,6 @@ class PcbPlotter():
         use self.svg_precision.
         """
         return x / self._svg_divider
-
 
     def _svg2ki_v6(self, x: float) -> int:
         """
