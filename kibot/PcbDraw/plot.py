@@ -459,37 +459,77 @@ def extract_svg_content(root: etree.Element) -> List[etree.Element]:
             el.tag = el.tag.split('}', 1)[1]
     return [ x for x in root if x.tag and x.tag not in ["title", "desc"]]
 
-def strip_style_svg(root: etree.Element, keys: List[str], forbidden_colors: List[str], new_val: str) -> bool:
-    """ Remove elements with fill and/or stoke using any *forbidden_colors*
-        Change attributes listed in keys """
+def strip_style_svg(root: etree.Element, keys: List[str], forbidden_colors: List[str]) -> bool:
     elements_to_remove = []
-    for el in root.getiterator():
+    normalized_forbidden_colors = {color.lower() for color in forbidden_colors}
+
+    def process_element(el: etree.Element, inherited_opacity: Dict[str, str],
+                        inherited_suppression: Dict[str, bool]) -> None:
+        effective_opacity = dict(inherited_opacity)
+        suppression = dict(inherited_suppression)
+
         if "style" in el.attrib:
             s = el.attrib["style"].strip().split(";")
-            styles = {}
+            styles: Dict[str, str] = {}
             for x in s:
                 if len(x) == 0:
                     continue
-                key, val = tuple(x.split(":"))
+                key, val = tuple(x.split(":", 1))
                 key = key.strip()
                 val = val.strip()
                 styles[key] = val
+
             fill = styles.get("fill", "").lower()
             stroke = styles.get("stroke", "").lower()
-            if fill in forbidden_colors or stroke in forbidden_colors:
+            if fill in normalized_forbidden_colors or stroke in normalized_forbidden_colors:
                 elements_to_remove.append(el)
-            new_styles = {}
-            for key, val in styles.items():
-                if key not in keys or val == 'none':
-                    new_styles[key] = val
-                elif not (isV5() or isV6() or isV7()):
-                    new_styles[key] = new_val
+
+            for paint in ("fill", "stroke"):
+                opacity = f"{paint}-opacity"
+                if opacity in styles:
+                    effective_opacity[paint] = styles[opacity]
+
+                if paint not in keys:
+                    suppression[paint] = False
+                    continue
+
+                value = styles.get(paint)
+                normalized_value = value.lower() if value is not None else None
+                if normalized_value == "none":
+                    # KiCAD 9+ uses "fill: none"/"stroke: none" instead of
+                    # zero opacity. Removing the paint property would make the
+                    # element inherit the layer color, so preserve its absence
+                    # through opacity instead.
+                    styles[opacity] = "0"
+                    del styles[paint]
+                    suppression[paint] = True
+                elif value is not None:
+                    del styles[paint]
+                    if inherited_suppression[paint] and opacity not in styles:
+                        # A visible child can override a parent's "none" paint.
+                        # Reset the zero opacity introduced on the parent to the
+                        # opacity the child inherited in the source SVG.
+                        styles[opacity] = effective_opacity[paint]
+                    suppression[paint] = False
+
             el.attrib["style"] = ";" \
-                .join([f"{key}: {val}" for key, val in new_styles.items()]) \
+                .join([f"{key}: {val}" for key, val in styles.items() if key not in keys]) \
                 .replace("  ", " ") \
                 .strip()
+
+        for child in el:
+            process_element(child, effective_opacity, suppression)
+
+    process_element(
+        root,
+        inherited_opacity={"fill": "1", "stroke": "1"},
+        inherited_suppression={"fill": False, "stroke": False},
+    )
+
     for el in elements_to_remove:
-        el.getparent().remove(el)
+        parent = el.getparent()
+        if parent is not None:
+            parent.remove(el)
     return root in elements_to_remove
 
 def empty_svg(**attrs: str) -> etree.ElementTree:
@@ -821,38 +861,33 @@ class PlotSubstrate(PlotInterface):
         self._plotter.append_board_element(self._container)
 
     def _process_layer(self,name: str, source_filename: str) -> None:
-        style = self._plotter.get_style(name)
         layer = etree.SubElement(self._container, "g", id="substrate-" + name,
-            style="fill:{0}; stroke:{0};".format(style))
+            style="fill:{0}; stroke:{0};".format(self._plotter.get_style(name)))
         if name == "pads":
             layer.attrib["mask"] = "url(#pads-mask)"
         if name == "silk":
             layer.attrib["mask"] = "url(#pads-mask-silkscreen)"
         for element in extract_svg_content(read_svg_unique(source_filename, self._plotter.unique_prefix())):
-            # Forbidden colors = workaround - KiCAD plots vias white
-            # See https://gitlab.com/kicad/code/kicad/-/issues/10491
             if not strip_style_svg(element, keys=["fill", "stroke"],
-                                   forbidden_colors=["#ffffff"], new_val=style):
+                                   forbidden_colors=["#ffffff"]):
                 layer.append(element)
 
     def _process_outline(self, name: str, source_filename: str) -> None:
         if self.outline_width == 0:
             return
-        style = self._plotter.get_style(name)
         layer = etree.SubElement(self._container, "g", id="substrate-" + name,
             style="fill:{0}; stroke:{0}; stroke-width: {1}".format(
-                style,
+                self._plotter.get_style(name),
                 self._plotter.ki2svg(self.outline_width)))
         if name == "pads":
             layer.attrib["mask"] = "url(#pads-mask)"
         if name == "silk":
             layer.attrib["mask"] = "url(#pads-mask-silkscreen)"
         for element in extract_svg_content(read_svg_unique(source_filename, self._plotter.unique_prefix())):
-            # Forbidden colors = workaround - KiCAD plots vias white
-            # See https://gitlab.com/kicad/code/kicad/-/issues/10491
             if not strip_style_svg(element, keys=["fill", "stroke", "stroke-width"],
-                                   forbidden_colors=["#ffffff"], new_val=style):
+                                   forbidden_colors=["#ffffff"]):
                 layer.append(element)
+        # TODO
         for hole in collect_holes(self._plotter.board):
             position = [self._plotter.ki2svg(coord) for coord in hole.position]
             size = [self._plotter.ki2svg(coord) for coord in hole.drillsize]
@@ -867,17 +902,14 @@ class PlotSubstrate(PlotInterface):
         clipPath = self._plotter.get_def_slot(tag_name="clipPath", id="cut-off")
         board_polygon = get_board_polygon(extract_svg_content(read_svg_unique(source_filename, self._plotter.unique_prefix())))
         clipPath.append(board_polygon)
-        style = self._plotter.get_style(name)
         layer = etree.SubElement(self._container, "g", id="substrate-"+name,
-            style="fill:{0}; stroke:{0};".format(style))
+            style="fill:{0}; stroke:{0};".format(self._plotter.get_style(name)))
         # This call is here just for debug purposes, I want to get the same result as the reference file
         self._plotter.unique_prefix()
         layer.append(deepcopy(board_polygon))
         for element in extract_svg_content(read_svg_unique(source_filename, self._plotter.unique_prefix())):
-            # Forbidden colors = workaround - KiCAD plots vias white
-            # See https://gitlab.com/kicad/code/kicad/-/issues/10491
             if not strip_style_svg(element, keys=["fill", "stroke"],
-                                  forbidden_colors=["#ffffff"], new_val=style):
+                                  forbidden_colors=["#ffffff"]):
                 layer.append(element)
 
     def _process_mask(self, name: str, source_filename: str) -> None:
@@ -1140,14 +1172,11 @@ class PlotVCuts(PlotInterface):
         ])
 
     def _process_vcuts(self, name: str, source_filename: str) -> None:
-        style = self._plotter.get_style("vcut")
         layer = etree.Element("g", id="substrate-vcuts",
-            style="fill:{0}; stroke:{0};".format(style))
+            style="fill:{0}; stroke:{0};".format(self._plotter.get_style("vcut")))
         for element in extract_svg_content(read_svg_unique(source_filename, self._plotter.unique_prefix())):
-            # Forbidden colors = workaround - KiCAD plots vias white
-            # See https://gitlab.com/kicad/code/kicad/-/issues/10491
             if not strip_style_svg(element, keys=["fill", "stroke"],
-                                   forbidden_colors=["#ffffff"], new_val=style):
+                                   forbidden_colors=["#ffffff"]):
                 layer.append(element)
         self._plotter.append_board_element(layer)
 
@@ -1163,12 +1192,11 @@ class PlotPaste(PlotInterface):
         self._plotter.execute_plot_plan(plan)
 
     def _process_paste(self, name: str, source_filename: str) -> None:
-        style = self._plotter.get_style("paste")
         layer = etree.Element("g", id="substrate-paste",
-            style="fill:{0}; stroke:{0};".format(style))
+            style="fill:{0}; stroke:{0};".format(self._plotter.get_style("paste")))
         for element in extract_svg_content(read_svg_unique(source_filename, self._plotter.unique_prefix())):
             if not strip_style_svg(element, keys=["fill", "stroke"],
-                                   forbidden_colors=["#ffffff"], new_val=style):
+                                   forbidden_colors=["#ffffff"]):
                 layer.append(element)
         self._plotter.append_board_element(layer)
 
