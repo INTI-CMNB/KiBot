@@ -14,7 +14,7 @@ import sysconfig
 import tempfile
 from dataclasses import dataclass, field
 from decimal import Decimal
-from typing import Callable, Dict, List, Optional, Set, Tuple, TypeVar, Union, Any
+from typing import Callable, Dict, List, Optional, Set, Tuple, Union, Any
 
 from .unit import read_resistance
 from lxml import etree, objectify # type: ignore
@@ -28,7 +28,6 @@ except ImportError:
     from . import np
     WITH_NUMPY = False
 
-T = TypeVar("T")
 Numeric = Union[int, float]
 Point = Tuple[Numeric, Numeric]
 Box = Tuple[Numeric, Numeric, Numeric, Numeric]
