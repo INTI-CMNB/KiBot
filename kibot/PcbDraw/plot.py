@@ -363,31 +363,29 @@ def find_data_file(name: str, extension: str, data_paths: List[str], subdir: Opt
             return fname
     return None
 
-def ki2mm(val: int) -> float:
+def internal_to_mm(val: int) -> float:
     return val / 1000000.0
 
-def mm2ki(val: float) -> int:
+def mm_to_internal(val: float) -> int:
     return int(val * 1000000)
 
-def to_kicad_basic_units(val: str) -> int:
-    """
-    Read string value and return it as KiCAD base units
-    """
+def to_internal_units(val: str) -> int:
+    """Read string value and return it as KiCAD base units."""
     x = float_re + r'\s*(pt|pc|mm|cm|in)?'
     value, unit = re.findall(x, val)[0]
     value = float(value)
     if unit == "" or unit == "px":
-        return mm2ki(value * 25.4 / 96)
+        return mm_to_internal(value * 25.4 / 96)
     if unit == "pt":
-        return mm2ki(value * 25.4 / 72)
+        return mm_to_internal(value * 25.4 / 72)
     if unit == "pc":
-        return mm2ki(value * 25.4 / 6)
+        return mm_to_internal(value * 25.4 / 6)
     if unit == "mm":
-        return mm2ki(value)
+        return mm_to_internal(value)
     if unit == "cm":
-        return mm2ki(value * 10)
+        return mm_to_internal(value * 10)
     if unit == "in":
-        return mm2ki(25.4 * value)
+        return mm_to_internal(25.4 * value)
     raise RuntimeError(f"Unknown units in '{val}'")
 
 def to_user_units(val: str) -> float:
@@ -820,7 +818,7 @@ ELEMENTS_USED = (
 class PlotSubstrate(PlotInterface):
     drill_holes: bool = True
     copper: bool = True
-    outline_width: int = mm2ki(0.1)
+    outline_width: int = mm_to_internal(0.1)
     only_mask: bool = False
 
     def render(self, plotter: PcbPlotter) -> None:
@@ -1049,21 +1047,21 @@ class PlotComponents(PlotInterface):
             origin=(origin_x, origin_y),
             svg_offset=(svg_offset_x, svg_offset_y),
             scale=(svg_scale_x, svg_scale_y),
-            size=(to_kicad_basic_units(svg_tree.attrib["width"]), to_kicad_basic_units(svg_tree.attrib["height"]))
+            size=(to_internal_units(svg_tree.attrib["width"]), to_internal_units(svg_tree.attrib["height"]))
         )
         self._apply_resistor_code(component_element, id_prefix, ref, value)
         return component_element, component_info
 
     def _component_to_board_scale_and_offset(self, svg: etree.Element) \
             -> Tuple[float, float, float, float]:
-        width = self._plotter.ki2svg(to_kicad_basic_units(svg.attrib["width"]))
-        height = self._plotter.ki2svg(to_kicad_basic_units(svg.attrib["height"]))
+        width = self._plotter.ki2svg(to_internal_units(svg.attrib["width"]))
+        height = self._plotter.ki2svg(to_internal_units(svg.attrib["height"]))
         x, y, vw, vh = [float(x) for x in svg.attrib["viewBox"].split()]
         return width / vw, height / vh, x, y
 
     def _build_highlight(self, ref: str, info: PlacedComponentInfo,
                          position: Tuple[int, int, float]) -> None:
-        padding = mm2ki(self._plotter.get_style("highlight-padding"))
+        padding = mm_to_internal(self._plotter.get_style("highlight-padding"))
         h = etree.Element("rect", id=f"h_{ref}",
             x=str(self._plotter.ki2svg(-padding)),
             y=str(self._plotter.ki2svg(-padding)),
@@ -1145,9 +1143,9 @@ class PlotPlaceholders(PlotInterface):
     def _append_placeholder(self, lib: str, name: str, ref: str, value: str,
                           position: Tuple[int, int, float]) -> None:
         p = etree.Element("rect",
-            x=str(self._plotter.ki2svg(position[0] - mm2ki(0.5))),
-            y=str(self._plotter.ki2svg(position[1] - mm2ki(0.5))),
-            width=str(self._plotter.ki2svg(mm2ki(1))), height=str(self._plotter.ki2svg(mm2ki(1))), style="fill:red;")
+            x=str(self._plotter.ki2svg(position[0] - mm_to_internal(0.5))),
+            y=str(self._plotter.ki2svg(position[1] - mm_to_internal(0.5))),
+            width=str(self._plotter.ki2svg(mm_to_internal(1))), height=str(self._plotter.ki2svg(mm_to_internal(1))), style="fill:red;")
         self._plotter.append_component_element(p)
 
 @dataclass
@@ -1522,16 +1520,16 @@ class PcbPlotter():
             bbox[0], bbox[2],
             bbox[1] - bbox[0], bbox[3] - bbox[2]
         )
-        root.attrib["width"] = str(ki2mm(self.svg2ki(bbox[1] - bbox[0]))) + "mm"
-        root.attrib["height"] = str(ki2mm(self.svg2ki(bbox[3] - bbox[2]))) + "mm"
+        root.attrib["width"] = str(internal_to_mm(self.svg2ki(bbox[1] - bbox[0]))) + "mm"
+        root.attrib["height"] = str(internal_to_mm(self.svg2ki(bbox[3] - bbox[2]))) + "mm"
 
     def _setup_document(self, render_back: bool, mirror: bool) -> None:
         bb = self.board.ComputeBoundingBox(aBoardEdgesOnly=self.kicad_bb_only_edge)
         # If the board doesn't have a contour just use the A4 landscape size. Better than 0x0
         if not bb.GetWidth():
-            bb.SetWidth(mm2ki(297))
+            bb.SetWidth(mm_to_internal(297))
         if not bb.GetHeight():
-            bb.SetHeight(mm2ki(210))
+            bb.SetHeight(mm_to_internal(210))
         self.boardsize = bb
         transform_string = ""
         # Let me briefly explain what's going on. KiCAD outputs SVG in user units,
@@ -1542,13 +1540,13 @@ class PcbPlotter():
         if(render_back ^ mirror):
             transform_string = "scale(-1,1)"
             self._document = empty_svg(
-                width=f"{ki2mm(bb.GetWidth())}mm",
-                height=f"{ki2mm(bb.GetHeight())}mm",
+                width=f"{internal_to_mm(bb.GetWidth())}mm",
+                height=f"{internal_to_mm(bb.GetHeight())}mm",
                 viewBox=f"{self.ki2svg(-bb.GetWidth() - bb.GetX())} {self.ki2svg(bb.GetY())} {self.ki2svg(bb.GetWidth())} {self.ki2svg(bb.GetHeight())}")
         else:
             self._document = empty_svg(
-                width=f"{ki2mm(bb.GetWidth())}mm",
-                height=f"{ki2mm(bb.GetHeight())}mm",
+                width=f"{internal_to_mm(bb.GetWidth())}mm",
+                height=f"{internal_to_mm(bb.GetHeight())}mm",
                 viewBox=f"{self.ki2svg(bb.GetX())} {self.ki2svg(bb.GetY())} {self.ki2svg(bb.GetWidth())} {self.ki2svg(bb.GetHeight())}")
 
         self._defs = etree.SubElement(self._document.getroot(), "defs")
