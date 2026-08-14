@@ -215,6 +215,7 @@ class GS(object):
     F_Mask = None
     B_Mask = None
     Edge_Cuts = None
+    Cmts_User = None
     #
     # Global defaults
     #
