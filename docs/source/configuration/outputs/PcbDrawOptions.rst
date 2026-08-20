@@ -132,10 +132,11 @@ PcbDrawOptions parameters
 
 .. _PcbDrawOptions_size_detection:
 
--  ``size_detection`` :index:`: <pair: output - pcbdraw - options; size_detection>` [:ref:`string <string>`] (default: ``'kicad_edge'``) (choices: "kicad_edge", "kicad_all", "svg_paths") Method used to detect the size of the resulting image.
+-  ``size_detection`` :index:`: <pair: output - pcbdraw - options; size_detection>` [:ref:`string <string>`] (default: ``'kicad_edge'``) (choices: "kicad_edge", "kicad_all", "svg_paths", "kicad_edge_no_w") Method used to detect the size of the resulting image.
    The `kicad_edge` method uses the size of the board as reported by KiCad,
    components that extend beyond the PCB limit will be cropped. You can manually
-   adjust the margins to make them visible. |br|
+   adjust the margins to make them visible. The `kicad_edge_no_w` option is similar but excludes the width
+   of the edge drawings, which is more accurate. |br|
    The `kicad_all` method uses the whole size reported by KiCad. Usually includes extra space. |br|
    The `svg_paths` uses all visible drawings in the image. To use this method you
    must install the `numpy` Python module (may not be available in docker images).

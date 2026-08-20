@@ -34,6 +34,11 @@ Added
 
    -  ``single_file``: to plot all layers to a single file (KiCad 11)
 
+-  PcbDraw:
+
+   -  ``kicad_edge_no_w`` option to ``size_detection`` for more accurate
+      board edge detection.
+
 -  PDF:
 
    -  ``single_page``: used with ``single_file`` to get just one page
