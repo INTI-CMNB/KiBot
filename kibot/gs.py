@@ -214,6 +214,8 @@ class GS(object):
     B_SilkS = None
     F_Mask = None
     B_Mask = None
+    F_Fab = None
+    B_Fab = None
     Edge_Cuts = None
     Cmts_User = None
     #
@@ -867,6 +869,10 @@ class GS(object):
         return footprint.GetOrientation().AsRadians() if GS.ki7 else footprint.GetOrientationRadians()
 
     @staticmethod
+    def get_footprint_orientation_in_degrees(footprint):
+        return footprint.GetOrientation().AsDegrees() if GS.ki7 else footprint.GetOrientationDegrees()
+
+    @staticmethod
     def get_pad_orientation_in_degrees(pad):
         return pad.GetOrientation().AsDegrees() if GS.ki7 else pad.GetOrientationDegrees()
 
@@ -939,8 +945,10 @@ class GS(object):
         return GS.v2p(g.GetEnd())
 
     @staticmethod
-    def get_shape_bbox(s):
+    def get_shape_bbox(s, exact=True):
         """ Bounding box without the width of the trace """
+        if not exact:
+            return s.GetBoundingBox()
         width = s.GetWidth()
         s.SetWidth(0)
         bbox = s.GetBoundingBox()
@@ -1152,38 +1160,48 @@ class GS(object):
         return x1, y1, x2, y2
 
     @staticmethod
-    def compute_pcb_boundary_k5(board):
-        edge_layer = board.GetLayerID('Edge.Cuts')
-        x1 = y1 = x2 = y2 = None
+    def _merge_boundary_boxes(current, added):
+        if current is None:
+            return added
+        current.Merge(added)
+        return current
+
+    @staticmethod
+    def boundary_box_to_corners(bb):
+        if bb is None:
+            return (0, 0, 0, 0)
+        start = bb.GetOrigin()
+        end = bb.GetEnd()
+        return (start.x, start.y, end.x, end.y)
+
+    @staticmethod
+    def compute_boundary_k5(board, layers, classes, exact=True):
+        """ KiCad 6 to 10 flexible boundary box computation.
+            The `exact` argument applies only to `shapes` and makes them 0 width.
+            This is needed to compute the exact board size, otherwise we get the line width computed.
+            `layers` is a set of layers and `classes` a set of KiCad class objects. """
+        res = None
         for d in board.GetDrawings():
-            if d.GetClass() == GS.board_gr_type and d.GetLayer() == edge_layer:
-                bb = GS.get_shape_bbox(d)
-                start = bb.GetOrigin()
-                end = bb.GetEnd()
-                if x1 is None:
-                    x1 = x2 = start.x
-                    y1 = y2 = start.y
-                for p in [start, end]:
-                    x2 = max(x2, p.x)
-                    y2 = max(y2, p.y)
-                    x1 = min(x1, p.x)
-                    y1 = min(y1, p.y)
-        # This is a special case: the PCB edges are in a footprint
-        for m in GS.get_modules():
+            if d.GetClass() in classes and d.GetLayer() in layers:
+                res = GS._merge_boundary_boxes(res, GS.get_shape_bbox(d, exact))
+        # Now inside footprints
+        for m in board.GetFootprints():
             for gi in m.GraphicalItems():
-                if gi.GetClass() == GS.footprint_gr_type and gi.GetLayer() == edge_layer:
-                    bb = GS.get_shape_bbox(gi)
-                    start = bb.GetOrigin()
-                    end = bb.GetEnd()
-                    if x1 is None:
-                        x1 = x2 = start.x
-                        y1 = y2 = start.y
-                    for p in [start, end]:
-                        x2 = max(x2, p.x)
-                        y2 = max(y2, p.y)
-                        x1 = min(x1, p.x)
-                        y1 = min(y1, p.y)
-        return x1, y1, x2, y2
+                if gi.GetClass() in classes and gi.GetLayer() in layers:
+                    res = GS._merge_boundary_boxes(res, GS.get_shape_bbox(gi, exact))
+        return GS.boundary_box_to_corners(res)
+
+    @staticmethod
+    def compute_boundary_layers_k5(board, layers, include_text=True):
+        classes = {'PCB_SHAPE'}
+        if include_text:
+            classes.add('PTEXT')     # KiCad 6
+            classes.add('PCB_TEXT')  # KiCad 7+
+        return GS.compute_boundary_k5(board, layers, classes, exact=False)
+
+    @staticmethod
+    def compute_pcb_boundary_k5(board):
+        return GS.compute_boundary_k5(board, {GS.Edge_Cuts}, {'PCB_SHAPE'})
 
     @staticmethod
     def compute_pcb_boundary_kp(board):

@@ -425,6 +425,8 @@ def get_layers_info_pn():
     GS.B_SilkS = pcbnew.B_SilkS
     GS.F_Mask = pcbnew.F_Mask
     GS.B_Mask = pcbnew.B_Mask
+    GS.F_Fab = pcbnew.F_Fab
+    GS.B_Fab = pcbnew.B_Fab
     GS.Edge_Cuts = pcbnew.Edge_Cuts
     GS.Cmts_User = pcbnew.Cmts_User
     # Available plotter formats
@@ -481,6 +483,8 @@ def get_layers_info_kp():
     GS.B_SilkS = GS.DEFAULT_LAYER_NAMES['B.SilkS']
     GS.F_Mask = GS.DEFAULT_LAYER_NAMES['F.Mask']
     GS.B_Mask = GS.DEFAULT_LAYER_NAMES['B.Mask']
+    GS.F_Fab = GS.DEFAULT_LAYER_NAMES['F.Fab']
+    GS.B_Fab = GS.DEFAULT_LAYER_NAMES['B.Fab']
     GS.Edge_Cuts = GS.DEFAULT_LAYER_NAMES['Edge.Cuts']
     GS.Cmts_User = GS.DEFAULT_LAYER_NAMES['Cmts.User']
     # Available plotter formats

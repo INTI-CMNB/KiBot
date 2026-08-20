@@ -1203,11 +1203,10 @@ class PCB_PrintOptions(VariantOptions):
         from .PcbDraw.plot import PcbPlotter, PlotSubstrate
         # Run PcbDraw to make the heavy work (find the Edge.Cuts path and create masks)
         try:
-            plotter = PcbPlotter(GS.board)
+            plotter = PcbPlotter(GS.board, svg_precision=self.svg_precision)
             plotter.yield_warning = pcbdraw_warnings
             plotter.render_back = back
             plotter.plot_plan = [PlotSubstrate(only_mask=True)]
-            plotter.svg_precision = self.svg_precision
             image = plotter.plot()
         except (RuntimeError, SyntaxError, IOError) as e:
             GS.exit_with_error('PcbDraw error: '+str(e), PCBDRAW_ERR)
