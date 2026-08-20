@@ -2,6 +2,7 @@ import sys
 import pcbnew
 ToMM = pcbnew.ToMM
 
+
 def get_shape_bbox(s, exact):
     """ Bounding box without the width of the trace """
     if not exact:
@@ -47,6 +48,7 @@ def compute_pcb_boundary_k5(board):
 
 def print_rect(bb):
     print(f"({ToMM(bb.GetX())},{ToMM(bb.GetY())}) {ToMM(bb.GetWidth())} x {ToMM(bb.GetHeight())}")
+
 
 board = pcbnew.LoadBoard(sys.argv[1])
 
