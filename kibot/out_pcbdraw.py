@@ -244,10 +244,11 @@ class PcbDrawOptions(VariantOptions):
             self.resistor_flip = Optionable
             """ [string|list(string)=''] {comma_sep} List of resistors to flip its bands """
             self.size_detection = 'kicad_edge'
-            """ [kicad_edge,kicad_all,svg_paths] Method used to detect the size of the resulting image.
+            """ [kicad_edge,kicad_all,svg_paths,kicad_edge_no_w] Method used to detect the size of the resulting image.
                 The `kicad_edge` method uses the size of the board as reported by KiCad,
                 components that extend beyond the PCB limit will be cropped. You can manually
-                adjust the margins to make them visible.
+                adjust the margins to make them visible. The `kicad_edge_no_w` option is similar but excludes the width
+                of the edge drawings, which is more accurate.
                 The `kicad_all` method uses the whole size reported by KiCad. Usually includes extra space.
                 The `svg_paths` uses all visible drawings in the image. To use this method you
                 must install the `numpy` Python module (may not be available in docker images) """
@@ -430,7 +431,10 @@ class PcbDrawOptions(VariantOptions):
                 save_output_name = GS.tmp_file(suffix='.png')
 
         try:
-            plotter = PcbPlotter(board, edge_only=self.size_detection == 'kicad_edge', svg_precision=self.svg_precision)
+            plotter = PcbPlotter(board,
+                                 edge_only=self.size_detection.startswith('kicad_edge'),
+                                 svg_precision=self.svg_precision,
+                                 exclude_width=self.size_detection != 'kicad_edge_no_w')
             # Read libs from KiBot resources
             plotter.setup_arbitrary_data_path(GS.get_resource_path('pcbdraw'))
             # Libs indicated by PCBDRAW_LIB_PATH
