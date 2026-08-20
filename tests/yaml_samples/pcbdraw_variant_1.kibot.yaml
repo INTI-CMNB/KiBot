@@ -15,3 +15,5 @@ outputs:
     options:
       variant: default
       format: png
+      # size_detection: svg_paths
+      # size_detection: kicad_edge_no_w
