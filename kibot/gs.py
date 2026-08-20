@@ -1200,11 +1200,12 @@ class GS(object):
         return GS.compute_boundary_k5(board, layers, classes, exact=False)
 
     @staticmethod
-    def compute_pcb_boundary_k5(board):
-        return GS.compute_boundary_k5(board, {GS.Edge_Cuts}, {'PCB_SHAPE'})
+    def compute_pcb_boundary_k5(board, exact=True):
+        return GS.compute_boundary_k5(board, {GS.Edge_Cuts}, {'PCB_SHAPE'}, exact=exact)
 
     @staticmethod
-    def compute_pcb_boundary_kp(board):
+    def compute_pcb_boundary_kp(board, exact=True):
+        # TODO: Implement the `exact` equivalent
         edge_layer = GS.Edge_Cuts
         # Look for all shapes in the Edge Cuts
         shapes = [d for d in board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_SHAPE) if d.layer == edge_layer]

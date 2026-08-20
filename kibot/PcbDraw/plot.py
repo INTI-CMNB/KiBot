@@ -1309,16 +1309,19 @@ class PcbPlotter:
     KiBot:
     board: is a KiCad object, not a filename
     edge_only: Use the PCB edge when asking the BBox to KiCad
+    exclude_width: When `edge_only` is enabled and `compute_bbox` is false excludes the line widths
     svg_precision: Precision for older versions
+
     """
-    def __init__(self, board, edge_only=False, svg_precision=4):
+    def __init__(self, board, edge_only=False, svg_precision=4, exclude_width=False):
         self._unique_counter: int = 1
         self.board = board
         self.svg_precision = svg_precision  # KiCad 6 SVG scale (1 mm == 10 ** svg_precision)
         self.edge_only = edge_only
+        self.exclude_width = exclude_width
         self.internal_to_svg = GS.to_mm if GS.ki7 else self._ki2svg_v6
         self.svg_to_mm = self._float_to_str_mm if GS.ki7 else self._svg_to_mm_v6
-        self.board_data = load_board_data(board, self.internal_to_svg)
+        self.board_data = load_board_data(board, self.internal_to_svg, exclude_width)
         # KiBot: Avoid computing the bounds, trust KiCad
         self.board_bounds = self.board_data.bounds
         self.render_back: bool = False

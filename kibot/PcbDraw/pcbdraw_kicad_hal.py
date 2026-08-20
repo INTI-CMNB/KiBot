@@ -72,13 +72,13 @@ class BoardData:
     bounds: Bounds
 
 
-def load_board_data(board, internal_to_svg) -> BoardData:
+def load_board_data(board, internal_to_svg, exclude_width) -> BoardData:
     """ Compute the PCB boundaries and collect PCB components and holes.
         All coordinates/sizes are in SVG units.
         KiCad 6: depends on the SVG precision
         KiCad 7+: just mm """
     # Board bounds, only the edge, this isn't the full drawing size
-    x1, y1, x2, y2 = GS.compute_pcb_boundary(board)
+    x1, y1, x2, y2 = GS.compute_pcb_boundary(board, not exclude_width)
     # If the board doesn't have a contour just use the A4 landscape size. Better than 0x0
     if x2-x1 == 0:
         x1 = 0
