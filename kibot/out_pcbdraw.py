@@ -430,7 +430,7 @@ class PcbDrawOptions(VariantOptions):
                 save_output_name = GS.tmp_file(suffix='.png')
 
         try:
-            plotter = PcbPlotter(board)
+            plotter = PcbPlotter(board, edge_only=self.size_detection == 'kicad_edge', svg_precision=self.svg_precision)
             # Read libs from KiBot resources
             plotter.setup_arbitrary_data_path(GS.get_resource_path('pcbdraw'))
             # Libs indicated by PCBDRAW_LIB_PATH
@@ -443,7 +443,6 @@ class PcbDrawOptions(VariantOptions):
             plotter.render_back = self.bottom
             plotter.mirror = self.mirror
             plotter.margin = self._margin
-            plotter.svg_precision = self.svg_precision
             if self._style:
                 if isinstance(self._style, str):
                     plotter.resolve_style(self._style)
@@ -470,7 +469,6 @@ class PcbDrawOptions(VariantOptions):
             # Make sure we can use svgpathtools
             if plotter.compute_bbox:
                 self.ensure_tool('numpy')
-            plotter.kicad_bb_only_edge = self.size_detection == 'kicad_edge'
             # Plot it
             if PROFILE_PLOT:
                 logger.error('Start')

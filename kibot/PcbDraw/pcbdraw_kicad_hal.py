@@ -1,0 +1,169 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2026 Salvador E. Tropea
+# Copyright (c) 2026 Instituto Nacional de Tecnología Industrial
+# License: AGPL-3.0
+# Project: KiBot (formerly KiPlot)
+#
+# Implementation of the KiCad low level interface for PcbDraw
+# - Using SWIG API (pcbnew.py) for KiCad 6 to 10
+#
+from dataclasses import dataclass, field
+from enum import Enum
+import tempfile
+from typing import Mapping, Tuple
+from ..gs import GS
+from ..layer import Layer
+from .. import log
+
+logger = log.get_logger()
+
+
+@dataclass(frozen=True)
+class Point:
+    x: float
+    y: float
+
+
+@dataclass(frozen=True)
+class Size:
+    width: float
+    height: float
+
+
+@dataclass(frozen=True)
+class Bounds:
+    x: float
+    y: float
+    width: float
+    height: float
+
+
+class BoardSide(Enum):
+    FRONT = "front"
+    BACK = "back"
+
+
+@dataclass(frozen=True)
+class Component:
+    library: str
+    footprint: str
+    reference: str
+    value: str
+    position: Point
+    rotation_degrees: float
+    side: BoardSide
+    properties: Mapping[str, str] = field(default_factory=dict)    # Fields excluding "reference", "value", "footprint"
+
+    def __str__(self):
+        return f"{self.reference} {self.value} [{self.library}:{self.footprint}] @ {self.position} on {self.side}"
+
+
+@dataclass(frozen=True)
+class DrillHole:
+    position: Point
+    orientation_degrees: float
+    size: Size
+
+
+@dataclass(frozen=True)
+class BoardData:
+    components: Tuple[Component, ...]
+    holes: Tuple[DrillHole, ...]
+    bounds: Bounds
+
+
+def load_board_data(board, internal_to_svg) -> BoardData:
+    """ Compute the PCB boundaries and collect PCB components and holes.
+        All coordinates/sizes are in SVG units.
+        KiCad 6: depends on the SVG precision
+        KiCad 7+: just mm """
+    # Board bounds, only the edge, this isn't the full drawing size
+    x1, y1, x2, y2 = GS.compute_pcb_boundary(board)
+    # If the board doesn't have a contour just use the A4 landscape size. Better than 0x0
+    if x2-x1 == 0:
+        x1 = 0
+        x2 = GS.from_mm(297)
+    if y2-y1 == 0:
+        y1 = 0
+        y2 = GS.from_mm(210)
+    bounds = Bounds(internal_to_svg(x1), internal_to_svg(y1), internal_to_svg(x2-x1), internal_to_svg(y2-y1))
+
+    # Components and Holes
+    components = []
+    holes = []
+    for m in GS.get_modules_board(board):
+        # Component
+        # Side
+        layer = m.GetLayer()
+        if layer == GS.F_Cu:
+            side = BoardSide.FRONT
+        elif layer == GS.B_Cu:
+            side = BoardSide.BACK
+        else:
+            assert False
+        # lib+name
+        fpid = m.GetFPID()
+        library = str(fpid.GetLibNickname()).strip()
+        footprint = str(fpid.GetLibItemName()).strip()
+        # Properties
+        reference = m.GetReference().strip()
+        value = m.GetValue().strip()
+        properties = GS.get_fields(m)
+        # Position
+        pos = m.GetPosition()
+        position = Point(internal_to_svg(pos.x), internal_to_svg(pos.y))
+        rotation_degrees = GS.get_footprint_orientation_in_degrees(m)
+        components.append(Component(library=library, footprint=footprint, reference=reference, value=value,
+                                    position=position, rotation_degrees=rotation_degrees, side=side,
+                                    properties=properties))
+
+        # Holes
+        if m.GetPadCount() == 0:
+            continue
+        for pad in m.Pads():
+            pos = pad.GetPosition()
+            drs = pad.GetDrillSize()
+            holes.append(DrillHole(position=Point(internal_to_svg(pos[0]), internal_to_svg(pos[1])),
+                                   orientation_degrees=GS.get_pad_orientation_in_degrees(pad),
+                                   size=Size(internal_to_svg(drs.x), internal_to_svg(drs.y))))
+
+    # Holes from vias
+    for track in board.GetTracks():
+        if track.GetClass() != 'PCB_VIA':
+            continue
+        pos = track.GetPosition()
+        sz = internal_to_svg(track.GetDrillValue())
+        holes.append(DrillHole(position=Point(internal_to_svg(pos[0]), internal_to_svg(pos[1])),
+                               orientation_degrees=0.0,
+                               size=Size(sz, sz)))
+
+    return BoardData(components, holes, bounds)
+
+
+def export_pcb_svg_layers(board, layers, svg_precision):
+    assert GS.pn is not None, "No pcbnew support"
+    pcbnew = GS.pn
+    result = {}
+    with tempfile.TemporaryDirectory() as tmp:
+        pctl = pcbnew.PLOT_CONTROLLER(board)
+        popt = pctl.GetPlotOptions()
+        popt.SetOutputDirectory(tmp)
+        popt.SetScale(1)
+        popt.SetMirror(False)
+        popt.SetSubtractMaskFromSilk(True)
+        popt.SetDrillMarksType(0)  # NO_DRILL_SHAPE
+        popt.SetTextMode(pcbnew.PLOT_TEXT_MODE_STROKE)
+        if GS.ki7:
+            popt.SetSvgPrecision(svg_precision)
+        else:  # KiCad 6
+            popt.SetSvgPrecision(svg_precision, False)
+        for layer in set(layers):
+            logger.debug(f"Plotting layer {Layer.id2def_name(layer)}")
+            pctl.SetLayer(layer)
+            pctl.OpenPlotfile('pcbdraw', pcbnew.PLOT_FORMAT_SVG, 'pcbdraw')
+            pctl.SetColorMode(False)
+            pctl.PlotLayer()
+            pctl.ClosePlot()
+            with open(pctl.GetPlotFileName(), 'rb') as f:
+                result[layer] = f.read()
+    return result

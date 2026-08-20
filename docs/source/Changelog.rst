@@ -29,6 +29,27 @@ Fixed
 
    -  Rotated PostScript for the PCB Print output
 
+-  PcbDraw:
+
+   -  ‘svg_paths’ mode for ‘size_detection’ avoids stuff outside the PCB
+      and mirror issues. We still recommend using the default.
+
+Changed
+=======
+
+-  Gerber/PS/PDF/SVG/DXF:
+
+   -  ``exclude_pads_from_silkscreen`` is no longer valid (just warning)
+      was for KiCad 5
+
+-  Gerber/PS/PDF/SVG:
+
+   -  ``line_width`` is no longer valid (just warning) was for KiCad 5
+
+-  PcbDraw:
+
+   -  Updated to v1.4.0 base code, expect some subtle differences.
+
 `1.9.1 <https://github.com/INTI-CMNB/KiBot/compare/v1.9.0...v1.9.1>`__ - 2026-07-28
 -----------------------------------------------------------------------------------
 

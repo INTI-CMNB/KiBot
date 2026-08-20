@@ -8,6 +8,8 @@ outputs:
     dir: PcbDraw
     options: &pcb_draw_ops
       format: svg
+      # size_detection: 'svg_paths'
+      size_detection: 'kicad_all'
       # show_components: all
 
   - name: PcbDraw2
