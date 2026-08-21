@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.2] - Unreleased
 ### Added
+- Globals:
+  - `pcb_image_prefix`: to configure the prefix for groups used to insert
+    images on PCBs
 - *SCH Print:
   - 'draw_hop_over` to draw it at wire crossings
   - Better sub-sheet names handling for KiCad 10+
+  - Support to select which image to insert from an output, i.e. OUTPUT_NAME[2]
 - Gerber/DXF/PDF/PS/SVG:
   - `sheet_reference_layout`: to specify another worksheet (KiCad 11)
   - `common_layers`: list of layers to use on every page (KiCad 11)
@@ -18,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PcbDraw:
   - `kicad_edge_no_w` option to `size_detection` for more accurate board edge
     detection.
+- PCB Print:
+  - Support to select which image to insert from an output, i.e. OUTPUT_NAME[2]
 - PDF:
   - `single_page`: used with `single_file` to get just one page (KiCad 11)
   - `background_color`: to select a particular background color (KiCad 11)

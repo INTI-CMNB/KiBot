@@ -15,7 +15,7 @@ from .kicad.pcb import replace_footprints
 from .kicad.v6_sch import SchematicBitmapV6, Stroke, Color
 from .kiplot import get_all_components, look_for_output, get_output_targets, run_output
 from .misc import (Rect, W_WRONGPASTE, DISABLE_3D_MODEL_TEXT, W_NOCRTYD, MOD_ALLOW_MISSING_COURTYARD, W_MISSDIR, W_KEEPTMP,
-                   RENDERERS, read_png)
+                   RENDERERS, read_png, SUBIMAGE_REGEX)
 if not GS.kicad_version_n:
     # When running the regression tests we need it
     from kibot.__main__ import detect_kicad
@@ -1246,7 +1246,7 @@ class VariantOptions(BaseOptions):
             if c.ref in self.undo_show:
                 c.set_fitted(True)
 
-    def sch_replace_one_image(self, sheet, box, output_name, box_index):
+    def sch_replace_one_image(self, sheet, box, output_name, image_index, box_index):
         """ Replace one image in the schematic, see sch_replace_images """
         # Get the image file name
         logger.debugl(2, f"- Looking for output {output_name} images")
@@ -1256,7 +1256,12 @@ class VariantOptions(BaseOptions):
         if not targets:
             raise KiPlotConfigurationError("{self.desc_box(box)} uses `{output_name}` which doesn't"
                                            " generate any PNG")
-        fname = targets[0]
+        try:
+            fname = targets[0 if image_index is None else image_index-1]
+        except IndexError:
+            raise KiPlotConfigurationError(f'index {image_index} is out of range for output {output_name}, '
+                                           'check your schematic')
+
         logger.debugl(2, f"- Related image: {fname}")
         if not os.path.exists(fname):
             # The target doesn't exist
@@ -1323,13 +1328,16 @@ class VariantOptions(BaseOptions):
         logger.debug("Replacing images in schematic")
         res = False
         key = GS.global_sch_image_prefix+'_'
-        key_l = len(key)
+        len(key)
+        regex = re.compile(GS.global_sch_image_prefix+SUBIMAGE_REGEX)
         for s in GS.sch.all_sheets:
             s._replaced_images = []
             for index, b in enumerate(s.text_boxes):
-                text = b.text.strip()
-                if text.startswith(key):
-                    res |= self.sch_replace_one_image(s, b, text[key_l:], index)
+                match = regex.match(b.text.strip())
+                if match is not None:
+                    image_index = match.group(2)
+                    image_index = 0 if image_index is None else int(image_index)-1
+                    res |= self.sch_replace_one_image(s, b, match.group(1), image_index, index)
         return res
 
     def sch_restore_images(self, sch):

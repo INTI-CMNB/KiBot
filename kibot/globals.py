@@ -472,7 +472,19 @@ class Globals(FiltersOptions):
                 You must place a text box at the coordinates where you want to paste the image.
                 The width of the text box will be the width of the image.
                 The text box must contain *kibot_image_X* where X is the output name.
-                This option configures the prefix used. If this option is empty no images will be pasted """
+                This option configures the prefix used. If this option is empty no images will be pasted.
+                If the output generates more than one image you can used OUTPUT_NAME[INDEX] to select the
+                image. The first image is INDEX one, using zero you'll get the last image """
+            self.pcb_image_prefix = 'kibot_image'
+            """ Prefix used to paste images from outputs. Used by `pcb_print`.
+                You must create a group at the coordinates where you want to paste the image.
+                The image will be drawn inside the group, but the aspect ratio will be
+                preserved. So you'll get the best results if the group aspect ratio matches
+                the image aspect ratio.
+                The name of the group must be *kibot_image_X* where X is the output name.
+                This option configures the prefix used. If this option is empty no images will be pasted.
+                If the output generates more than one image you can used OUTPUT_NAME[INDEX] to select the
+                image. The first image is INDEX one, using zero you'll get the last image """
             self.code_page_fallback = 'latin1'
             """ Code page to use when UTF-8 decode fails. Leave empty to just use ASCII and spaces for codes
                 outside ASCII """

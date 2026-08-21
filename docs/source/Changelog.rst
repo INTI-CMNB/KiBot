@@ -19,10 +19,17 @@ Versioning <https://semver.org/spec/v2.0.0.html>`__.
 Added
 ~~~~~
 
+-  Globals:
+
+   -  ``pcb_image_prefix``: to configure the prefix for groups used to
+      insert images on PCBs
+
 -  \*SCH Print:
 
    -  ’draw_hop_over\` to draw it at wire crossings
    -  Better sub-sheet names handling for KiCad 10+
+   -  Support to select which image to insert from an output,
+      i.e. OUTPUT_NAME[2]
 
 -  Gerber/DXF/PDF/PS/SVG:
 
@@ -38,6 +45,11 @@ Added
 
    -  ``kicad_edge_no_w`` option to ``size_detection`` for more accurate
       board edge detection.
+
+-  PCB Print:
+
+   -  Support to select which image to insert from an output,
+      i.e. OUTPUT_NAME[2]
 
 -  PDF:
 

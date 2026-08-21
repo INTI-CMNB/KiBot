@@ -60,7 +60,7 @@ from .kicad.v5_sch import SchError
 from .kicad.pcb import PCB
 from .misc import (PDF_PCB_PRINT, W_PDMASKFAIL, W_MISSTOOL, PCBDRAW_ERR, W_PCBDRAW, FONT_HELP_TEXT, W_BUG16418, pretty_list,
                    try_int, W_NOPAGES, W_NOLAYERS, W_NOTHREPE, RENDERERS, read_png, EMBED_PREFIX, KICAD_VERSION_9_0_1,
-                   W_NOVISLA)
+                   W_NOVISLA, SUBIMAGE_REGEX)
 from .create_pdf import create_pdf_from_pages
 from .macros import macros, document, output_class  # noqa: F401
 from .drill_marks import DRILL_MARKS_MAP, add_drill_marks
@@ -1057,7 +1057,7 @@ class PCB_PrintOptions(VariantOptions):
         tmp_layer = GS.board.GetLayerID(GS.global_work_layer)
         for g in GS.board.Groups():
             name = g.GetName()
-            if not name.startswith('kibot_image_'):
+            if not GS.global_pcb_image_prefix or not name.startswith(GS.global_pcb_image_prefix+'_'):
                 continue
             x1, y1, x2, y2 = GS.compute_group_boundary(g)
             moved = []
@@ -1080,11 +1080,16 @@ class PCB_PrintOptions(VariantOptions):
         """ Look for groups named kibot_image_OUTPUT and paste images from the referred OUTPUTs """
         # Check which layers we printed
         layers = {la._id for la in page._layers}
+        if not GS.global_pcb_image_prefix:
+            logger.debug('Skipping image groups in the PCB')
+            return
         # Look for groups
         logger.debug('Looking for image groups in the PCB')
+        regex = re.compile(GS.global_pcb_image_prefix+SUBIMAGE_REGEX)
         for g in self._image_groups:
             name = g.name
-            if not name.startswith('kibot_image_'):
+            match = regex.match(name)
+            if match is None:
                 continue
             logger.debugl(2, f'- Found {name}')
             # Check if this group is for a layer we printed
@@ -1092,13 +1097,18 @@ class PCB_PrintOptions(VariantOptions):
                 logger.debug('- {name} not in printed layers')
                 continue
             # Look for the image from the output
-            output_name = name[12:]
+            output_name = match.group(1)
             output_obj = look_for_output(output_name, '`include image`', self._parent, RENDERERS)
             targets, _, _ = get_output_targets(output_name, self._parent)
             targets = [fn for fn in targets if fn.endswith('.png')]
             if not targets:
-                raise KiPlotConfigurationError("PCB group `{name}` uses `{output_name}` which doesn't generate any PNG")
-            fname = targets[0]
+                raise KiPlotConfigurationError(f"PCB group `{name}` uses `{output_name}` which doesn't generate any PNG")
+            index = int(match.group(2))
+            try:
+                fname = targets[0 if index is None else index-1]
+            except IndexError:
+                raise KiPlotConfigurationError(f'In group {name}, index {index} is out of range for output {output_name}')
+
             logger.debugl(2, f'- Related image: {fname}')
             if not os.path.exists(fname):
                 # The target doesn't exist

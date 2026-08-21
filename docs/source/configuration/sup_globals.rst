@@ -455,6 +455,18 @@
          Currently known are None, HAL, HASL, HAL SnPb, HAL lead-free, ENIG, ENEPIG, Hard gold, ImAg, Immersion Silver,
          Immersion Ag, ImAu, Immersion Gold, Immersion Au, Immersion Tin, Immersion Nickel, OSP and HT_OSP.
 
+.. _Globals_pcb_image_prefix:
+
+      -  ``pcb_image_prefix`` :index:`: <pair: global options; pcb_image_prefix>` [:ref:`string <string>`] (default: ``'kibot_image'``) Prefix used to paste images from outputs. Used by `pcb_print`.
+         You must create a group at the coordinates where you want to paste the image. |br|
+         The image will be drawn inside the group, but the aspect ratio will be
+         preserved. So you'll get the best results if the group aspect ratio matches
+         the image aspect ratio. |br|
+         The name of the group must be *kibot_image_X* where X is the output name. |br|
+         This option configures the prefix used. If this option is empty no images will be pasted. |br|
+         If the output generates more than one image you can used OUTPUT_NAME[INDEX] to select the
+         image. The first image is INDEX one, using zero you'll get the last image.
+
 .. _Globals_pcb_material:
 
       -  ``pcb_material`` :index:`: <pair: global options; pcb_material>` [:ref:`string <string>`] (default: ``'FR4'``) PCB core material. Currently used for documentation and to choose default colors.
@@ -503,7 +515,9 @@
          You must place a text box at the coordinates where you want to paste the image. |br|
          The width of the text box will be the width of the image. |br|
          The text box must contain *kibot_image_X* where X is the output name. |br|
-         This option configures the prefix used. If this option is empty no images will be pasted.
+         This option configures the prefix used. If this option is empty no images will be pasted. |br|
+         If the output generates more than one image you can used OUTPUT_NAME[INDEX] to select the
+         image. The first image is INDEX one, using zero you'll get the last image.
 
 .. _Globals_schematic_sheet_name_workaround:
 

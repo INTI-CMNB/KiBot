@@ -285,6 +285,7 @@ class GS(object):
     #  after defining its own options to allow Optionable do the overwrite.
     global_output = None
     global_pcb_finish = None
+    global_pcb_image_prefix = None
     global_pcb_material = None
     global_pcb_material_color = None
     global_remove_3D_models_for_dnp = None

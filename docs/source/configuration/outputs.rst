@@ -907,6 +907,9 @@ don't know how to create a group consult :ref:`create_group`.
 
    The image must be in PNG format, other formats aren't currently supported.
 
+The **kibot_image_** prefix can be configured by the `pcb_image_prefix`
+:ref:`global variable<Globals_pcb_image_prefix>`.
+
 The image will be associated with the layer of the first element in the group.
 So when you print this layer you'll get the image at the position of the group.
 
