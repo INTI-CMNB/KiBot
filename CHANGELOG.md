@@ -58,6 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 - Navigate Results:
   - Rotated PostScript for the PCB Print output
+  - Problems when skipping outputs and the skipped output was a candidate to
+    represent a category
 - PcbDraw:
   - 'svg_paths' mode for 'size_detection' avoids stuff outside the PCB and
     mirror issues. We still recommend using the default.

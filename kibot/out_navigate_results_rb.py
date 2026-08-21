@@ -1377,6 +1377,9 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
                 rep_file = None
                 # Look in all outputs
                 for o in RegOutput.get_outputs():
+                    if not o.run_by_default and self.skip_not_run:
+                        # Skip outputs that aren't generated in a regular run
+                        continue
                     if o.type in outs_rep:
                         out_dir = get_output_dir(o.dir, o, dry=True)
                         targets = o.get_targets(out_dir)

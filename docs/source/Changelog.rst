@@ -105,6 +105,8 @@ Fixed
 -  Navigate Results:
 
    -  Rotated PostScript for the PCB Print output
+   -  Problems when skipping outputs and the skipped output was a
+      candidate to represent a category
 
 -  PcbDraw:
 
