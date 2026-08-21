@@ -532,7 +532,7 @@ def detect_kicad():
             GS.VIATYPE_BURIED = 3
             GS.VIATYPE_MICROVIA = 1
     GS.footprint_gr_type = 'MGRAPHIC' if not GS.ki8 else 'PCB_SHAPE'
-    GS.board_gr_type = 'DRAWSEGMENT' if GS.ki5 else 'PCB_SHAPE'
+    GS.board_gr_type = 'PCB_SHAPE'
     GS.footprint_update_local_coords = GS.dummy1 if GS.ki8 else GS.footprint_update_local_coords_ki7
 
     logger.debug('Detected KiCad v{}.{}.{} ({} {})'.format(GS.kicad_version_major, GS.kicad_version_minor,

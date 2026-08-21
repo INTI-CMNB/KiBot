@@ -1175,7 +1175,7 @@ class GS(object):
         return (start.x, start.y, end.x, end.y)
 
     @staticmethod
-    def compute_boundary_k5(board, layers, classes, exact=True):
+    def compute_boundary_k6(board, layers, classes, exact=True):
         """ KiCad 6 to 10 flexible boundary box computation.
             The `exact` argument applies only to `shapes` and makes them 0 width.
             This is needed to compute the exact board size, otherwise we get the line width computed.
@@ -1192,16 +1192,16 @@ class GS(object):
         return GS.boundary_box_to_corners(res)
 
     @staticmethod
-    def compute_boundary_layers_k5(board, layers, include_text=True):
-        classes = {'PCB_SHAPE'}
+    def compute_boundary_layers_k6(board, layers, include_text=True):
+        classes = {'PCB_SHAPE', 'MGRAPHIC'}
         if include_text:
             classes.add('PTEXT')     # KiCad 6
             classes.add('PCB_TEXT')  # KiCad 7+
-        return GS.compute_boundary_k5(board, layers, classes, exact=False)
+        return GS.compute_boundary_k6(board, layers, classes, exact=False)
 
     @staticmethod
-    def compute_pcb_boundary_k5(board, exact=True):
-        return GS.compute_boundary_k5(board, {GS.Edge_Cuts}, {'PCB_SHAPE'}, exact=exact)
+    def compute_pcb_boundary_k6(board, exact=True):
+        return GS.compute_boundary_k6(board, {GS.Edge_Cuts}, {'PCB_SHAPE', 'MGRAPHIC'}, exact=exact)
 
     @staticmethod
     def compute_pcb_boundary_kp(board, exact=True):
@@ -1452,7 +1452,7 @@ class GS(object):
             GS.is_layer_enabled = GS.is_layer_enabled_k5
             GS.get_modules = GS.get_modules_k6
             GS.get_modules_board = GS.get_modules_board_k6
-            GS.compute_pcb_boundary = GS.compute_pcb_boundary_k5
+            GS.compute_pcb_boundary = GS.compute_pcb_boundary_k6
             GS.to_mm = GS.to_mm_k5
             GS.from_mm = GS.from_mm_k5
             GS.to_mils = GS.to_mils_k5
