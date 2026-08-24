@@ -256,6 +256,8 @@ def export_pcb_svg_layers_kp(board, layers, svg_precision):
     plot.use_drill_origin = False
     plot.subtract_solder_mask_from_silk = True
     plot.drill_marks = GS.NO_DRILL_SHAPE
+    plot.plot_reference_designators = True
+    plot.plot_footprint_values = True
 
     result = {}
     with tempfile.TemporaryDirectory() as tmp:
