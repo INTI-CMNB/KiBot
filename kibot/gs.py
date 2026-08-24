@@ -1218,6 +1218,10 @@ class GS(object):
         if not len(shapes):
             return 0, 0, 0, 0
         boxes = board.get_item_bounding_box(shapes)
+        if exact:
+            # Reduce all boxes by the stroke width
+            for b, d in zip(boxes, shapes):
+                b.inflate(-d.attributes.stroke.width)
         bb = GS.kp.geometry.Box2.from_pos_size(boxes[0].pos, boxes[0].size)
         if len(boxes) > 1:
             for b in boxes[1:]:
