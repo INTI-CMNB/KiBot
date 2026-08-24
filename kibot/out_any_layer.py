@@ -295,7 +295,7 @@ class AnyLayerOptions(VariantOptions):
                 plot.common_layers = common_layers+[GS.Edge_Cuts]
         else:  # No extra Edge Cuts
             if self.is_single_file_and_page():
-                layers.extend(common_layers)
+                layers = common_layers+layers
             else:
                 plot.common_layers = common_layers
         plot.layers = layers
