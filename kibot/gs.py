@@ -1184,19 +1184,19 @@ class GS(object):
         return (start.x, start.y, end.x, end.y)
 
     @staticmethod
-    def compute_boundary_k6(board, layers, classes, exact=True):
+    def _compute_boundary_k6(board, layers, classes, exact=True):
         """ KiCad 6 to 10 flexible boundary box computation.
             The `exact` argument applies only to `shapes` and makes them 0 width.
             This is needed to compute the exact board size, otherwise we get the line width computed.
             `layers` is a set of layers and `classes` a set of KiCad class objects. """
         res = None
         for d in board.GetDrawings():
-            if d.GetClass() in classes and d.GetLayer() in layers:
+            if d.GetClass() in classes and (layers is None or d.GetLayer() in layers):
                 res = GS._merge_boundary_boxes(res, GS.get_shape_bbox(d, exact))
         # Now inside footprints
         for m in board.GetFootprints():
             for gi in m.GraphicalItems():
-                if gi.GetClass() in classes and gi.GetLayer() in layers:
+                if gi.GetClass() in classes and (layers is None or gi.GetLayer() in layers):
                     res = GS._merge_boundary_boxes(res, GS.get_shape_bbox(gi, exact))
         return GS.boundary_box_to_corners(res)
 
@@ -1206,22 +1206,43 @@ class GS(object):
         if include_text:
             classes.add('PTEXT')     # KiCad 6
             classes.add('PCB_TEXT')  # KiCad 7+
-        return GS.compute_boundary_k6(board, layers, classes, exact=False)
+        return GS._compute_boundary_k6(board, layers, classes, exact=False)
 
     @staticmethod
     def compute_pcb_boundary_k6(board, exact=True):
-        return GS.compute_boundary_k6(board, {GS.Edge_Cuts}, {'PCB_SHAPE', 'MGRAPHIC'}, exact=exact)
+        return GS._compute_boundary_k6(board, {GS.Edge_Cuts}, {'PCB_SHAPE', 'MGRAPHIC'}, exact=exact)
 
     @staticmethod
-    def compute_pcb_boundary_kp(board, exact=True):
-        edge_layer = GS.Edge_Cuts
-        # Look for all shapes in the Edge Cuts
-        shapes = [d for d in board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_SHAPE) if d.layer == edge_layer]
+    def item_in_layers(item, layers):
+        if layers is None:  # Means any layer
+            return True
+        if hasattr(item, 'layer'):
+            return item.layer in layers
+        if hasattr(item, 'padstack'):  # Pad
+            return not set(item.padstack.layers).isdisjoint(layers)
+        if hasattr(item, 'layers'):  # Zone
+            return not set(item.layers).isdisjoint(layers)
+        raise AssertionError(f"Unknown PCB item: {item} {type(item)}")
+
+    @staticmethod
+    def _compute_boundary_kp(board, layers, items, classes, exact=True):
+        if items is None:
+            kot = GS.kp.proto.common.types.KiCadObjectType
+            items = [kot.KOT_PCB_SHAPE, kot.KOT_PCB_FOOTPRINT, kot.KOT_PCB_PAD, kot.KOT_PCB_TRACE,
+                     kot.KOT_PCB_VIA, kot.KOT_PCB_TEXT, kot.KOT_PCB_TEXTBOX, kot.KOT_PCB_TABLE,
+                     kot.KOT_PCB_TABLECELL, kot.KOT_PCB_ARC, kot.KOT_PCB_DIMENSION, kot.KOT_PCB_ZONE]
+        if classes is not None:
+            classes = tuple(classes)
+        if layers is None:
+            shapes = board.get_items(items)
+        else:
+            shapes = [d for d in board.get_items(items) if GS.item_in_layers(d, layers)]
         # Also inside footprints
-        for m in GS.get_modules():
-            for gi in m.definition.items:
-                if isinstance(gi, GS.kp.board_types.BoardShape) and gi.layer == edge_layer:
-                    shapes.append(gi)
+        if GS.kp.proto.common.types.KOT_PCB_FOOTPRINT not in items:
+            for m in GS.get_modules():
+                for gi in m.definition.items:
+                    if (classes is None or isinstance(gi, classes)) and GS.item_in_layers(gi, layers):
+                        shapes.append(gi)
         if not len(shapes):
             return 0, 0, 0, 0
         boxes = board.get_item_bounding_box(shapes)
@@ -1236,19 +1257,26 @@ class GS(object):
         return bb.pos.x, bb.pos.y, bb.pos.x+bb.size.x, bb.pos.y+bb.size.y
 
     @staticmethod
+    def compute_boundary_layers_kp(board, layers, include_text=True):
+        if include_text:
+            items = classes = None
+            # items += [kot.KOT_PCB_TEXT, kot.KOT_PCB_TEXTBOX, kot.KOT_PCB_TABLE, kot.KOT_PCB_TABLECELL, kot.KOT_PCB_DIMENSION]
+            # classes += [GS.kp.board_types.BoardText, GS.kp.board_types.BoardTextBox]
+        else:
+            kot = GS.kp.proto.common.types.KiCadObjectType
+            items = [kot.KOT_PCB_SHAPE, kot.KOT_PCB_PAD, kot.KOT_PCB_TRACE, kot.KOT_PCB_VIA, kot.KOT_PCB_ARC, kot.KOT_PCB_ZONE]
+            classes = [GS.kp.board_types.BoardShape]
+        return GS._compute_boundary_kp(board, layers, items, classes, exact=False)
+
+    @staticmethod
+    def compute_pcb_boundary_kp(board, exact=True):
+        return GS._compute_boundary_kp(board, {GS.Edge_Cuts},
+                                       [GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_SHAPE],
+                                       [GS.kp.board_types.BoardShape], exact=exact)
+
+    @staticmethod
     def compute_pcb_full_boundary_kp(board):
-        kot = GS.kp.proto.common.types.KiCadObjectType
-        shapes = board.get_items([kot.KOT_PCB_SHAPE, kot.KOT_PCB_FOOTPRINT, kot.KOT_PCB_PAD, kot.KOT_PCB_TRACE,
-                                  kot.KOT_PCB_VIA, kot.KOT_PCB_TEXT, kot.KOT_PCB_TEXTBOX, kot.KOT_PCB_TABLE,
-                                  kot.KOT_PCB_TABLECELL, kot.KOT_PCB_ARC, kot.KOT_PCB_DIMENSION, kot.KOT_PCB_ZONE])
-        if not len(shapes):
-            return 0, 0, 0, 0
-        boxes = board.get_item_bounding_box(shapes)
-        bb = GS.kp.geometry.Box2.from_pos_size(boxes[0].pos, boxes[0].size)
-        if len(boxes) > 1:
-            for b in boxes[1:]:
-                bb.merge(b)
-        return bb.pos.x, bb.pos.y, bb.pos.x+bb.size.x, bb.pos.y+bb.size.y
+        return GS.compute_boundary_layers_kp(board, None, include_text=True)
 
     @staticmethod
     def tmp_file(content=None, prefix=None, suffix=None, dir=None, what=None, a_logger=None, binary=False, indent=False):
@@ -1471,6 +1499,7 @@ class GS(object):
             GS.get_modules = GS.get_modules_k6
             GS.get_modules_board = GS.get_modules_board_k6
             GS.compute_pcb_boundary = GS.compute_pcb_boundary_k6
+            GS.compute_boundary_layers = GS.compute_boundary_layers_k6
             GS.to_mm = GS.to_mm_k5
             GS.from_mm = GS.from_mm_k5
             GS.to_mils = GS.to_mils_k5
@@ -1485,6 +1514,7 @@ class GS(object):
             GS.get_modules = GS.get_modules_kp
             GS.get_modules_board = GS.get_modules_board_kp
             GS.compute_pcb_boundary = GS.compute_pcb_boundary_kp
+            GS.compute_boundary_layers = GS.compute_boundary_layers_kp
             GS.to_mm = GS.to_mm_kp
             GS.from_mm = GS.kp.util.units.from_mm
             GS.to_mils = GS.kp.util.units.to_mils
