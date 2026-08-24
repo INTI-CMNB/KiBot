@@ -1581,7 +1581,7 @@ class PcbPlotter:
                     layers = set((GS.Edge_Cuts, GS.B_Mask, GS.B_Cu, GS.B_SilkS, GS.B_Fab))
                 else:
                     layers = set((GS.Edge_Cuts, GS.F_Mask, GS.F_Cu, GS.F_SilkS, GS.F_Fab))
-                bb = GS.compute_boundary_layers_k6(self.board, layers)
+                bb = GS.compute_boundary_layers(self.board, layers)
                 bbox = [self.internal_to_svg(bb[0]), self.internal_to_svg(bb[2]),
                         self.internal_to_svg(bb[1]), self.internal_to_svg(bb[3])]
             if mirrored:
