@@ -570,14 +570,6 @@ class GS(object):
     def to_mm_kp(val):
         return GS.kp.util.units.to_mm(val)
 
-    @staticmethod
-    def from_mm_kp(val):
-        return GS.kp.util.units.from_mm(val)
-
-    @staticmethod
-    def to_mils_kp(val):
-        return GS.kp.util.units.to_mils(val)
-
 #     @staticmethod
 #     def to_global_units(val):
 #         scale = GS.unit_name_to_scale_factor(GS.global_units)
@@ -1206,7 +1198,6 @@ class GS(object):
 
     @staticmethod
     def compute_pcb_boundary_kp(board, exact=True):
-        # TODO: Implement the `exact` equivalent
         edge_layer = GS.Edge_Cuts
         # Look for all shapes in the Edge Cuts
         shapes = [d for d in board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_SHAPE) if d.layer == edge_layer]
@@ -1471,5 +1462,5 @@ class GS(object):
             GS.get_modules_board = GS.get_modules_board_kp
             GS.compute_pcb_boundary = GS.compute_pcb_boundary_kp
             GS.to_mm = GS.to_mm_kp
-            GS.from_mm = GS.from_mm_kp
-            GS.to_mils = GS.to_mils_kp
+            GS.from_mm = GS.kp.util.units.from_mm
+            GS.to_mils = GS.kp.util.units.to_mils
