@@ -862,12 +862,28 @@ class GS(object):
         return footprint.GetOrientation().AsRadians() if GS.ki7 else footprint.GetOrientationRadians()
 
     @staticmethod
-    def get_footprint_orientation_in_degrees(footprint):
-        return footprint.GetOrientation().AsDegrees() if GS.ki7 else footprint.GetOrientationDegrees()
+    def get_footprint_orientation_in_degrees_k5(footprint):
+        return footprint.GetOrientationDegrees()
 
     @staticmethod
-    def get_pad_orientation_in_degrees(pad):
-        return pad.GetOrientation().AsDegrees() if GS.ki7 else pad.GetOrientationDegrees()
+    def get_footprint_orientation_in_degrees_k7(footprint):
+        return footprint.GetOrientation().AsDegrees()
+
+    @staticmethod
+    def get_footprint_orientation_in_degrees_kp(footprint):
+        return footprint.orientation.degrees
+
+    @staticmethod
+    def get_pad_orientation_in_degrees_k5(pad):
+        return pad.GetOrientationDegrees()
+
+    @staticmethod
+    def get_pad_orientation_in_degrees_k7(pad):
+        return pad.GetOrientation().AsDegrees()
+
+    @staticmethod
+    def get_pad_orientation_in_degrees_kp(pad):
+        return pad.padstack.angle.degrees
 
     @staticmethod
     def iu_to_svg(values, svg_precision):
@@ -1435,6 +1451,12 @@ class GS(object):
     def set_version_pointers():
         """ Used to setup function pointers according to the API and its version """
         if GS.pn is not None:
+            if GS.ki7:
+                GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_k7
+                GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_k7
+            else:
+                GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_k5
+                GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_k5
             if GS.ki9:
                 GS.layer_is_inner = GS.layer_is_inner_k9
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
@@ -1453,6 +1475,8 @@ class GS(object):
             GS.from_mm = GS.from_mm_k5
             GS.to_mils = GS.to_mils_k5
         elif GS.kp is not None:
+            GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_kp
+            GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_kp
             GS.layer_is_inner = GS.layer_is_inner_kp
             GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_kp
             GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_kp
