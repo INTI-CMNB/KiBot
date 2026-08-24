@@ -447,12 +447,19 @@ def make_XML_identifier(s: str) -> str:
     s = re.sub('^[^a-zA-Z_]+', '', s)
     return s
 
-def read_svg_unique(filename: str, prefix: str) -> etree.Element:
-    root, _ = read_svg_unique2(filename, prefix)
+def read_svg_unique(source: Union[str, bytes], prefix: str) -> etree.Element:
+    root, _ = read_svg_unique2(source, prefix)
     return root
 
-def read_svg_unique2(filename: str, prefix: str) -> etree.Element:
-    root = etree.parse(filename).getroot()
+def read_svg_unique2(source: Union[str, bytes], prefix: str) -> etree.Element:
+    parser = etree.XMLParser(huge_tree=True)
+    if isinstance(source, bytes):
+        content = source.decode("utf-8")
+        root = etree.fromstring(source, parser)
+    else:
+        root = etree.parse(source, parser).getroot()
+        with open(source) as svg_file:
+            content = svg_file.read()
     # We have to ensure all Ids in SVG are unique. Let's make it nasty by
     # collecting all ids and doing search & replace
     # Potentially dangerous (can break user text)
@@ -460,13 +467,9 @@ def read_svg_unique2(filename: str, prefix: str) -> etree.Element:
     for el in root.getiterator():
         if "id" in el.attrib and el.attrib["id"] != "origin":
             ids.append(el.attrib["id"])
-    with open(filename) as f:
-        content = f.read()
     for i in ids:
         content = content.replace("#"+i, "#" + prefix + i)
-    # Create a parser that allows huge files
-    parser = etree.XMLParser(huge_tree=True)
-    root = etree.fromstring(str.encode(content), parser=parser)
+    root = etree.fromstring(str.encode(content), parser)
     for el in root.getiterator():
         if "id" in el.attrib and el.attrib["id"] != "origin":
             el.attrib["id"] = prefix + el.attrib["id"]
@@ -1578,7 +1581,7 @@ class PcbPlotter:
                     layers = set((GS.Edge_Cuts, GS.B_Mask, GS.B_Cu, GS.B_SilkS, GS.B_Fab))
                 else:
                     layers = set((GS.Edge_Cuts, GS.F_Mask, GS.F_Cu, GS.F_SilkS, GS.F_Fab))
-                bb = GS.compute_boundary_layers_k5(self.board, layers)
+                bb = GS.compute_boundary_layers_k6(self.board, layers)
                 bbox = [self.internal_to_svg(bb[0]), self.internal_to_svg(bb[2]),
                         self.internal_to_svg(bb[1]), self.internal_to_svg(bb[3])]
             if mirrored:
