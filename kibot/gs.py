@@ -566,10 +566,6 @@ class GS(object):
     def to_mils_k5(val):
         return val/IU_PER_MILS
 
-    @staticmethod
-    def to_mm_kp(val):
-        return GS.kp.util.units.to_mm(val)
-
 #     @staticmethod
 #     def to_global_units(val):
 #         scale = GS.unit_name_to_scale_factor(GS.global_units)
@@ -1515,6 +1511,6 @@ class GS(object):
             GS.get_modules_board = GS.get_modules_board_kp
             GS.compute_pcb_boundary = GS.compute_pcb_boundary_kp
             GS.compute_boundary_layers = GS.compute_boundary_layers_kp
-            GS.to_mm = GS.to_mm_kp
+            GS.to_mm = GS.kp.util.units.to_mm
             GS.from_mm = GS.kp.util.units.from_mm
             GS.to_mils = GS.kp.util.units.to_mils
