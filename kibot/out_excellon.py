@@ -3,15 +3,14 @@
 # Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
-from pcbnew import EXCELLON_WRITER
 from .out_any_drill import AnyDrill
 from .gs import GS
 from .macros import macros, document, output_class  # noqa: F401
 
-ZF = {'DECIMAL_FORMAT': EXCELLON_WRITER.DECIMAL_FORMAT,
-      'SUPPRESS_LEADING': EXCELLON_WRITER.SUPPRESS_LEADING,
-      'SUPPRESS_TRAILING': EXCELLON_WRITER.SUPPRESS_TRAILING,
-      'KEEP_ZEROS': EXCELLON_WRITER.KEEP_ZEROS}
+ZF = {'DECIMAL_FORMAT': GS.DZF_DECIMAL,
+      'SUPPRESS_LEADING': GS.DZF_SUPPRESS_LEADING,
+      'SUPPRESS_TRAILING': GS.DZF_SUPPRESS_TRAILING,
+      'KEEP_ZEROS': GS.DZF_KEEP_ZEROS}
 ZF_CLI = {'DECIMAL_FORMAT': 'decimal',
           'SUPPRESS_LEADING': 'suppressleading',
           'SUPPRESS_TRAILING': 'suppresstrailing',
@@ -60,7 +59,7 @@ class ExcellonOptions(AnyDrill):
                 options.append('--excellon-mirror-y')
             return options, True
         # KiCad <10 or left_digits/right_digits
-        drill_writer = EXCELLON_WRITER(board)
+        drill_writer = GS.pn.EXCELLON_WRITER(board)
         drill_writer.SetOptions(self.mirror_y_axis, self.minimal_header, GS.p2v_k7(offset), self.pth_and_npth_single_file)
         drill_writer.SetRouteModeForOvalHoles(self.route_mode_for_oval_holes)
         drill_writer.SetFormat(self.metric_units, ZF[self.zeros_format], self.left_digits, self.right_digits)

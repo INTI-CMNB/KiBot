@@ -449,6 +449,11 @@ def get_layers_info_pn():
         GS.NO_DRILL_SHAPE = 0
         GS.SMALL_DRILL_SHAPE = 1
         GS.FULL_DRILL_SHAPE = 2
+    # Drill Zeros Format
+    GS.DZF_DECIMAL = pcbnew.EXCELLON_WRITER.DECIMAL_FORMAT
+    GS.DZF_SUPPRESS_LEADING = pcbnew.EXCELLON_WRITER.SUPPRESS_LEADING
+    GS.DZF_SUPPRESS_TRAILING = pcbnew.EXCELLON_WRITER.SUPPRESS_TRAILING
+    GS.DZF_KEEP_ZEROS = pcbnew.EXCELLON_WRITER.KEEP_ZEROS
     # DXF Units
     if hasattr(pcbnew, 'DXF_UNITS_MM'):
         GS.DXF_UNITS_MILLIMETERS = pcbnew.DXF_UNITS_MM
@@ -495,9 +500,16 @@ def get_layers_info_kp():
     GS.PLOT_FORMAT_PDF = 4
     GS.PLOT_FORMAT_SVG = 5
     # Drill Marks
-    GS.NO_DRILL_SHAPE = kipy.proto.board.board_jobs_pb2.PlotDrillMarks.PDM_NONE
-    GS.SMALL_DRILL_SHAPE = kipy.proto.board.board_jobs_pb2.PlotDrillMarks.PDM_SMALL
-    GS.FULL_DRILL_SHAPE = kipy.proto.board.board_jobs_pb2.PlotDrillMarks.PDM_FULL
+    PDM = kipy.proto.board.board_jobs_pb2.PlotDrillMarks
+    GS.NO_DRILL_SHAPE = PDM.PDM_NONE
+    GS.SMALL_DRILL_SHAPE = PDM.PDM_SMALL
+    GS.FULL_DRILL_SHAPE = PDM.PDM_FULL
+    # Drill Zeros Format
+    DZF = kipy.proto.board.board_jobs_pb2.DrillZerosFormat
+    GS.DZF_DECIMAL = DZF.DZF_DECIMAL
+    GS.DZF_SUPPRESS_LEADING = DZF.DZF_SUPPRESS_LEADING
+    GS.DZF_SUPPRESS_TRAILING = DZF.DZF_SUPPRESS_TRAILING
+    GS.DZF_KEEP_ZEROS = DZF.DZF_KEEP_ZEROS
 
 
 def get_layers_info():

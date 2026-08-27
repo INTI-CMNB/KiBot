@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2024 Nguyen Vincent
-# Copyright (c) 2024 Salvador E. Tropea
-# Copyright (c) 2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2024-2026 Salvador E. Tropea
+# Copyright (c) 2024-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # Contributed by Nguyen Vincent (@nguyen-v)
 # Reimplementation of
 # https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/exporters/gendrill_file_writer_base.cpp
 from ..gs import GS
-import pcbnew
 from kibot import log
 
 logger = log.get_logger()
@@ -20,10 +19,16 @@ HOLE_SHAPE_DICT = {0: 'Round',
                    1: 'Slot',
                    2: 'Round + Slot'}
 
-HOLE_TYPE_DICT = {pcbnew.HOLE_ATTRIBUTE_HOLE_MECHANICAL: 'Mechanical',
-                  pcbnew.HOLE_ATTRIBUTE_HOLE_PAD: 'Pad',
-                  pcbnew.HOLE_ATTRIBUTE_HOLE_VIA_THROUGH: 'Via',
-                  pcbnew.HOLE_ATTRIBUTE_HOLE_VIA_BURIED: 'Via'}
+HOLE_UNKNOWN = -1
+HOLE_MECHANICAL = 0
+HOLE_PAD = 1
+HOLE_VIA_THROUGH = 2
+HOLE_VIA_BURIED = 3
+
+HOLE_TYPE_DICT = {HOLE_MECHANICAL: 'Mechanical',
+                  HOLE_PAD: 'Pad',
+                  HOLE_VIA_THROUGH: 'Via',
+                  HOLE_VIA_BURIED: 'Via'}
 
 
 def get_unique_layer_pairs():
@@ -135,6 +140,7 @@ def get_layer_pair_name(index, use_layer_names=False, merge_PTH_NPTH=True, group
 
 def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
                      group_slots_and_round_holes=True):
+    pcbnew = GS.pn
 
     # Buffer associated to specific layer pairs
     hole_list_layer_pair = []
@@ -158,9 +164,9 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
             new_hole.m_ItemParent = via
 
             if layer_pair == (GS.F_Cu, GS.B_Cu):
-                new_hole.m_HoleAttribute = pcbnew.HOLE_ATTRIBUTE_HOLE_VIA_THROUGH
+                new_hole.m_HoleAttribute = HOLE_VIA_THROUGH
             else:
-                new_hole.m_HoleAttribute = pcbnew.HOLE_ATTRIBUTE_HOLE_VIA_BURIED
+                new_hole.m_HoleAttribute = HOLE_VIA_BURIED
 
             new_hole.m_Tool_Reference = -1
             # KiCad 7+ an angle, otherwise just a double
@@ -200,8 +206,7 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
 
                 new_hole.m_ItemParent = pad
                 new_hole.m_Hole_NotPlated = pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH
-                new_hole.m_HoleAttribute = (pcbnew.HOLE_ATTRIBUTE_HOLE_MECHANICAL if
-                                            new_hole.m_Hole_NotPlated else pcbnew.HOLE_ATTRIBUTE_HOLE_PAD)
+                new_hole.m_HoleAttribute = HOLE_MECHANICAL if new_hole.m_Hole_NotPlated else HOLE_PAD
                 new_hole.m_Tool_Reference = -1
                 new_hole.m_Hole_Orient = pad.GetOrientation() if GS.ki7 else GS.angle_as_double(pad.GetOrientation())
                 new_hole.m_Hole_Diameter = min(pad.GetDrillSize().x, pad.GetDrillSize().y)
@@ -225,7 +230,7 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
 
     last_hole_diameter = -1
     last_not_plated = False
-    last_attribute = pcbnew.HOLE_ATTRIBUTE_HOLE_UNKNOWN
+    last_attribute = HOLE_UNKNOWN
 
     last_hole_shape = -1
 
