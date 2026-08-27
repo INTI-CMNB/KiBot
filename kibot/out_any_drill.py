@@ -333,11 +333,10 @@ class AnyDrill(VariantOptions):
         self.filter_pcb_components()
         if self.output:
             output_dir = os.path.dirname(output_dir)
-        # dialog_gendrill.cpp:357
         if self.use_aux_axis_as_origin:
             offset = GS.get_aux_origin()
         else:
-            offset = GS.pn.wxPoint(0, 0)
+            offset = GS.get_absolute_origin()
         drill_writer, use_cli = self._configure_writer(GS.board, offset)
 
         logger.debug("Generating drill files in "+output_dir)
