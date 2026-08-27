@@ -30,6 +30,8 @@ HOLE_TYPE_DICT = {HOLE_MECHANICAL: 'Mechanical',
                   HOLE_VIA_THROUGH: 'Via',
                   HOLE_VIA_BURIED: 'Via'}
 
+FRONT_AND_BACK = (GS.F_Cu, GS.B_Cu)
+
 
 def get_unique_layer_pairs():
     # Collect all vias on the board
@@ -55,7 +57,7 @@ def get_unique_layer_pairs():
             unique_layer_pairs.add(layer_pair)
 
     # Start the returned list with the default through-hole layer pair
-    layer_pairs = [(GS.F_Cu, GS.B_Cu)]
+    layer_pairs = [FRONT_AND_BACK]
 
     # Add each unique layer pair individually to the list
     for layer_pair in sorted(unique_layer_pairs):
@@ -70,7 +72,7 @@ def get_num_layer_pairs(merge_PTH_NPTH=True):
 
     if not merge_PTH_NPTH:
 
-        hole_sets.append((GS.F_Cu, GS.B_Cu))
+        hole_sets.append(FRONT_AND_BACK)
 
         hole_list_layer_pair, _ = build_holes_list(
             hole_sets[-1], merge_PTH_NPTH, generate_NPTH_list=True, group_slots_and_round_holes=True
@@ -89,7 +91,7 @@ def get_full_holes_list(merge_PTH_NPTH=True, group_slots_and_round_holes=True):
     hole_sets = get_unique_layer_pairs()
 
     if not merge_PTH_NPTH:
-        hole_sets.append((GS.F_Cu, GS.B_Cu))
+        hole_sets.append(FRONT_AND_BACK)
 
     for i, pair in enumerate(hole_sets):
         doing_npth = not merge_PTH_NPTH and (i == len(hole_sets)-1)
@@ -112,7 +114,7 @@ def get_layer_pair_name(index, use_layer_names=False, merge_PTH_NPTH=True, group
 
     if not merge_PTH_NPTH:
 
-        hole_sets.append((GS.F_Cu, GS.B_Cu))
+        hole_sets.append(FRONT_AND_BACK)
 
         hole_list_layer_pair, _ = build_holes_list(
             hole_sets[-1], merge_PTH_NPTH, generate_NPTH_list=True, group_slots_and_round_holes=True
@@ -188,7 +190,7 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
             hole_list_layer_pair.append(new_hole)
 
     # Add footprint/pad related PTH to hole_list_layer_pair
-    if layer_pair == (GS.F_Cu, GS.B_Cu):
+    if layer_pair == FRONT_AND_BACK:
         for footprint in GS.get_modules():
             for pad in footprint.Pads():
 
