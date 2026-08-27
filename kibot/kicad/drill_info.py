@@ -163,13 +163,7 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
                 continue
 
             new_hole = pcbnew.HOLE_INFO()
-            new_hole.m_ItemParent = via
-
-            if layer_pair == (GS.F_Cu, GS.B_Cu):
-                new_hole.m_HoleAttribute = HOLE_VIA_THROUGH
-            else:
-                new_hole.m_HoleAttribute = HOLE_VIA_BURIED
-
+            new_hole.m_HoleAttribute = HOLE_VIA_THROUGH if layer_pair == FRONT_AND_BACK else HOLE_VIA_BURIED
             new_hole.m_Tool_Reference = -1
             # KiCad 7+ an angle, otherwise just a double
             new_hole.m_Hole_Orient = GS.angle(0) if GS.ki7 else 0.0
