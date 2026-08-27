@@ -38,6 +38,21 @@ HOLE_TYPE_DICT = {HOLE_MECHANICAL: 'Mechanical',
 FRONT_AND_BACK = (GS.F_Cu, GS.B_Cu)
 
 
+class HoleInfo(object):
+    def __init__(self):
+        super().__init__()
+        self.m_HoleAttribute = HOLE_VIA_THROUGH
+        self.m_Tool_Reference = -1
+        self.m_Hole_Orient = GS.angle(0) if GS.ki7 else 0.0
+        self.m_Hole_Diameter = 0
+        self.m_Hole_NotPlated = False
+        self.m_Hole_Size_x = self.m_Hole_Size_y = 0
+        self.m_Hole_Shape = HOLE_ROUND
+        self.m_Hole_Pos = None
+        self.m_Hole_Top_Layer = GS.F_Cu
+        self.m_Hole_Bottom_Layer = GS.B_Cu
+
+
 def get_unique_layer_pairs():
     # Collect all vias on the board
     via_type_key = 'PCB_VIA'
@@ -163,27 +178,22 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
                 continue
 
             hole_sz = via.GetDrillValue()
-
             if hole_sz == 0:
                 continue
 
-            new_hole = pcbnew.HOLE_INFO()
-            new_hole.m_HoleAttribute = HOLE_VIA_THROUGH if layer_pair == FRONT_AND_BACK else HOLE_VIA_BURIED
-            new_hole.m_Tool_Reference = -1
-            # KiCad 7+ an angle, otherwise just a double
-            new_hole.m_Hole_Orient = GS.angle(0) if GS.ki7 else 0.0
-            new_hole.m_Hole_Diameter = hole_sz
-            new_hole.m_Hole_NotPlated = False
-            new_hole.m_Hole_Size.x = new_hole.m_Hole_Size.y = new_hole.m_Hole_Diameter
-
-            new_hole.m_Hole_Shape = HOLE_ROUND
-            new_hole.m_Hole_Pos = via.GetStart()
-
-            new_hole.m_Hole_Top_Layer = via.TopLayer()
-            new_hole.m_Hole_Bottom_Layer = via.BottomLayer()
-
-            if (new_hole.m_Hole_Top_Layer != layer_pair[0]) or (new_hole.m_Hole_Bottom_Layer != layer_pair[1]):
+            top_layer = via.TopLayer()
+            bottom_layer = via.BottomLayer()
+            if (top_layer != layer_pair[0]) or (bottom_layer != layer_pair[1]):
                 continue
+
+            new_hole = HoleInfo()
+            if layer_pair != FRONT_AND_BACK:
+                new_hole.m_HoleAttribute = HOLE_VIA_BURIED
+            new_hole.m_Hole_Diameter = hole_sz
+            new_hole.m_Hole_Size_x = new_hole.m_Hole_Size_y = new_hole.m_Hole_Diameter
+            new_hole.m_Hole_Pos = via.GetStart()
+            new_hole.m_Hole_Top_Layer = top_layer
+            new_hole.m_Hole_Bottom_Layer = bottom_layer
 
             hole_list_layer_pair.append(new_hole)
 
@@ -202,19 +212,17 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
                 if pad.GetDrillSize().x == 0:
                     continue
 
-                new_hole = pcbnew.HOLE_INFO()
-
-                new_hole.m_Hole_NotPlated = pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH
-                new_hole.m_HoleAttribute = HOLE_MECHANICAL if new_hole.m_Hole_NotPlated else HOLE_PAD
-                new_hole.m_Tool_Reference = -1
+                npth = pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH
+                new_hole = HoleInfo()
+                new_hole.m_HoleAttribute = HOLE_MECHANICAL if npth else HOLE_PAD
                 new_hole.m_Hole_Orient = pad.GetOrientation() if GS.ki7 else GS.angle_as_double(pad.GetOrientation())
                 new_hole.m_Hole_Diameter = min(pad.GetDrillSize().x, pad.GetDrillSize().y)
-                new_hole.m_Hole_Size = pad.GetDrillSize()
-                new_hole.m_Hole_Shape = HOLE_SLOT if (pad.GetDrillShape() != pcbnew.PAD_DRILL_SHAPE_CIRCLE and
-                                                      pad.GetDrillSize().x != pad.GetDrillSize().y) else HOLE_ROUND
+                new_hole.m_Hole_NotPlated = npth
+                dsz = pad.GetDrillSize()
+                new_hole.m_Hole_Size_x, new_hole.m_Hole_Size_y = dsz.x, dsz.y
+                if pad.GetDrillShape() != pcbnew.PAD_DRILL_SHAPE_CIRCLE and pad.GetDrillSize().x != pad.GetDrillSize().y:
+                    new_hole.m_Hole_Shape = HOLE_SLOT
                 new_hole.m_Hole_Pos = pad.GetPosition()
-                new_hole.m_Hole_Top_Layer = GS.F_Cu
-                new_hole.m_Hole_Bottom_Layer = GS.B_Cu
 
                 hole_list_layer_pair.append(new_hole)
 
@@ -235,10 +243,9 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
 
     for hole in hole_list_layer_pair:
 
-        if (hole.m_Hole_Diameter != last_hole_diameter or
-                hole.m_Hole_NotPlated != last_not_plated or
-                hole.m_HoleAttribute != last_attribute or
-                (not group_slots_and_round_holes and hole.m_Hole_Shape != last_hole_shape)):
+        if (hole.m_Hole_Diameter != last_hole_diameter or hole.m_Hole_NotPlated != last_not_plated or
+            hole.m_HoleAttribute != last_attribute or (not group_slots_and_round_holes and
+                                                       hole.m_Hole_Shape != last_hole_shape)):
 
             new_tool = pcbnew.DRILL_TOOL(0, False)
 
