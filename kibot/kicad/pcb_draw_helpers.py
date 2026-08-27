@@ -155,18 +155,18 @@ def draw_arc(g, x, y, angle_start, angle, radius, layer, line_w=10000):
     GS.board.Add(arc)
 
 
-def draw_oval(g, x, y, size, orientation, layer, line_w=10000):
+def draw_oval(g, x, y, size_x, size_y, orientation, layer, line_w=10000):
     # Rotate the shape to make it "vertical"
-    if size.x > size.y:
-        size.x, size.y = size.y, size.x
+    if size_x > size_y:
+        size_x, size_y = size_y, size_x
         # Avoid +=/-= they produce a free() error when using KiCad 8.0.6
         if orientation.AsDegrees() < 270:
             orientation = orientation + GS.angle(90)
         else:
             orientation = orientation - GS.angle(270)
 
-    deltaxy = size.y - size.x
-    radius = size.x // 2
+    deltaxy = size_y - size_x
+    radius = size_x // 2
     half_height = deltaxy // 2
 
     # Apply the orientation
@@ -355,4 +355,4 @@ def draw_drill_marks(g, layer, hole_list_layer_pair):
 
         if hole.m_Hole_Shape != 0:
             width = get_sketch_oval_best_pen_size()
-            draw_oval(g, pos.x, pos.y, hole.m_Hole_Size, hole.m_Hole_Orient, layer, width)
+            draw_oval(g, pos.x, pos.y, hole.m_Hole_Size_x, hole.m_Hole_Size_y, hole.m_Hole_Orient, layer, width)
