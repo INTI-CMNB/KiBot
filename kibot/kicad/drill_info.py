@@ -15,9 +15,14 @@ logger = log.get_logger()
 PLATED_DICT = {True: 'NPTH',
                False: 'PTH'}
 
-HOLE_SHAPE_DICT = {0: 'Round',
-                   1: 'Slot',
-                   2: 'Round + Slot'}
+# Values for tool usage
+HOLE_ROUND = 0
+HOLE_SLOT = 1
+HOLE_ROUND_SLOT = 2
+
+HOLE_SHAPE_DICT = {HOLE_ROUND: 'Round',
+                   HOLE_SLOT: 'Slot',
+                   HOLE_ROUND_SLOT: 'Round + Slot'}
 
 HOLE_UNKNOWN = -1
 HOLE_MECHANICAL = 0
@@ -171,14 +176,13 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
             new_hole.m_Hole_NotPlated = False
             new_hole.m_Hole_Size.x = new_hole.m_Hole_Size.y = new_hole.m_Hole_Diameter
 
-            new_hole.m_Hole_Shape = 0
+            new_hole.m_Hole_Shape = HOLE_ROUND
             new_hole.m_Hole_Pos = via.GetStart()
 
             new_hole.m_Hole_Top_Layer = via.TopLayer()
             new_hole.m_Hole_Bottom_Layer = via.BottomLayer()
 
-            if (new_hole.m_Hole_Top_Layer != layer_pair[0]) or \
-               (new_hole.m_Hole_Bottom_Layer != layer_pair[1]):
+            if (new_hole.m_Hole_Top_Layer != layer_pair[0]) or (new_hole.m_Hole_Bottom_Layer != layer_pair[1]):
                 continue
 
             hole_list_layer_pair.append(new_hole)
@@ -200,15 +204,14 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
 
                 new_hole = pcbnew.HOLE_INFO()
 
-                new_hole.m_ItemParent = pad
                 new_hole.m_Hole_NotPlated = pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH
                 new_hole.m_HoleAttribute = HOLE_MECHANICAL if new_hole.m_Hole_NotPlated else HOLE_PAD
                 new_hole.m_Tool_Reference = -1
                 new_hole.m_Hole_Orient = pad.GetOrientation() if GS.ki7 else GS.angle_as_double(pad.GetOrientation())
                 new_hole.m_Hole_Diameter = min(pad.GetDrillSize().x, pad.GetDrillSize().y)
                 new_hole.m_Hole_Size = pad.GetDrillSize()
-                new_hole.m_Hole_Shape = 1 if (pad.GetDrillShape() != pcbnew.PAD_DRILL_SHAPE_CIRCLE and
-                                              pad.GetDrillSize().x != pad.GetDrillSize().y) else 0
+                new_hole.m_Hole_Shape = HOLE_SLOT if (pad.GetDrillShape() != pcbnew.PAD_DRILL_SHAPE_CIRCLE and
+                                                      pad.GetDrillSize().x != pad.GetDrillSize().y) else HOLE_ROUND
                 new_hole.m_Hole_Pos = pad.GetPosition()
                 new_hole.m_Hole_Top_Layer = GS.F_Cu
                 new_hole.m_Hole_Bottom_Layer = GS.B_Cu
@@ -266,6 +269,6 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
 
         if (tool_list_layer_pair[-1].m_OvalCount > 0 and
                 tool_list_layer_pair[-1].m_TotalCount > tool_list_layer_pair[-1].m_OvalCount):
-            tool_list_layer_pair[-1].m_Hole_Shape = 2  # The tool is associated to both slots and round holes
+            tool_list_layer_pair[-1].m_Hole_Shape = HOLE_ROUND_SLOT  # The tool is associated to both slots and round holes
 
     return hole_list_layer_pair, tool_list_layer_pair

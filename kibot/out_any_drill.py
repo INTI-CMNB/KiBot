@@ -8,7 +8,7 @@ import os
 import re
 import csv
 from .error import KiPlotConfigurationError
-from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT, HOLE_TYPE_DICT
+from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT, HOLE_TYPE_DICT, HOLE_ROUND_SLOT
 from .kiplot import run_command
 from .optionable import Optionable
 from .out_base import VariantOptions
@@ -448,7 +448,7 @@ class AnyDrill(VariantOptions):
                         for col in columns:
                             if col._field == "count":
                                 value = (f'{tool.m_TotalCount-tool.m_OvalCount} + {tool.m_OvalCount}' if
-                                         tool.m_Hole_Shape == 2 else tool.m_TotalCount)
+                                         tool.m_Hole_Shape == HOLE_ROUND_SLOT else tool.m_TotalCount)
                             elif col._field == "hole size":
                                 if self._table_units == 'millimeters':
                                     value = f'{GS.to_mm(tool.m_Diameter):.2f}mm'
