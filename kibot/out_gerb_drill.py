@@ -3,7 +3,6 @@
 # Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
-from pcbnew import GERBER_WRITER
 from .gs import GS
 from .out_any_drill import AnyDrill
 from .macros import macros, document, output_class  # noqa: F401
@@ -20,7 +19,7 @@ class Gerb_DrillOptions(AnyDrill):
                        '--drill-origin', 'plot' if offset.x != 0 or offset.y != 0 else 'absolute',
                        '--gerber-precision', '6']  # Currently is always 4.6
             return options, True
-        drill_writer = GERBER_WRITER(board)
+        drill_writer = GS.pn.GERBER_WRITER(board)
         # hard coded in UI?
         drill_writer.SetFormat(5)
         drill_writer.SetOptions(GS.p2v_k7(offset))

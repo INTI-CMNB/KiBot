@@ -7,8 +7,6 @@
 import os
 import re
 import csv
-from pcbnew import (PLOT_FORMAT_HPGL, PLOT_FORMAT_POST, PLOT_FORMAT_GERBER, PLOT_FORMAT_DXF, PLOT_FORMAT_SVG,
-                    PLOT_FORMAT_PDF, wxPoint, B_Cu, F_Cu, GERBER_WRITER, PAD_ATTRIB_NPTH)
 from .error import KiPlotConfigurationError
 from .kicad.drill_info import get_full_holes_list, PLATED_DICT, HOLE_SHAPE_DICT, HOLE_TYPE_DICT
 from .kiplot import run_command
@@ -22,9 +20,7 @@ from . import log
 
 logger = log.get_logger()
 
-VALID_COLUMNS = ["Count", "Hole Size", "Plated", "Hole Shape", "Drill Layer Pair"]
-if GS.ki6:
-    VALID_COLUMNS.append("Hole Type")
+VALID_COLUMNS = ["Count", "Hole Size", "Plated", "Hole Shape", "Drill Layer Pair", "Hole Type"]
 VALID_COLUMNS_L = {c.lower() for c in VALID_COLUMNS}
 
 
@@ -147,12 +143,12 @@ class AnyDrill(VariantOptions):
         super().__init__()
         # Mappings to KiCad values
         self._map_map = {
-                         'hpgl': PLOT_FORMAT_HPGL,
-                         'ps': PLOT_FORMAT_POST,
-                         'gerber': PLOT_FORMAT_GERBER,
-                         'dxf': PLOT_FORMAT_DXF,
-                         'svg': PLOT_FORMAT_SVG,
-                         'pdf': PLOT_FORMAT_PDF,
+                         'hpgl': GS.PLOT_FORMAT_HPGL,
+                         'ps': GS.PLOT_FORMAT_POST,
+                         'gerber': GS.PLOT_FORMAT_GERBER,
+                         'dxf': GS.PLOT_FORMAT_DXF,
+                         'svg': GS.PLOT_FORMAT_SVG,
+                         'pdf': GS.PLOT_FORMAT_PDF,
                          'None': None
                         }
         self._map_ext = {'hpgl': 'plt', 'ps': 'ps', 'gerber': 'gbr', 'dxf': 'dxf', 'svg': 'svg', 'pdf': 'pdf', 'None': None}
@@ -235,11 +231,11 @@ class AnyDrill(VariantOptions):
         layer_cnt = GS.board.GetCopperLayerCount()
         if GS.ki9:
             # TODO: Unify and abstract
-            top_layer = int(layer_pair[0]/2) if layer_pair[0] != F_Cu else 1
-            bot_layer = int(layer_pair[1]/2) if layer_pair[1] != B_Cu else layer_cnt
+            top_layer = int(layer_pair[0]/2) if layer_pair[0] != GS.F_Cu else 1
+            bot_layer = int(layer_pair[1]/2) if layer_pair[1] != GS.B_Cu else layer_cnt
         else:
             top_layer = layer_pair[0] + 1
-            bot_layer = layer_pair[1] + 1 if layer_pair[1] != B_Cu else layer_cnt
+            bot_layer = layer_pair[1] + 1 if layer_pair[1] != GS.B_Cu else layer_cnt
         return f"(L{top_layer}-L{bot_layer})"
 
     @staticmethod
@@ -247,7 +243,7 @@ class AnyDrill(VariantOptions):
         """ Get the ID for all the generated files.
             It includes buried/blind vias. """
         groups = [''] if unified else ['PTH', 'NPTH']
-        via_type = 'VIA' if GS.ki5 else 'PCB_VIA'
+        via_type = 'PCB_VIA'
         pairs = set()
         for t in GS.board.GetTracks():
             tclass = t.GetClass()
@@ -274,7 +270,7 @@ class AnyDrill(VariantOptions):
             tmp_base is used to specify the `GS.pcb_basename` for a temporal variant.
             I don't really know if variants really apply to drill files, but is currently supported """
         filenames = {}
-        self._configure_writer(GS.board, wxPoint(0, 0))
+        self._configure_writer(GS.board, GS.pn.wxPoint(0, 0))
         files = AnyDrill._get_drill_groups(self._unified_output)
         force_rename = tmp_base is not None
         if not force_rename:
@@ -326,7 +322,7 @@ class AnyDrill(VariantOptions):
                 dr = pad.GetDrillSize()
                 if dr.x == 0 or dr.y == 0:
                     continue
-                is_pth = pad.GetAttribute() != PAD_ATTRIB_NPTH
+                is_pth = pad.GetAttribute() != GS.pn.PAD_ATTRIB_NPTH
                 if not is_pth:
                     found_npth = True
                 if is_pth:
@@ -347,7 +343,7 @@ class AnyDrill(VariantOptions):
         if self.use_aux_axis_as_origin:
             offset = GS.get_aux_origin()
         else:
-            offset = wxPoint(0, 0)
+            offset = GS.pn.wxPoint(0, 0)
         drill_writer, use_cli = self._configure_writer(GS.board, offset)
 
         logger.debug("Generating drill files in "+output_dir)
@@ -388,7 +384,7 @@ class AnyDrill(VariantOptions):
             if gen_map:
                 drill_writer.SetMapFileFormat(self._map)
                 logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
-            if GS.ki10 and isinstance(drill_writer, GERBER_WRITER):
+            if GS.ki10 and isinstance(drill_writer, GS.pn.GERBER_WRITER):
                 # KiCad 10 inconsistency ...
                 drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map, True)
             else:
