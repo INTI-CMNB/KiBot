@@ -509,11 +509,13 @@ class GS(object):
     @staticmethod
     def get_aux_origin():
         if GS.board is None:
-            return (0, 0)
-        if GS.ki6:
-            settings = GS.board.GetDesignSettings()
-            return settings.GetAuxOrigin()
-        return GS.board.GetAuxOrigin()
+            return GS.pn.wxPoint(0, 0)
+        settings = GS.board.GetDesignSettings()
+        return settings.GetAuxOrigin()
+
+    @staticmethod
+    def get_absolute_origin():
+        return GS.pn.wxPoint(0, 0)
 
     @staticmethod
     def get_center(m):
