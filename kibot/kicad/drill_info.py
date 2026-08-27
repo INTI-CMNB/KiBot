@@ -53,6 +53,17 @@ class HoleInfo(object):
         self.m_Hole_Bottom_Layer = GS.B_Cu
 
 
+class ToolInfo(object):
+    def __init__(self, hole):
+        super().__init__()
+        self.m_Diameter = hole.m_Hole_Diameter
+        self.m_Hole_NotPlated = hole.m_Hole_NotPlated
+        self.m_HoleAttribute = hole.m_HoleAttribute
+        self.m_Hole_Shape = hole.m_Hole_Shape  # not present in original implementation
+        self.m_TotalCount = 0
+        self.m_OvalCount = 0
+
+
 def get_unique_layer_pairs():
     # Collect all vias on the board
     via_type_key = 'PCB_VIA'
@@ -160,14 +171,9 @@ def get_layer_pair_name(index, use_layer_names=False, merge_PTH_NPTH=True, group
         return f'L{top_layer} - L{bot_layer}'
 
 
-def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
-                     group_slots_and_round_holes=True):
+def collect_holes_k6(layer_pair, merge_PTH_NPTH, generate_NPTH_list):
     pcbnew = GS.pn
-
-    # Buffer associated to specific layer pairs
     hole_list_layer_pair = []
-    tool_list_layer_pair = []
-
     # This is no longer valid on KiCad 9 where micro vias can specify their real top layer
     # assert layer_pair[0] < layer_pair[1], f"Invalid layer pair order {layer_pair[0]} {layer_pair[1]}"
 
@@ -226,6 +232,13 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
 
                 hole_list_layer_pair.append(new_hole)
 
+    return hole_list_layer_pair
+
+
+def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True, group_slots_and_round_holes=True):
+    # Buffer associated to specific layer pairs
+    hole_list_layer_pair = collect_holes_k6(layer_pair, merge_PTH_NPTH, generate_NPTH_list)
+
     hole_list_layer_pair.sort(key=lambda hole: (
         hole.m_Hole_NotPlated,       # Non-plated holes come after plated holes
         hole.m_Hole_Diameter,        # Increasing diameter
@@ -235,47 +248,35 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True,
         hole.m_Hole_Pos.y            # Y position
     ))
 
+    tool_list_layer_pair = []
+
     last_hole_diameter = -1
     last_not_plated = False
     last_attribute = HOLE_UNKNOWN
-
     last_hole_shape = -1
+    last_tool = None
 
+    # Holes are sorted so we get batches with similar attributes
     for hole in hole_list_layer_pair:
-
         if (hole.m_Hole_Diameter != last_hole_diameter or hole.m_Hole_NotPlated != last_not_plated or
             hole.m_HoleAttribute != last_attribute or (not group_slots_and_round_holes and
                                                        hole.m_Hole_Shape != last_hole_shape)):
+            last_tool = ToolInfo(hole)
+            tool_list_layer_pair.append(last_tool)
 
-            new_tool = pcbnew.DRILL_TOOL(0, False)
+            last_hole_diameter = last_tool.m_Diameter
+            last_not_plated = last_tool.m_Hole_NotPlated
+            last_attribute = last_tool.m_HoleAttribute
+            last_hole_shape = last_tool.m_Hole_Shape
 
-            new_tool.m_Diameter = hole.m_Hole_Diameter
-            new_tool.m_Hole_NotPlated = hole.m_Hole_NotPlated
-            new_tool.m_HoleAttribute = hole.m_HoleAttribute
-            new_tool.m_Hole_Shape = hole.m_Hole_Shape  # not present in original implementation
-            new_tool.m_TotalCount = 0
-            new_tool.m_OvalCount = 0
+        hole.m_Tool_Reference = len(tool_list_layer_pair)
 
-            tool_list_layer_pair.append(new_tool)
+        last_tool.m_TotalCount += 1
 
-            last_hole_diameter = new_tool.m_Diameter
-            last_not_plated = new_tool.m_Hole_NotPlated
-            last_attribute = new_tool.m_HoleAttribute
-            last_hole_shape = new_tool.m_Hole_Shape
+        if hole.m_Hole_Shape != HOLE_ROUND:
+            last_tool.m_OvalCount += 1
 
-        tool_index = len(tool_list_layer_pair)
-
-        if tool_index == 0:
-            continue
-
-        hole.m_Tool_Reference = tool_index
-        tool_list_layer_pair[-1].m_TotalCount += 1
-
-        if hole.m_Hole_Shape:
-            tool_list_layer_pair[-1].m_OvalCount += 1
-
-        if (tool_list_layer_pair[-1].m_OvalCount > 0 and
-                tool_list_layer_pair[-1].m_TotalCount > tool_list_layer_pair[-1].m_OvalCount):
-            tool_list_layer_pair[-1].m_Hole_Shape = HOLE_ROUND_SLOT  # The tool is associated to both slots and round holes
+        if last_tool.m_OvalCount > 0 and last_tool.m_TotalCount > last_tool.m_OvalCount:
+            last_tool.m_Hole_Shape = HOLE_ROUND_SLOT  # The tool is associated to both slots and round holes
 
     return hole_list_layer_pair, tool_list_layer_pair
