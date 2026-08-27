@@ -228,14 +228,8 @@ class AnyDrill(VariantOptions):
 
     @staticmethod
     def _get_layer_pair_names(layer_pair):
-        layer_cnt = GS.board.GetCopperLayerCount()
-        if GS.ki9:
-            # TODO: Unify and abstract
-            top_layer = int(layer_pair[0]/2) if layer_pair[0] != GS.F_Cu else 1
-            bot_layer = int(layer_pair[1]/2) if layer_pair[1] != GS.B_Cu else layer_cnt
-        else:
-            top_layer = layer_pair[0] + 1
-            bot_layer = layer_pair[1] + 1 if layer_pair[1] != GS.B_Cu else layer_cnt
+        top_layer = GS.copper_layer_to_ordinal(layer_pair[0])+1
+        bot_layer = GS.copper_layer_to_ordinal(layer_pair[1])+1
         return f"(L{top_layer}-L{bot_layer})"
 
     @staticmethod
