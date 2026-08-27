@@ -264,7 +264,7 @@ class AnyDrill(VariantOptions):
             tmp_base is used to specify the `GS.pcb_basename` for a temporal variant.
             I don't really know if variants really apply to drill files, but is currently supported """
         filenames = {}
-        self._configure_writer(GS.board, GS.pn.wxPoint(0, 0))
+        self._configure_writer(GS.board)
         files = AnyDrill._get_drill_groups(self._unified_output)
         force_rename = tmp_base is not None
         if not force_rename:
@@ -333,11 +333,7 @@ class AnyDrill(VariantOptions):
         self.filter_pcb_components()
         if self.output:
             output_dir = os.path.dirname(output_dir)
-        if self.use_aux_axis_as_origin:
-            offset = GS.get_aux_origin()
-        else:
-            offset = GS.get_absolute_origin()
-        drill_writer, use_cli = self._configure_writer(GS.board, offset)
+        drill_writer, use_cli = self._configure_writer(GS.board)
 
         logger.debug("Generating drill files in "+output_dir)
         gen_map = self._map is not None
