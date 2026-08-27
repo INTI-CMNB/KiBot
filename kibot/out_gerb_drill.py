@@ -13,16 +13,16 @@ class Gerb_DrillOptions(AnyDrill):
         super().__init__()
         self._ext = 'gbr'
 
-    def _configure_writer(self, board, offset):
+    def _configure_writer(self, board):
         if GS.ki10:
             options = ['--format', 'gerber',
-                       '--drill-origin', 'plot' if offset.x != 0 or offset.y != 0 else 'absolute',
+                       '--drill-origin', 'plot' if self.use_aux_axis_as_origin else 'absolute',
                        '--gerber-precision', '6']  # Currently is always 4.6
             return options, True
         drill_writer = GS.pn.GERBER_WRITER(board)
         # hard coded in UI?
         drill_writer.SetFormat(5)
-        drill_writer.SetOptions(GS.p2v_k7(offset))
+        drill_writer.SetOptions(GS.p2v_k7(GS.get_aux_origin() if self.use_aux_axis_as_origin else GS.get_absolute_origin()))
         return drill_writer, False
 
 

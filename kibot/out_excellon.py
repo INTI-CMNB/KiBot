@@ -43,14 +43,14 @@ class ExcellonOptions(AnyDrill):
             """ Use route command for oval holes (G00), otherwise use G85 """
         self._ext = 'drl'
 
-    def _configure_writer(self, board, offset):
+    def _configure_writer(self, board):
         self._unified_output = self.pth_and_npth_single_file
         if GS.ki10 and self.left_digits == 0 and self.right_digits == 0:
             options = ['--format', 'excellon',
                        '--excellon-units', 'mm' if self.metric_units else 'in',
                        '--excellon-zeros-format', ZF_CLI[self.zeros_format],
                        '--excellon-oval-format', 'route' if self.route_mode_for_oval_holes else 'alternate',
-                       '--drill-origin', 'plot' if offset.x != 0 or offset.y != 0 else 'absolute']
+                       '--drill-origin', 'plot' if self.use_aux_axis_as_origin else 'absolute']
             if not self.pth_and_npth_single_file:
                 options.append('--excellon-separate-th')
             if self.minimal_header:
@@ -60,6 +60,7 @@ class ExcellonOptions(AnyDrill):
             return options, True
         # KiCad <10 or left_digits/right_digits
         drill_writer = GS.pn.EXCELLON_WRITER(board)
+        offset = GS.get_aux_origin() if self.use_aux_axis_as_origin else GS.get_absolute_origin()
         drill_writer.SetOptions(self.mirror_y_axis, self.minimal_header, GS.p2v_k7(offset), self.pth_and_npth_single_file)
         drill_writer.SetRouteModeForOvalHoles(self.route_mode_for_oval_holes)
         drill_writer.SetFormat(self.metric_units, ZF[self.zeros_format], self.left_digits, self.right_digits)
