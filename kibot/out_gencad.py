@@ -44,9 +44,8 @@ class GenCADOptions(VariantOptions):
         self.help_only_sub_pcbs()
         self.get_targets = self._get_targets
 
-    def run(self, name):
+    def run_kiauto(self, name):
         command = self.ensure_tool('KiAuto')
-        super().run(name)
         board_name = self.save_tmp_board_if_variant()
         # Create the command line
         cmd = [command, 'export_gencad', '--output_name', os.path.basename(name)]
@@ -64,6 +63,24 @@ class GenCADOptions(VariantOptions):
         cmd = self.add_extra_options(cmd)
         # Execute it
         self.exec_with_retry(cmd, FAILED_EXECUTE)
+
+    def run_kipy(self, name):
+        self.filter_pcb_components()
+        GS.board.export_gencad(
+            name,
+            flip_bottom_pads=self.flip_bottom_padstacks,
+            use_individual_shapes=self.no_reuse_shapes,
+            store_origin_coords=self.save_origin,
+            use_drill_origin=self.aux_origin,
+            use_unique_pins=self.unique_pin_names)
+        self.unfilter_pcb_components()
+
+    def run(self, name):
+        super().run(name)
+        if GS.kp is not None:
+            self.run_kipy(name)
+        else:
+            self.run_kiauto(name)
 
 
 @output_class
