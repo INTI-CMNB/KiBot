@@ -12,6 +12,11 @@ IPC2581Options parameters
 -  **output** :index:`: <pair: output - ipc2581 - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Filename for the output (%i=IPC-2581, %x=zip/xml)
    The extension depends on the compress option. Affected by global options.
 
+.. _IPC2581Options_bom_revision:
+
+-  ``bom_revision`` :index:`: <pair: output - ipc2581 - options; bom_revision>` [:ref:`string <string>`] (default: ``''``) BOM revision to use in the output file. Defaults to schematic revision from the project file.
+   Needs KiCad 10+.
+
 .. _IPC2581Options_compress:
 
 -  ``compress`` :index:`: <pair: output - ipc2581 - options; compress>` [:ref:`boolean <boolean>`] (default: ``true``) Compress the XML file as a *zip* file.
@@ -23,6 +28,10 @@ IPC2581Options parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _IPC2581Options_drawing_sheet:
+
+-  ``drawing_sheet`` :index:`: <pair: output - ipc2581 - options; drawing_sheet>` [:ref:`string <string>`] (default: ``''``) Path to drawing sheet, this overrides any existing project defined sheet when used.
 
 .. _IPC2581Options_exclude_filter:
 

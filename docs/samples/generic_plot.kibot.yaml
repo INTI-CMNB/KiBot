@@ -2071,6 +2071,9 @@ outputs:
     type: 'ipc2581'
     dir: 'Example/ipc2581_dir'
     options:
+      # [string=''] BOM revision to use in the output file. Defaults to schematic revision from the project file.
+      # Needs KiCad 10+
+      bom_revision: ''
       # [boolean=true] Compress the XML file as a *zip* file
       compress: true
       # [string|list(string)='_null'] Name of the filter to mark components as not fitted.
@@ -2078,6 +2081,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [string=''] Path to drawing sheet, this overrides any existing project defined sheet when used
+      drawing_sheet: ''
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

@@ -47,6 +47,11 @@ Added
 
    -  ``single_file``: to plot all layers to a single file (KiCad 11)
 
+-  IPC 2581:
+
+   -  ``drawing_sheet``: to specify a particular drawing sheet
+   -  ``bom_revision``: to mention in the exported file (KiCad 10+)
+
 -  PcbDraw:
 
    -  ``kicad_edge_no_w`` option to ``size_detection`` for more accurate

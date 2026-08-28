@@ -1,5 +1,5 @@
-56 outputs types with a total of 2334 different parameters
-Single type parameters: 2137 (92 %)
+56 outputs types with a total of 2336 different parameters
+Single type parameters: 2139 (92 %)
 Multi type parameters: 197 (8 %)
 Average parameters: 42
 Maximum number of parameters: 218
@@ -43,7 +43,6 @@ Outputs sorted by parameters:
 - jobset: 25
 - qr_lib: 25
 - compress: 26
-- ipc2581: 26
 - stencil_3d: 26
 - kikit_present: 27
 - navigate_results: 27
@@ -51,6 +50,7 @@ Outputs sorted by parameters:
 - step: 27
 - bom_labels: 28
 - dxf_sch_print: 28
+- ipc2581: 28
 - ps_sch_print: 28
 - stencil_for_jig: 28
 - svg_sch_print: 28
@@ -153,7 +153,7 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1011
+-             String: 1013
 -            Boolean:  605
 - ListStringSingular:  309
 -             Number:  306
@@ -169,7 +169,7 @@ Outputs sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  843 
+-             String:  845 
 -            Boolean:  535 
 - ListStringSingular:  305 
 -             Number:  212 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2733 different parameters
-Single type parameters: 2510 (92 %)
+97 totals types with a total of 2735 different parameters
+Single type parameters: 2512 (92 %)
 Multi type parameters: 223 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -499,7 +499,6 @@ Totals sorted by parameters:
 - ibom: 25
 - kicost: 25
 - compress: 26
-- ipc2581: 26
 - stencil_3d: 26
 - kikit_present: 27
 - navigate_results: 27
@@ -507,6 +506,7 @@ Totals sorted by parameters:
 - step: 27
 - bom_labels: 28
 - dxf_sch_print: 28
+- ipc2581: 28
 - ps_sch_print: 28
 - stencil_for_jig: 28
 - svg_sch_print: 28
@@ -651,7 +651,7 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1180
+-             String: 1182
 -            Boolean:  708
 -             Number:  359
 - ListStringSingular:  340
@@ -667,7 +667,7 @@ Totals sorted by depth:
 -       NumberChoice:    1
 --------------------------------------------------------------------------------
 Used as single data type:
--             String:  994 
+-             String:  996 
 -            Boolean:  628 
 - ListStringSingular:  336 
 -             Number:  250 

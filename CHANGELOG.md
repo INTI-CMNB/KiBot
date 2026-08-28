@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `generate_tenting` to generate filling and tenting information (KiCad 10+)
 - DXF:
   - `single_file`: to plot all layers to a single file (KiCad 11)
+- IPC 2581:
+  - `drawing_sheet`: to specify a particular drawing sheet
+  - `bom_revision`: to mention in the exported file (KiCad 10+)
 - PcbDraw:
   - `kicad_edge_no_w` option to `size_detection` for more accurate board edge
     detection.

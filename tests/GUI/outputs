@@ -6091,6 +6091,20 @@
           null
         ],
         [
+          "bom_revision",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
+          "drawing_sheet",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"
