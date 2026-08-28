@@ -536,6 +536,13 @@ def get_layers_info_kp():
     GS.DS_CIRCLE = bt2.DS_CIRCLE
     GS.DS_OBLONG = bt2.DS_OBLONG
     GS.DS_UNDEFINED = bt2.DS_UNDEFINED
+    # Units
+    ct2 = kipy.proto.common.types.enums_pb2
+    GS.U_INCH = ct2.U_INCH
+    GS.U_MM = ct2.U_MM
+    GS.U_MILS = ct2.U_MILS
+    GS.U_METERS = ct2.U_METERS
+    GS.U_TENTHS = ct2.U_TENTHS
 
 
 def get_layers_info():

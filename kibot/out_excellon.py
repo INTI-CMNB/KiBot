@@ -94,8 +94,7 @@ class ExcellonOptions(AnyDrill):
         else:
             drill_report_file = ''
         # Units
-        utp = GS.kp.proto.common.types.enums_pb2.Units
-        units = utp.U_MM if self.metric_units else utp.U_INCH
+        units = GS.U_MM if self.metric_units else GS.U_INCH
         # Zeros format
         res = GS.board.export_drill_excellon(
             output_dir,
