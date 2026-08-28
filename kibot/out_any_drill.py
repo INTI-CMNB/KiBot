@@ -233,7 +233,7 @@ class AnyDrill(VariantOptions):
         return f"(L{top_layer}-L{bot_layer})"
 
     @staticmethod
-    def _get_drill_groups(unified):
+    def _get_drill_groups_pn(unified):
         """ Get the ID for all the generated files.
             It includes buried/blind vias. """
         groups = [''] if unified else ['PTH', 'NPTH']
@@ -258,6 +258,23 @@ class AnyDrill(VariantOptions):
         groups.extend(list(pairs))
         return groups
 
+    @staticmethod
+    def _get_drill_groups_kp(unified):
+        """ Get the ID for all the generated files.
+            It includes buried/blind vias. """
+        groups = [''] if unified else ['PTH', 'NPTH']
+        pairs = set()
+        for via in GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_VIA):
+            l1i = via.padstack.drill.start_layer
+            l1 = AnyDrill._get_layer_name(l1i)
+            l2i = via.padstack.drill.end_layer
+            l2 = AnyDrill._get_layer_name(l2i)
+            pair = l1+'-'+l2
+            if pair != 'front-back':
+                pairs.add(pair)
+        groups.extend(list(pairs))
+        return groups
+
     def get_file_names(self, output_dir, just_drills=False, tmp_base=None):
         """ Returns a dict containing KiCad names and its replacement.
             If no replacement is needed the replacement is empty.
@@ -266,6 +283,7 @@ class AnyDrill(VariantOptions):
         filenames = {}
         self._configure_writer(GS.board)
         files = AnyDrill._get_drill_groups(self._unified_output)
+        logger.debug(f"Expected drill pairs: {files}")
         force_rename = tmp_base is not None
         if not force_rename:
             tmp_base = GS.pcb_basename
@@ -296,7 +314,27 @@ class AnyDrill(VariantOptions):
                 filenames[k_file] = file
         return filenames
 
-    def look_for_drills(self):
+    def look_for_drills_kp(self):
+        """ KiCad 10 skips empty gerber files """
+        if self._ext != 'gbr':
+            return True, True
+        # Look for vias, they are PTH
+        found_pth = len(GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_VIA)) != 0
+        # Look for pads
+        found_npth = False
+        for pad in GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_PAD):
+            dr = pad.padstack.drill.diameter
+            if dr.x == 0 or dr.y == 0:
+                continue
+            if pad.pad_type == GS.PT_PTH:
+                found_pth = True
+            if pad.pad_type == GS.PT_NPTH:
+                found_npth = True
+            if found_pth and found_npth:
+                break
+        return found_pth, found_npth
+
+    def look_for_drills_pn(self):
         """ KiCad 10 skips empty gerber files """
         if not GS.ki10 or self._ext != 'gbr':
             return True, True
@@ -328,6 +366,52 @@ class AnyDrill(VariantOptions):
         logger.debug(f"Drills search: PTH {found_pth} NPTH {found_npth}")
         return found_pth, found_npth
 
+    def run_with_cli(self, output_dir, drill_writer, gen_map):
+        # Using kicad-cli
+        fname = self.save_tmp_board() if self.will_filter_pcb_components() else GS.pcb_file
+        odir = output_dir  # if self.generate_drill_files else tempfile.gettempdir()
+        # No variant here
+        cmd = [GS.kicad_cli, 'pcb', 'export', 'drill', '--output', odir] + drill_writer
+        if gen_map:
+            logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
+            cmd.extend(['--generate-map', '--map-format', self._map_cli])
+        if self._report:
+            drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+            logger.debug("Generating drill report: "+drill_report_file)
+            cmd.extend(['--generate-report', '--report-path', drill_report_file])
+        run_command(cmd + [fname])
+        if self._files_to_remove:
+            self.remove_temporals()
+        tmp_base = os.path.splitext(os.path.basename(fname))[0]
+        if not self.generate_drill_files:
+            # We can't prevent kicad-cli from generating them, so just remove them
+            files = self.get_file_names(output_dir, tmp_base=tmp_base, just_drills=True)
+            for f in files.keys():
+                os.remove(f)
+
+        return tmp_base
+
+    def run_with_pcbnew(self, output_dir, drill_writer, gen_map):
+        # Using Python pcbnew API
+        if gen_map:
+            drill_writer.SetMapFileFormat(self._map)
+            logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
+        if GS.ki10 and isinstance(drill_writer, GS.pn.GERBER_WRITER):
+            # KiCad 10 inconsistency ...
+            drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map, True)
+        else:
+            drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
+        # Generate the report
+        if self._report:
+            drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+            logger.debug("Generating drill report: "+drill_report_file)
+            if GS.ki10:
+                logger.error("No drill reports until KiCad bug https://gitlab.com/kicad/code/kicad/-/work_items/23268 "
+                             "is fixed")
+            else:
+                drill_writer.GenDrillReportFile(drill_report_file)
+        return None
+
     def run(self, output_dir):
         super().run(output_dir)
         self.filter_pcb_components()
@@ -339,58 +423,20 @@ class AnyDrill(VariantOptions):
         gen_map = self._map is not None
 
         if not self.generate_drill_files and not gen_map and not self._report and not self._table_output:
-            logger.warning(
-                W_NODRILL +
-                "Not generating drill files nor drill maps "
-                "nor report nor drill table on "
-                f"`{self._parent.name}`"
-            )
+            logger.warning(W_NODRILL+"Not generating drill files nor drill maps nor report nor drill table on "
+                           f"`{self._parent.name}`")
 
         if use_cli:
-            # Using kicad-cli
-            fname = self.save_tmp_board() if self.will_filter_pcb_components() else GS.pcb_file
-            odir = output_dir  # if self.generate_drill_files else tempfile.gettempdir()
-            # No variant here
-            cmd = [GS.kicad_cli, 'pcb', 'export', 'drill', '--output', odir] + drill_writer
-            if gen_map:
-                logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
-                cmd.extend(['--generate-map', '--map-format', self._map_cli])
-            if self._report:
-                drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
-                logger.debug("Generating drill report: "+drill_report_file)
-                cmd.extend(['--generate-report', '--report-path', drill_report_file])
-            run_command(cmd + [fname])
-            if self._files_to_remove:
-                self.remove_temporals()
-            tmp_base = os.path.splitext(os.path.basename(fname))[0]
-            if not self.generate_drill_files:
-                # We can't prevent kicad-cli from generating them, so just remove them
-                files = self.get_file_names(output_dir, tmp_base=tmp_base, just_drills=True)
-                for f in files.keys():
-                    os.remove(f)
+            tmp_base = self.run_with_cli(output_dir, drill_writer, gen_map)
         else:
-            # Using Python API
-            if gen_map:
-                drill_writer.SetMapFileFormat(self._map)
-                logger.debug("Generating drill map type {} in {}".format(self._map, output_dir))
-            if GS.ki10 and isinstance(drill_writer, GS.pn.GERBER_WRITER):
-                # KiCad 10 inconsistency ...
-                drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map, True)
+            if GS.pn:
+                tmp_base = self.run_with_pcbnew(output_dir, drill_writer, gen_map)
             else:
-                drill_writer.CreateDrillandMapFilesSet(output_dir, self.generate_drill_files, gen_map)
-            # Generate the report
-            if self._report:
-                drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
-                logger.debug("Generating drill report: "+drill_report_file)
-                if GS.ki10:
-                    logger.error("No drill reports until KiCad bug https://gitlab.com/kicad/code/kicad/-/work_items/23268 "
-                                 "is fixed")
-                else:
-                    drill_writer.GenDrillReportFile(drill_report_file)
-            tmp_base = None
+                tmp_base = self.run_with_kipy(output_dir, gen_map)
 
         # KiCad 10 has a feature: no files generated if the kind of drills is missing
         has_pth, has_npth = self.look_for_drills()
+        logger.debug(f"Drills search: PTH {has_pth} NPTH {has_npth}")
 
         # Rename the files
         files = self.get_file_names(output_dir, tmp_base=tmp_base)
@@ -452,7 +498,7 @@ class AnyDrill(VariantOptions):
                             elif col._field == "hole shape":
                                 value = HOLE_SHAPE_DICT[tool.m_Hole_Shape]
                             elif col._field == "drill layer pair":
-                                value = f'{GS.board.GetLayerName(layer_pair[0])} - {GS.board.GetLayerName(layer_pair[1])}'
+                                value = f'{Layer.id2name(layer_pair[0])} - {Layer.id2name(layer_pair[1])}'
                             elif col._field == "hole type" and GS.ki6:
                                 value = HOLE_TYPE_DICT[tool.m_HoleAttribute]
                             else:
@@ -484,3 +530,11 @@ class AnyDrill(VariantOptions):
                 targets.append(self.expand_filename(out_dir, self._table_output,
                                f'{layer_pair_name}' + '_drill_table', 'csv'))
         return targets
+
+
+if GS.pn is not None:
+    AnyDrill._get_drill_groups = AnyDrill._get_drill_groups_pn
+    AnyDrill.look_for_drills = AnyDrill.look_for_drills_pn
+else:
+    AnyDrill._get_drill_groups = AnyDrill._get_drill_groups_kp
+    AnyDrill.look_for_drills = AnyDrill.look_for_drills_kp

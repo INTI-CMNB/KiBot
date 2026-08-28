@@ -64,7 +64,7 @@ class ToolInfo(object):
         self.m_OvalCount = 0
 
 
-def get_unique_layer_pairs():
+def _get_unique_layer_pairs_pn():
     # Collect all vias on the board
     via_type_key = 'PCB_VIA'
 
@@ -86,6 +86,26 @@ def get_unique_layer_pairs():
         # Only note blind or buried vias (not through-hole vias)
         if via_type != GS.VIATYPE_THROUGH:
             unique_layer_pairs.add(layer_pair)
+
+    return unique_layer_pairs
+
+
+def _get_unique_layer_pairs_kp():
+    # Use a set to store unique layer pairs
+    unique_layer_pairs = set()
+
+    for via in GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_VIA):
+        # Extract layer pairs from the via
+        layer_pair = (via.padstack.drill.start_layer, via.padstack.drill.end_layer)
+        # Only note blind or buried vias (not through-hole vias)
+        if via.type != GS.VIATYPE_THROUGH:
+            unique_layer_pairs.add(layer_pair)
+
+    return unique_layer_pairs
+
+
+def get_unique_layer_pairs():
+    unique_layer_pairs = _get_unique_layer_pairs()
 
     # Start the returned list with the default through-hole layer pair
     layer_pairs = [FRONT_AND_BACK]
@@ -219,14 +239,14 @@ def collect_holes_k6(layer_pair, merge_PTH_NPTH, generate_NPTH_list):
                     continue
 
                 npth = pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH
+                dsz = pad.GetDrillSize()
                 new_hole = HoleInfo()
                 new_hole.m_HoleAttribute = HOLE_MECHANICAL if npth else HOLE_PAD
                 new_hole.m_Hole_Orient = pad.GetOrientation() if GS.ki7 else GS.angle_as_double(pad.GetOrientation())
-                new_hole.m_Hole_Diameter = min(pad.GetDrillSize().x, pad.GetDrillSize().y)
+                new_hole.m_Hole_Diameter = min(dsz.x, dsz.y)
                 new_hole.m_Hole_NotPlated = npth
-                dsz = pad.GetDrillSize()
                 new_hole.m_Hole_Size_x, new_hole.m_Hole_Size_y = dsz.x, dsz.y
-                if pad.GetDrillShape() != pcbnew.PAD_DRILL_SHAPE_CIRCLE and pad.GetDrillSize().x != pad.GetDrillSize().y:
+                if pad.GetDrillShape() != pcbnew.PAD_DRILL_SHAPE_CIRCLE and dsz.x != dsz.y:
                     new_hole.m_Hole_Shape = HOLE_SLOT
                 new_hole.m_Hole_Pos = pad.GetPosition()
 
@@ -235,9 +255,68 @@ def collect_holes_k6(layer_pair, merge_PTH_NPTH, generate_NPTH_list):
     return hole_list_layer_pair
 
 
+def collect_holes_kp(layer_pair, merge_PTH_NPTH, generate_NPTH_list):
+    hole_list_layer_pair = []
+
+    # Add plated vias to hole_list_layer_pair
+    if not generate_NPTH_list:
+        for via in GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_VIA):
+            hole_sz = via.drill_diameter
+            if hole_sz == 0:
+                continue
+
+            top_layer = via.padstack.drill.start_layer
+            bottom_layer = via.padstack.drill.end_layer
+            if (top_layer != layer_pair[0]) or (bottom_layer != layer_pair[1]):
+                continue
+
+            new_hole = HoleInfo()
+            if layer_pair != FRONT_AND_BACK:
+                new_hole.m_HoleAttribute = HOLE_VIA_BURIED
+            new_hole.m_Hole_Diameter = hole_sz
+            new_hole.m_Hole_Size_x = new_hole.m_Hole_Size_y = new_hole.m_Hole_Diameter
+            new_hole.m_Hole_Pos = via.position
+            new_hole.m_Hole_Top_Layer = top_layer
+            new_hole.m_Hole_Bottom_Layer = bottom_layer
+
+            hole_list_layer_pair.append(new_hole)
+
+    # Add footprint/pad related PTH to hole_list_layer_pair
+    if layer_pair == FRONT_AND_BACK:
+        for pad in GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_PAD):
+
+            npth = pad.pad_type == GS.PT_NPTH
+
+            if not merge_PTH_NPTH:
+                if not generate_NPTH_list and npth:
+                    continue
+
+                if generate_NPTH_list and not npth:
+                    continue
+
+            if pad.padstack.drill.diameter.x == 0:
+                continue
+
+            ps = pad.padstack
+            drill = ps.drill
+            new_hole = HoleInfo()
+            new_hole.m_HoleAttribute = HOLE_MECHANICAL if npth else HOLE_PAD
+            new_hole.m_Hole_Orient = ps.angle
+            new_hole.m_Hole_Diameter = min(drill.diameter.x, drill.diameter.y)
+            new_hole.m_Hole_NotPlated = npth
+            new_hole.m_Hole_Size_x, new_hole.m_Hole_Size_y = drill.diameter.x, drill.diameter.y
+            if drill.shape != GS.DS_CIRCLE and drill.diameter.x != drill.diameter.y:
+                new_hole.m_Hole_Shape = HOLE_SLOT
+            new_hole.m_Hole_Pos = pad.position
+
+            hole_list_layer_pair.append(new_hole)
+
+    return hole_list_layer_pair
+
+
 def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True, group_slots_and_round_holes=True):
     # Buffer associated to specific layer pairs
-    hole_list_layer_pair = collect_holes_k6(layer_pair, merge_PTH_NPTH, generate_NPTH_list)
+    hole_list_layer_pair = collect_holes(layer_pair, merge_PTH_NPTH, generate_NPTH_list)
 
     hole_list_layer_pair.sort(key=lambda hole: (
         hole.m_Hole_NotPlated,       # Non-plated holes come after plated holes
@@ -280,3 +359,11 @@ def build_holes_list(layer_pair, merge_PTH_NPTH, generate_NPTH_list=True, group_
             last_tool.m_Hole_Shape = HOLE_ROUND_SLOT  # The tool is associated to both slots and round holes
 
     return hole_list_layer_pair, tool_list_layer_pair
+
+
+if GS.pn is not None:
+    _get_unique_layer_pairs = _get_unique_layer_pairs_pn
+    collect_holes = collect_holes_k6
+else:
+    _get_unique_layer_pairs = _get_unique_layer_pairs_kp
+    collect_holes = collect_holes_kp

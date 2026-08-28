@@ -3,9 +3,13 @@
 # Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+from .error import KiPlotConfigurationError
 from .out_any_drill import AnyDrill
 from .gs import GS
 from .macros import macros, document, output_class  # noqa: F401
+from . import log
+
+logger = log.get_logger()
 
 ZF = {'DECIMAL_FORMAT': GS.DZF_DECIMAL,
       'SUPPRESS_LEADING': GS.DZF_SUPPRESS_LEADING,
@@ -43,9 +47,16 @@ class ExcellonOptions(AnyDrill):
             """ Use route command for oval holes (G00), otherwise use G85 """
         self._ext = 'drl'
 
+    def is_default_digits(self):
+        return ((self.left_digits == 0 and self.right_digits == 0) or  # Using default
+                (self.left_digits == 3 and self.right_digits == 3) or  # User matched the default
+                self.zeros_format == 'DECIMAL_FORMAT')                 # Using decimal point
+
     def _configure_writer(self, board):
         self._unified_output = self.pth_and_npth_single_file
-        if GS.ki10 and self.left_digits == 0 and self.right_digits == 0:
+        if GS.ki11:
+            return None, False
+        if GS.ki10 and self.is_default_digits():
             options = ['--format', 'excellon',
                        '--excellon-units', 'mm' if self.metric_units else 'in',
                        '--excellon-zeros-format', ZF_CLI[self.zeros_format],
@@ -65,6 +76,38 @@ class ExcellonOptions(AnyDrill):
         drill_writer.SetRouteModeForOvalHoles(self.route_mode_for_oval_holes)
         drill_writer.SetFormat(self.metric_units, ZF[self.zeros_format], self.left_digits, self.right_digits)
         return drill_writer, False
+
+    def run_with_kipy(self, output_dir, gen_map):
+        if not self.is_default_digits():
+            raise KiPlotConfigurationError("left/right digits not supported")
+        # Origin
+        dot = GS.kp.proto.board.board_jobs_pb2.DrillOrigin
+        origin = dot.DO_PLOT if self.use_aux_axis_as_origin else dot.DO_ABSOLUTE
+        # Map file
+        map_format = GS.PLOT_FMT_TO_DMF[self._map_type if gen_map else '']
+        # Report
+        if self._report:
+            drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+            logger.debug("Generating drill report: "+drill_report_file)
+        else:
+            drill_report_file = ''
+        # Units
+        utp = GS.kp.proto.common.types.enums_pb2.Units
+        units = utp.U_MM if self.metric_units else utp.U_INCH
+        # Zeros format
+        res = GS.board.export_drill_excellon(
+            output_dir,
+            origin=origin,
+            map_format=map_format,
+            report_filename=drill_report_file,
+            units=units,
+            zeros_format=ZF[self.zeros_format],
+            route_oval_holes=self.route_mode_for_oval_holes,
+            combine_pth_npth=self.pth_and_npth_single_file,
+            minimal_header=self.minimal_header,
+            mirror_y=self.mirror_y_axis)
+        self.check_job_ok(res)
+        return None
 
 
 @output_class

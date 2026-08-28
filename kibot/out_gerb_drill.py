@@ -6,6 +6,9 @@
 from .gs import GS
 from .out_any_drill import AnyDrill
 from .macros import macros, document, output_class  # noqa: F401
+from . import log
+
+logger = log.get_logger()
 
 
 class Gerb_DrillOptions(AnyDrill):
@@ -14,6 +17,8 @@ class Gerb_DrillOptions(AnyDrill):
         self._ext = 'gbr'
 
     def _configure_writer(self, board):
+        if GS.ki11:
+            return None, False
         if GS.ki10:
             options = ['--format', 'gerber',
                        '--drill-origin', 'plot' if self.use_aux_axis_as_origin else 'absolute',
@@ -24,6 +29,28 @@ class Gerb_DrillOptions(AnyDrill):
         drill_writer.SetFormat(5)
         drill_writer.SetOptions(GS.p2v_k7(GS.get_aux_origin() if self.use_aux_axis_as_origin else GS.get_absolute_origin()))
         return drill_writer, False
+
+    def run_with_kipy(self, output_dir, gen_map):
+        # Origin
+        dot = GS.kp.proto.board.board_jobs_pb2.DrillOrigin
+        origin = dot.DO_PLOT if self.use_aux_axis_as_origin else dot.DO_ABSOLUTE
+        # Map file
+        map_format = GS.PLOT_FMT_TO_DMF[self._map_type if gen_map else '']
+        # Report
+        if self._report:
+            drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+            logger.debug("Generating drill report: "+drill_report_file)
+        else:
+            drill_report_file = ''
+        # TODO: precision
+        # TODO: generate_tenting
+        res = GS.board.export_drill_gerber(
+            output_dir,
+            origin=origin,
+            map_format=map_format,
+            report_filename=drill_report_file)
+        self.check_job_ok(res)
+        return None
 
 
 @output_class

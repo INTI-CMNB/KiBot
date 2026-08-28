@@ -241,10 +241,12 @@ class Layer(Optionable):
     @staticmethod
     def _set_pcb_layers_pn():
         Layer._pcb_layers = {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().Seq()}
+        Layer._pcb_layer_names = {id: name for name, id in Layer._pcb_layers.items()}
 
     @staticmethod
     def _set_pcb_layers_kp():
         Layer._pcb_layers = {GS.board.get_layer_name(id): id for id in GS.enabled_layers}
+        Layer._pcb_layer_names = {id: name for name, id in Layer._pcb_layers.items()}
 
     def get_default_suffix(self):
         if GS.global_layer_defaults:
@@ -352,6 +354,14 @@ class Layer(Optionable):
     @staticmethod
     def id2def_name_kp(id):
         return GS.kp.util.board_layer.canonical_name(id)
+
+    @staticmethod
+    def id2name(id):
+        if Layer._pcb_layers is None:
+            Layer._pcb_layers = {}
+            if GS.board:
+                Layer._set_pcb_layers()
+        return Layer._pcb_layer_names.get(id, 'Unknown')
 
 
 if GS.pn is not None:

@@ -329,12 +329,6 @@ class AnyLayerOptions(VariantOptions):
         """ KiPy hook called after layers creation, but before removing the output dir """
         return
 
-    def check_job_ok(self, res):
-        if res.succeeded:
-            logger.debug(f'KiCad job generated files: {res.output_paths}')
-            return
-        raise PlotError(res.message)
-
     def _run_kp(self, output_dir, layers, common_layers):
         """ KiPy implementation """
         # Validate the layers
