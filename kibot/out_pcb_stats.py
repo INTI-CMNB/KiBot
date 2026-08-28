@@ -40,10 +40,7 @@ class PCB_StatsOptions(VariantOptions):
         # The format indicates the extension
         self._expand_ext = self.format
 
-    def run(self, output):
-        if not GS.ki10:
-            GS.exit_with_error("`pcb_stats` needs KiCad 10+", MISSING_TOOL)
-        super().run(output)
+    def run_kicli(self, output):
         # Make units explicit
         # Base command, no variants here
         cmd = [GS.kicad_cli, 'pcb', 'export', 'stats', '-o', output]
@@ -58,6 +55,29 @@ class PCB_StatsOptions(VariantOptions):
         run_command(cmd)
         if self._files_to_remove:
             self.remove_temporals()
+
+    def run_kipy(self, name):
+        self.filter_pcb_components()
+
+        res = GS.board.export_stats(
+            name,
+            format=GS.SOF_REPORT if self.format == 'txt' else GS.SOF_JSON,
+            units=GS.U_MM if self.units == 'millimeters' else GS.U_INCH,
+            exclude_footprints_without_pads=self.exclude_footprints_without_pads,
+            subtract_holes_from_board_area=self.subtract_holes_from_board,
+            subtract_holes_from_copper_areas=self.subtract_holes_from_copper)
+
+        self.unfilter_pcb_components()
+        self.check_job_ok(res)
+
+    def run(self, output):
+        if not GS.ki10:
+            GS.exit_with_error("`pcb_stats` needs KiCad 10+", MISSING_TOOL)
+        super().run(output)
+        if GS.kp is not None:
+            self.run_kipy(output)
+        else:
+            self.run_kicli(output)
 
 
 @output_class
