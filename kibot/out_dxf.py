@@ -71,10 +71,7 @@ class DXFOptions(DrillMarks):
         else:  # multiple files
             page_mode = GS.kp.proto.board.board_jobs_pb2.BoardJobPaginationMode.BJPM_EACH_LAYER_OWN_FILE
         # Units
-        if self.metric_units:
-            units = GS.kp.proto.common.types.enums_pb2.Units.U_MM
-        else:
-            units = GS.kp.proto.common.types.enums_pb2.Units.U_INCH
+        units = GS.U_MM if self.metric_units else GS.U_INCH
 
         res = GS.board.export_dxf(destination,
                                   plot_settings=plot,
