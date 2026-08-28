@@ -44,6 +44,11 @@ class IPC2581Options(VariantOptions):
             self.field_internal_id = ''
             """ Name of the field used as an internal ID.
                 Leave empty to create unique IDs """
+            self.bom_revision = ''
+            """ BOM revision to use in the output file. Defaults to schematic revision from the project file.
+                Needs KiCad 10+ """
+            self.drawing_sheet = ''
+            """ Path to drawing sheet, this overrides any existing project defined sheet when used """
         super().__init__()
         self._expand_id = 'IPC-2581'
         self.get_targets = self._get_targets
@@ -68,10 +73,33 @@ class IPC2581Options(VariantOptions):
             if val and val not in valid:
                 logger.warning(W_BADFIELD+f'Invalid column name `{val}` for `{fld}`. Valid columns are {sorted(valid)}.')
 
-    def run(self, name):
-        if not GS.ki9:
-            GS.exit_with_error("`IPC2581` needs KiCad 9+", MISSING_TOOL)
-        super().run(name)
+    def run_kipy(self, name):
+        self.filter_pcb_components()
+
+        settings = GS.kp.board_jobs.Ipc2581ExportSettings()
+        settings.compress = self.compress
+        settings.precision = self.precision
+        settings.units = GS.U_MM if self.units == 'millimeters' else GS.U_INCH
+        settings.version = GS.IPC2581V_B if self.version == 'B' else GS.IPC2581V_C
+        settings.manufacturer_part_number_column = self._field_part_number
+        settings.manufacturer_column = self._field_manufacturer
+        settings.distributor_part_number_column = self._field_dist_part_number
+        settings.distributor_column = self._field_distributor
+        settings.internal_id_column = self._field_internal_id
+        kicad_variant = self.kicad_variant_name()
+        if kicad_variant:
+            settings.variant = kicad_variant
+        if self.bom_revision:
+            settings.bom_revision = self.bom_revision
+        if self.drawing_sheet:
+            settings.drawing_sheet = self.drawing_sheet
+
+        res = GS.board.export_ipc2581(name, settings=settings)
+
+        self.unfilter_pcb_components()
+        self.check_job_ok(res)
+
+    def run_kicli(self, name):
         board_name = self.save_tmp_board_if_variant()
         cmd = [GS.kicad_cli, 'pcb', 'export', 'ipc2581', '-o', name, '--units', UNITS_2_KICAD[self.units],
                '--precision', str(int(self.precision)), '--version', self.version]
@@ -87,9 +115,22 @@ class IPC2581Options(VariantOptions):
             cmd.extend(['--bom-col-dist', self._field_distributor])
         if self._field_internal_id:
             cmd.extend(['--bom-col-int-id', self._field_internal_id])
+        if self.drawing_sheet:
+            cmd.extend(['--drawing-sheet', self.drawing_sheet])
+        if GS.ki10 and self.bom_revision:
+            cmd.extend(['--bom-rev', self.bom_revision])
         self.add_kicad_cli_variant(cmd)
         cmd.append(board_name)
         run_command(cmd)
+
+    def run(self, name):
+        if not GS.ki9:
+            GS.exit_with_error("`IPC2581` needs KiCad 9+", MISSING_TOOL)
+        super().run(name)
+        if GS.kp is not None:
+            self.run_kipy(name)
+        else:
+            self.run_kicli(name)
 
 
 @output_class
