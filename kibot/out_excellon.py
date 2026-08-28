@@ -38,11 +38,13 @@ class ExcellonOptions(AnyDrill):
             self.left_digits = 0
             """ number of digits for integer part of coordinates (0 is auto).
                 Doesn't apply to DECIMAL_FORMAT.
-                Default is 3 and currently can't be configured from the GUI, avoid using it """
+                Default is 3 and currently can't be configured from the GUI, avoid using it.
+                Not supported on KiCad 11+ """
             self.right_digits = 0
             """ number of digits for mantissa part of coordinates (0 is auto).
                 Doesn't apply to DECIMAL_FORMAT.
-                Default is 3 and currently can't be configured from the GUI, avoid using it """
+                Default is 3 and currently can't be configured from the GUI, avoid using it.
+                Not supported on KiCad 11+ """
             self.route_mode_for_oval_holes = True
             """ Use route command for oval holes (G00), otherwise use G85 """
         self._ext = 'drl'
