@@ -1101,16 +1101,22 @@ class GS(object):
             f.write(content)
 
     @staticmethod
-    def get_fields(footprint):
+    def get_fields_k6(footprint):
         """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE)
-            Note: KiCad 6/7 only returns `properties`, KiCad 8+ returns real fields (Value, Footprint, etc.) """
-        if GS.ki8:
-            # KiCad 8 defines a special object (PCB_FIELD) and its iterator
-            return {f.GetName(): f.GetText() for f in footprint.GetFields()}
-        if GS.ki6:
-            return footprint.GetProperties()
-        # KiCad 5 didn't have fields in the modules
-        return {}
+            Note: KiCad 6/7 only returns `properties` """
+        return footprint.GetProperties()
+
+    @staticmethod
+    def get_fields_k8(footprint):
+        """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE)
+            Note: KiCad 8+ returns real fields (Value, Footprint, etc.) """
+        # KiCad 8 defines a special object (PCB_FIELD) and its iterator
+        return {f.GetName(): f.GetText() for f in footprint.GetFields()}
+
+    @staticmethod
+    def get_fields_kp(footprint):
+        """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE) """
+        return {p.name: p.text.value for p in footprint.texts_and_fields if isinstance(p, GS.kp.board_types.Field)}
 
     @staticmethod
     def set_fields(footprint, flds):
@@ -1483,6 +1489,10 @@ class GS(object):
             else:
                 GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_k5
                 GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_k5
+            if GS.ki8:
+                GS.get_fields = GS.get_fields_k8
+            else:
+                GS.get_fields = GS.get_fields_k6
             if GS.ki9:
                 GS.layer_is_inner = GS.layer_is_inner_k9
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
@@ -1516,3 +1526,4 @@ class GS(object):
             GS.to_mm = GS.kp.util.units.to_mm
             GS.from_mm = GS.kp.util.units.from_mm
             GS.to_mils = GS.kp.util.units.to_mils
+            GS.get_fields = GS.get_fields_kp
