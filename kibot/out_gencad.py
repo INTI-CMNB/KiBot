@@ -66,7 +66,7 @@ class GenCADOptions(VariantOptions):
 
     def run_kipy(self, name):
         self.filter_pcb_components()
-        GS.board.export_gencad(
+        res = GS.board.export_gencad(
             name,
             flip_bottom_pads=self.flip_bottom_padstacks,
             use_individual_shapes=self.no_reuse_shapes,
@@ -74,6 +74,7 @@ class GenCADOptions(VariantOptions):
             use_drill_origin=self.aux_origin,
             use_unique_pins=self.unique_pin_names)
         self.unfilter_pcb_components()
+        self.check_job_ok(res)
 
     def run(self, name):
         super().run(name)
