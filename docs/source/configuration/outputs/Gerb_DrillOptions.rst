@@ -31,6 +31,15 @@ Gerb_DrillOptions parameters
 
 -  ``generate_drill_files`` :index:`: <pair: output - gerb_drill - options; generate_drill_files>` [:ref:`boolean <boolean>`] (default: ``true``) Generate drill files. Set to False and choose map format if only map is to be generated.
 
+.. _Gerb_DrillOptions_generate_tenting:
+
+-  ``generate_tenting`` :index:`: <pair: output - gerb_drill - options; generate_tenting>` [:ref:`boolean <boolean>`] (default: ``false``) Generate tenting information. KiCad 10+
+   
+.. note::
+   The names of the tenting file can't be controlled.
+..
+
+
 .. _Gerb_DrillOptions_map:
 
 -  ``map`` :index:`: <pair: output - gerb_drill - options; map>`  [:ref:`DrillMap parameters <DrillMap>`] [:ref:`dict <dict>` | :ref:`string <string>`] (default: ``'None'``) (choices: "hpgl", "ps", "gerber", "dxf", "svg", "pdf", "None") Format for a graphical drill map.
@@ -48,6 +57,10 @@ Gerb_DrillOptions parameters
    Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
    variant.
 
+
+.. _Gerb_DrillOptions_precision:
+
+-  ``precision`` :index:`: <pair: output - gerb_drill - options; precision>` [:ref:`number <number>`] (default: ``6``) (range: 5 to 6) Decimals used for coordinates.
 
 .. _Gerb_DrillOptions_pth_id:
 

@@ -47,7 +47,8 @@ ExcellonOptions parameters
 
 -  ``left_digits`` :index:`: <pair: output - excellon - options; left_digits>` [:ref:`number <number>`] (default: ``0``) number of digits for integer part of coordinates (0 is auto).
    Doesn't apply to DECIMAL_FORMAT. |br|
-   Default is 3 and currently can't be configured from the GUI, avoid using it.
+   Default is 3 and currently can't be configured from the GUI, avoid using it. |br|
+   Not supported on KiCad 11+.
 
 .. _ExcellonOptions_map:
 
@@ -83,7 +84,8 @@ ExcellonOptions parameters
 
 -  ``right_digits`` :index:`: <pair: output - excellon - options; right_digits>` [:ref:`number <number>`] (default: ``0``) number of digits for mantissa part of coordinates (0 is auto).
    Doesn't apply to DECIMAL_FORMAT. |br|
-   Default is 3 and currently can't be configured from the GUI, avoid using it.
+   Default is 3 and currently can't be configured from the GUI, avoid using it. |br|
+   Not supported on KiCad 11+.
 
 .. _ExcellonOptions_route_mode_for_oval_holes:
 

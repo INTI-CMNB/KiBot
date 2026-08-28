@@ -37,6 +37,12 @@ Added
       11)
    -  ``common_layers``: list of layers to use on every page (KiCad 11)
 
+-  Drill Gerbers:
+
+   -  ``precision`` to choose between 5 and 6 decimals
+   -  ``generate_tenting`` to generate filling and tenting information
+      (KiCad 10+)
+
 -  DXF:
 
    -  ``single_file``: to plot all layers to a single file (KiCad 11)

@@ -4542,6 +4542,20 @@
             "DataTypeListStringSingular"
           ],
           null
+        ],
+        [
+          "precision",
+          [
+            "DataTypeNumber"
+          ],
+          null
+        ],
+        [
+          "generate_tenting",
+          [
+            "DataTypeBoolean"
+          ],
+          null
         ]
       ]
     ]

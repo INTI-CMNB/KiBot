@@ -1401,7 +1401,8 @@ outputs:
       generate_drill_files: true
       # [number=0] number of digits for integer part of coordinates (0 is auto).
       # Doesn't apply to DECIMAL_FORMAT.
-      # Default is 3 and currently can't be configured from the GUI, avoid using it
+      # Default is 3 and currently can't be configured from the GUI, avoid using it.
+      # Not supported on KiCad 11+
       left_digits: 0
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
       # Not generated unless a format is specified.
@@ -1438,7 +1439,8 @@ outputs:
         filename: ''
       # [number=0] number of digits for mantissa part of coordinates (0 is auto).
       # Doesn't apply to DECIMAL_FORMAT.
-      # Default is 3 and currently can't be configured from the GUI, avoid using it
+      # Default is 3 and currently can't be configured from the GUI, avoid using it.
+      # Not supported on KiCad 11+
       right_digits: 0
       # [boolean=true] Use route command for oval holes (G00), otherwise use G85
       route_mode_for_oval_holes: true
@@ -1633,6 +1635,9 @@ outputs:
       exclude_filter: '_null'
       # [boolean=true] Generate drill files. Set to False and choose map format if only map is to be generated
       generate_drill_files: true
+      # [boolean=false] Generate tenting information. KiCad 10+
+      # Important: The names of the tenting file can't be controlled
+      generate_tenting: false
       # [dict|string='None'] [hpgl,ps,gerber,dxf,svg,pdf,None] Format for a graphical drill map.
       # Not generated unless a format is specified.
       # KiCad 10 doesn't support HPGL
@@ -1651,6 +1656,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
+      # [number=6] [5,6] Decimals used for coordinates
+      precision: 6
       # [string] Force this replacement for %i when generating PTH and unified files
       pth_id: null
       # [dict|string=''] Name of the drill report. Not generated unless a name is specified
