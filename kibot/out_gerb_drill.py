@@ -14,6 +14,14 @@ logger = log.get_logger()
 class Gerb_DrillOptions(AnyDrill):
     def __init__(self):
         super().__init__()
+        with document:
+            self.precision = 6
+            """ [5,6] Decimals used for coordinates """
+            self.generate_tenting = False
+            """ Generate tenting information. KiCad 10+
+                Important: The names of the tenting file can't be controlled """
+            # The names are hard to figure out, because the tenting can be controlled by design rules
+            # The KiPy API is currently failing to report the generated files
         self._ext = 'gbr'
 
     def _configure_writer(self, board):
@@ -22,11 +30,12 @@ class Gerb_DrillOptions(AnyDrill):
         if GS.ki10:
             options = ['--format', 'gerber',
                        '--drill-origin', 'plot' if self.use_aux_axis_as_origin else 'absolute',
-                       '--gerber-precision', '6']  # Currently is always 4.6
+                       '--gerber-precision', str(self.precision)]
+            if self.generate_tenting:
+                options.append('--generate-tenting')
             return options, True
         drill_writer = GS.pn.GERBER_WRITER(board)
-        # hard coded in UI?
-        drill_writer.SetFormat(5)
+        drill_writer.SetFormat(self.precision)
         drill_writer.SetOptions(GS.p2v_k7(GS.get_aux_origin() if self.use_aux_axis_as_origin else GS.get_absolute_origin()))
         return drill_writer, False
 
@@ -42,13 +51,13 @@ class Gerb_DrillOptions(AnyDrill):
             logger.debug("Generating drill report: "+drill_report_file)
         else:
             drill_report_file = ''
-        # TODO: precision
-        # TODO: generate_tenting
         res = GS.board.export_drill_gerber(
             output_dir,
             origin=origin,
             map_format=map_format,
-            report_filename=drill_report_file)
+            report_filename=drill_report_file,
+            precision=GS.DGP_4_5 if self.precision == 5 else GS.DGP_4_6,
+            generate_tenting=self.generate_tenting)
         self.check_job_ok(res)
         return None
 

@@ -516,6 +516,9 @@ def get_layers_info_kp():
                           'svg': bj2.DMF_SVG,
                           'pdf': bj2.DMF_PDF,
                           '': bj2.DMF_UNKNOWN}
+    # Drill Gerber Precision
+    GS.DGP_4_5 = bj2.DGP_4_5
+    GS.DGP_4_6 = bj2.DGP_4_6
     # Via Type
     bt2 = kipy.proto.board.board_types_pb2
     GS.VIATYPE_THROUGH = bt2.VT_THROUGH             # Through vias always start on F_Cu and end on B_Cu
