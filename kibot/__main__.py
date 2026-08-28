@@ -522,6 +522,9 @@ def get_layers_info_kp():
     # IPC 2581 Version
     GS.IPC2581V_B = bj2.IPC2581V_B
     GS.IPC2581V_C = bj2.IPC2581V_C
+    # Stats Output Format
+    GS.SOF_REPORT = bj2.SOF_REPORT
+    GS.SOF_JSON = bj2.SOF_JSON
     # Via Type
     bt2 = kipy.proto.board.board_types_pb2
     GS.VIATYPE_THROUGH = bt2.VT_THROUGH             # Through vias always start on F_Cu and end on B_Cu
