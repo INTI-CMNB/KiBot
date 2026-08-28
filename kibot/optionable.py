@@ -8,7 +8,7 @@ import difflib
 import os
 import re
 from re import compile
-from .error import KiPlotConfigurationError
+from .error import KiPlotConfigurationError, PlotError
 from .gs import GS
 from .misc import W_UNKOPS, DISTRIBUTORS_STUBS, DISTRIBUTORS_STUBS_SEPS, typeof, RE_LEN
 from . import log
@@ -800,6 +800,13 @@ class BaseOptions(Optionable):
         self._expand_id = cur_id
         self._expand_ext = cur_ext
         return res
+
+    def check_job_ok(self, res):
+        """ KiPy KiCad Job success check """
+        if res.succeeded:
+            logger.debug(f'KiCad job generated files: {res.output_paths}')
+            return
+        raise PlotError(res.message)
 
 
 class PanelOptions(BaseOptions):

@@ -500,16 +500,39 @@ def get_layers_info_kp():
     GS.PLOT_FORMAT_PDF = 4
     GS.PLOT_FORMAT_SVG = 5
     # Drill Marks
-    PDM = kipy.proto.board.board_jobs_pb2.PlotDrillMarks
-    GS.NO_DRILL_SHAPE = PDM.PDM_NONE
-    GS.SMALL_DRILL_SHAPE = PDM.PDM_SMALL
-    GS.FULL_DRILL_SHAPE = PDM.PDM_FULL
+    bj2 = kipy.proto.board.board_jobs_pb2
+    GS.NO_DRILL_SHAPE = bj2.PDM_NONE
+    GS.SMALL_DRILL_SHAPE = bj2.PDM_SMALL
+    GS.FULL_DRILL_SHAPE = bj2.PDM_FULL
     # Drill Zeros Format
-    DZF = kipy.proto.board.board_jobs_pb2.DrillZerosFormat
-    GS.DZF_DECIMAL = DZF.DZF_DECIMAL
-    GS.DZF_SUPPRESS_LEADING = DZF.DZF_SUPPRESS_LEADING
-    GS.DZF_SUPPRESS_TRAILING = DZF.DZF_SUPPRESS_TRAILING
-    GS.DZF_KEEP_ZEROS = DZF.DZF_KEEP_ZEROS
+    GS.DZF_DECIMAL = bj2.DZF_DECIMAL
+    GS.DZF_SUPPRESS_LEADING = bj2.DZF_SUPPRESS_LEADING
+    GS.DZF_SUPPRESS_TRAILING = bj2.DZF_SUPPRESS_TRAILING
+    GS.DZF_KEEP_ZEROS = bj2.DZF_KEEP_ZEROS
+    # Drill Map Format
+    GS.PLOT_FMT_TO_DMF = {'ps': bj2.DMF_POSTSCRIPT,
+                          'gerber': bj2.DMF_GERBER_X2,
+                          'dxf': bj2.DMF_DXF,
+                          'svg': bj2.DMF_SVG,
+                          'pdf': bj2.DMF_PDF,
+                          '': bj2.DMF_UNKNOWN}
+    # Via Type
+    bt2 = kipy.proto.board.board_types_pb2
+    GS.VIATYPE_THROUGH = bt2.VT_THROUGH             # Through vias always start on F_Cu and end on B_Cu
+    GS.VIATYPE_BLIND = bt2.VT_BLIND                 # Blind vias start on an outer layer and end in the middle (Since V10)
+    GS.VIATYPE_BURIED = bt2.VT_BURIED               # Buried vias start and end on inner layers (Since V10)
+    GS.VIATYPE_MICROVIA = bt2.VT_MICRO              # Microvias, blind/buried vias, can have arbitrary start and end layers,
+    #                                                 but also have different size defaults and design rules
+    GS.VIATYPE_BLIND_BURIED = bt2.VT_BLIND_BURIED   # Blind/buried vias can have arbitrary start and end layers
+    # Pad Type
+    GS.PT_PTH = bt2.PT_PTH
+    GS.PT_NPTH = bt2.PT_NPTH
+    GS.PT_SMD = bt2.PT_SMD
+    GS.PT_EDGE_CONNECTOR = bt2.PT_EDGE_CONNECTOR
+    # Drill Shape
+    GS.DS_CIRCLE = bt2.DS_CIRCLE
+    GS.DS_OBLONG = bt2.DS_OBLONG
+    GS.DS_UNDEFINED = bt2.DS_UNDEFINED
 
 
 def get_layers_info():
