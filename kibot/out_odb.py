@@ -30,6 +30,8 @@ class ODBOptions(VariantOptions):
             self.units = 'millimeters'
             """ [millimeters,inches] Units used for the positions. Affected by global options.
                 Note that when using *mils* as global units this option becomes *inches* """
+            self.drawing_sheet = ''
+            """ Path to drawing sheet, this overrides any existing project defined sheet when used """
         super().__init__()
         self._expand_id = 'odb'
 
@@ -45,17 +47,40 @@ class ODBOptions(VariantOptions):
     def fix_dir_name(self, name):
         return name[:-1] if not self._expand_ext and self.output.endswith('.%x') else name
 
+    def run_kicli(self, name):
+        board_name = self.save_tmp_board_if_variant()
+        cmd = [GS.kicad_cli, 'pcb', 'export', 'odb', '-o', name, '--compression', self.compression, '--units',
+               UNITS_2_KICAD[self.units], '--precision', str(int(self.precision))]
+        self.add_kicad_cli_variant(cmd)
+        if self.drawing_sheet:
+            cmd.extend(['--drawing-sheet', self.drawing_sheet])
+        cmd.append(board_name)
+        run_command(cmd)
+
+    def run_kipy(self, name):
+        self.filter_pcb_components()
+
+        kicad_variant = self.kicad_variant_name()
+        res = GS.board.export_odb(
+            name,
+            drawing_sheet=self.drawing_sheet,
+            compression=GS.ODB_COMPRESSION[self.compression],
+            precision=self.precision,
+            units=GS.U_MM if self.units == 'millimeters' else GS.U_INCH,
+            variant=kicad_variant if kicad_variant is not None else '')
+
+        self.unfilter_pcb_components()
+        self.check_job_ok(res)
+
     def run(self, name):
         if not GS.ki9:
             GS.exit_with_error("`odb` needs KiCad 9+", MISSING_TOOL)
         name = self.fix_dir_name(name)
         super().run(name)
-        board_name = self.save_tmp_board_if_variant()
-        cmd = [GS.kicad_cli, 'pcb', 'export', 'odb', '-o', name, '--compression', self.compression, '--units',
-               UNITS_2_KICAD[self.units], '--precision', str(int(self.precision))]
-        self.add_kicad_cli_variant(cmd)
-        cmd.append(board_name)
-        run_command(cmd)
+        if GS.kp is not None:
+            self.run_kipy(name)
+        else:
+            self.run_kicli(name)
 
 
 @output_class
