@@ -8372,6 +8372,13 @@
           null
         ],
         [
+          "drawing_sheet",
+          [
+            "DataTypeString"
+          ],
+          null
+        ],
+        [
           "variant",
           [
             "DataTypeString"

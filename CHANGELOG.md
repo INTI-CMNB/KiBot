@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - IPC 2581:
   - `drawing_sheet`: to specify a particular drawing sheet
   - `bom_revision`: to mention in the exported file (KiCad 10+)
+- ODB++:
+  - `drawing_sheet`: to specify a particular drawing sheet
 - PcbDraw:
   - `kicad_edge_no_w` option to `size_detection` for more accurate board edge
     detection.

@@ -2780,6 +2780,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       dnf_filter: '_null'
+      # [string=''] Path to drawing sheet, this overrides any existing project defined sheet when used
+      drawing_sheet: ''
       # [string|list(string)='_null'] Name of the filter to exclude components from processing.
       # Is a short-cut to use for simple cases where a variant is an overkill.
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the

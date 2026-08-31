@@ -28,6 +28,10 @@ ODBOptions parameters
    variant.
 
 
+.. _ODBOptions_drawing_sheet:
+
+-  ``drawing_sheet`` :index:`: <pair: output - odb - options; drawing_sheet>` [:ref:`string <string>`] (default: ``''``) Path to drawing sheet, this overrides any existing project defined sheet when used.
+
 .. _ODBOptions_exclude_filter:
 
 -  ``exclude_filter`` :index:`: <pair: output - odb - options; exclude_filter>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``'_null'``) Name of the filter to exclude components from processing.
