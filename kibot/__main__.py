@@ -525,6 +525,11 @@ def get_layers_info_kp():
     # Stats Output Format
     GS.SOF_REPORT = bj2.SOF_REPORT
     GS.SOF_JSON = bj2.SOF_JSON
+    # ODB++ Compression
+    # GS.ODBC_NONE = bj2.ODBC_NONE
+    # GS.ODBC_ZIP = bj2.ODBC_ZIP
+    # GS.ODBC_TGZ = bj2.ODBC_TGZ
+    GS.ODB_COMPRESSION = {'none': bj2.ODBC_NONE, 'zip': bj2.ODBC_ZIP, 'tgz': bj2.ODBC_TGZ}
     # Via Type
     bt2 = kipy.proto.board.board_types_pb2
     GS.VIATYPE_THROUGH = bt2.VT_THROUGH             # Through vias always start on F_Cu and end on B_Cu
