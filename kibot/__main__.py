@@ -530,6 +530,10 @@ def get_layers_info_kp():
     # GS.ODBC_ZIP = bj2.ODBC_ZIP
     # GS.ODBC_TGZ = bj2.ODBC_TGZ
     GS.ODB_COMPRESSION = {'none': bj2.ODBC_NONE, 'zip': bj2.ODBC_ZIP, 'tgz': bj2.ODBC_TGZ}
+    # Board 3D Format
+    GS.B3D_FORMAT = {'step': bj2.B3D_STEP, 'stpz': bj2.B3D_STEPZ, 'brep': bj2.B3D_BREP, 'xao': bj2.B3D_XAO,
+                     'glb': bj2.B3D_GLB, 'vrml': bj2.B3D_VRML, 'ply': bj2.B3D_PLY, 'stl': bj2.B3D_STL,
+                     'u3d': bj2.B3D_U3D, 'pdf': bj2.B3D_PDF}
     # Via Type
     bt2 = kipy.proto.board.board_types_pb2
     GS.VIATYPE_THROUGH = bt2.VT_THROUGH             # Through vias always start on F_Cu and end on B_Cu
