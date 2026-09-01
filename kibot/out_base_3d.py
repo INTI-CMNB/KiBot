@@ -3,6 +3,7 @@
 # Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+from contextlib import contextmanager
 from decimal import Decimal
 from fnmatch import fnmatch
 import os
@@ -547,15 +548,8 @@ class Base3DOptions(VariantOptions):
         self.used_3d_models = {}
         # Look for all the footprints
         for m in GS.get_modules():
-            ref = m.GetReference()
-            lib_id = m.GetFPID()
-            lib_nickname = str(lib_id.GetLibNickname())
+            models_l, ref, lib_nickname = self.get_models_from_footprint(m)
             sch_comp = all_comps_hash.get(ref, None)
-            # Extract the models (the iterator returns copies)
-            models = m.Models()
-            models_l = []
-            while not models.empty():
-                models_l.append(models.pop())
             # Look for all the 3D models for this footprint
             for m3d in models_l:
                 if m3d.m_Filename.endswith(DISABLE_3D_MODEL_TEXT):
@@ -602,8 +596,7 @@ class Base3DOptions(VariantOptions):
                             logger.debug('- Modifying models with text vars')
                         self.replace_model(replace, m3d, force_wrl, force_step, is_copy_mode, rename_function, rename_data)
             # Push the models back
-            for model in reversed(models_l):
-                models.append(model)
+            self.push_models_to_footprint(m, models_l)
         if downloaded:
             logger.warning(W_DOWN3D+' {} 3D models downloaded or cached'.format(len(downloaded)))
         return self.models_replaced if not is_copy_mode else list(self.source_models)
@@ -622,7 +615,8 @@ class Base3DOptions(VariantOptions):
                     models.add(full_name)
         return list(models)
 
-    def filter_components(self, highlight=None, force_wrl=False, also_sch=False, force_step=False):
+    @contextmanager
+    def do_filter_components(self, highlight=None, force_wrl=False, also_sch=False, force_step=False):
         if GS.kicad_version_n >= KICAD_VERSION_9_0_9:
             # KiCad 10 removed WRL files, so we must enforce the use of STEP files
             # But wait, why not also remove them from the 9.0.9 repo? Lets make the last stable release to be crippled
@@ -645,35 +639,49 @@ class Base3DOptions(VariantOptions):
             # No variant/filter to apply
             if self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=all_comps) or dnp_removed:
                 # Some missing components found and we downloaded them
+                yield 1
+                # Undo the changes done during download
+                self.undo_3d_models_rename(GS.board)
+                if dnp_removed:
+                    self.restore_3D_models(GS.board, all_comps_hash)
+                return
+            yield 2
+            return
+        self.filter_pcb_components(do_3D=True, do_2D=True, highlight=highlight)
+        self.replace_variant_var()
+        if also_sch:
+            self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps,
+                                 rename_function=abs_path_model, rename_filter='*')
+            replaced_images = self.sch_replace_images(GS.sch)
+            yield 3
+            if replaced_images:
+                self.sch_restore_images(GS.sch)
+        else:
+            self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps)
+            yield 4
+        self.restore_variant_var()
+        self.unfilter_pcb_components(do_3D=True, do_2D=True)
+        return
+
+    def filter_components(self, highlight=None, force_wrl=False, also_sch=False, force_step=False):
+        with self.do_filter_components(highlight=highlight, force_wrl=force_wrl, also_sch=also_sch,
+                                       force_step=force_step) as mechanism:
+            if mechanism == 1:
                 # Save the fixed board
                 ret = self.save_tmp_board()
                 if also_sch and GS.sch_file:
                     link_name = ret.replace('.kicad_pcb', '.kicad_sch')
                     os.symlink(GS.sch_file, link_name)
                     self._files_to_remove.append(link_name)
-                # Undo the changes done during download
-                self.undo_3d_models_rename(GS.board)
-                if dnp_removed:
-                    self.restore_3D_models(GS.board, all_comps_hash)
-                return ret
-            return GS.pcb_file
-        self.filter_pcb_components(do_3D=True, do_2D=True, highlight=highlight)
-        self.replace_variant_var()
-        if also_sch:
-            self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps,
-                                 rename_function=abs_path_model, rename_filter='*')
-            fname, pcb_dir = self.save_tmp_dir_board('3D')
-            replaced_images = self.sch_replace_images(GS.sch)
-            GS.sch.save_variant(pcb_dir)
-            if replaced_images:
-                self.sch_restore_images(GS.sch)
-            self._files_to_remove.append(pcb_dir)
-        else:
-            self.download_models(force_wrl=force_wrl, force_step=force_step, all_comps=self._comps)
-            fname = self.save_tmp_board()
-        self.restore_variant_var()
-        self.unfilter_pcb_components(do_3D=True, do_2D=True)
-        return fname
+            elif mechanism == 2:
+                ret = GS.pcb_file
+            elif mechanism == 3:
+                ret, pcb_dir = self.save_tmp_dir_board('3D')
+                GS.sch.save_variant(pcb_dir)
+                self._files_to_remove.append(pcb_dir)
+            else:
+                ret = self.save_tmp_board()
+        return ret
 
     def restore_variant_var(self):
         for g, ori_text in self._replaced_variant_texts:

@@ -53,6 +53,14 @@ Shape {
 comp_range_regex = re.compile(r'([a-zA-Z]+)(\d+)-([a-zA-Z]+)(\d+)')
 
 
+class OldModel:
+    def __init__(self, fname):
+        self.m_Filename = fname
+
+    def __repr__(self):
+        return self.m_Filename
+
+
 class BaseOutput(RegOutput):
     _extra_index_pairs = []
 
@@ -623,24 +631,52 @@ class VariantOptions(BaseOptions):
         for model in reversed(models_l):
             models.append(model)
 
-    def undo_3d_models_rename(self, board):
-        """ Restores the file name for any renamed 3D module """
-        for m in GS.get_modules_board(board):
-            # Get the model references
+    def get_models_from_footprint(self, m):
+        if GS.pn is not None:
+            ref = m.GetReference()
+            lib_id = m.GetFPID()
+            lib_nickname = str(lib_id.GetLibNickname())
+            # Extract the models (the iterator returns copies)
             models = m.Models()
             models_l = []
             while not models.empty():
                 models_l.append(models.pop())
+            return models_l, ref, lib_nickname
+        # KiPy implementation
+        lib_nickname = m.definition.id.library
+        ref = next(filter(lambda p: isinstance(p, GS.kp.board_types.Field) and p.name == 'Reference',
+                          m.texts_and_fields)).text.value
+        models_l = [OldModel(m3d.filename) for m3d in m.definition.models]
+        return models_l, ref, lib_nickname
+
+    def push_models_to_footprint(self, m, models_l):
+        if GS.pn is not None:
+            models = m.Models()
+            for model in reversed(models_l):
+                models.append(model)
+            return
+        changed = False
+        for o, n in zip(models_l, m.definition.models):
+            if n.filename != o.m_Filename:
+                n.filename = o.m_Filename
+                changed = True
+        if changed:
+            GS.board.update_items(m)
+
+    def undo_3d_models_rename(self, board):
+        """ Restores the file name for any renamed 3D module """
+        for m in GS.get_modules_board(board):
+            # Get the model references
+            models_l, ref, _ = self.get_models_from_footprint(m)
             # Fix any changed path
-            replaced = self._undo_3d_models_rep.get(m.GetReference())
+            replaced = self._undo_3d_models_rep.get(ref)
             for i, m3d in enumerate(models_l):
                 if m3d.m_Filename in self._undo_3d_models:
                     m3d.m_Filename = self._undo_3d_models[m3d.m_Filename]
                 if replaced:
                     m3d.m_Filename = replaced[i]
             # Push the models back
-            for model in reversed(models_l):
-                models.append(model)
+            self.push_models_to_footprint(m, models_l)
         # Reset the list of changes
         self._undo_3d_models = {}
         self._undo_3d_models_rep = {}
@@ -1013,9 +1049,12 @@ class VariantOptions(BaseOptions):
             Advantage: all relative paths inside the file remains valid
             Disadvantage: the name of the file gets altered """
         fname = GS.tmp_file(suffix='.kicad_pcb', dir=GS.pcb_dir if dir is None else dir, what='modified PCB', a_logger=logger)
-        GS.board.Save(fname)
+        if GS.pn is not None:
+            GS.board.Save(fname)
+            GS.copy_project(fname)
+        else:
+            GS.board.save_as(fname, overwrite=True, include_project=True)
         self.patch_prjname(fname)
-        GS.copy_project(fname)
         self._files_to_remove.extend(GS.get_pcb_and_pro_names(fname))
         return fname
 
