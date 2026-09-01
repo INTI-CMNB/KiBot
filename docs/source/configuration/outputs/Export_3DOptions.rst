@@ -17,9 +17,10 @@ Export_3DOptions parameters
 
 .. _Export_3DOptions_format:
 
--  **format** :index:`: <pair: output - export_3d - options; format>` [:ref:`string <string>`] (default: ``'step'``) (choices: "step", "glb", "stl", "xao", "brep", "ply", "u3d", "pdf") 3D format used.
+-  **format** :index:`: <pair: output - export_3d - options; format>` [:ref:`string <string>`] (default: ``'step'``) (choices: "step", "stpz", "glb", "stl", "xao", "brep", "ply", "u3d", "pdf") 3D format used.
 
    - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
+   - STPZ: Compressed STEP (KiCad 10+)
    - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
      known as WebGL Transmissions Format or WebGL TF. |br|
    - STL: 3D printer format, from stereolithography CAD software created by 3D Systems. |br|
@@ -44,7 +45,7 @@ Export_3DOptions parameters
 
 .. _Export_3DOptions_output:
 
--  **output** :index:`: <pair: output - export_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options.
+-  **output** :index:`: <pair: output - export_3d - options; output>` [:ref:`string <string>`] (default: ``'%f-%i%I%v.%x'``) Name for the generated 3D file (%i='3D' %x='step/stpz/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options.
 
 .. _Export_3DOptions_board_only:
 
@@ -140,6 +141,10 @@ Export_3DOptions parameters
 .. _Export_3DOptions_no_components:
 
 -  ``no_components`` :index:`: <pair: output - export_3d - options; no_components>` [:ref:`boolean <boolean>`] (default: ``false``) Exclude 3D models for components.
+
+.. _Export_3DOptions_no_extra_pad_thickness:
+
+-  ``no_extra_pad_thickness`` :index:`: <pair: output - export_3d - options; no_extra_pad_thickness>` [:ref:`boolean <boolean>`] (default: ``false``) Disable extra pad thickness (pads will have normal thickness) (KiCad 10+).
 
 .. _Export_3DOptions_no_optimize_step:
 

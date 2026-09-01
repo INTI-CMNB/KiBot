@@ -4018,6 +4018,13 @@
           null
         ],
         [
+          "no_extra_pad_thickness",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "include_zones",
           [
             "DataTypeBoolean"

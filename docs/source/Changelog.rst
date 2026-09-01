@@ -47,6 +47,12 @@ Added
 
    -  ``single_file``: to plot all layers to a single file (KiCad 11)
 
+-  Export 3D:
+
+   -  Compressed STEP (STPZ) (KiCad 10+)
+   -  ``no_extra_pad_thickness`` option to avoid extra pads thickness
+      (KiCad 10+)
+
 -  IPC 2581:
 
    -  ``drawing_sheet``: to specify a particular drawing sheet

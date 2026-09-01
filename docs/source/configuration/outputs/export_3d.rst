@@ -11,12 +11,15 @@ Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli.
 Supported formats include:
 
 - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
+- STPZ: Compressed STEP files (KiCad 10+)
 - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
   known as WebGL Transmissions Format or WebGL TF.
 - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
 - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
 - BRep: Part of Open CASCADE Technology (OCCT)
-- PLY: Polygon File Format or the Stanford Triangle Format.
+- PLY: Polygon File Format or the Stanford Triangle Format. (KiCad 10+)
+- U3D: Universal 3D (ECMA-363) primarily used to embed interactive 3D models into PDF documents. (KiCad 10+)
+- PDF: Portable Document Format with the 3D model (KiCad 10+)
 
 STEP is the most common 3D format for exchange purposes
 

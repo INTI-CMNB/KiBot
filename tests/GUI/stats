@@ -1,5 +1,5 @@
-56 outputs types with a total of 2337 different parameters
-Single type parameters: 2140 (92 %)
+56 outputs types with a total of 2338 different parameters
+Single type parameters: 2141 (92 %)
 Multi type parameters: 197 (8 %)
 Average parameters: 42
 Maximum number of parameters: 218
@@ -69,7 +69,7 @@ Outputs sorted by parameters:
 - kicost: 37
 - diff: 42
 - excellon: 42
-- export_3d: 42
+- export_3d: 43
 - kibom: 45
 - ibom: 48
 - dxf: 50
@@ -154,7 +154,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1014
--            Boolean:  605
+-            Boolean:  606
 - ListStringSingular:  309
 -             Number:  306
 -             Choice:  115
@@ -170,7 +170,7 @@ Outputs sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  846 
--            Boolean:  535 
+-            Boolean:  536 
 - ListStringSingular:  305 
 -             Number:  212 
 -             Choice:  112 
@@ -414,8 +414,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2736 different parameters
-Single type parameters: 2513 (92 %)
+97 totals types with a total of 2737 different parameters
+Single type parameters: 2514 (92 %)
 Multi type parameters: 223 (8 %)
 Average parameters: 28
 Maximum number of parameters: 218
@@ -526,7 +526,7 @@ Totals sorted by parameters:
 - kicost: 37
 - diff: 42
 - excellon: 42
-- export_3d: 42
+- export_3d: 43
 - kibom: 45
 - ibom: 48
 - dxf: 50
@@ -652,7 +652,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1183
--            Boolean:  708
+-            Boolean:  709
 -             Number:  359
 - ListStringSingular:  340
 -             Choice:  147
@@ -668,7 +668,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  997 
--            Boolean:  628 
+-            Boolean:  629 
 - ListStringSingular:  336 
 -             Number:  250 
 -             Choice:  144 

@@ -1471,12 +1471,15 @@ outputs:
   # 3D models exports of various formats using KiCad (BREP/GLB/STL/STEP/XAO):
   # Supported formats include:
   # - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
+  # - STPZ: Compressed STEP files (KiCad 10+)
   # - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
   # > known as WebGL Transmissions Format or WebGL TF.
   # - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
   # - XAO: XAO (SALOME/Gmsh) format, used for FEM and simulations.
   # - BRep: Part of Open CASCADE Technology (OCCT)
-  # - PLY: Polygon File Format or the Stanford Triangle Format.
+  # - PLY: Polygon File Format or the Stanford Triangle Format. (KiCad 10+)
+  # - U3D: Universal 3D (ECMA-363) primarily used to embed interactive 3D models into PDF documents. (KiCad 10+)
+  # - PDF: Portable Document Format with the 3D model (KiCad 10+)
   # STEP is the most common 3D format for exchange purposes
   - name: 'export_3d_example'
     comment: 'Exports the PCB as a 3D model using KiCad 9 or newer, using kicad-cli.'
@@ -1510,8 +1513,9 @@ outputs:
       exclude_filter: '_null'
       # [boolean=false] Don't cut via holes in conductor layers
       fill_all_vias: false
-      # [string='step'] [step,glb,stl,xao,brep,ply,u3d,pdf] 3D format used.
+      # [string='step'] [step,stpz,glb,stl,xao,brep,ply,u3d,pdf] 3D format used.
       # - STEP: ISO 10303-21 Clear Text Encoding of the Exchange Structure
+      # - STPZ: Compressed STEP (KiCad 10+)
       # - GLB: Binary version of the glTF, Graphics Library Transmission Format or GL Transmission Format and formerly
       # > known as WebGL Transmissions Format or WebGL TF.
       # - STL: 3D printer format, from stereolithography CAD software created by 3D Systems.
@@ -1553,6 +1557,8 @@ outputs:
       no_board_body: false
       # [boolean=false] Exclude 3D models for components
       no_components: false
+      # [boolean=false] Disable extra pad thickness (pads will have normal thickness) (KiCad 10+)
+      no_extra_pad_thickness: false
       # [boolean=false] Do not optimize STEP file (enables writing parametric curves)
       no_optimize_step: false
       # [boolean=false] Used to exclude 3D models for components with 'virtual' attribute
@@ -1564,7 +1570,7 @@ outputs:
       # You can define any other origin using the format 'X,Y', i.e. '3.2,-10'. Don't put units here.
       # The units used here are the ones specified by the `units` option
       origin: 'grid'
-      # [string='%f-%i%I%v.%x'] Name for the generated 3D file (%i='3D' %x='step/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options
+      # [string='%f-%i%I%v.%x'] Name for the generated 3D file (%i='3D' %x='step/stpz/glb/stl/xao/brep/ply/u3d/pdf'). Affected by global options
       output: '%f-%i%I%v.%x'
       # [string|list(string)='_null'] Name of the filter to transform fields before applying other filters.
       # Is a short-cut to use for simple cases where a variant is an overkill.
