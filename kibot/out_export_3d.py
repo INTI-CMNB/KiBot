@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2025 Salvador E. Tropea
-# Copyright (c) 2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2025-2026 Salvador E. Tropea
+# Copyright (c) 2025-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+# KiCad >9:  kicad-cli (KiPy ends using kicad-cli with bugs in KiCad, using disk copy of PCB)
+#            KiPy implementation is available, just not used. Hoping KiCad solves it.
 import re
 from .error import KiPlotConfigurationError
 from .misc import UNITS_2_KICAD, MISSING_TOOL
