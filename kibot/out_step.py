@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020-2023 Salvador E. Tropea
-# Copyright (c) 2020-2023 Instituto Nacional de Tecnología Industrial
-# License: GPL-3.0
+# Copyright (c) 2020-2026 Salvador E. Tropea
+# Copyright (c) 2020-2026 Instituto Nacional de Tecnología Industrial
+# License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+# KiCad 5-8: KiAuto
+# KiCad >9:  kicad-cli (KiPy ends using kicad-cli with bugs in KiCad, using disk copy of PCB)
 # KiCad 6 bug: https://gitlab.com/kicad/code/kicad/-/issues/10075
 """
 Dependencies:
@@ -11,13 +13,13 @@ Dependencies:
     version: 1.6.1
     version_k7: 2.2.8
     version_k8: 2.3.2
-    version_k9: 2.3.5
-    version_k10: 2.3.9
+    version_k9: 0.0.0
     command: kicad2step_do
 """
 import os
 import re
 from .error import KiPlotConfigurationError
+from .kiplot import run_command
 from .misc import KICAD2STEP_ERR, W_DEPR
 from .gs import GS
 from .out_base_3d import Base3DOptions, Base3D
@@ -54,10 +56,32 @@ class STEPOptions(Base3DOptions):
         if (val not in ['grid', 'drill']) and (re.match(r'[-\d\.]+\s*,\s*[-\d\.]+\s*$', val) is None):
             raise KiPlotConfigurationError('Origin must be `grid` or `drill` or `X,Y`')
 
-    def run(self, output):
-        if GS.ki9:
-            logger.warning(W_DEPR+'For KiCad 9 use the `export_3d` output instead of `step`')
-        super().run(output)
+    def run_cli(self, name, board_name):
+        # Run the export from CLI
+        cmd = [GS.kicad_cli, 'pcb', 'export', 'step', '-o', name, '-f']
+        if self.no_virtual:
+            cmd.append('--no-unspecified')
+        if self.subst_models:
+            cmd.append('--subst-models')
+        # Make units explicit
+        if self.metric_units:
+            units = 'mm'
+        else:
+            units = 'in'
+        if self.min_distance >= 0:
+            cmd.extend(['--min-distance', "{}{}".format(self.min_distance, units)])
+        if self.origin == 'drill':
+            cmd.append('--drill-origin')
+        elif self.origin == 'grid':
+            cmd.append('--grid-origin')
+        else:
+            cmd.extend(['--user-origin', "{}{}".format(self.origin.replace(',', 'x'), units)])
+        cmd.append(board_name)
+        run_command(cmd)
+        if self._files_to_remove:
+            self.remove_temporals()
+
+    def run_kiauto(self, output, board_name):
         command = self.ensure_tool('KiAuto')
         # Make units explicit
         if self.metric_units:
@@ -83,11 +107,21 @@ class STEPOptions(Base3DOptions):
             cmd.append('--grid-origin')
         else:
             cmd.extend(['--user-origin', "{}{}".format(self.origin.replace(',', 'x'), units)])
-        # The board
-        board_name = self.filter_components(force_step=True)
         cmd.append(board_name)
         # Execute it
         self.exec_with_retry(self.add_extra_options(cmd, os.path.dirname(output)), KICAD2STEP_ERR)
+
+    def run(self, output):
+        if GS.ki9:
+            logger.warning(W_DEPR+'For KiCad 9 use the `export_3d` output instead of `step`')
+        super().run(output)
+        # The board
+        board_name = self.filter_components(force_step=True)
+
+        if GS.ki9:
+            self.run_cli(output, board_name)
+        else:
+            self.run_kiauto(output, board_name)
 
 
 @output_class
