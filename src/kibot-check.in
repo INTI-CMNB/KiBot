@@ -253,7 +253,7 @@ def check_version(version, roles, no_ver=False, tests=None):
         this_sever = 0
         max_version = r.get('max_version')
         version = get_version(r)
-        if not_avail or (version and ver < version) or (max_version and ver >= max_version):
+        if (not_avail and version != [0,0,0]) or (version and ver < version) or (max_version and ver >= max_version):
             if mandatory:
                 this_sever = 4 if glb else 3
             else:
@@ -300,6 +300,8 @@ def show_roles(roles):
     needed = []
     optional = []
     for r in roles:
+        if r['sev'] == 0:
+            continue
         if r['mandatory']:
             needed.append(r)
         else:
