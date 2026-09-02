@@ -507,15 +507,27 @@ class GS(object):
         return board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_FOOTPRINT)
 
     @staticmethod
-    def get_aux_origin():
+    def get_aux_origin_pn():
         if GS.board is None:
             return GS.pn.wxPoint(0, 0)
         settings = GS.board.GetDesignSettings()
         return settings.GetAuxOrigin()
 
     @staticmethod
-    def get_absolute_origin():
+    def get_aux_origin_kp():
+        if GS.board is None:
+            return GS.kp.geometry.Vector2.from_xy(0, 0)
+        return GS.board.get_origin(GS.BOT_DRILL)
+
+    @staticmethod
+    def get_absolute_origin_pn():
         return GS.pn.wxPoint(0, 0)
+
+    @staticmethod
+    def get_absolute_origin_kp():
+        if GS.board is None:
+            return GS.kp.geometry.Vector2.from_xy(0, 0)
+        return GS.board.get_origin(GS.BOT_GRID)
 
     @staticmethod
     def get_center(m):
@@ -1274,13 +1286,34 @@ class GS(object):
 
     @staticmethod
     def compute_pcb_boundary_kp(board, exact=True):
+        """ Just the PCB edge """
         return GS._compute_boundary_kp(board, {GS.Edge_Cuts},
                                        [GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_SHAPE],
                                        [GS.kp.board_types.BoardShape], exact=exact)
 
     @staticmethod
     def compute_pcb_full_boundary_kp(board):
+        """ All, PCB and extra items """
         return GS.compute_boundary_layers_kp(board, None, include_text=True)
+
+    @staticmethod
+    def get_pcb_center_mm_kp(board=None, full=False):
+        if board is None:
+            board = GS.board
+        if board is None:
+            return 0, 0
+        x1, y1, x2, y2 = GS.compute_pcb_full_boundary_kp(board) if full else GS.compute_pcb_boundary_kp(board)
+        return GS.to_mm((x1+x2)/2), GS.to_mm((y1+y2)/2)
+
+    @staticmethod
+    def get_pcb_center_mm_pn(board=None, full=False):
+        if board is None:
+            board = GS.board
+        if board is None:
+            return 0, 0
+        bb = GS.board.ComputeBoundingBox(not full)
+        center = bb.GetCenter()
+        return GS.to_mm(center.x), GS.to_mm(center.y)
 
     @staticmethod
     def tmp_file(content=None, prefix=None, suffix=None, dir=None, what=None, a_logger=None, binary=False, indent=False):
@@ -1511,6 +1544,9 @@ class GS(object):
             GS.to_mm = GS.to_mm_k5
             GS.from_mm = GS.from_mm_k5
             GS.to_mils = GS.to_mils_k5
+            GS.get_aux_origin = GS.get_aux_origin_pn
+            GS.get_absolute_origin = GS.get_absolute_origin_pn
+            GS.get_pcb_center_mm = GS.get_pcb_center_mm_pn
         elif GS.kp is not None:
             GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_kp
             GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_kp
@@ -1527,3 +1563,6 @@ class GS(object):
             GS.from_mm = GS.kp.util.units.from_mm
             GS.to_mils = GS.kp.util.units.to_mils
             GS.get_fields = GS.get_fields_kp
+            GS.get_aux_origin = GS.get_aux_origin_kp
+            GS.get_absolute_origin = GS.get_absolute_origin_kp
+            GS.get_pcb_center_mm = GS.get_pcb_center_mm_kp

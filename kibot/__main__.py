@@ -558,6 +558,10 @@ def get_layers_info_kp():
     GS.U_MILS = ct2.U_MILS
     GS.U_METERS = ct2.U_METERS
     GS.U_TENTHS = ct2.U_TENTHS
+    # Board Origin Type
+    bc2 = kipy.proto.board.board_commands_pb2
+    GS.BOT_GRID = bc2.BOT_GRID
+    GS.BOT_DRILL = bc2.BOT_DRILL
 
 
 def get_layers_info():

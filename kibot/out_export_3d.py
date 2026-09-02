@@ -90,10 +90,7 @@ class Export_3DOptions(Base3DOptions):
         val = self.origin
         if (val not in ['grid', 'drill']):
             if val == 'center':
-                bb = GS.board.ComputeBoundingBox(True)
-                center = bb.GetCenter()
-                self._user_x = GS.to_mm(center.x)
-                self._user_y = GS.to_mm(center.y)
+                self._user_x, self._user_y = GS.get_pcb_center_mm()
                 self._units = 'mm'
             else:
                 user_origin = re.match(r'([-\d\.]+)\s*,\s*([-\d\.]+)\s*$', val)
