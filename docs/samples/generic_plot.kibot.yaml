@@ -5378,11 +5378,11 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       pre_transform: '_null'
-      # [string='millimeters'] [millimeters,inches'] Units for `ref_x` and `ref_y`
+      # [string='millimeters'] [millimeters,inches] Units for `ref_x` and `ref_y`
       ref_units: 'millimeters'
-      # [number=0] X coordinate to use as reference when `use_pcb_center_as_ref` and `use_pcb_center_as_ref` are disabled
+      # [number=0] X coordinate to use as reference when `use_pcb_center_as_ref` and `use_aux_axis_as_origin` are disabled
       ref_x: 0
-      # [number=0] Y coordinate to use as reference when `use_pcb_center_as_ref` and `use_pcb_center_as_ref` are disabled
+      # [number=0] Y coordinate to use as reference when `use_pcb_center_as_ref` and `use_aux_axis_as_origin` are disabled
       ref_y: 0
       # [list(string)|string='all'] [none,all,*] List of components to draw, can be also a string for `none` or `all`.
       # Ranges like *R5-R10* are supported.

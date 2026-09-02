@@ -101,15 +101,15 @@ VRMLOptions parameters
 
 .. _VRMLOptions_ref_units:
 
--  ``ref_units`` :index:`: <pair: output - vrml - options; ref_units>` [:ref:`string <string>`] (default: ``'millimeters'``) (choices: "millimeters", "inches'") Units for `ref_x` and `ref_y`.
+-  ``ref_units`` :index:`: <pair: output - vrml - options; ref_units>` [:ref:`string <string>`] (default: ``'millimeters'``) (choices: "millimeters", "inches") Units for `ref_x` and `ref_y`.
 
 .. _VRMLOptions_ref_x:
 
--  ``ref_x`` :index:`: <pair: output - vrml - options; ref_x>` [:ref:`number <number>`] (default: ``0``) X coordinate to use as reference when `use_pcb_center_as_ref` and `use_pcb_center_as_ref` are disabled.
+-  ``ref_x`` :index:`: <pair: output - vrml - options; ref_x>` [:ref:`number <number>`] (default: ``0``) X coordinate to use as reference when `use_pcb_center_as_ref` and `use_aux_axis_as_origin` are disabled.
 
 .. _VRMLOptions_ref_y:
 
--  ``ref_y`` :index:`: <pair: output - vrml - options; ref_y>` [:ref:`number <number>`] (default: ``0``) Y coordinate to use as reference when `use_pcb_center_as_ref` and `use_pcb_center_as_ref` are disabled.
+-  ``ref_y`` :index:`: <pair: output - vrml - options; ref_y>` [:ref:`number <number>`] (default: ``0``) Y coordinate to use as reference when `use_pcb_center_as_ref` and `use_aux_axis_as_origin` are disabled.
 
 .. _VRMLOptions_use_aux_axis_as_origin:
 
