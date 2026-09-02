@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2025 Salvador E. Tropea
-# Copyright (c) 2022-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 """
@@ -10,15 +10,15 @@ Dependencies:
     version: 2.1.0
     version_k7: 2.2.8
     version_k8: 2.3.2
-    version_k9: 2.3.5
-    version_k10: 2.3.9
+    version_k9: 0.0.0
 """
 import os
 import re
 from shutil import copy2
 from .gs import GS
+from .kiplot import run_command
 from .out_base_3d import Base3DOptionsWithHL, Base3D
-from .misc import FAILED_EXECUTE, W_MISSWRL
+from .misc import FAILED_EXECUTE, W_MISSWRL, UNITS_2_KICAD
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 
@@ -128,11 +128,11 @@ class VRMLOptions(Base3DOptionsWithHL):
             """ Use the auxiliary axis as origin for coordinates.
                 Has more precedence than `use_pcb_center_as_ref` """
             self.ref_x = 0
-            """ X coordinate to use as reference when `use_pcb_center_as_ref` and `use_pcb_center_as_ref` are disabled """
+            """ X coordinate to use as reference when `use_pcb_center_as_ref` and `use_aux_axis_as_origin` are disabled """
             self.ref_y = 0
-            """ Y coordinate to use as reference when `use_pcb_center_as_ref` and `use_pcb_center_as_ref` are disabled """
+            """ Y coordinate to use as reference when `use_pcb_center_as_ref` and `use_aux_axis_as_origin` are disabled """
             self.ref_units = 'millimeters'
-            """ [millimeters,inches'] Units for `ref_x` and `ref_y` """
+            """ [millimeters,inches] Units for `ref_x` and `ref_y` """
             self.model_units = 'millimeters'
             """ [millimeters,meters,deciinches,inches] Units used for the VRML (1 deciinch = 0.1 inches) """
         super().__init__()
@@ -157,34 +157,63 @@ class VRMLOptions(Base3DOptionsWithHL):
         center = GS.board.ComputeBoundingBox(True).Centre()
         return self.to_mm(center.x), self.to_mm(center.y)
 
-    def run(self, name):
+    def solve_origin(self):
+        """ Convert the various origin options into coordinates """
+        if self.use_aux_axis_as_origin:
+            offset = GS.get_aux_origin()
+            x = GS.to_mm(offset.x)
+            y = GS.to_mm(offset.y)
+            units = 'millimeters'
+        elif self.use_pcb_center_as_ref:
+            x, y = GS.get_pcb_center_mm()
+            units = 'millimeters'
+        else:
+            x = self.ref_x
+            y = self.ref_y
+            units = self.ref_units
+        return x, y, units
+
+    def run_cli(self, name, board_name):
+        # Run the export from CLI
+        cmd = [GS.kicad_cli, 'pcb', 'export', 'vrml', '-o', name, '-f', '--units', UNITS_2_KICAD[self.model_units]]
+        # 3D models
+        if self.dir_models:
+            # Don't embed the 3D models
+            cmd.extend(['--models-relative', '--models-dir', self.dir_models])
+        # Origin
+        x, y, units = self.solve_origin()
+        cmd.extend(['--user-origin', f'{x}x{y}{UNITS_2_KICAD[units]}'])
+        self.add_kicad_cli_variant(cmd)
+        cmd.append(board_name)
+        run_command(cmd)
+        if self._files_to_remove:
+            self.remove_temporals()
+
+    def run_kiauto(self, name, board_name):
         command = self.ensure_tool('KiAuto')
-        super().run(name)
-        self.apply_show_components()
-        board_name = self.filter_components(highlight=set(self.expand_kf_components(self._highlight)), force_wrl=True)
-        self.undo_show_components()
         cmd = [command, 'export_vrml', '--output_name', os.path.basename(name), '-U', self.model_units]
         if self.dir_models:
             cmd.extend(['--dir_models', self.dir_models])
-        if not self.use_pcb_center_as_ref or GS.ki5 or self.use_aux_axis_as_origin:
-            if self.use_aux_axis_as_origin:
-                offset = GS.get_aux_origin()
-                x = GS.to_mm(offset.x)
-                y = GS.to_mm(offset.y)
-                units = 'millimeters'
-            # KiCad 5 doesn't support using the center, we emulate it
-            elif self.use_pcb_center_as_ref and GS.ki5:
-                x, y = self.get_pcb_center()
-                units = 'millimeters'
-            else:
-                x = self.ref_x
-                y = self.ref_y
-                units = self.ref_units
-            cmd.extend(['-x', str(x), '-y', str(y), '-u', units])
+        # Origin
+        x, y, units = self.solve_origin()
+        cmd.extend(['-x', str(x), '-y', str(y), '-u', units])
+
         dname = os.path.dirname(name)
         cmd.extend([board_name, dname])
         # Execute it
         self.exec_with_retry(self.add_extra_options(cmd), FAILED_EXECUTE)
+
+    def run(self, name):
+        super().run(name)
+        self.apply_show_components()
+        board_name = self.filter_components(highlight=set(self.expand_kf_components(self._highlight)), force_wrl=True)
+        self.undo_show_components()
+
+        if GS.ki9:
+            self.run_cli(name, board_name)
+        else:
+            self.run_kiauto(name, board_name)
+
         # Warn about missing models
         if GS.global_vrml_3d_model_workaround and self.dir_models:
             assert os.path.isfile(name)
@@ -192,6 +221,7 @@ class VRMLOptions(Base3DOptionsWithHL):
                 urls = find_vrml_inline_urls(f.read())
             for f in urls:
                 basename = os.path.basename(f)
+                dname = os.path.dirname(name)
                 fullname = os.path.join(dname, f)
                 if not os.path.isfile(fullname):
                     logger.warning(W_MISSWRL+f'Missing component in generated VRML: `{f}`')
