@@ -3,6 +3,8 @@
 # Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
+# KiCad 5-8: KiAuto
+# KiCad >9:  kicad-cli (KiPy ends using kicad-cli with bugs in KiCad, using disk copy of PCB)
 """
 Dependencies:
   - from: KiAuto
@@ -152,10 +154,6 @@ class VRMLOptions(Base3DOptionsWithHL):
             # So we just add the dir
             targets.append(os.path.join(out_dir, self.dir_models))
         return targets
-
-    def get_pcb_center(self):
-        center = GS.board.ComputeBoundingBox(True).Centre()
-        return self.to_mm(center.x), self.to_mm(center.y)
 
     def solve_origin(self):
         """ Convert the various origin options into coordinates """
