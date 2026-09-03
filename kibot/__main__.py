@@ -551,6 +551,10 @@ def get_layers_info_kp():
     GS.DS_CIRCLE = bt2.DS_CIRCLE
     GS.DS_OBLONG = bt2.DS_OBLONG
     GS.DS_UNDEFINED = bt2.DS_UNDEFINED
+    # Footprint Mounting Style
+    GS.FMS_THROUGH_HOLE = bt2.FMS_THROUGH_HOLE
+    GS.FMS_SMD = bt2.FMS_SMD
+    GS.FMS_UNSPECIFIED = bt2.FMS_UNSPECIFIED
     # Units
     ct2 = kipy.proto.common.types.enums_pb2
     GS.U_INCH = ct2.U_INCH

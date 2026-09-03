@@ -303,7 +303,7 @@ class PositionOptions(VariantOptions):
                     is_bottom = c.bottom
                     rotation = c.footprint_rot
                     # Here we can't use c.footprint_x/y because this doesn't work for panels
-                    center = GS.get_center(m)
+                    center = GS.fp_get_center(m)
                     center_x = center.x
                     center_y = center.y
                     if c.pos_offset_x is not None:
@@ -316,7 +316,7 @@ class PositionOptions(VariantOptions):
                 footprint = str(m.GetFPID().GetLibItemName())  # pcbnew.UTF8 type
                 is_bottom = m.IsFlipped()
                 rotation = m.GetOrientationDegrees()
-                center = GS.get_center(m)
+                center = GS.fp_get_center(m)
                 center_x = center.x
                 center_y = center.y
             # If passed check the position options

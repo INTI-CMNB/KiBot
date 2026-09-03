@@ -20,7 +20,8 @@ from shutil import copy2
 from sys import exit, exc_info
 import tempfile
 from traceback import extract_stack, format_list, print_tb
-from .misc import EXIT_BAD_ARGS, W_DATEFORMAT, W_UNKVAR, WRONG_INSTALL, CORRUPTED_PRO, hide_stderr, KICAD_VERSION_9_0_5
+from .misc import (EXIT_BAD_ARGS, W_DATEFORMAT, W_UNKVAR, WRONG_INSTALL, CORRUPTED_PRO, hide_stderr, KICAD_VERSION_9_0_5,
+                   MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, MOD_SMD, MOD_THROUGH_HOLE, MOD_VIRTUAL)
 from .log import get_logger
 
 logger = get_logger(__name__)
@@ -530,25 +531,22 @@ class GS(object):
         return GS.board.get_origin(GS.BOT_GRID)
 
     @staticmethod
-    def get_center(m):
-        if GS.ki5:
-            return m.GetCenter()
-        return m.GetPosition()
+    def fp_get_center_pn(footprint):
+        return footprint.GetPosition()
 
     @staticmethod
-    def get_fp_size(m):
-        if GS.ki5:
-            pads = m.Pads()
-            r = pcbnew.EDA_RECT()
-            for pad in pads:
-                r.Merge(pad.GetBoundingBox())
-            rot = m.GetOrientationDegrees()
-            if rot == 270 or rot == 90:
-                return (r.GetHeight(), r.GetWidth())
-            return (r.GetWidth(), r.GetHeight())
-        # KiCad 6
-        r = m.GetFpPadsLocalBbox()
+    def fp_get_center_kp(footprint):
+        return footprint.position
+
+    @staticmethod
+    def fp_get_size_pn(footprint):
+        r = footprint.GetFpPadsLocalBbox()
         return (r.GetWidth(), r.GetHeight())
+
+    @staticmethod
+    def fp_get_size_kp(footprint):
+        bb = GS._compute_boundary_for_items_kp(GS.board, footprint.definition.pads, exact=False)
+        return (bb.size.x, bb.size.y)
 
     @staticmethod
     def unit_name_to_scale_factor(units):
@@ -1241,6 +1239,19 @@ class GS(object):
         raise AssertionError(f"Unknown PCB item: {item} {type(item)}")
 
     @staticmethod
+    def _compute_boundary_for_items_kp(board, items, exact=True):
+        boxes = board.get_item_bounding_box(items)
+        if exact:
+            # Reduce all boxes by the stroke width
+            for b, d in zip(boxes, items):
+                b.inflate(-d.attributes.stroke.width)
+        bb = GS.kp.geometry.Box2.from_pos_size(boxes[0].pos, boxes[0].size)
+        if len(boxes) > 1:
+            for b in boxes[1:]:
+                bb.merge(b)
+        return bb
+
+    @staticmethod
     def _compute_boundary_kp(board, layers, items, classes, exact=True):
         if items is None:
             kot = GS.kp.proto.common.types.KiCadObjectType
@@ -1261,15 +1272,7 @@ class GS(object):
                         shapes.append(gi)
         if not len(shapes):
             return 0, 0, 0, 0
-        boxes = board.get_item_bounding_box(shapes)
-        if exact:
-            # Reduce all boxes by the stroke width
-            for b, d in zip(boxes, shapes):
-                b.inflate(-d.attributes.stroke.width)
-        bb = GS.kp.geometry.Box2.from_pos_size(boxes[0].pos, boxes[0].size)
-        if len(boxes) > 1:
-            for b in boxes[1:]:
-                bb.merge(b)
+        bb = GS._compute_boundary_for_items_kp(board, shapes, exact)
         return bb.pos.x, bb.pos.y, bb.pos.x+bb.size.x, bb.pos.y+bb.size.y
 
     @staticmethod
@@ -1391,7 +1394,7 @@ class GS(object):
 
     @staticmethod
     def module_position(m):
-        pos = GS.get_center(m)
+        pos = GS.fp_get_center(m)
         return f'({GS.to_mm(pos.x)}, {GS.to_mm(pos.y)}) mm'
 
     @staticmethod
@@ -1513,6 +1516,127 @@ class GS(object):
         return variant.name if variant and variant.type == 'kicad' and GS.ki10 else None
 
     @staticmethod
+    def fp_get_reference_k5(footprint):
+        return footprint.GetReference()
+
+    @staticmethod
+    def fp_get_reference_kp(footprint):
+        return footprint.reference_field.text.value
+
+    @staticmethod
+    def fp_get_attributes_pn(footprint):
+        attrs = footprint.GetAttributes()
+        return (bool(attrs & MOD_BOARD_ONLY), bool(attrs & MOD_SMD), bool(attrs & MOD_THROUGH_HOLE),
+                bool(attrs & MOD_VIRTUAL), bool(attrs & MOD_EXCLUDE_FROM_POS_FILES),
+                bool(attrs & MOD_EXCLUDE_FROM_BOM))
+
+    @staticmethod
+    def fp_get_attributes_kp(footprint):
+        attrs = footprint.attributes
+        return (attrs.not_in_schematic, attrs.mounting_style == GS.FMS_SMD, attrs.mounting_style == GS.FMS_THROUGH_HOLE,
+                attrs.mounting_style == GS.FMS_UNSPECIFIED, attrs.exclude_from_position_files,
+                attrs.exclude_from_bill_of_materials)
+
+    @staticmethod
+    def fp_get_sheet_path_str_pn(footprint):
+        return footprint.GetPath().AsString()
+
+    @staticmethod
+    def fp_get_sheet_path_str_kp(footprint):
+        return '/'+'/'.join((p.value for p in footprint.sheet_path.path))
+
+    @staticmethod
+    def fp_get_id_str_pn(footprint):
+        return footprint.m_Uuid.AsString()
+
+    @staticmethod
+    def fp_get_id_str_kp(footprint):
+        return footprint.id.value
+
+    @staticmethod
+    def fp_get_value_pn(footprint):
+        return footprint.GetValue()
+
+    @staticmethod
+    def fp_get_value_kp(footprint):
+        return footprint.value_field.text.value
+
+    @staticmethod
+    def fp_is_bottom_pn(footprint):
+        return footprint.IsFlipped()
+
+    @staticmethod
+    def fp_is_bottom_kp(footprint):
+        return footprint.layer == GS.B_Cu
+
+    @staticmethod
+    def fp_get_pads_pn(footprint):
+        return footprint.Pads()
+
+    @staticmethod
+    def fp_get_pads_kp(footprint):
+        return footprint.definition.pads
+
+    @staticmethod
+    def fp_get_lib_and_name_kp(footprint):
+        return footprint.definition.id.library+':'+footprint.definition.id.name
+
+    @staticmethod
+    def fp_get_lib_and_name_pn(footprint):
+        lib = footprint.GetFPID()
+        return lib.GetUniStringLibId()
+
+    @staticmethod
+    def pad_get_net_name_pn(pad):
+        return pad.GetNetname()
+
+    @staticmethod
+    def pad_get_net_name_kp(pad):
+        return pad.net.name
+
+    @staticmethod
+    def pad_get_net_class_pn(pad):
+        return pad.GetNetClassName()
+
+    @staticmethod
+    def pad_get_net_class_kp(pad):
+        classes = GS.board.get_netclass_for_nets(pad.net)
+        res = classes.get(pad.net.name)
+        return 'Default' if res is None else res.name
+
+    @staticmethod
+    def pad_get_position_pn(pad):
+        return pad.GetCenter()
+
+    @staticmethod
+    def pad_get_position_kp(pad):
+        return pad.position
+
+    @staticmethod
+    def pad_get_fab_property_pn(pad):
+        return pad.GetProperty()
+
+    @staticmethod
+    def pad_get_fab_property_kp(pad):
+        return pad.fab_property
+
+    @staticmethod
+    def pad_has_hole_pn(pad):
+        return pad.HasHole()
+
+    @staticmethod
+    def pad_has_hole_kp(pad):
+        return pad.padstack.drill.diameter.x != 0
+
+    @staticmethod
+    def pad_get_number_pn(pad):
+        return pad.GetNumber()
+
+    @staticmethod
+    def pad_get_number_kp(pad):
+        return pad.number
+
+    @staticmethod
     def set_version_pointers():
         """ Used to setup function pointers according to the API and its version """
         if GS.pn is not None:
@@ -1547,6 +1671,22 @@ class GS(object):
             GS.get_aux_origin = GS.get_aux_origin_pn
             GS.get_absolute_origin = GS.get_absolute_origin_pn
             GS.get_pcb_center_mm = GS.get_pcb_center_mm_pn
+            GS.fp_get_reference = GS.fp_get_reference_k5
+            GS.fp_get_attributes = GS.fp_get_attributes_pn
+            GS.fp_get_sheet_path_str = GS.fp_get_sheet_path_str_pn
+            GS.fp_get_id_str = GS.fp_get_id_str_pn
+            GS.fp_get_value = GS.fp_get_value_pn
+            GS.fp_is_bottom = GS.fp_is_bottom_pn
+            GS.fp_get_center = GS.fp_get_center_pn
+            GS.fp_get_size = GS.fp_get_size_pn
+            GS.fp_get_pads = GS.fp_get_pads_pn
+            GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_pn
+            GS.pad_get_net_name = GS.pad_get_net_name_pn
+            GS.pad_get_net_class = GS.pad_get_net_class_pn
+            GS.pad_get_position = GS.pad_get_position_pn
+            GS.pad_get_fab_property = GS.pad_get_fab_property_pn
+            GS.pad_has_hole = GS.pad_has_hole_pn
+            GS.pad_get_number = GS.pad_get_number_pn
         elif GS.kp is not None:
             GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_kp
             GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_kp
@@ -1566,3 +1706,19 @@ class GS(object):
             GS.get_aux_origin = GS.get_aux_origin_kp
             GS.get_absolute_origin = GS.get_absolute_origin_kp
             GS.get_pcb_center_mm = GS.get_pcb_center_mm_kp
+            GS.fp_get_reference = GS.fp_get_reference_kp
+            GS.fp_get_attributes = GS.fp_get_attributes_kp
+            GS.fp_get_sheet_path_str = GS.fp_get_sheet_path_str_kp
+            GS.fp_get_id_str = GS.fp_get_id_str_kp
+            GS.fp_get_value = GS.fp_get_value_kp
+            GS.fp_is_bottom = GS.fp_is_bottom_kp
+            GS.fp_get_center = GS.fp_get_center_kp
+            GS.fp_get_size = GS.fp_get_size_kp
+            GS.fp_get_pads = GS.fp_get_pads_kp
+            GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_kp
+            GS.pad_get_net_name = GS.pad_get_net_name_kp
+            GS.pad_get_net_class = GS.pad_get_net_class_kp
+            GS.pad_get_position = GS.pad_get_position_kp
+            GS.pad_get_fab_property = GS.pad_get_fab_property_kp
+            GS.pad_has_hole = GS.pad_has_hole_kp
+            GS.pad_get_number = GS.pad_get_number_kp
