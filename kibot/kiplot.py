@@ -25,7 +25,7 @@ from .bom.columnlist import ColumnList
 from .gs import GS
 from .registrable import RegOutput
 from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, version_str2tuple,
-                   EXIT_BAD_CONFIG, WRONG_INSTALL, UI_SMD, UI_VIRTUAL, TRY_INSTALL_CHECK, MOD_SMD, MOD_THROUGH_HOLE,
+                   EXIT_BAD_CONFIG, WRONG_INSTALL, TRY_INSTALL_CHECK, MOD_SMD, MOD_THROUGH_HOLE,
                    MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
                    NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
@@ -526,18 +526,14 @@ def get_board_comps_data(comps, kicad_variant=None):
         ref = m.GetReference()
         # logger.error(f'{ref} {m.m_Uuid.AsString()} -> {m.GetPath().AsString()}')
         attrs = m.GetAttributes()
-        if GS.ki6:
-            # By full sheet path
-            c = comps_hash.get(m.GetPath().AsString())
-            if c is None:
-                # Check if we have a component with the same reference in the schematic
-                c = comps_hash_ref.get(ref)
-                if c is not None:
-                    logger.warning(W_PCBNOSCH+f"{ref} not linked to an existing schematic component, "
-                                   f"but {ref} found in schematic, assuming this is the same")
-        else:
-            # By reference
-            c = comps_hash.get(ref)
+        # By full sheet path
+        c = comps_hash.get(m.GetPath().AsString())
+        if c is None:
+            # Check if we have a component with the same reference in the schematic
+            c = comps_hash_ref.get(ref)
+            if c is not None:
+                logger.warning(W_PCBNOSCH+f"{ref} not linked to an existing schematic component, "
+                               f"but {ref} found in schematic, assuming this is the same")
 
         real_fields = GS.get_fields(m)
         extra_env = create_extra_env(real_fields)
@@ -553,31 +549,24 @@ def get_board_comps_data(comps, kicad_variant=None):
             c = create_component_from_footprint(m, ref, env, real_fields)
             if c is None:
                 continue
-            if GS.ki6:
-                logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
+            logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
             comps.append(c)
 
         if c.has_pcb_info:
-            if GS.ki6:
-                if c.ref != ref:
-                    # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
-                    logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
-                                  " unrelated, making a new one")
-                    c = create_component_from_footprint(m, ref, env, real_fields)
-                    if c is None:
-                        continue
-                else:
-                    # This isn't normal, but KiKit can create a panel with repeated references
-                    # In this case we have an schematic with M components and a PCB with N*M components
-                    # N repeated components in the PCB points to the same component in the schematic
-                    logger.debugl(3, f"Repeated {c.ref}/{ref}")
-                    c = c.copy()
-                    logger.warning(W_REPREF+"Repeated component in PCB, normal for a KiKit panel")
+            if c.ref != ref:
+                # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
+                logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
+                              " unrelated, making a new one")
+                c = create_component_from_footprint(m, ref, env, real_fields)
+                if c is None:
+                    continue
             else:
-                # When using references they can be repeated
-                # We already got this reference and filled the PCB info, this is another copy
+                # This isn't normal, but KiKit can create a panel with repeated references
+                # In this case we have an schematic with M components and a PCB with N*M components
+                # N repeated components in the PCB points to the same component in the schematic
                 logger.debugl(3, f"Repeated {c.ref}/{ref}")
                 c = c.copy()
+                logger.warning(W_REPREF+"Repeated component in PCB, normal for a KiKit panel")
             comps.append(c)
 
         # Check the "Value", inform if different
@@ -617,52 +606,42 @@ def get_board_comps_data(comps, kicad_variant=None):
             net_class.add(pad.GetNetClassName())
         c.net_name = ','.join(net_name)
         c.net_class = ','.join(net_class)
-        if GS.ki5:
-            # KiCad 5
-            if attrs == UI_SMD:
-                c.smd = True
-            elif attrs == UI_VIRTUAL:
-                c.virtual = True
-            else:
-                c.tht = True
-        else:
-            # KiCad 6
-            if attrs & MOD_SMD:
-                c.smd = True
-            if attrs & MOD_THROUGH_HOLE:
-                c.tht = True
-            if attrs & MOD_VIRTUAL == MOD_VIRTUAL:
-                c.virtual = True
-            if attrs & MOD_EXCLUDE_FROM_POS_FILES:
-                c.in_pos = False
-            # The PCB contains another flag for the BoM
-            # I guess it should be in sync, but: why should somebody want to unsync it?
-            if attrs & MOD_EXCLUDE_FROM_BOM:
-                c.in_bom_pcb = False
-            if attrs & MOD_BOARD_ONLY:
-                c.in_pcb_only = True
-            c.pcb_id = m.m_Uuid.AsString()
-            look_for_type = (not c.smd) and (not c.tht)
-            for pad in m.Pads():
-                p = PadProperty()
-                center = pad.GetCenter()
-                p.x = center.x
-                p.y = center.y
-                p.fab_property = pad.GetProperty()
-                p.net = pad.GetNetname()
-                p.net_class = pad.GetNetClassName()
-                p.has_hole = pad.HasHole()
-                name = pad.GetNumber()
-                c.pad_properties[name] = p
-                # Try to figure out if this is THT or SMD when not specified
-                if look_for_type:
-                    if p.has_hole:
-                        # At least one THT, stop looking
-                        c.tht = True
-                        look_for_type = False
-                    elif name:
-                        # We have pad a valid pad, assume this is all SMD and keep looking
-                        c.smd = True
+        if attrs & MOD_SMD:
+            c.smd = True
+        if attrs & MOD_THROUGH_HOLE:
+            c.tht = True
+        if attrs & MOD_VIRTUAL == MOD_VIRTUAL:
+            c.virtual = True
+        if attrs & MOD_EXCLUDE_FROM_POS_FILES:
+            c.in_pos = False
+        # The PCB contains another flag for the BoM
+        # I guess it should be in sync, but: why should somebody want to unsync it?
+        if attrs & MOD_EXCLUDE_FROM_BOM:
+            c.in_bom_pcb = False
+        if attrs & MOD_BOARD_ONLY:
+            c.in_pcb_only = True
+        c.pcb_id = m.m_Uuid.AsString()
+        look_for_type = (not c.smd) and (not c.tht)
+        for pad in m.Pads():
+            p = PadProperty()
+            center = pad.GetCenter()
+            p.x = center.x
+            p.y = center.y
+            p.fab_property = pad.GetProperty()
+            p.net = pad.GetNetname()
+            p.net_class = pad.GetNetClassName()
+            p.has_hole = pad.HasHole()
+            name = pad.GetNumber()
+            c.pad_properties[name] = p
+            # Try to figure out if this is THT or SMD when not specified
+            if look_for_type:
+                if p.has_hole:
+                    # At least one THT, stop looking
+                    c.tht = True
+                    look_for_type = False
+                elif name:
+                    # We have pad a valid pad, assume this is all SMD and keep looking
+                    c.smd = True
     if kicad_variant is not None:
         logger.debug(f"Switching the PCB to {old_variant}")
         GS.board.SetCurrentVariant(old_variant)
