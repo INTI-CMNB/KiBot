@@ -25,11 +25,11 @@ from .bom.columnlist import ColumnList
 from .gs import GS
 from .registrable import RegOutput
 from .misc import (PLOT_ERROR, CORRUPTED_PCB, EXIT_BAD_ARGS, CORRUPTED_SCH, version_str2tuple,
-                   EXIT_BAD_CONFIG, WRONG_INSTALL, TRY_INSTALL_CHECK, MOD_SMD, MOD_THROUGH_HOLE,
-                   MOD_VIRTUAL, W_PCBNOSCH, W_NONEEDSKIP, W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH,
-                   NO_SCH_FILE, NO_PCB_FILE, W_VARPCB, NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH,
-                   MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, hide_stderr, W_MAXDEPTH, DONT_STOP,
-                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY, W_REPREF, KIPY_ERROR)
+                   EXIT_BAD_CONFIG, WRONG_INSTALL, TRY_INSTALL_CHECK, W_PCBNOSCH, W_NONEEDSKIP,
+                   W_WRONGCHAR, name2make, W_TIMEOUT, W_KIAUTO, W_VARSCH, NO_SCH_FILE, NO_PCB_FILE, W_VARPCB,
+                   NO_YAML_MODULE, WRONG_ARGUMENTS, FAILED_EXECUTE, W_VALMISMATCH, hide_stderr, W_MAXDEPTH, DONT_STOP,
+                   W_BADREF, try_decode_utf8, MISSING_FILES, KICAD_VERSION_9_0_1, W_NOUUIDMAP, W_SILLY,
+                   W_REPREF, KIPY_ERROR)
 from .error import PlotError, KiPlotConfigurationError, config_error, KiPlotError
 from .config_reader import CfgYamlReader
 from .pre_base import BasePreFlight
@@ -404,10 +404,10 @@ def load_sch(sch_file=None, forced=False):
 def create_component_from_footprint(m, ref, env, real_fields):
     c = SchematicComponentV6()
     c.f_ref = c.ref = ref
-    c.name = m.GetValue()
+    c.name = GS.fp_get_value(m)
     c.sheet_path_h = c.sheet_path = c.lib = ''
     c.project = GS.sch_basename
-    c.id = m.m_Uuid.AsString() if hasattr(m, 'm_Uuid') else ''
+    c.id = GS.fp_get_id_str(m)
     # Basic fields
     # Reference
     f = SchematicField()
@@ -424,8 +424,7 @@ def create_component_from_footprint(m, ref, env, real_fields):
     # Footprint
     f = SchematicField()
     f.name = 'Footprint'
-    lib = m.GetFPID()
-    f.value = lib.GetUniStringLibId()
+    f.value = GS.fp_get_lib_and_name(m)
     f.number = 2
     c.add_field(f)
     # Datasheet
@@ -507,11 +506,9 @@ def get_board_comps_data(comps, kicad_variant=None):
     if not GS.pcb_file:
         return
     load_board()
-    if GS.ki6:
-        comps_hash = {c.sheet_full_path: c for c in comps}
-        comps_hash_ref = {c.ref: c for c in comps}
-    else:
-        comps_hash = {c.ref: c for c in comps}
+    comps_hash = {c.sheet_full_path: c for c in comps}
+    comps_hash_ref = {c.ref: c for c in comps}
+    logger.error(comps_hash)
     # Reset the "has_pcb_info" flag
     for c in comps:
         c.has_pcb_info = False
@@ -519,15 +516,15 @@ def get_board_comps_data(comps, kicad_variant=None):
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
     env.update(GS.load_pro_variables())
-    if kicad_variant is not None:
+    if kicad_variant is not None and GS.pn is not None:
         old_variant = GS.board.GetCurrentVariant()
         GS.board.SetCurrentVariant(kicad_variant)
     for m in GS.get_modules():
-        ref = m.GetReference()
-        # logger.error(f'{ref} {m.m_Uuid.AsString()} -> {m.GetPath().AsString()}')
-        attrs = m.GetAttributes()
+        ref = GS.fp_get_reference(m)
+        # logger.error(f'{ref} {GS.fp_get_id_str(m)} -> {GS.fp_get_sheet_path_str(m)}')
+        board_only, is_smd, is_tht, is_unspecified, no_pos, no_bom = GS.fp_get_attributes(m)
         # By full sheet path
-        c = comps_hash.get(m.GetPath().AsString())
+        c = comps_hash.get(GS.fp_get_sheet_path_str(m))
         if c is None:
             # Check if we have a component with the same reference in the schematic
             c = comps_hash_ref.get(ref)
@@ -539,23 +536,23 @@ def get_board_comps_data(comps, kicad_variant=None):
         extra_env = create_extra_env(real_fields)
 
         if c is None:
-            if not (attrs & MOD_BOARD_ONLY) and not ref.startswith('KiKit_'):
+            if not board_only and not ref.startswith('KiKit_'):
                 logger.warning(W_PCBNOSCH+f'`{ref}` component in board, but not in schematic')
             if not GS.global_include_components_from_pcb:
                 # v1.6.3 behavior
-                logger.debugl(3, f"Not including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
+                logger.debugl(3, f"Not including {c.ref} ({GS.fp_get_id_str(m)}) only found in PCB")
                 continue
             # Create a component for this so we can include/exclude it using filters
             c = create_component_from_footprint(m, ref, env, real_fields)
             if c is None:
                 continue
-            logger.debugl(3, f"Including {c.ref} ({m.m_Uuid.AsString()}) only found in PCB")
+            logger.debugl(3, f"Including {c.ref} ({GS.fp_get_id_str(m)}) only found in PCB")
             comps.append(c)
 
         if c.has_pcb_info:
             if c.ref != ref:
                 # This is a "feature" in KiCad, you can get a PCB only component linked to an unrelated sch component
-                logger.debugl(3, f"Repeated PCB {ref} {m.m_Uuid.AsString()} SCH {c.ref} {m.GetPath().AsString()}"
+                logger.debugl(3, f"Repeated PCB {ref} {GS.fp_get_id_str(m)} SCH {c.ref} {GS.fp_get_sheet_path_str(m)}"
                               " unrelated, making a new one")
                 c = create_component_from_footprint(m, ref, env, real_fields)
                 if c is None:
@@ -570,7 +567,7 @@ def get_board_comps_data(comps, kicad_variant=None):
             comps.append(c)
 
         # Check the "Value", inform if different
-        new_value = expand_one_footprint_field(m.GetValue(), env, extra_env)
+        new_value = expand_one_footprint_field(GS.fp_get_value(m), env, extra_env)
         if new_value != c.value:
             expanded_value = expand_one_footprint_field(c.value, env, extra_env)
             if new_value != expanded_value:
@@ -588,12 +585,12 @@ def get_board_comps_data(comps, kicad_variant=None):
             del real_fields['Value']
         c.value = new_value
 
-        c.bottom = m.IsFlipped()
-        c.footprint_rot = m.GetOrientationDegrees()
-        center = GS.get_center(m)
+        c.bottom = GS.fp_is_bottom(m)
+        c.footprint_rot = GS.get_footprint_orientation_in_degrees(m)
+        center = GS.fp_get_center(m)
         c.footprint_x = center.x
         c.footprint_y = center.y
-        (c.footprint_w, c.footprint_h) = GS.get_fp_size(m)
+        (c.footprint_w, c.footprint_h) = GS.fp_get_size(m)
         c.pad_properties = {}
         if GS.global_use_pcb_fields:
             copy_fields(c, real_fields, env, extra_env)
@@ -601,37 +598,37 @@ def get_board_comps_data(comps, kicad_variant=None):
         # Net
         net_name = set()
         net_class = set()
-        for pad in m.Pads():
-            net_name.add(pad.GetNetname())
-            net_class.add(pad.GetNetClassName())
+        for pad in GS.fp_get_pads(m):
+            net_name.add(GS.pad_get_net_name(pad))
+            net_class.add(GS.pad_get_net_class(pad))
         c.net_name = ','.join(net_name)
         c.net_class = ','.join(net_class)
-        if attrs & MOD_SMD:
+        if is_smd:
             c.smd = True
-        if attrs & MOD_THROUGH_HOLE:
+        if is_tht:
             c.tht = True
-        if attrs & MOD_VIRTUAL == MOD_VIRTUAL:
+        if is_unspecified:
             c.virtual = True
-        if attrs & MOD_EXCLUDE_FROM_POS_FILES:
+        if no_pos:
             c.in_pos = False
         # The PCB contains another flag for the BoM
         # I guess it should be in sync, but: why should somebody want to unsync it?
-        if attrs & MOD_EXCLUDE_FROM_BOM:
+        if no_bom:
             c.in_bom_pcb = False
-        if attrs & MOD_BOARD_ONLY:
+        if board_only:
             c.in_pcb_only = True
-        c.pcb_id = m.m_Uuid.AsString()
+        c.pcb_id = GS.fp_get_id_str(m)
         look_for_type = (not c.smd) and (not c.tht)
-        for pad in m.Pads():
+        for pad in GS.fp_get_pads(m):
             p = PadProperty()
-            center = pad.GetCenter()
+            center = GS.pad_get_position(pad)
             p.x = center.x
             p.y = center.y
-            p.fab_property = pad.GetProperty()
-            p.net = pad.GetNetname()
-            p.net_class = pad.GetNetClassName()
-            p.has_hole = pad.HasHole()
-            name = pad.GetNumber()
+            p.fab_property = GS.pad_get_fab_property(pad)
+            p.net = GS.pad_get_net_name(pad)
+            p.net_class = GS.pad_get_net_class(pad)
+            p.has_hole = GS.pad_has_hole(pad)
+            name = GS.pad_get_number(pad)
             c.pad_properties[name] = p
             # Try to figure out if this is THT or SMD when not specified
             if look_for_type:
@@ -644,7 +641,8 @@ def get_board_comps_data(comps, kicad_variant=None):
                     c.smd = True
     if kicad_variant is not None:
         logger.debug(f"Switching the PCB to {old_variant}")
-        GS.board.SetCurrentVariant(old_variant)
+        if GS.pn is not None:
+            GS.board.SetCurrentVariant(old_variant)
 
 
 def expand_comp_fields(c, env):

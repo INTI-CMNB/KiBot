@@ -65,7 +65,7 @@ class ModInfo(object):
         self.new_ref_suffix = -1
         # Get the relevant coordinate
         if coord_type == 'footprint':
-            pos = GS.get_center(m)
+            pos = GS.fp_get_center(m)
         else:  # Reference
             pos = m.Reference().GetPosition()
         self.x = pos.x
@@ -188,7 +188,7 @@ class Annotate_PCB(BasePreFlight):  # noqa: F821
         for m in GS.get_modules():
             ref = m.GetReference()
             if ref[-1] == '?':
-                center = GS.get_center(m)
+                center = GS.fp_get_center(m)
                 scale = GS.unit_name_to_scale_factor('millimeters')
                 logger.warning(W_NOANNO+'Missing annotation in component at {},{} mm ({})'.
                                format(center.x*scale, center.y*scale, ref))
