@@ -1395,7 +1395,7 @@ class GS(object):
 
     @staticmethod
     def module_position(m):
-        pos = GS.fp_get_center(m)
+        pos = GS.fp_get_position(m)
         return f'({GS.to_mm(pos.x)}, {GS.to_mm(pos.y)}) mm'
 
     @staticmethod
@@ -1704,7 +1704,7 @@ class GS(object):
             GS.fp_get_id_str = GS.fp_get_id_str_pn
             GS.fp_get_value = GS.fp_get_value_pn
             GS.fp_is_bottom = GS.fp_is_bottom_pn
-            GS.fp_get_center = GS.fp_get_center_pn
+            GS.fp_get_position = GS.fp_get_position_pn
             GS.fp_get_size = GS.fp_get_size_pn
             GS.fp_get_pads = GS.fp_get_pads_pn
             GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_pn
@@ -1741,7 +1741,7 @@ class GS(object):
             GS.fp_get_id_str = GS.fp_get_id_str_kp
             GS.fp_get_value = GS.fp_get_value_kp
             GS.fp_is_bottom = GS.fp_is_bottom_kp
-            GS.fp_get_center = GS.fp_get_center_kp
+            GS.fp_get_position = GS.fp_get_position_kp
             GS.fp_get_size = GS.fp_get_size_kp
             GS.fp_get_pads = GS.fp_get_pads_kp
             GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_kp

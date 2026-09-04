@@ -586,7 +586,7 @@ def get_board_comps_data(comps, kicad_variant=None):
 
         c.bottom = GS.fp_is_bottom(m)
         c.footprint_rot = GS.get_footprint_orientation_in_degrees(m)
-        center = GS.fp_get_center(m)
+        center = GS.fp_get_position(m)
         c.footprint_x = center.x
         c.footprint_y = center.y
         (c.footprint_w, c.footprint_h) = GS.fp_get_size(m)
