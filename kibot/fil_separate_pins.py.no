@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2024 Salvador E. Tropea
-# Copyright (c) 2024 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2024-2026 Salvador E. Tropea
+# Copyright (c) 2024-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 # This filter takes ideas from https://github.com/snhobbs/kicad-testpoints by Simon Hobbs
-import pcbnew
 from copy import deepcopy
 from .gs import GS
 from .optionable import Optionable
-from .misc import MISSING_TOOL
 from .macros import macros, document, filter_class  # noqa: F401
 from . import log
 logger = log.get_logger()
@@ -33,31 +31,29 @@ class Separate_Pins(BaseFilter):  # noqa: F821
             self.ref_sep = '.'
             """ Separator used in the reference (i.e. R10.1) """
             self.attribute = PadAttribute
-            """ [string|list(string)] [bga,local_fiducial,global_fiducial,testpoint,heatsink,castellated,none] Fabrication
-                attribute/s of the included pads """
+            """ [string|list(string)] [bga,local_fiducial,global_fiducial,testpoint,heatsink,castellated,pressfit,none]
+                Fabrication attribute/s of the included pads """
             self.keep_component = False
             """ If we also keep the original component or we just get the selected pads """
 
     def config(self, parent):
         super().config(parent)
-        if not GS.ki5:
-            STR2ATTR = {'bga': pcbnew.PAD_PROP_BGA,
-                        'local_fiducial': pcbnew.PAD_PROP_FIDUCIAL_LOCAL,
-                        'global_fiducial': pcbnew.PAD_PROP_FIDUCIAL_GLBL,
-                        'testpoint': pcbnew.PAD_PROP_TESTPOINT,
-                        'heatsink': pcbnew.PAD_PROP_HEATSINK,
-                        'castellated': pcbnew.PAD_PROP_CASTELLATED,
-                        'none': pcbnew.PAD_PROP_NONE}
-            self._attribute = {STR2ATTR[v] for v in self.attribute}
+        STR2ATTR = {'bga': GS.PAD_PROP_BGA,
+                    'local_fiducial': GS.PAD_PROP_FIDUCIAL_LOCAL,
+                    'global_fiducial': GS.PAD_PROP_FIDUCIAL_GLBL,
+                    'testpoint': GS.PAD_PROP_TESTPOINT,
+                    'heatsink': GS.PAD_PROP_HEATSINK,
+                    'castellated': GS.PAD_PROP_CASTELLATED,
+                    'pressfit': GS.PAD_PROP_PRESSFIT,
+                    'none': GS.PAD_PROP_NONE}
+        self._attribute = {STR2ATTR[v] for v in self.attribute}
 
     def filter(self, comp):
         """ Separate the selected pins as pseudo-components """
-        if GS.ki5:
-            GS.exit_with_error("`separate_pins` needs KiCad 6+", MISSING_TOOL)
         res = []
         if self.keep_component:
             res.append(comp)
-        if GS.ki5 or not comp.has_pcb_info:
+        if not comp.has_pcb_info:
             # No information from the PCB
             logger.error('No PCB info')
             return res

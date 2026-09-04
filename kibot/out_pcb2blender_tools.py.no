@@ -13,8 +13,6 @@ import struct
 from typing import List
 from .gs import GS
 from pcbnew import B_Paste, F_Paste, PCB_TEXT_T, ToMM
-if GS.ki6:
-    from pcbnew import PAD_PROP_HEATSINK
 from .misc import (W_UNKPCB3DTXT, W_NOPCB3DBR, W_NOPCB3DTL, W_BADPCB3DTXT, W_UNKPCB3DNAME, W_BADPCB3DSTK, MISSING_TOOL)
 from .optionable import Optionable
 from .out_base import VariantOptions
@@ -25,9 +23,7 @@ logger = log.get_logger()
 
 
 def is_heatsink_pad(pad):
-    if not GS.ki6:
-        return False
-    return pad.GetProperty() == PAD_PROP_HEATSINK
+    return GS.pad_get_fab_property(pad) == GS.PFP_HEATSINK
 
 
 @dataclass
@@ -119,6 +115,7 @@ class PadFabType(Enum):
     HEATSINK = 5
     CASTELLATED = 6
     MECHANICAL = 7
+    PRESSFIT = 8
 
     @classmethod
     def _missing_(cls, value):
@@ -245,7 +242,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
                         f.write(f'roundness = {pad.GetRoundRectRadiusRatio()}\n')
                         f.write(f'drill_shape = "{DrillShape(pad.GetDrillShape()).name}"\n')
                         f.write(f'drill_size = {list(map(GS.to_mm, pad.GetDrillSize()))}\n')
-                        f.write(f'fab_type = "{PadFabType(pad.GetProperty()).name}"\n')
+                        f.write(f'fab_type = "{PadFabType(GS.pad_get_fab_property(pad)).name}"\n')
                 else:
                     with open(name, 'wb') as f:
                         f.write(struct.pack("!ff????BBffffBff",

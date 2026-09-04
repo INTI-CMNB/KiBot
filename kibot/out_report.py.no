@@ -763,12 +763,11 @@ class ReportOptions(VariantOptions):
             pads = GS.fp_get_pads(m)
             for pad in pads:
                 # Pad properties
-                if not GS.ki5:
-                    p = PadProperty()
-                    p.fab_property = pad.GetProperty()
-                    p.net = GS.pad_get_net_name(pad)
-                    p.name = ref+'.'+pad.GetNumber()
-                    pad_properties.append(p)
+                p = PadProperty()
+                p.fab_property = GS.pad_get_fab_property(pad)
+                p.net = GS.pad_get_net_name(pad)
+                p.name = ref+'.'+pad.GetNumber()
+                pad_properties.append(p)
                 dr = pad.GetDrillSize()
                 if not dr.x:
                     continue
@@ -1056,7 +1055,7 @@ class ReportOptions(VariantOptions):
         self.total_pads = len(pad_properties)
         nets_with_tp = {}
         for p in pad_properties:
-            if p.fab_property == pcbnew.PAD_PROP_TESTPOINT:
+            if p.fab_property == GS.PAD_PROP_TESTPOINT:
                 self.testpoint_pads += 1
                 nets_with_tp[p.net] = nets_with_tp.get(p.net, [])+[p.name]
         cnd = GS.board.GetConnectivity()
