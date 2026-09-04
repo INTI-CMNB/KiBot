@@ -38,14 +38,14 @@ class Separate_Pins(BaseFilter):  # noqa: F821
 
     def config(self, parent):
         super().config(parent)
-        STR2ATTR = {'bga': GS.PAD_PROP_BGA,
-                    'local_fiducial': GS.PAD_PROP_FIDUCIAL_LOCAL,
-                    'global_fiducial': GS.PAD_PROP_FIDUCIAL_GLBL,
-                    'testpoint': GS.PAD_PROP_TESTPOINT,
-                    'heatsink': GS.PAD_PROP_HEATSINK,
-                    'castellated': GS.PAD_PROP_CASTELLATED,
-                    'pressfit': GS.PAD_PROP_PRESSFIT,
-                    'none': GS.PAD_PROP_NONE}
+        STR2ATTR = {'bga': GS.PFP_BGA,
+                    'local_fiducial': GS.PFP_FIDUCIAL_LOCAL,
+                    'global_fiducial': GS.PFP_FIDUCIAL_GLBL,
+                    'testpoint': GS.PFP_TESTPOINT,
+                    'heatsink': GS.PFP_HEATSINK,
+                    'castellated': GS.PFP_CASTELLATED,
+                    'pressfit': GS.PFP_PRESSFIT,
+                    'none': GS.PFP_NONE}
         self._attribute = {STR2ATTR[v] for v in self.attribute}
 
     def filter(self, comp):
