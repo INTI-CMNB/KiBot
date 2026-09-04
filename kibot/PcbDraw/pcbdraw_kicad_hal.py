@@ -103,9 +103,9 @@ def load_board_data_pn(board, internal_to_svg, exclude_width) -> BoardData:
         else:
             assert False
         # lib+name
-        fpid = m.GetFPID()
-        library = str(fpid.GetLibNickname()).strip()
-        footprint = str(fpid.GetLibItemName()).strip()
+        library, footprint = GS.fp_get_lib_and_name(m, separated=True)
+        library = library.strip()
+        footprint = footprint.strip()
         # Properties
         reference = GS.fp_get_reference(m).strip()
         value = GS.fp_get_value(m).strip()

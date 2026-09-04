@@ -129,8 +129,7 @@ class Copy_FilesOptions(Base3DOptions):
         extra_files = []
         added = set()
         for m in GS.get_modules():
-            id = m.GetFPID()
-            lib_nick = str(id.GetLibNickname())
+            lib_nick, name = GS.fp_get_lib_and_name(m, separated=True)
             src_alias = KiConf.fp_nick_to_path(lib_nick)
             if src_alias is None:
                 logger.warning(f'{W_MISSLIB}Missing footprint library `{lib_nick}`')
@@ -143,7 +142,6 @@ class Copy_FilesOptions(Base3DOptions):
                 new_alias.uri = os.path.join(out_lib_base_prj, lib_nick+'.pretty')
                 aliases[lib_nick] = new_alias
 
-            name = str(id.GetLibItemName())
             mod_fname = name+'.kicad_mod'
             footprint_src = os.path.join(src_lib, mod_fname)
             if not os.path.isfile(footprint_src):
