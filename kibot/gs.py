@@ -1526,15 +1526,21 @@ class GS(object):
     @staticmethod
     def fp_get_attributes_pn(footprint):
         attrs = footprint.GetAttributes()
-        return (bool(attrs & MOD_BOARD_ONLY), bool(attrs & MOD_SMD), bool(attrs & MOD_THROUGH_HOLE),
-                bool(attrs & MOD_VIRTUAL), bool(attrs & MOD_EXCLUDE_FROM_POS_FILES),
+        return (bool(attrs & MOD_SMD),
+                bool(attrs & MOD_THROUGH_HOLE),
+                (attrs & MOD_VIRTUAL) == MOD_VIRTUAL,
+                bool(attrs & MOD_BOARD_ONLY),
+                bool(attrs & MOD_EXCLUDE_FROM_POS_FILES),
                 bool(attrs & MOD_EXCLUDE_FROM_BOM))
 
     @staticmethod
     def fp_get_attributes_kp(footprint):
         attrs = footprint.attributes
-        return (attrs.not_in_schematic, attrs.mounting_style == GS.FMS_SMD, attrs.mounting_style == GS.FMS_THROUGH_HOLE,
-                attrs.mounting_style == GS.FMS_UNSPECIFIED, attrs.exclude_from_position_files,
+        return (attrs.mounting_style == GS.FMS_SMD,
+                attrs.mounting_style == GS.FMS_THROUGH_HOLE,
+                attrs.mounting_style == GS.FMS_UNSPECIFIED,
+                attrs.not_in_schematic,
+                attrs.exclude_from_position_files,
                 attrs.exclude_from_bill_of_materials)
 
     @staticmethod
