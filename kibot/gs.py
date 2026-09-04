@@ -1601,13 +1601,17 @@ class GS(object):
         return footprint.definition.pads
 
     @staticmethod
-    def fp_get_lib_and_name_kp(footprint):
+    def fp_get_lib_and_name_kp(footprint, separated=False):
+        if separated:
+            return footprint.definition.id.library, footprint.definition.id.name
         return footprint.definition.id.library+':'+footprint.definition.id.name
 
     @staticmethod
-    def fp_get_lib_and_name_pn(footprint):
-        lib = footprint.GetFPID()
-        return lib.GetUniStringLibId()
+    def fp_get_lib_and_name_pn(footprint, separated=False):
+        id = footprint.GetFPID()
+        if separated:
+            return str(id.GetLibNickname()), str(id.GetLibItemName())
+        return id.GetUniStringLibId()
 
     @staticmethod
     def pad_get_net_name_pn(pad):

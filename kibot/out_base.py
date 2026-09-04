@@ -634,8 +634,7 @@ class VariantOptions(BaseOptions):
     def get_models_from_footprint(self, m):
         if GS.pn is not None:
             ref = GS.fp_get_reference(m)
-            lib_id = m.GetFPID()
-            lib_nickname = str(lib_id.GetLibNickname())
+            lib_nickname, _ = GS.fp_get_lib_and_name(m, separated=True)
             # Extract the models (the iterator returns copies)
             models = m.Models()
             models_l = []
