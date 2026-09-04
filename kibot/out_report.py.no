@@ -766,7 +766,7 @@ class ReportOptions(VariantOptions):
                 p = PadProperty()
                 p.fab_property = GS.pad_get_fab_property(pad)
                 p.net = GS.pad_get_net_name(pad)
-                p.name = ref+'.'+pad.GetNumber()
+                p.name = ref+'.'+GS.pad_get_number(pad)
                 pad_properties.append(p)
                 dr = pad.GetDrillSize()
                 if not dr.x:
@@ -1027,8 +1027,8 @@ class ReportOptions(VariantOptions):
                     poly = pad.GetCustomShapeAsPolygon()
                     area = GS.to_mm(GS.to_mm(poly.Area()))
                 else:
-                    logger.warning(f"{W_UNKPADSH}Unknown shape for pad `{pad.GetNumber()}` of `{GS.fp_get_reference(m)}` " +
-                                   get_pad_info(pad))
+                    logger.warning(f"{W_UNKPADSH}Unknown shape for pad `{GS.pad_get_number(pad)}` of "
+                                   f"`{GS.fp_get_reference(m)}` "+get_pad_info(pad))
                 if on_top:
                     self.paste_pads_front += 1
                     self.paste_pads_front_area += area

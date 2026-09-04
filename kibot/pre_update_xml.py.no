@@ -152,7 +152,7 @@ class Update_XML(BasePreFlight):  # noqa: F821
                 continue
             pcb_net_names.add(net_name)
             sch_nodes = net_nodes[net_name]
-            pcb_nodes = {GS.fp_get_reference(pad.GetParent())+' pin '+pad.GetNumber()
+            pcb_nodes = {GS.fp_get_reference(pad.GetParent())+' pin '+GS.pad_get_number(pad)
                          for pad in con.GetNetItems(n, pcbnew.PCB_PAD_T)
                          if GS.fp_get_reference(pad.GetParent()) not in excluded}
             dif = pcb_nodes-sch_nodes
