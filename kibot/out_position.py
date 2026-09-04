@@ -10,7 +10,7 @@ from re import compile
 from datetime import datetime
 from .gs import GS
 from .kiplot import run_command
-from .misc import UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES, W_POSGRID
+from .misc import W_POSGRID
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .error import KiPlotConfigurationError
@@ -214,26 +214,14 @@ class PositionOptions(VariantOptions):
             bothf.close()
 
     @staticmethod
-    def is_pure_smd_5(m):
-        return m.GetAttributes() == UI_SMD
+    def is_pure_smd(m):
+        is_smd, is_tht, _, _, no_pos, _ = GS.fp_get_attributes(m)
+        return is_smd and not (is_tht or no_pos)
 
     @staticmethod
-    def is_pure_smd_6(m):
-        return m.GetAttributes() & (MOD_THROUGH_HOLE | MOD_SMD | MOD_EXCLUDE_FROM_POS_FILES) == MOD_SMD
-
-    @staticmethod
-    def is_not_virtual_5(m):
-        return m.GetAttributes() != UI_VIRTUAL
-
-    @staticmethod
-    def is_not_virtual_6(m):
-        return not (m.GetAttributes() & MOD_EXCLUDE_FROM_POS_FILES)
-
-    @staticmethod
-    def get_attr_tests():
-        if GS.ki5:
-            return PositionOptions.is_pure_smd_5, PositionOptions.is_not_virtual_5
-        return PositionOptions.is_pure_smd_6, PositionOptions.is_not_virtual_6
+    def is_not_virtual(m):
+        _, _, _, _, no_pos, _ = GS.fp_get_attributes(m)
+        return not no_pos
 
     def get_targets(self, out_dir):
         ext = self._expand_ext
@@ -277,7 +265,6 @@ class PositionOptions(VariantOptions):
         comps_hash = self.get_refs_hash_multi()
         modules = []
         modules_side = []
-        is_pure_smd, is_not_virtual = self.get_attr_tests()
         quote_char = '"' if self.format == 'CSV' else ''
         quote_char_extra = quote_char if self.quote_all else ''
         x_origin = 0.0
@@ -320,7 +307,8 @@ class PositionOptions(VariantOptions):
                 center_x = center.x
                 center_y = center.y
             # If passed check the position options
-            if (self.only_smd and is_pure_smd(m)) or (not self.only_smd and (is_not_virtual(m) or self.include_virtual)):
+            if ((self.only_smd and self.is_pure_smd(m)) or
+                    (not self.only_smd and (self.is_not_virtual(m) or self.include_virtual))):
                 # KiCad: PLACE_FILE_EXPORTER::GenPositionData() in export_footprints_placefile.cpp
                 pos_x = (center_x - x_origin)
                 pos_y = (center_y - y_origin)
@@ -353,7 +341,7 @@ class PositionOptions(VariantOptions):
                 modules.append(row)
                 modules_side.append(is_bottom)
             else:
-                logger.debug('- pure_smd: {} not_virtual {}'.format(is_pure_smd(m), is_not_virtual(m)))
+                logger.debug('- pure_smd: {} not_virtual {}'.format(self.is_pure_smd(m), self.is_not_virtual(m)))
         # Find max width for all columns
         maxlengths = []
         for col, name in enumerate(columns):

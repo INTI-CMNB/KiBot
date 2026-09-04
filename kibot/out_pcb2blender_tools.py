@@ -15,8 +15,7 @@ from .gs import GS
 from pcbnew import B_Paste, F_Paste, PCB_TEXT_T, ToMM
 if GS.ki6:
     from pcbnew import PAD_PROP_HEATSINK
-from .misc import (MOD_THROUGH_HOLE, MOD_SMD, UI_VIRTUAL, W_UNKPCB3DTXT, W_NOPCB3DBR, W_NOPCB3DTL, W_BADPCB3DTXT,
-                   W_UNKPCB3DNAME, W_BADPCB3DSTK, MISSING_TOOL)
+from .misc import (W_UNKPCB3DTXT, W_NOPCB3DBR, W_NOPCB3DTL, W_BADPCB3DTXT, W_UNKPCB3DNAME, W_BADPCB3DSTK, MISSING_TOOL)
 from .optionable import Optionable
 from .out_base import VariantOptions
 from .macros import macros, document, output_class  # noqa: F401
@@ -214,23 +213,15 @@ class PCB2Blender_ToolsOptions(VariantOptions):
         bounds = (bounds[0]-1, bounds[1]-1, bounds[2]+2, bounds[3]+2)
         self.write_bounds(fname, self.board_bounds_format, bounds)
 
-    @staticmethod
-    def is_not_virtual_ki6(m):
-        return bool(m.GetAttributes() & (MOD_THROUGH_HOLE | MOD_SMD))
-
-    @staticmethod
-    def is_not_virtual_ki5(m):
-        return bool(m.GetAttributes() != UI_VIRTUAL)
-
     def do_pads_info(self, dir_name):
         if not self.pads_info_create:
             return
         dir_name = os.path.join(dir_name, self.pads_info_dir)
         os.makedirs(dir_name, exist_ok=True)
-        is_not_virtual = self.is_not_virtual_ki5 if GS.ki5 else self.is_not_virtual_ki6
         for i, footprint in enumerate(GS.get_modules()):
             has_model = len(footprint.Models()) > 0
-            is_tht_or_smd = is_not_virtual(footprint)
+            is_smd, is_tht, _, _, _, _ = GS.fp_get_attributes(footprint)
+            is_tht_or_smd = is_smd or is_tht
             value = footprint.GetValue()
             value = value.replace('/', '_')
             reference = GS.fp_get_reference(footprint)

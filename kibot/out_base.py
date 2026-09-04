@@ -14,8 +14,8 @@ from .gs import GS
 from .kicad.pcb import replace_footprints
 from .kicad.v6_sch import SchematicBitmapV6, Stroke, Color
 from .kiplot import get_all_components, look_for_output, get_output_targets, run_output
-from .misc import (Rect, W_WRONGPASTE, DISABLE_3D_MODEL_TEXT, W_NOCRTYD, MOD_ALLOW_MISSING_COURTYARD, W_MISSDIR, W_KEEPTMP,
-                   RENDERERS, read_png, SUBIMAGE_REGEX)
+from .misc import (Rect, W_WRONGPASTE, DISABLE_3D_MODEL_TEXT, W_NOCRTYD, W_MISSDIR, W_KEEPTMP, RENDERERS,
+                   read_png, SUBIMAGE_REGEX)
 if not GS.kicad_version_n:
     # When running the regression tests we need it
     from kibot.__main__ import detect_kicad
@@ -849,7 +849,7 @@ class VariantOptions(BaseOptions):
                 w = bbox.GetWidth()
                 h = bbox.GetHeight()
                 m_cen = m.GetCenter()
-                if not (m.GetAttributes() & MOD_ALLOW_MISSING_COURTYARD):
+                if not GS.fp_get_allow_missing_courtyard(m):
                     logger.warning(W_NOCRTYD+"Missing courtyard for `{}`".format(ref))
             if extra_debug:
                 logger.debug(f'Highlight for {ref}')

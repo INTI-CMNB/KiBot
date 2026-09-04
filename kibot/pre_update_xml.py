@@ -21,7 +21,7 @@ from .macros import macros, document, pre_class  # noqa: F401
 from .error import KiPlotConfigurationError
 from .gs import GS
 from .kiplot import load_board
-from .misc import BOM_ERROR, KICAD_VERSION_7_0_1, MISSING_TOOL, MOD_BOARD_ONLY, NETLIST_DIFF, W_NOTINBOM, W_PARITY
+from .misc import BOM_ERROR, KICAD_VERSION_7_0_1, MISSING_TOOL, NETLIST_DIFF, W_NOTINBOM, W_PARITY
 from .log import get_logger
 from .optionable import Optionable
 import pcbnew
@@ -91,7 +91,8 @@ class Update_XML(BasePreFlight):  # noqa: F821
                     logger.warning(W_NOTINBOM+f"{ref} excluded from BoM we can't check its parity, upgrade to KiCad 7")
                     excluded.add(ref)
                 else:
-                    if not m.GetAttributes() & MOD_BOARD_ONLY:
+                    _, _, _, no_sch, _, _ = GS.fp_get_attributes(m)
+                    if not no_sch:
                         errors.append('{} found in PCB, but not in schematic'.format(ref))
                 continue
             sch_data = comps[ref]

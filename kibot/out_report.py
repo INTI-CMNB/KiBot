@@ -22,8 +22,7 @@ import pcbnew
 
 from .create_pdf import split_pdf
 from .gs import GS
-from .misc import (UI_SMD, UI_VIRTUAL, MOD_THROUGH_HOLE, MOD_SMD, MOD_EXCLUDE_FROM_POS_FILES, W_WRONGEXT, W_UNKPADSH,
-                   W_WRONGOAR, W_ECCLASST, W_BLINDVIAS, W_MICROVIAS, W_BURIEDVIAS)
+from .misc import (W_WRONGEXT, W_UNKPADSH, W_WRONGOAR, W_ECCLASST, W_BLINDVIAS, W_MICROVIAS, W_BURIEDVIAS)
 from .registrable import RegOutput
 from .out_base import VariantOptions
 from .error import KiPlotConfigurationError
@@ -556,25 +555,14 @@ class ReportOptions(VariantOptions):
         return self._context_individual_images(line, self._schematic_svgs)
 
     @staticmethod
-    def is_pure_smd_5(m):
-        return m.GetAttributes() == UI_SMD
+    def is_pure_smd(m):
+        is_smd, is_tht, _, _, _, _ = GS.fp_get_attributes(m)
+        return is_smd and not is_tht
 
     @staticmethod
-    def is_pure_smd_6(m):
-        return m.GetAttributes() & (MOD_THROUGH_HOLE | MOD_SMD) == MOD_SMD
-
-    @staticmethod
-    def is_not_virtual_5(m):
-        return m.GetAttributes() != UI_VIRTUAL
-
-    @staticmethod
-    def is_not_virtual_6(m):
-        return not (m.GetAttributes() & MOD_EXCLUDE_FROM_POS_FILES)
-
-    def get_attr_tests(self):
-        if GS.ki5:
-            return self.is_pure_smd_5, self.is_not_virtual_5
-        return self.is_pure_smd_6, self.is_not_virtual_6
+    def is_not_virtual(m):
+        _, _, _, _, no_pos, _ = GS.fp_get_attributes(m)
+        return not no_pos
 
     def measure_pcb(self, board):
         x1, y1, x2, y2 = GS.compute_pcb_boundary(board)
@@ -723,7 +711,6 @@ class ReportOptions(VariantOptions):
         self.top_smd_exc = self.top_tht_exc = self.bot_smd_exc = self.bot_tht_exc = 0
         top_layer = board.GetLayerID('F.Cu')
         bottom_layer = board.GetLayerID('B.Cu')
-        is_pure_smd, is_not_virtual = self.get_attr_tests()
         npth_attrib = 3 if GS.ki5 else pcbnew.PAD_ATTRIB_NPTH
         min_oar = GS.from_mm(0.1)
         pad_properties = []
@@ -732,7 +719,7 @@ class ReportOptions(VariantOptions):
             comp = self._comps_hash.get(ref, None) if self._comps and self._comps_hash else None
             layer = m.GetLayer()
             if layer == top_layer:
-                if is_pure_smd(m):
+                if self.is_pure_smd(m):
                     self.top_smd += 1
                     if comp:
                         if not comp.included:
@@ -742,7 +729,7 @@ class ReportOptions(VariantOptions):
                                 self.top_smd_dnp += 1
                             if comp.fixed:
                                 self.top_smd_dnc += 1
-                elif is_not_virtual(m):
+                elif self.is_not_virtual(m):
                     self.top_tht += 1
                     if comp:
                         if not comp.included:
@@ -753,7 +740,7 @@ class ReportOptions(VariantOptions):
                             if comp.fixed:
                                 self.top_tht_dnc += 1
             elif layer == bottom_layer:
-                if is_pure_smd(m):
+                if self.is_pure_smd(m):
                     self.bot_smd += 1
                     if comp:
                         if not comp.included:
@@ -763,7 +750,7 @@ class ReportOptions(VariantOptions):
                                 self.bot_smd_dnp += 1
                             if comp.fixed:
                                 self.bot_smd_dnc += 1
-                elif is_not_virtual(m):
+                elif self.is_not_virtual(m):
                     self.bot_tht += 1
                     if comp:
                         if not comp.included:

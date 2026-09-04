@@ -21,7 +21,8 @@ from sys import exit, exc_info
 import tempfile
 from traceback import extract_stack, format_list, print_tb
 from .misc import (EXIT_BAD_ARGS, W_DATEFORMAT, W_UNKVAR, WRONG_INSTALL, CORRUPTED_PRO, hide_stderr, KICAD_VERSION_9_0_5,
-                   MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, MOD_SMD, MOD_THROUGH_HOLE, MOD_VIRTUAL)
+                   MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, MOD_SMD, MOD_THROUGH_HOLE, MOD_VIRTUAL,
+                   MOD_ALLOW_MISSING_COURTYARD)
 from .log import get_logger
 
 logger = get_logger(__name__)
@@ -1544,6 +1545,22 @@ class GS(object):
                 attrs.exclude_from_bill_of_materials)
 
     @staticmethod
+    def fp_get_allow_missing_courtyard_pn(footprint):
+        return footprint.GetAttributes() & MOD_ALLOW_MISSING_COURTYARD
+
+    @staticmethod
+    def fp_get_allow_missing_courtyard_kp(footprint):
+        return footprint.attributes.exempt_from_courtyard_requirement
+
+    @staticmethod
+    def fp_get_mounting_style_str_pn(footprint):
+        return footprint.GetTypeName()
+
+    @staticmethod
+    def fp_get_mounting_style_str_kp(footprint):
+        return GS.FMS_TO_STR.get(footprint.attributes, 'UKNOWN')
+
+    @staticmethod
     def fp_get_sheet_path_str_pn(footprint):
         return footprint.GetPath().AsString()
 
@@ -1687,6 +1704,8 @@ class GS(object):
             GS.fp_get_size = GS.fp_get_size_pn
             GS.fp_get_pads = GS.fp_get_pads_pn
             GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_pn
+            GS.fp_get_allow_missing_courtyard = GS.fp_get_allow_missing_courtyard_pn
+            GS.fp_get_mounting_style_str = GS.fp_get_mounting_style_str_pn
             GS.pad_get_net_name = GS.pad_get_net_name_pn
             GS.pad_get_net_class = GS.pad_get_net_class_pn
             GS.pad_get_position = GS.pad_get_position_pn
@@ -1722,6 +1741,8 @@ class GS(object):
             GS.fp_get_size = GS.fp_get_size_kp
             GS.fp_get_pads = GS.fp_get_pads_kp
             GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_kp
+            GS.fp_get_allow_missing_courtyard = GS.fp_get_allow_missing_courtyard_kp
+            GS.fp_get_mounting_style_str = GS.fp_get_mounting_style_str_kp
             GS.pad_get_net_name = GS.pad_get_net_name_kp
             GS.pad_get_net_class = GS.pad_get_net_class_kp
             GS.pad_get_position = GS.pad_get_position_kp
