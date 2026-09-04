@@ -349,7 +349,7 @@ class AnyDrill(VariantOptions):
         # Look for pads
         found_npth = False
         for m in GS.board.GetFootprints():
-            pads = m.Pads()
+            pads = GS.fp_get_pads(m)
             for pad in pads:
                 dr = pad.GetDrillSize()
                 if dr.x == 0 or dr.y == 0:

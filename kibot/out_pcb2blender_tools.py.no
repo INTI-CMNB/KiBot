@@ -225,7 +225,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             value = GS.fp_get_value(footprint)
             value = value.replace('/', '_')
             reference = GS.fp_get_reference(footprint)
-            for j, pad in enumerate(footprint.Pads()):
+            for j, pad in enumerate(GS.fp_get_pads(footprint)):
                 if not self.solder_join_on_heatsink and is_heatsink_pad(pad):
                     continue
                 name = os.path.join(dir_name, sanitized("{}_{}_{}_{}".format(value, reference, i, j)))
@@ -439,7 +439,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
                 value = GS.fp_get_value(footprint)
                 value = value.replace('/', '_')
                 reference = GS.fp_get_reference(footprint)
-                for j, pad in enumerate(footprint.Pads()):
+                for j, pad in enumerate(GS.fp_get_pads(footprint)):
                     if not self.solder_join_on_heatsink and is_heatsink_pad(pad):
                         continue
                     files.append(os.path.join(dir_name, sanitized(f"{value}_{reference}_{i}_{j}")+ext))

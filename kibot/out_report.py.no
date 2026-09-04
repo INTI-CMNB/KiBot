@@ -760,7 +760,7 @@ class ReportOptions(VariantOptions):
                                 self.bot_tht_dnp += 1
                             if comp.fixed:
                                 self.bot_tht_dnc += 1
-            pads = m.Pads()
+            pads = GS.fp_get_pads(m)
             for pad in pads:
                 # Pad properties
                 if not GS.ki5:
@@ -969,7 +969,7 @@ class ReportOptions(VariantOptions):
         self.paste_pads_front = self.paste_pads_bottom = 0
         self.paste_pads_front_area = self.paste_pads_bottom_area = 0
         for m in modules:
-            for pad in m.Pads():
+            for pad in GS.fp_get_pads(m):
                 on_top = pad.IsOnLayer(pcbnew.F_Paste)
                 on_bottom = pad.IsOnLayer(pcbnew.B_Paste)
                 if not on_top and not on_bottom:

@@ -121,7 +121,7 @@ def load_board_data_pn(board, internal_to_svg, exclude_width) -> BoardData:
         # Holes
         if m.GetPadCount() == 0:
             continue
-        for pad in m.Pads():
+        for pad in GS.fp_get_pads(m):
             drs = pad.GetDrillSize()
             if drs.x == 0 or drs.y == 0:
                 continue

@@ -119,7 +119,7 @@ def convert_brd(pcb, brd, do_sort):
     # Pins
     pads = []
     for m in modules:
-        pads_list = m.Pads()
+        pads_list = GS.fp_get_pads(m)
         for pad in sorted(pads_list, key=lambda pad: natural_sort_key(pad.GetName())):
             pads.append(pad)
 
@@ -141,7 +141,7 @@ def convert_brd(pcb, brd, do_sort):
     testpoints = []
     for m in module_list:
         if not skip_module(m, tp=True):
-            pads_list = m.Pads()
+            pads_list = GS.fp_get_pads(m)
             for pad in sorted(pads_list, key=lambda pad: natural_sort_key(pad.GetName())):
                 testpoints.append((m, pad))
 
@@ -188,7 +188,7 @@ def convert_bvr(pcb, bvr):
         flipped = GS.fp_is_bottom(module)
         side = "B" if flipped else "T"
         mount = GS.fp_get_mounting_style_str(module)
-        pads_list = module.Pads()
+        pads_list = GS.fp_get_pads(module)
 
         bvr.write("\n")
         bvr.write(f"PART_NAME {ref}\n")
