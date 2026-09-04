@@ -299,7 +299,7 @@ class PositionOptions(VariantOptions):
                         center_x += c.pos_offset_x
                         center_y += c.pos_offset_y
             if value is None:
-                value = m.GetValue()
+                value = GS.fp_get_value(m)
                 footprint = str(m.GetFPID().GetLibItemName())  # pcbnew.UTF8 type
                 is_bottom = m.IsFlipped()
                 rotation = m.GetOrientationDegrees()

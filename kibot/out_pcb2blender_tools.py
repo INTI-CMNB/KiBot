@@ -222,7 +222,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             has_model = len(footprint.Models()) > 0
             is_smd, is_tht, _, _, _, _ = GS.fp_get_attributes(footprint)
             is_tht_or_smd = is_smd or is_tht
-            value = footprint.GetValue()
+            value = GS.fp_get_value(footprint)
             value = value.replace('/', '_')
             reference = GS.fp_get_reference(footprint)
             for j, pad in enumerate(footprint.Pads()):
@@ -436,7 +436,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             dir_name = os.path.join(out_dir, self.pads_info_dir)
             ext = '.toml' if self.pads_info_format == 'TOML' else ''
             for i, footprint in enumerate(GS.get_modules()):
-                value = footprint.GetValue()
+                value = GS.fp_get_value(footprint)
                 value = value.replace('/', '_')
                 reference = GS.fp_get_reference(footprint)
                 for j, pad in enumerate(footprint.Pads()):

@@ -99,7 +99,7 @@ class Update_XML(BasePreFlight):  # noqa: F821
             pcb_fp = m.GetFPIDAsString()
             if sch_data.fp != pcb_fp:
                 errors.append('{} footprint mismatch (PCB: `{}` vs schematic: `{}`)'.format(ref, pcb_fp, sch_data.fp))
-            pcb_val = m.GetValue()
+            pcb_val = GS.fp_get_value(m)
             if sch_data.val != pcb_val:
                 errors.append('{} value mismatch (PCB: `{}` vs schematic: `{}`)'.format(ref, pcb_val, sch_data.val))
             # Properties

@@ -258,7 +258,7 @@ def convert_obdata(pcb, obdata, comps_hash):
         ref = GS.fp_get_reference(module)
         libid = module.GetFPID()
         package = libid.GetUniStringLibId()
-        value = module.GetValue()
+        value = GS.fp_get_value(module)
 
         package = re.sub(r'^.*:', '', package)
 
