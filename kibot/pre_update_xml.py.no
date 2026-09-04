@@ -82,7 +82,7 @@ class Update_XML(BasePreFlight):  # noqa: F821
         found_comps = set()
         excluded = set()
         for m in GS.get_modules():
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             pcb_props = GS.get_fields(m)
             found_comps.add(ref)
             if ref not in comps:
@@ -151,9 +151,9 @@ class Update_XML(BasePreFlight):  # noqa: F821
                 continue
             pcb_net_names.add(net_name)
             sch_nodes = net_nodes[net_name]
-            pcb_nodes = {pad.GetParent().GetReference()+' pin '+pad.GetNumber()
+            pcb_nodes = {GS.fp_get_reference(pad.GetParent())+' pin '+pad.GetNumber()
                          for pad in con.GetNetItems(n, pcbnew.PCB_PAD_T)
-                         if pad.GetParent().GetReference() not in excluded}
+                         if GS.fp_get_reference(pad.GetParent()) not in excluded}
             dif = pcb_nodes-sch_nodes
             if dif:
                 errors.append('Net `{}` extra PCB connection/s: {}'.format(net_name, ','.join(list(dif))))

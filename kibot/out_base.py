@@ -381,7 +381,7 @@ class VariantOptions(BaseOptions):
         extra_tlay_lines = []
         extra_blay_lines = []
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             # Rectangle containing the drawings, no text
             frect = Rect()
             brect = Rect()
@@ -420,7 +420,7 @@ class VariantOptions(BaseOptions):
             return
         # Undo the drawings
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
             if c and c.included and not c.fitted:
                 restore = self.extra_tlay_lines.pop(0)
@@ -473,7 +473,7 @@ class VariantOptions(BaseOptions):
             exclude.addLayer(fmask)
             exclude.addLayer(bmask)
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
             if c and not c.fitted:
                 # Remove all pads from *.Paste
@@ -543,7 +543,7 @@ class VariantOptions(BaseOptions):
         logger.debug('Restoring paste, mask and/or glue')
         if GS.global_remove_solder_paste_for_dnp or GS.global_remove_solder_mask_for_dnp:
             for m in GS.get_modules_board(board):
-                ref = m.GetReference()
+                ref = GS.fp_get_reference(m)
                 c = comps_hash.get(ref, None)
                 if c and not c.fitted:
                     logger.debugl(3, '- Restoring paste/mask for '+ref)
@@ -576,7 +576,7 @@ class VariantOptions(BaseOptions):
         old_graphs = []
         rescue = board.GetLayerID(GS.global_work_layer)
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
             if c is not None and not c.included:
                 logger.debugl(3, f'- Removed {ref} drawings from {layer_name}')
@@ -633,7 +633,7 @@ class VariantOptions(BaseOptions):
 
     def get_models_from_footprint(self, m):
         if GS.pn is not None:
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             lib_id = m.GetFPID()
             lib_nickname = str(lib_id.GetLibNickname())
             # Extract the models (the iterator returns copies)
@@ -689,7 +689,7 @@ class VariantOptions(BaseOptions):
         # Remove the 3D models for not fitted components
         rem_models = []
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
             if c:
                 # The filter/variant knows about this component
@@ -716,7 +716,7 @@ class VariantOptions(BaseOptions):
             return
         # Undo the removing
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
             if c and not c.fitted:
                 models = m.Models()
@@ -796,7 +796,7 @@ class VariantOptions(BaseOptions):
         variant_name = self.variant.name if self.variant else 'None'
         for m in GS.get_modules_board(board):
             if extra_debug:
-                logger.debug("- Processing module " + m.GetReference())
+                logger.debug("- Processing module " + GS.fp_get_reference(m))
             found_slots, found_var = self.look_for_text_defs(m, field_regex, field_regex_sp, variant_name)
             if found_slots is not None:
                 self.apply_list_of_3D_models(enable, found_slots, m, found_var)
@@ -827,7 +827,7 @@ class VariantOptions(BaseOptions):
         # TODO: Adjust? Configure?
         z = (100.0 if self.highlight_on_top else 0.1)/2.54
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             if ref not in highlight:
                 continue
             models = m.Models()
@@ -885,7 +885,7 @@ class VariantOptions(BaseOptions):
         if not self._highlighted_3D_components:
             return
         for m in GS.get_modules_board(board):
-            if m.GetReference() not in self._highlighted_3D_components:
+            if GS.fp_get_reference(m) not in self._highlighted_3D_components:
                 continue
             m.Models().pop()
         self._highlighted_3D_components = None
@@ -901,7 +901,7 @@ class VariantOptions(BaseOptions):
         # Check if we have footprints that needs change
         to_change = {}
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
             if hasattr(c, '_footprint_variant') and c._footprint_variant:
                 to_change[c.ref] = c.get_field_value('footprint')
@@ -1008,7 +1008,7 @@ class VariantOptions(BaseOptions):
             if first:
                 has_GetFPIDAsString = hasattr(m, 'GetFPIDAsString')
                 first = False
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             comp = comps_hash.get(ref, None)
             if comp is not None:
                 old_value = m.GetValue()
@@ -1027,7 +1027,7 @@ class VariantOptions(BaseOptions):
         """ Undo sch_fields_to_pcb() """
         has_GetFPIDAsString = self._has_GetFPIDAsString
         for m in GS.get_modules_board(board):
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             data = self._sch_fields_to_pcb_bkp.get(ref, None)
             if data is not None:
                 m.SetValue(data[0])

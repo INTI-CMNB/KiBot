@@ -95,7 +95,7 @@ def convert_brd(pcb, brd, do_sort):
     # Parts
     module_list = GS.get_modules()
     if do_sort:
-        module_list = sorted(module_list, key=lambda mod: mod.GetReference())
+        module_list = sorted(module_list, key=lambda mod: GS.fp_get_reference(mod))
     modules = []
     for m in module_list:
         if not skip_module(m):
@@ -107,7 +107,7 @@ def convert_brd(pcb, brd, do_sort):
         module_bbox = module.GetBoundingBox()
         flipped = module.IsFlipped()
         brd.write("{ref} {x1} {y1} {x2} {y2} {pin} {side}\n"
-                  .format(ref=module.GetReference(),
+                  .format(ref=GS.fp_get_reference(module),
                           x1=coord(module_bbox.GetLeft()),
                           y1=y_coord(outline_maxy, module_bbox.GetTop(), flipped),
                           x2=coord(module_bbox.GetRight()),
@@ -138,7 +138,7 @@ def convert_brd(pcb, brd, do_sort):
     # Nails
     module_list = GS.get_modules()
     if do_sort:
-        module_list = sorted(module_list, key=lambda mod: mod.GetReference())
+        module_list = sorted(module_list, key=lambda mod: GS.fp_get_reference(mod))
     testpoints = []
     for m in module_list:
         if not skip_module(m, tp=True):
@@ -151,7 +151,7 @@ def convert_brd(pcb, brd, do_sort):
         pad_pos = pad.GetPosition()
         flipped = pad.IsFlipped()
         brd.write("{probe} {x} {y} {net} {side}\n"
-                  .format(probe=module.GetReference()[2:],
+                  .format(probe=GS.fp_get_reference(module)[2:],
                           x=coord(pad_pos.x),
                           y=y_coord(outline_maxy, pad_pos.y, flipped),
                           net=pad.GetNetCode(),
@@ -196,7 +196,7 @@ def convert_bvr(pcb, bvr):
         if not skip_module(module):
             modules.append(module)
 
-        ref = module.GetReference()
+        ref = GS.fp_get_reference(module)
         flipped = module.IsFlipped()
         side = "B" if flipped else "T"
         mount = get_type_name(module)
@@ -267,7 +267,7 @@ def convert_obdata(pcb, obdata, comps_hash):
     obdata.write("###\n")
 
     for module in GS.get_modules():
-        ref = module.GetReference()
+        ref = GS.fp_get_reference(module)
         libid = module.GetFPID()
         package = libid.GetUniStringLibId()
         value = module.GetValue()

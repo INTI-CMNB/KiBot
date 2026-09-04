@@ -57,7 +57,7 @@ class ModInfo(object):
     def __init__(self, m, coord_type, grid):
         self.footprint = m
         # Get the reference and separate it in prefix (i.e. R) and suffix (i.e. 10)
-        ref = m.GetReference()
+        ref = GS.fp_get_reference(m)
         res = SchematicComponent.ref_re.match(ref)
         if not res:
             raise PlotError('Malformed component reference `{}`'.format(ref))
@@ -186,7 +186,7 @@ class Annotate_PCB(BasePreFlight):  # noqa: F821
         logger.debug('- Collecting components')
         modules = []
         for m in GS.get_modules():
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             if ref[-1] == '?':
                 center = GS.fp_get_center(m)
                 scale = GS.unit_name_to_scale_factor('millimeters')
