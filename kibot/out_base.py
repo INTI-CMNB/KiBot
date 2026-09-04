@@ -438,7 +438,7 @@ class VariantOptions(BaseOptions):
         bpaste = board.GetLayerID('B.Paste')
         top = bottom = False
         for m in GS.get_modules_board(board):
-            for p in m.Pads():
+            for p in GS.fp_get_pads(m):
                 pad_layers = p.GetLayerSet()
                 if not top and fpaste in pad_layers.Seq():
                     top = True
@@ -479,7 +479,7 @@ class VariantOptions(BaseOptions):
                 # Remove all pads from *.Paste
                 if GS.global_remove_solder_paste_for_dnp or GS.global_remove_solder_mask_for_dnp:
                     old_c_layers = []
-                    for p in m.Pads():
+                    for p in GS.fp_get_pads(m):
                         pad_layers = p.GetLayerSet()
                         is_front = (fpaste in pad_layers.Seq()) or (fmask in pad_layers.Seq())
                         old_c_layers.append(pad_layers.FmtHex())
@@ -548,7 +548,7 @@ class VariantOptions(BaseOptions):
                 if c and not c.fitted:
                     logger.debugl(3, '- Restoring paste/mask for '+ref)
                     restore = self._old_layers.pop(0)
-                    for p in m.Pads():
+                    for p in GS.fp_get_pads(m):
                         pad_layers = p.GetLayerSet()
                         res = restore.pop(0)
                         if GS.ki9:

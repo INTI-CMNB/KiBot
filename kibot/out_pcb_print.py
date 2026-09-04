@@ -786,7 +786,7 @@ class PCB_PrintOptions(VariantOptions):
                 if gi.GetLayer() == id:
                     gi.SetLayer(tmp_layer)
                     moved.append(gi)
-            for pad in m.Pads():
+            for pad in GS.fp_get_pads(m):
                 dr = pad.GetDrillSize()
                 if dr.x:
                     continue
@@ -850,7 +850,7 @@ class PCB_PrintOptions(VariantOptions):
                 if gi.GetLayer() == id:
                     gi.SetLayer(tmp_layer)
                     moved.append(gi)
-            for pad in m.Pads():
+            for pad in GS.fp_get_pads(m):
                 layers = pad.GetLayerSet()
                 if GS.layers_contains(layers, id):
                     if GS.ki9:
@@ -1236,7 +1236,7 @@ class PCB_PrintOptions(VariantOptions):
 #         logger.error(bbox.GetSize())
 #         for f in GS.board.Footprints():
 #             logger.error('Pads')
-#             for p in f.Pads():
+#             for p in GS.fp_get_pads(f):
 #                 bbox = p.GetBoundingBox()
 #                 logger.error(bbox.GetSize())
 #             logger.error('Graphics')
@@ -1514,7 +1514,7 @@ class PCB_PrintOptions(VariantOptions):
         if not GS.ki10:
             return
         for m in GS.get_modules():
-            for pad in m.Pads():
+            for pad in GS.fp_get_pads(m):
                 dr = pad.GetDrillSize()
                 if dr.x < 100:
                     continue

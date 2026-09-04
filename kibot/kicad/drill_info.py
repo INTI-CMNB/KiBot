@@ -226,7 +226,7 @@ def collect_holes_k6(layer_pair, merge_PTH_NPTH, generate_NPTH_list):
     # Add footprint/pad related PTH to hole_list_layer_pair
     if layer_pair == FRONT_AND_BACK:
         for footprint in GS.get_modules():
-            for pad in footprint.Pads():
+            for pad in GS.fp_get_pads(footprint):
 
                 if not merge_PTH_NPTH:
                     if not generate_NPTH_list and pad.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:

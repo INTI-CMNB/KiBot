@@ -1181,7 +1181,7 @@ def look_for_used_layers():
         components[layer] = components.get(layer, 0)+1
         for gi in m.GraphicalItems():
             layers.add(gi.GetLayer())
-        for pad in m.Pads():
+        for pad in GS.fp_get_pads(m):
             for id in pad.GetLayerSet().Seq():
                 layers.add(id)
     # All drawings in the PCB
