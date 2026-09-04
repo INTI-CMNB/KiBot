@@ -766,7 +766,7 @@ class ReportOptions(VariantOptions):
                 if not GS.ki5:
                     p = PadProperty()
                     p.fab_property = pad.GetProperty()
-                    p.net = pad.GetNetname()
+                    p.net = GS.pad_get_net_name(pad)
                     p.name = ref+'.'+pad.GetNumber()
                     pad_properties.append(p)
                 dr = pad.GetDrillSize()

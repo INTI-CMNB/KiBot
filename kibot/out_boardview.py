@@ -199,7 +199,7 @@ def convert_bvr(pcb, bvr):
 
         for pad in sorted(pads_list, key=lambda pad: natural_sort_key(pad.GetName())):
             pin_num = pad.GetName() if GS.ki5 else pad.GetNumber()
-            net = pad.GetNetname()
+            net = GS.pad_get_net_name(pad)
             pad_bbox = pad.GetBoundingBox()
             pad_size = pad.GetSize()
 
