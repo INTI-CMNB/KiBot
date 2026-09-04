@@ -290,7 +290,7 @@ class PositionOptions(VariantOptions):
                     is_bottom = c.bottom
                     rotation = c.footprint_rot
                     # Here we can't use c.footprint_x/y because this doesn't work for panels
-                    center = GS.fp_get_center(m)
+                    center = GS.fp_get_position(m)
                     center_x = center.x
                     center_y = center.y
                     if c.pos_offset_x is not None:
@@ -303,7 +303,7 @@ class PositionOptions(VariantOptions):
                 _, footprint = GS.fp_get_lib_and_name(m, separated=True)
                 is_bottom = GS.fp_is_bottom(m)
                 rotation = m.GetOrientationDegrees()
-                center = GS.fp_get_center(m)
+                center = GS.fp_get_position(m)
                 center_x = center.x
                 center_y = center.y
             # If passed check the position options
