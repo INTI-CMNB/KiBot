@@ -532,11 +532,11 @@ class GS(object):
         return GS.board.get_origin(GS.BOT_GRID)
 
     @staticmethod
-    def fp_get_center_pn(footprint):
+    def fp_get_position_pn(footprint):
         return footprint.GetPosition()
 
     @staticmethod
-    def fp_get_center_kp(footprint):
+    def fp_get_position_kp(footprint):
         return footprint.position
 
     @staticmethod
