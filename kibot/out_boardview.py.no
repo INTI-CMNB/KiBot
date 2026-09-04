@@ -9,7 +9,6 @@ import re
 from pcbnew import SHAPE_POLY_SET, PAD_SHAPE_CIRCLE
 from .gs import GS
 from .kiplot import get_all_components
-from .misc import UI_SMD, UI_VIRTUAL
 from .out_base import VariantOptions
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
@@ -159,17 +158,6 @@ def convert_brd(pcb, brd, do_sort):
     brd.write("\n")
 
 
-def get_type_name(m):
-    if GS.ki5:
-        attrs = m.GetAttributes()
-        if attrs == UI_SMD:
-            return 'SMD'
-        if attrs == UI_VIRTUAL:
-            return 'VIRTUAL'
-        return 'THT'
-    return m.GetTypeName()
-
-
 def convert_bvr(pcb, bvr):
     bvr.write("BVRAW_FORMAT_3\n")
 
@@ -199,7 +187,7 @@ def convert_bvr(pcb, bvr):
         ref = GS.fp_get_reference(module)
         flipped = module.IsFlipped()
         side = "B" if flipped else "T"
-        mount = get_type_name(module)
+        mount = GS.fp_get_mounting_style_str(module)
         pads_list = module.Pads()
 
         bvr.write("\n")

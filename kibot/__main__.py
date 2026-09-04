@@ -555,6 +555,7 @@ def get_layers_info_kp():
     GS.FMS_THROUGH_HOLE = bt2.FMS_THROUGH_HOLE
     GS.FMS_SMD = bt2.FMS_SMD
     GS.FMS_UNSPECIFIED = bt2.FMS_UNSPECIFIED
+    GS.FMS_TO_STR = {GS.FMS_THROUGH_HOLE: 'THT', GS.FMS_SMD: 'SMD', GS.FMS_UNSPECIFIED: 'UNSPECIFIED'}
     # Units
     ct2 = kipy.proto.common.types.enums_pb2
     GS.U_INCH = ct2.U_INCH
