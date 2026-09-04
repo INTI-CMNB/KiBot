@@ -75,7 +75,7 @@ class ModInfo(object):
         self.x = granular(self.x*scale, grid)
         self.y = granular(self.y*scale, grid)
         # Side
-        self.is_bottom = m.IsFlipped()
+        self.is_bottom = GS.fp_is_bottom(m)
         if self.is_bottom:
             # Mirror the X axis
             self.x = -self.x
