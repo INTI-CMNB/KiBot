@@ -104,7 +104,7 @@ def convert_brd(pcb, brd, do_sort):
     pin_at = 0
     for module in modules:
         module_bbox = module.GetBoundingBox()
-        flipped = module.IsFlipped()
+        flipped = GS.fp_is_bottom(module)
         brd.write("{ref} {x1} {y1} {x2} {y2} {pin} {side}\n"
                   .format(ref=GS.fp_get_reference(module),
                           x1=coord(module_bbox.GetLeft()),
@@ -185,7 +185,7 @@ def convert_bvr(pcb, bvr):
             modules.append(module)
 
         ref = GS.fp_get_reference(module)
-        flipped = module.IsFlipped()
+        flipped = GS.fp_is_bottom(module)
         side = "B" if flipped else "T"
         mount = GS.fp_get_mounting_style_str(module)
         pads_list = module.Pads()
