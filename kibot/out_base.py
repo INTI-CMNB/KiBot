@@ -1011,7 +1011,7 @@ class VariantOptions(BaseOptions):
             ref = GS.fp_get_reference(m)
             comp = comps_hash.get(ref, None)
             if comp is not None:
-                old_value = m.GetValue()
+                old_value = GS.fp_get_value(m)
                 old_fields = GS.get_fields(m)
                 # Introduced in 6.0.6
                 old_fp = m.GetFPIDAsString() if has_GetFPIDAsString else None

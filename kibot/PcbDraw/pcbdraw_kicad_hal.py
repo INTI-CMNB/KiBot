@@ -108,7 +108,7 @@ def load_board_data_pn(board, internal_to_svg, exclude_width) -> BoardData:
         footprint = str(fpid.GetLibItemName()).strip()
         # Properties
         reference = GS.fp_get_reference(m).strip()
-        value = m.GetValue().strip()
+        value = GS.fp_get_value(m).strip()
         properties = GS.get_fields(m)
         # Position
         pos = m.GetPosition()
