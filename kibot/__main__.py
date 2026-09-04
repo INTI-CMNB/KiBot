@@ -472,7 +472,7 @@ def get_layers_info_pn():
     GS.PFP_TESTPOINT = pcbnew.PAD_PROP_TESTPOINT
     GS.PFP_HEATSINK = pcbnew.PAD_PROP_HEATSINK
     GS.PFP_CASTELLATED = pcbnew.PAD_PROP_CASTELLATED
-    GS.PFP_MECHANICAL = pcbnew.PAD_PROP_MECHANICAL
+    GS.PFP_MECHANICAL = pcbnew.PAD_PROP_MECHANICAL if GS.ki9 else pcbnew.PAD_PROP_CASTELLATED+1
 
 
 def get_layers_info_kp():
