@@ -508,7 +508,6 @@ def get_board_comps_data(comps, kicad_variant=None):
     load_board()
     comps_hash = {c.sheet_full_path: c for c in comps}
     comps_hash_ref = {c.ref: c for c in comps}
-    logger.error(comps_hash)
     # Reset the "has_pcb_info" flag
     for c in comps:
         c.has_pcb_info = False
@@ -522,7 +521,7 @@ def get_board_comps_data(comps, kicad_variant=None):
     for m in GS.get_modules():
         ref = GS.fp_get_reference(m)
         # logger.error(f'{ref} {GS.fp_get_id_str(m)} -> {GS.fp_get_sheet_path_str(m)}')
-        board_only, is_smd, is_tht, is_unspecified, no_pos, no_bom = GS.fp_get_attributes(m)
+        is_smd, is_tht, is_unspecified, no_sch, no_pos, no_bom = GS.fp_get_attributes(m)
         # By full sheet path
         c = comps_hash.get(GS.fp_get_sheet_path_str(m))
         if c is None:
@@ -536,7 +535,7 @@ def get_board_comps_data(comps, kicad_variant=None):
         extra_env = create_extra_env(real_fields)
 
         if c is None:
-            if not board_only and not ref.startswith('KiKit_'):
+            if not no_sch and not ref.startswith('KiKit_'):
                 logger.warning(W_PCBNOSCH+f'`{ref}` component in board, but not in schematic')
             if not GS.global_include_components_from_pcb:
                 # v1.6.3 behavior
@@ -615,7 +614,7 @@ def get_board_comps_data(comps, kicad_variant=None):
         # I guess it should be in sync, but: why should somebody want to unsync it?
         if no_bom:
             c.in_bom_pcb = False
-        if board_only:
+        if no_sch:
             c.in_pcb_only = True
         c.pcb_id = GS.fp_get_id_str(m)
         look_for_type = (not c.smd) and (not c.tht)
