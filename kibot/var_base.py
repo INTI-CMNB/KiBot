@@ -154,7 +154,7 @@ class SubPCBOptions(PanelOptions):
             dest = os.path.join(d, os.path.basename(GS.pcb_file))
             if comps_hash:
                 # Memorize the used modules
-                old_modules = {m.GetReference() for m in GS.get_modules()}
+                old_modules = {GS.fp_get_reference(m) for m in GS.get_modules()}
             # Now do the separation
             cmd = [command, 'separate', '--preserveArcs', '-s', self.get_separate_source()]
             if self.strip_annotation:
@@ -168,7 +168,7 @@ class SubPCBOptions(PanelOptions):
             if comps_hash:
                 logger.debug('Removing components outside the sub-PCB')
                 # Memorize the used modules
-                new_modules = {m.GetReference() for m in GS.get_modules()}
+                new_modules = {GS.fp_get_reference(m) for m in GS.get_modules()}
                 # Compute the modules we removed
                 diff = old_modules - new_modules
                 logger.debugl(3, diff)
@@ -200,7 +200,7 @@ class SubPCBOptions(PanelOptions):
             Footprints are added to the list of references to exclude.
             We also check their position, not their BBox. """
         for m in iter:
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             if not self._board_rect.Contains(m.GetPosition()) or (self.strip_annotation and ref == self.reference):
                 GS.board.Remove(m)
                 self._removed.append(m)
@@ -271,7 +271,7 @@ class SubPCBOptions(PanelOptions):
         logger.debug('Looking for the rectangle pointed by `{}`'.format(ref))
         extra_debug = GS.debug_level > 2
         # Find the annotation component
-        r = next(filter(lambda x: x.GetReference() == ref, GS.get_modules()), None)
+        r = next(filter(lambda m: GS.fp_get_reference(m) == ref, GS.get_modules()), None)
         if r is None:
             raise KiPlotConfigurationError('Missing `{}` component in PCB, used for sub-PCB `{}`'.format(ref, self.name))
         # Find the point it indicates

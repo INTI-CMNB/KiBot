@@ -233,7 +233,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             is_tht_or_smd = is_not_virtual(footprint)
             value = footprint.GetValue()
             value = value.replace('/', '_')
-            reference = footprint.GetReference()
+            reference = GS.fp_get_reference(footprint)
             for j, pad in enumerate(footprint.Pads()):
                 if not self.solder_join_on_heatsink and is_heatsink_pad(pad):
                     continue
@@ -447,7 +447,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             for i, footprint in enumerate(GS.get_modules()):
                 value = footprint.GetValue()
                 value = value.replace('/', '_')
-                reference = footprint.GetReference()
+                reference = GS.fp_get_reference(footprint)
                 for j, pad in enumerate(footprint.Pads()):
                     if not self.solder_join_on_heatsink and is_heatsink_pad(pad):
                         continue

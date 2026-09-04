@@ -285,8 +285,8 @@ class PositionOptions(VariantOptions):
         if self.use_aux_axis_as_origin:
             (x_origin, y_origin) = GS.get_aux_origin()
             logger.debug('Using auxiliary origin: x={} y={}'.format(x_origin, y_origin))
-        for m in sorted(GS.get_modules(), key=lambda c: _ref_key(c.GetReference())):
-            ref = m.GetReference()
+        for m in sorted(GS.get_modules(), key=lambda c: _ref_key(GS.fp_get_reference(c))):
+            ref = GS.fp_get_reference(m)
             logger.debug('P&P ref: {}'.format(ref))
             value = None
             # Apply any filter or variant data

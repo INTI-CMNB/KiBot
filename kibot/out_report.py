@@ -728,7 +728,7 @@ class ReportOptions(VariantOptions):
         min_oar = GS.from_mm(0.1)
         pad_properties = []
         for m in modules:
-            ref = m.GetReference()
+            ref = GS.fp_get_reference(m)
             comp = self._comps_hash.get(ref, None) if self._comps and self._comps_hash else None
             layer = m.GetLayer()
             if layer == top_layer:
@@ -1041,7 +1041,7 @@ class ReportOptions(VariantOptions):
                     poly = pad.GetCustomShapeAsPolygon()
                     area = GS.to_mm(GS.to_mm(poly.Area()))
                 else:
-                    logger.warning(f"{W_UNKPADSH}Unknown shape for pad `{pad.GetNumber()}` of `{m.GetReference()}` " +
+                    logger.warning(f"{W_UNKPADSH}Unknown shape for pad `{pad.GetNumber()}` of `{GS.fp_get_reference(m)}` " +
                                    get_pad_info(pad))
                 if on_top:
                     self.paste_pads_front += 1
