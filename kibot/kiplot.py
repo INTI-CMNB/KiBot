@@ -515,9 +515,7 @@ def get_board_comps_data(comps, kicad_variant=None):
     KiConf.init(GS.sch_file)
     env = KiConf.kicad_env
     env.update(GS.load_pro_variables())
-    if kicad_variant is not None and GS.pn is not None:
-        old_variant = GS.board.GetCurrentVariant()
-        GS.board.SetCurrentVariant(kicad_variant)
+    old_variant = GS.pcb_set_variant(kicad_variant)
     for m in GS.get_modules():
         ref = GS.fp_get_reference(m)
         # logger.error(f'{ref} {GS.fp_get_id_str(m)} -> {GS.fp_get_sheet_path_str(m)}')
@@ -638,10 +636,7 @@ def get_board_comps_data(comps, kicad_variant=None):
                 elif name:
                     # We have pad a valid pad, assume this is all SMD and keep looking
                     c.smd = True
-    if kicad_variant is not None:
-        logger.debug(f"Switching the PCB to {old_variant}")
-        if GS.pn is not None:
-            GS.board.SetCurrentVariant(old_variant)
+    GS.pcb_set_variant(old_variant)
 
 
 def expand_comp_fields(c, env):

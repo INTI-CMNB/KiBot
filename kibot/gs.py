@@ -1664,6 +1664,23 @@ class GS(object):
         return pad.number
 
     @staticmethod
+    def pcb_set_variant_pn(variant):
+        if variant is None:
+            return None
+        old_variant = GS.board.GetCurrentVariant()
+        GS.board.SetCurrentVariant(variant)
+        logger.debug(f"Switching the PCB to {variant} (was {old_variant})")
+        return old_variant
+
+    @staticmethod
+    def pcb_set_variant_kp(variant):
+        if variant is None:
+            return None
+        logger.error("KiPy needs to implement PCB variants "
+                     "https://gitlab.com/kicad/code/kicad-python/-/work_items/117")
+        return None
+
+    @staticmethod
     def set_version_pointers():
         """ Used to setup function pointers according to the API and its version """
         if GS.pn is not None:
@@ -1716,6 +1733,7 @@ class GS(object):
             GS.pad_get_fab_property = GS.pad_get_fab_property_pn
             GS.pad_has_hole = GS.pad_has_hole_pn
             GS.pad_get_number = GS.pad_get_number_pn
+            GS.pcb_set_variant = GS.pcb_set_variant_pn
         elif GS.kp is not None:
             GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_kp
             GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_kp
@@ -1753,3 +1771,4 @@ class GS(object):
             GS.pad_get_fab_property = GS.pad_get_fab_property_kp
             GS.pad_has_hole = GS.pad_has_hole_kp
             GS.pad_get_number = GS.pad_get_number_kp
+            GS.pcb_set_variant = GS.pcb_set_variant_kp

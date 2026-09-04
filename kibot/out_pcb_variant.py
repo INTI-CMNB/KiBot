@@ -132,7 +132,7 @@ class PCB_Variant_Options(VariantOptions):
         self.load_list_components(forced=True)
 
         # Transfer the variant to the component
-        GS.board.SetCurrentVariant('')
+        GS.pcb_set_variant('')
         for c in self._comps:
             if not hasattr(c, 'pcb_id'):
                 continue

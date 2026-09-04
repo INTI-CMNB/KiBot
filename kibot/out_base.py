@@ -1216,8 +1216,7 @@ class VariantOptions(BaseOptions):
             else:
                 logger.debug("Not setting VARIANT*")
             if GS.board and GS.kicad_variant_name(variant):
-                logger.debug(f"Switching the PCB to {variant.name}")
-                GS.board.SetCurrentVariant(variant.name)
+                GS.pcb_set_variant(variant.name)
         else:
             # KiCad 10 behavior when "Default" variant is selected
             if GS.pro_variables:
@@ -1225,10 +1224,7 @@ class VariantOptions(BaseOptions):
             else:
                 logger.debug("Not setting VARIANT*")
             if GS.ki10 and GS.board:
-                logger.debug("Switching the PCB to 'Default' variant")
-                if GS.pn is not None:
-                    GS.board.SetCurrentVariant('')
-                # TODO: kipy implementation, lacks it
+                GS.pcb_set_variant('')
 
     # The following 5 members are used by 2D and 3D renderers
     def setup_renderer(self, components, active_components):
