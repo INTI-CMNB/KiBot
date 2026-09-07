@@ -1103,9 +1103,9 @@ class PCB_PrintOptions(VariantOptions):
             targets = [fn for fn in targets if fn.endswith('.png')]
             if not targets:
                 raise KiPlotConfigurationError(f"PCB group `{name}` uses `{output_name}` which doesn't generate any PNG")
-            index = int(match.group(2))
+            index = match.group(2)
             try:
-                fname = targets[0 if index is None else index-1]
+                fname = targets[0 if index is None else int(index)-1]
             except IndexError:
                 raise KiPlotConfigurationError(f'In group {name}, index {index} is out of range for output {output_name}')
 
