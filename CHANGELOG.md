@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [1.9.2] - Unreleased
 ### Added
 - Globals:
@@ -30,6 +29,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `bom_revision`: to mention in the exported file (KiCad 10+)
 - ODB++:
   - `drawing_sheet`: to specify a particular drawing sheet
+- Panelize:
+  - `framing.widenercorners`/`widenerwidth`/`widenerlength` to add a rail
+    widener: a solid patch of extra rail material at chosen outer panel
+    corners, to give pick-and-place photoelectric sensors a bigger flat
+    target without growing the panel's outer outline
 - PcbDraw:
   - `kicad_edge_no_w` option to `size_detection` for more accurate board edge
     detection.
@@ -84,6 +88,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PcbDraw:
   - Updated to v1.4.0 base code, expect some subtle differences.
 
+### Fixed
+- Panelize:
+  - `framing.widenercorners` leaking KiBot-only options into the preset
+    passed to KiKit, making it fail
 
 ## [1.9.1] - 2026-07-28
 ### Added

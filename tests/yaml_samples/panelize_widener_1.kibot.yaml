@@ -1,0 +1,36 @@
+# Example KiBot config file to test the rail widener
+kibot:
+  version: 1
+
+outputs:
+  - name: 'panel'
+    comment: "Panel to test the rail widener"
+    type: panelize
+    options:
+      title: '+ (Panel)'
+      units: mm
+      create_preview: true
+      configs:
+        - layout:
+            rows: 1
+            cols: 2
+            space: 2
+          tabs:
+            type: fixed
+            width: 3
+            vcount: 1
+            hcount: 0
+          cuts:
+            type: mousebites
+            drill: 0.5
+            spacing: 1mm
+            offset: 0.2
+            prolong: 0.5
+          framing:
+            type: railstb
+            width: 3
+            space: 2
+            fillet: 1
+            widenercorners: [tl, tr, bl, br]
+            widenerwidth: 6
+            widenerlength: 8
