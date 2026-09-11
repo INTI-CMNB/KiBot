@@ -40,13 +40,7 @@ class Gerb_DrillOptions(AnyDrill):
         return drill_writer, False
 
     def run_with_kipy(self, output_dir, gen_map):
-        # Current API only works on files on disk :-(
-        save_board = self.will_filter_pcb_components()
-        if save_board:
-            GS.make_bkp(GS.pcb_file)
-        try:
-            if save_board:
-                GS.board.save()
+        with self.kipy_job_with_modified_pcb():
             # Origin
             dot = GS.kp.proto.board.board_jobs_pb2.DrillOrigin
             origin = dot.DO_PLOT if self.use_aux_axis_as_origin else dot.DO_ABSOLUTE
@@ -66,9 +60,6 @@ class Gerb_DrillOptions(AnyDrill):
                 precision=GS.DGP_4_5 if self.precision == 5 else GS.DGP_4_6,
                 generate_tenting=self.generate_tenting)
             self.check_job_ok(res)
-        finally:
-            if save_board:
-                GS.restore_bkp(GS.pcb_file)
 
 
 @output_class

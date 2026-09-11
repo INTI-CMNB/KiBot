@@ -83,13 +83,7 @@ class ExcellonOptions(AnyDrill):
         if not self.is_default_digits():
             raise KiPlotConfigurationError("left/right digits not supported")
 
-        # Current API only works on files on disk :-(
-        save_board = self.will_filter_pcb_components()
-        if save_board:
-            GS.make_bkp(GS.pcb_file)
-        try:
-            if save_board:
-                GS.board.save()
+        with self.kipy_job_with_modified_pcb():
             # Origin
             dot = GS.kp.proto.board.board_jobs_pb2.DrillOrigin
             origin = dot.DO_PLOT if self.use_aux_axis_as_origin else dot.DO_ABSOLUTE
@@ -116,9 +110,6 @@ class ExcellonOptions(AnyDrill):
                 minimal_header=self.minimal_header,
                 mirror_y=self.mirror_y_axis)
             self.check_job_ok(res)
-        finally:
-            if save_board:
-                GS.restore_bkp(GS.pcb_file)
 
 
 @output_class
