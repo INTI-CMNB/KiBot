@@ -2026,7 +2026,7 @@ def test_panelize_1(test_dir):
 
 
 @pytest.mark.slow
-@pytest.mark.skipif(context.ki5(), reason="KiKit is v6+")
+@pytest.mark.skipif(not context.ki9(), reason="Needs KiKit 1.8.0")
 def test_panelize_widener_1(test_dir):
     prj = 'simple_2layer'
     ctx = context.TestContext(test_dir, prj, 'panelize_widener_1')
