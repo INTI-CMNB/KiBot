@@ -288,11 +288,11 @@ class VariantOptions(BaseOptions):
         # Use a condensed list of components. Repeated references are listed once. Sub-units are represented by one
         self._collapse_components = True
         if GS.pn is not None:
-            self.sch_fields_to_pcb = self.sch_fields_to_pcb_pn
-            self.restore_sch_fields_to_pcb = self.restore_sch_fields_to_pcb_pn
+            self._sch_fields_to_pcb = self.sch_fields_to_pcb_pn
+            self._restore_sch_fields_to_pcb = self.restore_sch_fields_to_pcb_pn
         else:
-            self.sch_fields_to_pcb = self.sch_fields_to_pcb_kp
-            self.restore_sch_fields_to_pcb = self.restore_sch_fields_to_pcb_kp
+            self._sch_fields_to_pcb = self.sch_fields_to_pcb_kp
+            self._restore_sch_fields_to_pcb = self.restore_sch_fields_to_pcb_kp
 
     def config(self, parent):
         super().config(parent)
@@ -953,7 +953,7 @@ class VariantOptions(BaseOptions):
                 # Copy any change in the schematic fields to the PCB properties
                 # I.e. the value of a component so it gets updated in the *.Fab layer
                 # Also useful for iBoM that can read the sch fields from the PCB
-                self.sch_fields_to_pcb(GS.board, self._comps_hash)
+                self._sch_fields_to_pcb(GS.board, self._comps_hash)
             if do_3D:
                 # Disable the models that aren't for this variant
                 self.apply_3D_variant_aspect(GS.board)
@@ -972,7 +972,7 @@ class VariantOptions(BaseOptions):
             if hasattr(self, 'hide_excluded') and self.hide_excluded:
                 self.restore_fab(GS.board, self._comps_hash)
             # Restore the PCB properties and values
-            self.restore_sch_fields_to_pcb(GS.board)
+            self._restore_sch_fields_to_pcb(GS.board)
         if do_3D and self._comps_hash:
             # Undo the removing (also rename)
             self.restore_3D_models(GS.board, self._comps_hash)

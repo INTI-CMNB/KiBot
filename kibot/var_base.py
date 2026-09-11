@@ -117,13 +117,13 @@ class SubPCBOptions(PanelOptions):
         self._name_example = 'a_sub_pcb'
         self._reference_example = 'BRD1'
         if GS.pn is not None:
-            self.get_pcb_edges = self.get_pcb_edges_pn
-            self.remove_outside = self.remove_outside_pn
-            self.restore_removed = self.restore_removed_pn
+            self._get_pcb_edges = self.get_pcb_edges_pn
+            self._remove_outside = self.remove_outside_pn
+            self._restore_removed = self.restore_removed_pn
         else:
-            self.get_pcb_edges = self.get_pcb_edges_kp
-            self.remove_outside = self.remove_outside_kp
-            self.restore_removed = self.restore_removed_kp
+            self._get_pcb_edges = self.get_pcb_edges_kp
+            self._remove_outside = self.remove_outside_kp
+            self._restore_removed = self.restore_removed_kp
 
     def __str__(self):
         res = self.name+' '
@@ -343,7 +343,7 @@ class SubPCBOptions(PanelOptions):
         # Look for the PCB edges
         if extra_debug:
             logger.debug("- Looking for contour elements")
-        edges = self.get_pcb_edges()
+        edges = self._get_pcb_edges()
         # Detect which edge is selected
         sel_edge = next(filter(lambda x: GS.board_hit_test(x.shape, point), edges), None)
         if sel_edge is None:
@@ -387,7 +387,7 @@ class SubPCBOptions(PanelOptions):
                 self._board_rect = self.search_reference_rect(self.reference)
                 GS.inflate_box(self._board_rect, int(self._tolerance))
             # Using a rectangle
-            self.remove_outside(comps_hash)
+            self._remove_outside(comps_hash)
             # Center the PCB
             self.center_objects()
         else:
@@ -422,7 +422,7 @@ class SubPCBOptions(PanelOptions):
         """ Restore the sub-PCB selection. """
         if self.tool == 'internal':
             self.restore_moved()
-            self.restore_removed()
+            self._restore_removed()
         else:
             # Using KiKit:
             self.unload_board(comps_hash)
