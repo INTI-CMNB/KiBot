@@ -1930,6 +1930,7 @@ class GS(object):
             else:
                 GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_k5
                 GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_k5
+                GS.create_eda_rect = GS.create_eda_rect_k5
             if GS.ki8:
                 GS.get_fields = GS.get_fields_k8
                 GS.fp_clear_fields_pn = GS.fp_clear_fields_k8
@@ -1947,7 +1948,6 @@ class GS(object):
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
                 GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
                 GS.inner_layer_index = GS.inner_layer_index_k5
-                GS.create_eda_rect = GS.create_eda_rect_k5
             GS.is_layer_enabled = GS.is_layer_enabled_k5
             GS.get_modules = GS.get_modules_k6
             GS.get_modules_board = GS.get_modules_board_k6
