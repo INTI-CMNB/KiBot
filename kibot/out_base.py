@@ -287,6 +287,12 @@ class VariantOptions(BaseOptions):
         self._highlighted_3D_components = None
         # Use a condensed list of components. Repeated references are listed once. Sub-units are represented by one
         self._collapse_components = True
+        if GS.pn is not None:
+            self.sch_fields_to_pcb = self.sch_fields_to_pcb_pn
+            self.restore_sch_fields_to_pcb = self.restore_sch_fields_to_pcb_pn
+        else:
+            self.sch_fields_to_pcb = self.sch_fields_to_pcb_kp
+            self.restore_sch_fields_to_pcb = self.restore_sch_fields_to_pcb_kp
 
     def config(self, parent):
         super().config(parent)
@@ -374,10 +380,10 @@ class VariantOptions(BaseOptions):
             return
         logger.debug("Crossing modules")
         # Cross the affected components
-        ffab = board.GetLayerID('F.Fab')
-        bfab = board.GetLayerID('B.Fab')
-        tlay = board.GetLayerID(GS.global_dnp_cross_top_layer)
-        blay = board.GetLayerID(GS.global_dnp_cross_bottom_layer)
+        ffab = GS.F_Fab
+        bfab = GS.B_Fab
+        tlay = GS.layer_name2id(GS.global_dnp_cross_top_layer)
+        blay = GS.layer_name2id(GS.global_dnp_cross_bottom_layer)
         extra_tlay_lines = []
         extra_blay_lines = []
         for m in GS.get_modules_board(board):
@@ -453,22 +459,25 @@ class VariantOptions(BaseOptions):
         if comps_hash is None or not (GS.global_remove_solder_paste_for_dnp or GS.global_remove_adhesive_for_dnp or
                                       GS.global_remove_solder_mask_for_dnp):
             return
+        if GS.pn is None:
+            logger.error('remove_paste_and_glue not yet implemented')
+            return
         logger.debug('Removing paste, mask and/or glue')
         exclude = GS.pn.LSET()
-        fpaste = board.GetLayerID('F.Paste')
-        bpaste = board.GetLayerID('B.Paste')
+        fpaste = GS.F_Paste
+        bpaste = GS.B_Paste
         exclude.addLayer(fpaste)
         exclude.addLayer(bpaste)
         old_layers = []
-        fadhes = board.GetLayerID('F.Adhes')
-        badhes = board.GetLayerID('B.Adhes')
+        fadhes = GS.F_Adhes
+        badhes = GS.B_Adhes
         old_fadhes = []
         old_badhes = []
         old_fmask = []
         old_bmask = []
-        rescue = board.GetLayerID(GS.global_work_layer)
-        fmask = board.GetLayerID('F.Mask')
-        bmask = board.GetLayerID('B.Mask')
+        rescue = GS.layer_name2id(GS.global_work_layer)
+        fmask = GS.F_Mask
+        bmask = GS.B_Mask
         if GS.global_remove_solder_mask_for_dnp:
             exclude.addLayer(fmask)
             exclude.addLayer(bmask)
@@ -539,6 +548,9 @@ class VariantOptions(BaseOptions):
 
     def restore_paste_and_glue(self, board, comps_hash):
         if comps_hash is None:
+            return
+        if GS.pn is None:
+            logger.error('restore_paste_and_glue not yet implemented')
             return
         logger.debug('Restoring paste, mask and/or glue')
         if GS.global_remove_solder_paste_for_dnp or GS.global_remove_solder_mask_for_dnp:
@@ -917,9 +929,10 @@ class VariantOptions(BaseOptions):
 
     def include_parents(self, comps):
         new_comps = {}
-        for ref, c in comps.items():
-            new_comps[ref] = c
-            self.add_parent_comps(c, new_comps)
+        if comps is not None:
+            for ref, c in comps.items():
+                new_comps[ref] = c
+                self.add_parent_comps(c, new_comps)
         return new_comps
 
     def filter_pcb_components(self, do_3D=False, do_2D=True, highlight=None):
@@ -997,7 +1010,7 @@ class VariantOptions(BaseOptions):
                 GS.board.GetTitleBlock().SetTitle(self.old_title)
             self.old_title = None
 
-    def sch_fields_to_pcb(self, board, comps_hash):
+    def sch_fields_to_pcb_pn(self, board, comps_hash):
         """ Change the module/footprint data according to the filtered fields.
             iBoM can parse it. """
         self._sch_fields_to_pcb_bkp = {}
@@ -1015,14 +1028,14 @@ class VariantOptions(BaseOptions):
                 # Introduced in 6.0.6
                 old_fp = m.GetFPIDAsString() if has_GetFPIDAsString else None
                 fields = {f.name: f.value for f in comp.fields}
-                GS.set_fields(m, fields)
+                GS.fp_set_fields_pn(m, fields)
                 m.SetValue(fields['Value'])
                 if has_GetFPIDAsString:
                     m.SetFPIDAsString(fields['Footprint'])
                 self._sch_fields_to_pcb_bkp[ref] = (old_value, old_fields, old_fp)
         self._has_GetFPIDAsString = has_GetFPIDAsString
 
-    def restore_sch_fields_to_pcb(self, board):
+    def restore_sch_fields_to_pcb_pn(self, board):
         """ Undo sch_fields_to_pcb() """
         has_GetFPIDAsString = self._has_GetFPIDAsString
         for m in GS.get_modules_board(board):
@@ -1032,8 +1045,24 @@ class VariantOptions(BaseOptions):
                 m.SetValue(data[0])
                 if has_GetFPIDAsString:
                     m.SetFPIDAsString(data[2])
-                GS.clear_fields(m)
-                GS.set_fields(m, data[1])
+                GS.fp_clear_fields_pn(m)
+                GS.fp_set_fields_pn(m, data[1])
+
+    def sch_fields_to_pcb_kp(self, board, comps_hash):
+        """ Change the module/footprint data according to the filtered fields.
+            iBoM can parse it. """
+        self._sch_fields_to_pcb_bkp = {}
+        for m in GS.get_modules_board(board):
+            ref = GS.fp_get_reference(m)
+            comp = comps_hash.get(ref, None)
+            if comp is not None:
+                self._sch_fields_to_pcb_bkp[ref] = GS.get_fields(m)
+                GS.fp_set_fields_kp(m, {f.name: f.value for f in comp.fields})
+
+    def restore_sch_fields_to_pcb_kp(self, board):
+        """ Undo sch_fields_to_pcb() """
+        for m in GS.get_modules_board(board):
+            GS.fp_set_fields_kp(m, self._sch_fields_to_pcb_bkp.get(GS.fp_get_reference(m), None))
 
     def patch_prjname(self, fname):
         """ Fixes ${PROJECTNAME} when we save to a temporal PCB """

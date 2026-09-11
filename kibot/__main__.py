@@ -474,6 +474,13 @@ def get_layers_info_pn():
     GS.PFP_CASTELLATED = pcbnew.PAD_PROP_CASTELLATED
     GS.PFP_MECHANICAL = pcbnew.PAD_PROP_MECHANICAL if GS.ki9 else GS.PFP_CASTELLATED+1
     GS.PFP_PRESSFIT = pcbnew.PAD_PROP_PRESSFIT if GS.ki10 else GS.PFP_MECHANICAL+1
+    # Units
+    if hasattr(pcbnew, 'IU_PER_MM'):
+        GS.IU_PER_MM = pcbnew.IU_PER_MM
+        GS.IU_PER_MILS = pcbnew.IU_PER_MILS
+    else:
+        GS.IU_PER_MM = pcbnew.pcbIUScale.IU_PER_MM
+        GS.IU_PER_MILS = pcbnew.pcbIUScale.IU_PER_MILS
 
 
 def get_layers_info_kp():
@@ -587,6 +594,25 @@ def get_layers_info_kp():
     bc2 = kipy.proto.board.board_commands_pb2
     GS.BOT_GRID = bc2.BOT_GRID
     GS.BOT_DRILL = bc2.BOT_DRILL
+    # KiCad Object Type
+    ct = kipy.proto.common.types
+    GS.KOT_PCB_SHAPE = ct.KOT_PCB_SHAPE
+    GS.KOT_PCB_FOOTPRINT = ct.KOT_PCB_FOOTPRINT
+    GS.KOT_PCB_PAD = ct.KOT_PCB_PAD
+    GS.KOT_PCB_TRACE = ct.KOT_PCB_TRACE
+    GS.KOT_PCB_VIA = ct.KOT_PCB_VIA
+    GS.KOT_PCB_TEXT = ct.KOT_PCB_TEXT
+    GS.KOT_PCB_TEXTBOX = ct.KOT_PCB_TEXTBOX
+    GS.KOT_PCB_TABLE = ct.KOT_PCB_TABLE
+    GS.KOT_PCB_TABLECELL = ct.KOT_PCB_TABLECELL
+    GS.KOT_PCB_ARC = ct.KOT_PCB_ARC
+    GS.KOT_PCB_DIMENSION = ct.KOT_PCB_DIMENSION
+    GS.KOT_PCB_ZONE = ct.KOT_PCB_ZONE
+    GS.KOT_PCB_BARCODE = ct.KOT_PCB_BARCODE
+    GS.KOT_PCB_REFERENCE_IMAGE = ct.KOT_PCB_REFERENCE_IMAGE
+    # Units
+    GS.IU_PER_MM = kipy.util.units.from_mm(1)
+    GS.IU_PER_MILS = kipy.util.units.from_mils(1)
 
 
 def get_layers_info():
@@ -602,8 +628,8 @@ def get_layers_info():
 def detect_kicad():
     import_kicad_api()
     get_kicad_version()
-    GS.set_version_pointers()
     get_layers_info()
+    GS.set_version_pointers()
 
     # Setup details dependent on the API version
     if GS.ki10 and GS.pn is not None:

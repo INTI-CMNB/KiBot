@@ -7,13 +7,6 @@ from contextlib import contextmanager
 import os
 import re
 import json
-try:
-    import pcbnew
-except ImportError:
-    # This is caught by __main__, ignore the error here
-    class pcbnew(object):
-        IU_PER_MM = 1
-        IU_PER_MILS = 1
 from datetime import datetime
 import shlex
 from shutil import copy2
@@ -26,12 +19,6 @@ from .misc import (EXIT_BAD_ARGS, W_DATEFORMAT, W_UNKVAR, WRONG_INSTALL, CORRUPT
 from .log import get_logger
 
 logger = get_logger(__name__)
-if hasattr(pcbnew, 'IU_PER_MM'):
-    IU_PER_MM = pcbnew.IU_PER_MM
-    IU_PER_MILS = pcbnew.IU_PER_MILS
-else:
-    IU_PER_MM = pcbnew.pcbIUScale.IU_PER_MM
-    IU_PER_MILS = pcbnew.pcbIUScale.IU_PER_MILS
 # KiCad 6 uses IUs for SVGs, with option for SVG_Precision
 # KiCad 5 uses a very different scale based on inches
 # KiCad 7 uses mm
@@ -121,9 +108,6 @@ class GS(object):
     stackup = None
     # Preprocessor definitions
     cli_defines = {}
-    kikit_units_to_kicad = {'mm': IU_PER_MM, 'cm': 10*IU_PER_MM, 'dm': 100*IU_PER_MM,
-                            'm': 1000*IU_PER_MM, 'mil': IU_PER_MILS, 'inch': 1000*IU_PER_MILS,
-                            'in': 1000*IU_PER_MILS}
     ci_cd_detected = False
     stop_flag = False
     errors_ignored = False    # We ignored at least one error
@@ -475,16 +459,19 @@ class GS(object):
         """ KiCad v7 changed various wxPoint args to VECTOR2I.
             This helper changes the types accordingly """
         if GS.ki8:
-            return pcbnew.VECTOR2I(point.x, point.y)
+            return GS.pn.VECTOR2I(point.x, point.y)
         elif GS.ki7:
-            return pcbnew.VECTOR2I(point)
+            return GS.pn.VECTOR2I(point)
         return point
 
-    def angle(ang):
-        if hasattr(pcbnew, 'EDA_ANGLE'):
+    def angle_pn(ang):
+        if hasattr(GS.pn, 'EDA_ANGLE'):
             # Here we can't use KiCad version because the nasty pcb_transition can be patching it
-            return pcbnew.EDA_ANGLE(ang*10, pcbnew.TENTHS_OF_A_DEGREE_T)
+            return GS.pn.EDA_ANGLE(ang*10, GS.pn.TENTHS_OF_A_DEGREE_T)
         return ang*10
+
+    def angle_kp(ang):
+        return GS.kp.geometry.Angle.from_degrees(ang)
 
     def angle_as_double(ang):
         if isinstance(ang, float):
@@ -546,17 +533,20 @@ class GS(object):
 
     @staticmethod
     def fp_get_size_kp(footprint):
-        bb = GS._compute_boundary_for_items_kp(GS.board, footprint.definition.pads, exact=False)
+        pads = footprint.definition.pads
+        if not pads:
+            return (0, 0)
+        bb = GS._compute_boundary_for_items_kp(GS.board, pads, exact=False)
         return (bb.size.x, bb.size.y)
 
     @staticmethod
     def unit_name_to_scale_factor(units):
         if units == 'millimeters' or units == 'mm':
-            return 1.0/IU_PER_MM
+            return 1.0/GS.IU_PER_MM
         if units == 'mils':
-            return 1.0/IU_PER_MILS
+            return 1.0/GS.IU_PER_MILS
         # Inches
-        return 0.001/IU_PER_MILS
+        return 0.001/GS.IU_PER_MILS
 
 #     @staticmethod
 #     def unit_name_to_abrev(units):
@@ -569,15 +559,15 @@ class GS(object):
 
     @staticmethod
     def to_mm_k5(val):
-        return float(val)/IU_PER_MM
+        return float(val)/GS.IU_PER_MM
 
     @staticmethod
     def from_mm_k5(val):
-        return int(val*IU_PER_MM)
+        return int(val*GS.IU_PER_MM)
 
     @staticmethod
     def to_mils_k5(val):
-        return val/IU_PER_MILS
+        return val/GS.IU_PER_MILS
 
 #     @staticmethod
 #     def to_global_units(val):
@@ -598,7 +588,7 @@ class GS(object):
 
     @staticmethod
     def zones():
-        return pcbnew.ZONES() if GS.ki6 else pcbnew.ZONE_CONTAINERS()
+        return GS.pn.ZONES() if GS.ki6 else GS.pn.ZONE_CONTAINERS()
 
     @staticmethod
     def layers_contains(layers, id):
@@ -793,7 +783,7 @@ class GS(object):
     @staticmethod
     def load_board_low_level(file):
         with hide_stderr():
-            board = pcbnew.LoadBoard(file)
+            board = GS.pn.LoadBoard(file)
         return board
 
     @staticmethod
@@ -828,7 +818,7 @@ class GS(object):
     def reload_project(pro_name):
         if pro_name is None:
             return
-        sm = pcbnew.GetSettingsManager()
+        sm = GS.pn.GetSettingsManager()
         sm.UnloadProject(GS.board.GetProject(), False)
         assert sm.LoadProject(pro_name)
         # If we use the old project KiCad SIGSEGV
@@ -847,19 +837,35 @@ class GS(object):
         GS.exit_with_error('Missing resource directory `{}`'.format(name), WRONG_INSTALL)
 
     @staticmethod
-    def create_eda_rect(tlx, tly, brx, bry):
-        if GS.ki9:
-            # TODO: Might be fixed in the release
-            return pcbnew.BOX2I(pcbnew.VECTOR2I(tlx, tly), pcbnew.VECTOR2L(brx-tlx, bry-tly))
-        if GS.ki7:
-            return pcbnew.BOX2I(pcbnew.VECTOR2I(tlx, tly), pcbnew.VECTOR2I(brx-tlx, bry-tly))
-        return pcbnew.EDA_RECT(pcbnew.wxPoint(tlx, tly), pcbnew.wxSize(brx-tlx, bry-tly))
+    def create_eda_rect_k9(tlx, tly, brx, bry):
+        # TODO: Might be fixed in the release
+        return GS.pn.BOX2I(GS.pn.VECTOR2I(tlx, tly), GS.pn.VECTOR2L(brx-tlx, bry-tly))
+
+    @staticmethod
+    def create_eda_rect_k7(tlx, tly, brx, bry):
+        return GS.pn.BOX2I(GS.pn.VECTOR2I(tlx, tly), GS.pn.VECTOR2I(brx-tlx, bry-tly))
+
+    @staticmethod
+    def create_eda_rect_k5(tlx, tly, brx, bry):
+        return GS.pn.EDA_RECT(GS.pn.wxPoint(tlx, tly), GS.pn.wxSize(brx-tlx, bry-tly))
+
+    @staticmethod
+    def create_eda_rect_kp(tlx, tly, brx, bry):
+        return GS.kp.geometry.Box2.from_xywh(tlx, tly, brx-tlx, bry-tly)
+
+    @staticmethod
+    def inflate_box_pn(box, amount):
+        box.Inflate(amount)
+
+    @staticmethod
+    def inflate_box_kp(box, amount):
+        box.inflate(amount)
 
     @staticmethod
     def get_rect_for(bound):
         if GS.ki7:
             pos = bound.GetPosition()
-            return pcbnew.wxRect(pcbnew.wxPoint(pos.x, pos.y), pcbnew.wxSize(bound.GetWidth(), bound.GetHeight()))
+            return GS.pn.wxRect(GS.pn.wxPoint(pos.x, pos.y), GS.pn.wxSize(bound.GetWidth(), bound.GetHeight()))
         return bound.getWxRect()
 
     @staticmethod
@@ -921,49 +927,94 @@ class GS(object):
 
     # @staticmethod
     # def create_wxpoint(x, y):
-    #     return pcbnew.wxPoint(x, y)
+    #     return GS.pn.wxPoint(x, y)
 
     @staticmethod
     def is_valid_pcb_shape(g):
-        return g.GetShape() != pcbnew.S_SEGMENT or g.GetLength() > 0
+        return g.GetShape() != GS.pn.S_SEGMENT or g.GetLength() > 0
 
     @staticmethod
     def v2p(v):
         if GS.ki7:
-            return pcbnew.wxPoint(v.x, v.y)
+            return GS.pn.wxPoint(v.x, v.y)
         return v
 
     @staticmethod
-    def get_start_point(g):
+    def get_start_point_pn(g):
         shape = g.GetShape()
-        if GS.ki6:
-            if shape == pcbnew.S_CIRCLE:
-                # Circle start is circle center
-                return GS.v2p(g.GetStart())+pcbnew.wxPoint(g.GetRadius(), 0)
-            return GS.v2p(g.GetStart())
-        if shape in [pcbnew.S_ARC, pcbnew.S_CIRCLE]:
-            return GS.v2p(g.GetArcStart())
+        if shape == GS.pn.S_CIRCLE:
+            # Circle start is circle center
+            return GS.v2p(g.GetStart())+GS.pn.wxPoint(g.GetRadius(), 0)
         return GS.v2p(g.GetStart())
 
     @staticmethod
-    def get_end_point(g):
+    def get_start_point_kp(g):
+        if isinstance(g, GS.kp.board_types.BoardRectangle):
+            return g.top_left
+        if isinstance(g, GS.kp.board_types.BoardCircle):
+            return g.radius_point
+        if isinstance(g, GS.kp.board_types.BoardPolygon):
+            return g.polygons[0].outline.nodes[0].point
+        if hasattr(g, 'start'):
+            return g.start
+        raise AssertionError(f"Unknown shape {g}\n{dir(g)}")
+
+    @staticmethod
+    def get_end_point_pn(g):
         shape = g.GetShape()
         if GS.ki6:
-            if shape == pcbnew.S_CIRCLE:
+            if shape == GS.pn.S_CIRCLE:
                 # This is closed start == end
-                return GS.v2p(g.GetStart())+pcbnew.wxPoint(g.GetRadius(), 0)
-            if shape == pcbnew.S_RECT:
+                return GS.v2p(g.GetStart())+GS.pn.wxPoint(g.GetRadius(), 0)
+            if shape == GS.pn.S_RECT:
                 # Also closed start == end
                 return GS.v2p(g.GetStart())
             return GS.v2p(g.GetEnd())
-        if shape == pcbnew.S_ARC:
+        if shape == GS.pn.S_ARC:
             return GS.v2p(g.GetArcEnd())
-        if shape == pcbnew.S_CIRCLE:
+        if shape == GS.pn.S_CIRCLE:
             return GS.v2p(g.GetArcStart())
         return GS.v2p(g.GetEnd())
 
     @staticmethod
-    def get_shape_bbox(s, exact=True):
+    def get_end_point_kp(g):
+        if isinstance(g, GS.kp.board_types.BoardRectangle):
+            return g.top_left
+        if isinstance(g, GS.kp.board_types.BoardCircle):
+            return g.radius_point
+        if isinstance(g, GS.kp.board_types.BoardPolygon):
+            return g.polygons[0].outline.nodes[0].point
+        if hasattr(g, 'end'):
+            return g.end
+        raise AssertionError(f"Unknown shape {g}\n{dir(g)}")
+
+    @staticmethod
+    def get_shape_pn(shape):
+        return shape.ShowShape()
+
+    @staticmethod
+    def get_shape_kp(g):
+        if isinstance(g, GS.kp.board_types.BoardRectangle):
+            return "Rectangle"
+        if isinstance(g, GS.kp.board_types.BoardCircle):
+            return "Circle"
+        if isinstance(g, GS.kp.board_types.BoardPolygon):
+            return "Polygon"
+        cls = type(g).__name__
+        if cls.startswith('Board'):
+            return cls[5:]
+        raise AssertionError(f"Unknown shape {g}\n{dir(g)}")
+
+    @staticmethod
+    def board_hit_test_kp(item, point):
+        return GS.board.hit_test(item, point)
+
+    @staticmethod
+    def board_hit_test_pn(item, point):
+        return item.HitTest(point)
+
+    @staticmethod
+    def get_shape_bbox_pn(s, exact=True):
         """ Bounding box without the width of the trace """
         if not exact:
             return s.GetBoundingBox()
@@ -974,18 +1025,22 @@ class GS(object):
         return bbox
 
     @staticmethod
+    def get_shape_bbox_kp(s, exact=True):
+        return GS._compute_boundary_for_items_kp(GS.board, [s], exact=exact)
+
+    @staticmethod
     def create_module_element(m):
         if GS.ki8:
-            return pcbnew.PCB_SHAPE(m)
+            return GS.pn.PCB_SHAPE(m)
         if GS.ki6:
-            return pcbnew.FP_SHAPE(m)
-        return pcbnew.EDGE_MODULE(m)
+            return GS.pn.FP_SHAPE(m)
+        return GS.pn.EDGE_MODULE(m)
 
     @staticmethod
     def create_track(parent):
         if GS.ki6:
-            return pcbnew.PCB_TRACK(parent)
-        return pcbnew.TRACK(parent)
+            return GS.pn.PCB_TRACK(parent)
+        return GS.pn.TRACK(parent)
 
     @staticmethod
     def create_puntual_track(parent, position, layer):
@@ -1001,7 +1056,7 @@ class GS(object):
     def fill_zones(board, zones=None):
         if zones is None:
             zones = board.Zones()
-        pcbnew.ZONE_FILLER(board).Fill(zones)
+        GS.pn.ZONE_FILLER(board).Fill(zones)
         board.BuildConnectivity()
 
     @staticmethod
@@ -1081,12 +1136,6 @@ class GS(object):
         GS.errors_ignored = True
 
     @staticmethod
-    def get_shape(shape):
-        if GS.ki6:
-            return shape.ShowShape()
-        return shape.ShowShape(shape.GetShape())
-
-    @staticmethod
     def create_fp_lib(lib_name):
         """ Create a new footprints lib. You must provide a path.
             Doesn't fail if the lib is there.
@@ -1127,34 +1176,144 @@ class GS(object):
     @staticmethod
     def get_fields_kp(footprint):
         """ Returns a dict with the field/value for the fields in a FOOTPRINT (aka MODULE) """
-        return {p.name: p.text.value for p in footprint.texts_and_fields if isinstance(p, GS.kp.board_types.Field)}
+        fields = {}
+        # Internal fields
+        fields[footprint.reference_field.name] = footprint.reference_field.text.value
+        fields[footprint.value_field.name] = footprint.value_field.text.value
+        fields[footprint.datasheet_field.name] = footprint.datasheet_field.text.value
+        fields[footprint.description_field.name] = footprint.description_field.text.value
+        # Add the Footprint, to match the schematic
+        fields['Footprint'] = footprint.definition.id.library+':'+footprint.definition.id.name
+        # User defined fields
+        for item in footprint.definition.items:
+            if isinstance(item, GS.kp.board_types.Field):
+                fields[item.name] = item.text.value
+        return fields
 
     @staticmethod
-    def set_fields(footprint, flds):
+    def fp_set_fields_k6(footprint, flds):
         """ Sets the fields in a FOOTPRINT (aka MODULE) from a dict """
-        if GS.ki8:
-            new_fields = [fld for fld in flds.keys() if not footprint.HasField(fld)]
-            footprint.SetFields(flds)
-            # New fields are added as visible, so we must hide them (OMG!)
-            if GS.ki10:
-                for fld in new_fields:
-                    footprint.GetField(fld).SetVisible(False)
-            else:
-                for fld in new_fields:
-                    footprint.GetFieldByName(fld).SetVisible(False)
-        elif GS.ki6:
-            footprint.SetProperties(flds)
+        footprint.SetProperties(flds)
 
     @staticmethod
-    def clear_fields(footprint):
+    def fp_set_fields_k8(footprint, flds):
+        """ Sets the fields in a FOOTPRINT (aka MODULE) from a dict. """
+        new_fields = [fld for fld in flds.keys() if not footprint.HasField(fld)]
+        footprint.SetFields(flds)
+        # New fields are added as visible, so we must hide them (OMG!)
+        for fld in new_fields:
+            footprint.GetFieldByName(fld).SetVisible(False)
+
+    @staticmethod
+    def fp_set_fields_k10(footprint, flds):
+        """ Sets the fields in a FOOTPRINT (aka MODULE) from a dict """
+        new_fields = [fld for fld in flds.keys() if not footprint.HasField(fld)]
+        footprint.SetFields(flds)
+        # New fields are added as visible, so we must hide them (OMG!)
+        for fld in new_fields:
+            footprint.GetField(fld).SetVisible(False)
+
+    @staticmethod
+    def _set_internal_field_kp(field, flds, clear_missing):
+        name = field.name
+        if name not in flds:
+            # Undefined (not specified)
+            if clear_missing:
+                # Erase it
+                new_value = ''
+            else:
+                # Skip it, this is how KiCad works
+                return False
+        else:
+            # Defined (specified)
+            new_value = flds[name]
+        if new_value == field.text.value:
+            return False
+        logger.debugl(3, f"- Changing field {name} = `{field.text.value}` to `{new_value}`")
+        field.text.value = new_value
+        return True
+
+    @staticmethod
+    def fp_set_fields_kp(footprint, flds, clear_missing=True):
+        """ Sets the fields in a FootprintInstance from a dict.
+            Note that KiCad 7-10 never removes them, just modifies or adds new ones.
+            The `clear_missing` is more aggressive if a field is not specified we clear it.
+            Note that we never remove the Field because it contains information like position, layer, etc.
+            We just clear it to make it invisible, but is easy to revert """
+        if flds is None:
+            return
+        logger.debugl(3, f"Setting fields for {footprint.reference_field.text.value}")
+        changed = False
+        # Reference, Value, Datasheet and Description
+        changed |= GS._set_internal_field_kp(footprint.reference_field, flds, clear_missing)
+        changed |= GS._set_internal_field_kp(footprint.value_field, flds, clear_missing)
+        changed |= GS._set_internal_field_kp(footprint.datasheet_field, flds, clear_missing)
+        changed |= GS._set_internal_field_kp(footprint.description_field, flds, clear_missing)
+
+        # Handle the footprint, not sure if really necessary
+        new_fp = flds.get('Footprint')
+        if new_fp is not None:
+            cur_fp = GS.fp_get_lib_and_name(footprint)
+            if cur_fp != new_fp:
+                sep = new_fp.split(':')
+                if len(sep) == 2:
+                    footprint.definition.id.library = sep[0]
+                    footprint.definition.id.name = sep[1]
+                    changed = True
+
+        found = {footprint.reference_field.name, footprint.value_field.name, footprint.datasheet_field.name,
+                 footprint.description_field.name, 'Footprint'}
+        # User defined fields
+        # Modified fields
+        for i in footprint.definition.items:
+            if not isinstance(i, GS.kp.board_types.Field):
+                # Not a Field
+                continue
+            if i.name in found:
+                # Internal Field
+                continue
+            if i.name not in flds:
+                if clear_missing:
+                    new_value = ''
+                else:
+                    # We don't remove same as KiCad 7-10
+                    continue
+            else:
+                new_value = flds[i.name]
+            found.add(i.name)
+            if i.text.value == new_value:
+                continue
+            logger.debugl(3, f"- Changing field {i.name} = `{i.text.value}` to `{new_value}`")
+            i.text.value = new_value
+            changed = True
+        # Added fields
+        for name, value in flds.items():
+            if name in found:
+                continue
+            field = GS.kp.board_types.Field()
+            field.name = name
+            field.visible = False
+            field.text.value = value
+            footprint.definition.add_item(field)
+            logger.debugl(3, f"- Adding field {name} = `{value}`")
+            changed = True
+        if changed:
+            GS.board.update_items(footprint)
+
+    @staticmethod
+    def fp_clear_fields_k8(footprint):
         """ Clears the content of all fields in a FOOTPRINT (aka MODULE)
             We don't remove them because the API fails when using Delete/Remove and
             because we want to keep some attributes """
-        if GS.ki8:
-            for f in footprint.GetFields():
-                footprint.SetField(f.GetName(), '')
-        elif GS.ki6:
-            footprint.SetProperties({})
+        for f in footprint.GetFields():
+            footprint.SetField(f.GetName(), '')
+
+    @staticmethod
+    def fp_clear_fields_k6(footprint):
+        """ Clears the content of all fields in a FOOTPRINT (aka MODULE)
+            We don't remove them because the API fails when using Delete/Remove and
+            because we want to keep some attributes """
+        footprint.SetProperties({})
 
     @staticmethod
     def get_shown_text(obj, allow_extra_text=True, a_depth=0):
@@ -1255,10 +1414,10 @@ class GS(object):
     @staticmethod
     def _compute_boundary_kp(board, layers, items, classes, exact=True):
         if items is None:
-            kot = GS.kp.proto.common.types.KiCadObjectType
-            items = [kot.KOT_PCB_SHAPE, kot.KOT_PCB_FOOTPRINT, kot.KOT_PCB_PAD, kot.KOT_PCB_TRACE,
-                     kot.KOT_PCB_VIA, kot.KOT_PCB_TEXT, kot.KOT_PCB_TEXTBOX, kot.KOT_PCB_TABLE,
-                     kot.KOT_PCB_TABLECELL, kot.KOT_PCB_ARC, kot.KOT_PCB_DIMENSION, kot.KOT_PCB_ZONE]
+            items = [GS.KOT_PCB_SHAPE, GS.KOT_PCB_FOOTPRINT, GS.KOT_PCB_PAD, GS.KOT_PCB_TRACE,
+                     GS.KOT_PCB_VIA, GS.KOT_PCB_TEXT, GS.KOT_PCB_TEXTBOX, GS.KOT_PCB_TABLE,
+                     GS.KOT_PCB_TABLECELL, GS.KOT_PCB_ARC, GS.KOT_PCB_DIMENSION, GS.KOT_PCB_ZONE,
+                     GS.KOT_PCB_BARCODE, GS.KOT_PCB_REFERENCE_IMAGE]
         if classes is not None:
             classes = tuple(classes)
         if layers is None:
@@ -1280,11 +1439,10 @@ class GS(object):
     def compute_boundary_layers_kp(board, layers, include_text=True):
         if include_text:
             items = classes = None
-            # items += [kot.KOT_PCB_TEXT, kot.KOT_PCB_TEXTBOX, kot.KOT_PCB_TABLE, kot.KOT_PCB_TABLECELL, kot.KOT_PCB_DIMENSION]
+            # items += [GS.KOT_PCB_TEXT, GS.KOT_PCB_TEXTBOX, GS.KOT_PCB_TABLE, GS.KOT_PCB_TABLECELL, GS.KOT_PCB_DIMENSION]
             # classes += [GS.kp.board_types.BoardText, GS.kp.board_types.BoardTextBox]
         else:
-            kot = GS.kp.proto.common.types.KiCadObjectType
-            items = [kot.KOT_PCB_SHAPE, kot.KOT_PCB_PAD, kot.KOT_PCB_TRACE, kot.KOT_PCB_VIA, kot.KOT_PCB_ARC, kot.KOT_PCB_ZONE]
+            items = [GS.KOT_PCB_SHAPE, GS.KOT_PCB_PAD, GS.KOT_PCB_TRACE, GS.KOT_PCB_VIA, GS.KOT_PCB_ARC, GS.KOT_PCB_ZONE]
             classes = [GS.kp.board_types.BoardShape]
         return GS._compute_boundary_kp(board, layers, items, classes, exact=False)
 
@@ -1299,6 +1457,61 @@ class GS(object):
     def compute_pcb_full_boundary_kp(board):
         """ All, PCB and extra items """
         return GS.compute_boundary_layers_kp(board, None, include_text=True)
+
+    @staticmethod
+    def bbox_merge_pn(bbox, other_bbox):
+        bbox.Merge(other_bbox)
+
+    @staticmethod
+    def bbox_merge_kp(bbox, other_bbox):
+        bbox.merge(other_bbox)
+
+    @staticmethod
+    def bbox_get_position_pn(bbox):
+        return bbox.GetPosition()
+
+    @staticmethod
+    def bbox_get_position_kp(bbox):
+        return bbox.pos
+
+    @staticmethod
+    def bbox_get_center_pn(bbox):
+        return bbox.GetCenter()
+
+    @staticmethod
+    def bbox_get_center_kp(bbox):
+        return GS.kp.geometry.Vector2.from_xy(round(bbox.pos.x+bbox.size.x/2), round(bbox.pos.y+bbox.size.y/2))
+
+    @staticmethod
+    def bbox_get_end_pn(bbox):
+        return bbox.GetEnd()
+
+    @staticmethod
+    def bbox_get_end_kp(bbox):
+        return bbox.pos+bbox.size
+
+    @staticmethod
+    def bbox_contains_kp(bbox, elem):
+        if isinstance(elem, GS.kp.geometry.Box2):
+            # For another box we check both ends are inside
+            return GS.bbox_contains_kp(bbox, elem.pos) and GS.bbox_contains_kp(bbox, elem.pos+elem.size)
+        # For a single point
+        rel_pos = elem-bbox.pos
+        size = bbox.size
+
+        if size.x < 0:
+            size.x = -size.x
+            rel_pos.x += size.x
+
+        if size.y < 0:
+            size.y = -size.y
+            rel_pos.y += size.y
+
+        return (rel_pos.x >= 0) and (rel_pos.y >= 0) and (rel_pos.y <= size.y) and (rel_pos.x <= size.x)
+
+    @staticmethod
+    def bbox_contains_pn(bbox, elem):
+        return bbox.Contains(elem)
 
     @staticmethod
     def get_pcb_center_mm_kp(board=None, full=False):
@@ -1372,11 +1585,27 @@ class GS(object):
         return GS.stop_flag
 
     @staticmethod
-    def move_board_items(vector):
+    def move_board_items_pn(vector):
         any((x.Move(vector) for x in GS.get_modules()))
         any((x.Move(vector) for x in GS.board.GetDrawings()))
         any((x.Move(vector) for x in GS.board.GetTracks()))
         any((x.Move(vector) for x in GS.board.Zones()))
+
+    @staticmethod
+    def move_board_items_kp(vector):
+        all = GS.get_modules()
+        all += GS.board.get_shapes()
+        all += GS.board.get_tracks()
+        all += GS.board.get_vias()
+        all += GS.board.get_zones()
+        all += GS.board.get_text()
+        all += GS.board.get_dimensions()
+        all += GS.board.get_barcodes()
+        all += GS.board.get_reference_images()
+        all += GS.board.get_tables()
+        for item in all:
+            item.move(vector)
+        GS.board.update_items(all)
 
     @staticmethod
     def sanitize_file_name(name):
@@ -1432,9 +1661,9 @@ class GS(object):
     def copper_layer_to_ordinal_k9(n):
         """ Converts a KiCad layer number to its position.
             F.Cu will be 0 and B.Cu the last """
-        ordinal = pcbnew.CopperLayerToOrdinal(n)
+        ordinal = GS.pn.CopperLayerToOrdinal(n)
         # Adjust to the current PCB
-        if ordinal == pcbnew.CopperLayerToOrdinal(pcbnew.B_Cu):
+        if ordinal == GS.pn.CopperLayerToOrdinal(GS.pn.B_Cu):
             ordinal = GS.board.GetCopperLayerCount()-1
         return ordinal
 
@@ -1683,27 +1912,42 @@ class GS(object):
     @staticmethod
     def set_version_pointers():
         """ Used to setup function pointers according to the API and its version """
+        GS.kikit_units_to_kicad = {'mm': GS.IU_PER_MM, 'cm': 10*GS.IU_PER_MM, 'dm': 100*GS.IU_PER_MM,
+                                   'm': 1000*GS.IU_PER_MM, 'mil': GS.IU_PER_MILS, 'inch': 1000*GS.IU_PER_MILS,
+                                   'in': 1000*GS.IU_PER_MILS}
         if GS.pn is not None:
+            if GS.ki10:
+                # fp_set_fields_kp and fp_set_fields_pn are different and only used for pn/kp code
+                GS.fp_set_fields_pn = GS.fp_set_fields_k10
+            elif GS.ki8:
+                GS.fp_set_fields_pn = GS.fp_set_fields_k8
+            else:
+                GS.fp_set_fields_pn = GS.fp_set_fields_k6
             if GS.ki7:
                 GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_k7
                 GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_k7
+                GS.create_eda_rect = GS.create_eda_rect_k7
             else:
                 GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_k5
                 GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_k5
             if GS.ki8:
                 GS.get_fields = GS.get_fields_k8
+                GS.fp_clear_fields_pn = GS.fp_clear_fields_k8
             else:
                 GS.get_fields = GS.get_fields_k6
+                GS.fp_clear_fields_pn = GS.fp_clear_fields_k6
             if GS.ki9:
                 GS.layer_is_inner = GS.layer_is_inner_k9
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
                 GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k9
                 GS.inner_layer_index = GS.inner_layer_index_k9
+                GS.create_eda_rect = GS.create_eda_rect_k9
             else:
                 GS.layer_is_inner = GS.layer_is_inner_k5
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k5
                 GS.copper_layer_to_ordinal = GS.copper_layer_to_ordinal_k5
                 GS.inner_layer_index = GS.inner_layer_index_k5
+                GS.create_eda_rect = GS.create_eda_rect_k5
             GS.is_layer_enabled = GS.is_layer_enabled_k5
             GS.get_modules = GS.get_modules_k6
             GS.get_modules_board = GS.get_modules_board_k6
@@ -1734,6 +1978,19 @@ class GS(object):
             GS.pad_has_hole = GS.pad_has_hole_pn
             GS.pad_get_number = GS.pad_get_number_pn
             GS.pcb_set_variant = GS.pcb_set_variant_pn
+            GS.inflate_box = GS.inflate_box_pn
+            GS.get_start_point = GS.get_start_point_pn
+            GS.get_end_point = GS.get_end_point_pn
+            GS.get_shape = GS.get_shape_pn
+            GS.board_hit_test = GS.board_hit_test_pn
+            GS.get_shape_bbox = GS.get_shape_bbox_pn
+            GS.bbox_merge = GS.bbox_merge_pn
+            GS.bbox_get_position = GS.bbox_get_position_pn
+            GS.bbox_get_end = GS.bbox_get_end_pn
+            GS.bbox_contains = GS.bbox_contains_pn
+            GS.bbox_get_center = GS.bbox_get_center_pn
+            GS.move_board_items = GS.move_board_items_pn
+            GS.angle = GS.angle_pn
         elif GS.kp is not None:
             GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_kp
             GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_kp
@@ -1749,6 +2006,8 @@ class GS(object):
             GS.to_mm = GS.kp.util.units.to_mm
             GS.from_mm = GS.kp.util.units.from_mm
             GS.to_mils = GS.kp.util.units.to_mils
+            GS.create_eda_rect = GS.create_eda_rect_kp
+            GS.inflate_box = GS.inflate_box_kp
             GS.get_fields = GS.get_fields_kp
             GS.get_aux_origin = GS.get_aux_origin_kp
             GS.get_absolute_origin = GS.get_absolute_origin_kp
@@ -1772,3 +2031,15 @@ class GS(object):
             GS.pad_has_hole = GS.pad_has_hole_kp
             GS.pad_get_number = GS.pad_get_number_kp
             GS.pcb_set_variant = GS.pcb_set_variant_kp
+            GS.get_start_point = GS.get_start_point_kp
+            GS.get_end_point = GS.get_end_point_kp
+            GS.get_shape = GS.get_shape_kp
+            GS.board_hit_test = GS.board_hit_test_kp
+            GS.get_shape_bbox = GS.get_shape_bbox_kp
+            GS.bbox_merge = GS.bbox_merge_kp
+            GS.bbox_get_position = GS.bbox_get_position_kp
+            GS.bbox_get_end = GS.bbox_get_end_kp
+            GS.bbox_contains = GS.bbox_contains_kp
+            GS.bbox_get_center = GS.bbox_get_center_kp
+            GS.move_board_items = GS.move_board_items_kp
+            GS.angle = GS.angle_kp

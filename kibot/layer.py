@@ -175,6 +175,13 @@ class Layer(Optionable):
             return new_vals
         raise AssertionError("Unimplemented layer type "+str(type(values)))
 
+    @classmethod
+    def name2id(cls, name):
+        vals = Layer.solve(name)
+        if len(vals) > 1:
+            raise KiPlotConfigurationError(f"Layer name `{name}` represents more than one layer")
+        return vals[0]._id
+
     @staticmethod
     def _get_copper_pn():
         return {GS.board.GetLayerName(id): id for id in GS.board.GetEnabledLayers().CuStack()}
@@ -391,3 +398,5 @@ else:
     Layer._set_plot_layers = Layer._set_plot_layers_kp
     Layer.is_copper = Layer.is_copper_kp
     Layer.id2def_name = Layer.id2def_name_kp
+
+GS.layer_name2id = Layer.name2id
