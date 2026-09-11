@@ -23,7 +23,9 @@ logger = log.get_logger()
 
 
 def round_point(point, precision=-4):
-    return (round(point[0], precision), round(point[1], precision))
+    if isinstance(point, list):
+        return (round(point[0], precision), round(point[1], precision))
+    return (round(point.x, precision), round(point.y, precision))
 
 
 def point_str(point):
@@ -33,7 +35,7 @@ def point_str(point):
 
 
 def bbox_str(bbox):
-    return point_str(bbox.GetPosition())+'-'+point_str(bbox.GetEnd())
+    return point_str(GS.bbox_get_position(bbox))+'-'+point_str(GS.bbox_get_end(bbox))
 
 
 class Edge(object):
@@ -46,6 +48,7 @@ class Edge(object):
         self.shape = shape
         self.cls = GS.get_shape(shape)
         self.used = False
+        logger.debugl(3, f"  - {self.cls}: start {self.start} end {self.end}")
 
     def get_other_end(self, point):
         if self.r_start != point:
@@ -113,6 +116,14 @@ class SubPCBOptions(PanelOptions):
                 You can disable it only for the internal tool, KiKit should always do it """
         self._name_example = 'a_sub_pcb'
         self._reference_example = 'BRD1'
+        if GS.pn is not None:
+            self.get_pcb_edges = self.get_pcb_edges_pn
+            self.remove_outside = self.remove_outside_pn
+            self.restore_removed = self.restore_removed_pn
+        else:
+            self.get_pcb_edges = self.get_pcb_edges_kp
+            self.remove_outside = self.remove_outside_kp
+            self.restore_removed = self.restore_removed_kp
 
     def __str__(self):
         res = self.name+' '
@@ -180,7 +191,7 @@ class SubPCBOptions(PanelOptions):
                         self._excl_by_sub_pcb.add(c)
                         logger.debugl(2, '- Removing '+c)
 
-    def _remove_items(self, iter):
+    def _remove_items_pn(self, iter):
         """ Remove items outside the rectangle.
             If the item has width (shapes and tracks) we discard it.
             This produces something closer to KiKit. """
@@ -195,7 +206,7 @@ class SubPCBOptions(PanelOptions):
             if with_width:
                 m.SetWidth(width)
 
-    def _remove_modules(self, iter, comps_hash):
+    def _remove_modules_pn(self, iter, comps_hash):
         """ Remove modules outside the rectangle.
             Footprints are added to the list of references to exclude.
             We also check their position, not their BBox. """
@@ -207,24 +218,75 @@ class SubPCBOptions(PanelOptions):
                 if comps_hash:
                     self._excl_by_sub_pcb.add(ref)
 
-    def remove_outside(self, comps_hash):
+    def remove_outside_pn(self, comps_hash):
         """ Remove footprints, drawings, text and zones outside `_board_rect` rectangle.
             Keep them in a list to restore later. """
         self._removed = []
-        self._remove_modules(GS.get_modules(), comps_hash)
-        self._remove_items(GS.board.GetDrawings())
-        self._remove_items(GS.board.GetTracks())
-        self._remove_items(list(GS.board.Zones()))
+        self._remove_modules_pn(GS.get_modules(), comps_hash)
+        self._remove_items_pn(GS.board.GetDrawings())
+        self._remove_items_pn(GS.board.GetTracks())
+        self._remove_items_pn(list(GS.board.Zones()))
 
-    def get_pcb_edges(self):
-        """ Get a list of PCB shapes from the Edge.Cuts layer.
-            Only useful elements are returned. """
+    def _remove_modules_kp(self, comps_hash):
+        """ Schedule to remove modules outside the rectangle.
+            Footprints are added to the list of references to exclude.
+            We also check their position, not their BBox. """
+        for m in GS.get_modules():
+            ref = GS.fp_get_reference(m)
+            pos = GS.fp_get_position(m)
+            if not GS.bbox_contains(self._board_rect, pos) or (self.strip_annotation and ref == self.reference):
+                self._removed.append(m)
+                # logger.error(f"Removing {m}")
+                if comps_hash:
+                    self._excl_by_sub_pcb.add(ref)
+
+    def _remove_items_kp(self, items, get_width=None):
+        """ Schedule to remove items outside the rectangle.
+            If the item has width (shapes and tracks) we discard it.
+            This produces something closer to KiKit. """
+        # Compute the bbox for each item
+        boxes = GS.board.get_item_bounding_box(items)
+        # Eliminate the items width
+        if get_width is not None:
+            for b, d in zip(boxes, items):
+                b.inflate(-get_width(d))
+        # Check which elements are outside
+        for b, d in zip(boxes, items):
+            if not GS.bbox_contains(self._board_rect, b):
+                # logger.error(f"Removing {d} bbox: {bbox_str(b)}")
+                self._removed.append(d)
+
+    def remove_outside_kp(self, comps_hash):
+        logger.debug(f"Removing components outside {bbox_str(self._board_rect)}")
+        self._removed = []
+        self._remove_modules_kp(comps_hash)
+        self._remove_items_kp(GS.board.get_shapes(), lambda x: x.attributes.stroke.width)
+        self._remove_items_kp(GS.board.get_text(), lambda x: x.attributes.stroke_width)
+        self._remove_items_kp(GS.board.get_dimensions(), lambda x: x.line_thickness)
+        self._remove_items_kp(GS.board.get_barcodes())
+        self._remove_items_kp(GS.board.get_reference_images())
+        self._remove_items_kp(GS.board.get_tables(), lambda x: x.border_stroke.width)
+        self._remove_items_kp(GS.board.get_tracks(), lambda x: x.width)
+        self._remove_items_kp(GS.board.get_vias(), lambda x: x.diameter)
+        self._remove_items_kp(GS.board.get_zones())
+        GS.board.remove_items(self._removed)
+
+    def get_pcb_edges_pn(self):
         edges = []
         layer_cuts = self._ref_layer
         for edge in chain(GS.board.GetDrawings(), *[m.GraphicalItems() for m in GS.get_modules()]):
             if edge.GetLayer() != layer_cuts or edge.GetClass().startswith('PCB_DIM_') or not GS.is_valid_pcb_shape(edge):
                 continue
             edges.append(Edge(edge))
+        return edges
+
+    def get_pcb_edges_kp(self):
+        layer_cuts = self._ref_layer
+        edges = [Edge(d) for d in GS.board.get_items([GS.KOT_PCB_SHAPE]) if d.layer == layer_cuts]
+        for m in GS.get_modules():
+            for gi in m.definition.items:
+                if isinstance(gi, GS.kp.board_types.BoardShape) and gi.layer == layer_cuts:
+                    edges.append(Edge(gi))
         return edges
 
     def inform_unconnected(self, edge, point):
@@ -263,7 +325,7 @@ class SubPCBOptions(PanelOptions):
             contour.append(cur_edge)
             start, r_start = cur_edge.get_other_end(r_start)
             cur_edge.used = True
-            bbox.Merge(cur_edge.get_bbox())
+            GS.bbox_merge(bbox, cur_edge.get_bbox())
         return contour, bbox
 
     def search_reference_rect(self, ref):
@@ -273,19 +335,21 @@ class SubPCBOptions(PanelOptions):
         # Find the annotation component
         r = next(filter(lambda m: GS.fp_get_reference(m) == ref, GS.get_modules()), None)
         if r is None:
-            raise KiPlotConfigurationError('Missing `{}` component in PCB, used for sub-PCB `{}`'.format(ref, self.name))
+            raise KiPlotConfigurationError(f'Missing `{ref}` component in PCB, used for sub-PCB `{self.name}`')
         # Find the point it indicates
-        point = r.GetPosition()
+        point = GS.fp_get_position(r)
         if extra_debug:
             logger.debug('- Points to '+point_str(point))
         # Look for the PCB edges
+        if extra_debug:
+            logger.debug("- Looking for contour elements")
         edges = self.get_pcb_edges()
         # Detect which edge is selected
-        sel_edge = next(filter(lambda x: x.shape.HitTest(point), edges), None)
+        sel_edge = next(filter(lambda x: GS.board_hit_test(x.shape, point), edges), None)
         if sel_edge is None:
             raise KiPlotConfigurationError("The `{}` component doesn't select an object in the PCB edge".format(ref))
         if extra_debug:
-            logger.debug('- Segment '+str(sel_edge))
+            logger.debug('- Selected segment '+str(sel_edge))
         # Detect a contour containing this edge
         contour, bbox = self.find_contour(sel_edge, edges)
         if extra_debug:
@@ -307,7 +371,7 @@ class SubPCBOptions(PanelOptions):
         paper_center_x = GS.from_mm(pcb.paper_w/2)
         paper_center_y = GS.from_mm(pcb.paper_h/2)
         # Compute the offset to make it centered
-        self._moved = self._board_rect.GetCenter()
+        self._moved = GS.bbox_get_center(self._board_rect)
         self._moved.x = paper_center_x-self._moved.x
         self._moved.y = paper_center_y-self._moved.y
         self.move_objects()
@@ -316,12 +380,12 @@ class SubPCBOptions(PanelOptions):
         """ Apply the sub-PCB selection. """
         self._excl_by_sub_pcb = set()
         self._board_rect = GS.create_eda_rect(self._tlx, self._tly, self._brx, self._bry)
-        self._board_rect.Inflate(int(self._tolerance))
+        GS.inflate_box(self._board_rect, int(self._tolerance))
         if self.tool == 'internal':
             if self.reference:
                 # Get the rectangle containing the board edge pointed by the reference
                 self._board_rect = self.search_reference_rect(self.reference)
-                self._board_rect.Inflate(int(self._tolerance))
+                GS.inflate_box(self._board_rect, int(self._tolerance))
             # Using a rectangle
             self.remove_outside(comps_hash)
             # Center the PCB
@@ -339,10 +403,14 @@ class SubPCBOptions(PanelOptions):
         # Undo the sub-PCB: just reload the PCB
         GS.load_board(forced=True)
 
-    def restore_removed(self):
+    def restore_removed_pn(self):
         """ Restore the stuff we removed from the board """
         for o in self._removed:
             GS.board.Add(o)
+
+    def restore_removed_kp(self):
+        """ Restore the stuff we removed from the board """
+        GS.board.create_items(self._removed)
 
     def restore_moved(self):
         """ Move objects back to their original place """

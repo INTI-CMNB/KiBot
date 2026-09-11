@@ -82,33 +82,43 @@ class ExcellonOptions(AnyDrill):
     def run_with_kipy(self, output_dir, gen_map):
         if not self.is_default_digits():
             raise KiPlotConfigurationError("left/right digits not supported")
-        # Origin
-        dot = GS.kp.proto.board.board_jobs_pb2.DrillOrigin
-        origin = dot.DO_PLOT if self.use_aux_axis_as_origin else dot.DO_ABSOLUTE
-        # Map file
-        map_format = GS.PLOT_FMT_TO_DMF[self._map_type if gen_map else '']
-        # Report
-        if self._report:
-            drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
-            logger.debug("Generating drill report: "+drill_report_file)
-        else:
-            drill_report_file = ''
-        # Units
-        units = GS.U_MM if self.metric_units else GS.U_INCH
-        # Zeros format
-        res = GS.board.export_drill_excellon(
-            output_dir,
-            origin=origin,
-            map_format=map_format,
-            report_filename=drill_report_file,
-            units=units,
-            zeros_format=ZF[self.zeros_format],
-            route_oval_holes=self.route_mode_for_oval_holes,
-            combine_pth_npth=self.pth_and_npth_single_file,
-            minimal_header=self.minimal_header,
-            mirror_y=self.mirror_y_axis)
-        self.check_job_ok(res)
-        return None
+
+        # Current API only works on files on disk :-(
+        save_board = self.will_filter_pcb_components()
+        if save_board:
+            GS.make_bkp(GS.pcb_file)
+        try:
+            if save_board:
+                GS.board.save()
+            # Origin
+            dot = GS.kp.proto.board.board_jobs_pb2.DrillOrigin
+            origin = dot.DO_PLOT if self.use_aux_axis_as_origin else dot.DO_ABSOLUTE
+            # Map file
+            map_format = GS.PLOT_FMT_TO_DMF[self._map_type if gen_map else '']
+            # Report
+            if self._report:
+                drill_report_file = self.expand_filename(output_dir, self._report, 'drill_report', 'txt')
+                logger.debug("Generating drill report: "+drill_report_file)
+            else:
+                drill_report_file = ''
+            # Units
+            units = GS.U_MM if self.metric_units else GS.U_INCH
+            # Zeros format
+            res = GS.board.export_drill_excellon(
+                output_dir,
+                origin=origin,
+                map_format=map_format,
+                report_filename=drill_report_file,
+                units=units,
+                zeros_format=ZF[self.zeros_format],
+                route_oval_holes=self.route_mode_for_oval_holes,
+                combine_pth_npth=self.pth_and_npth_single_file,
+                minimal_header=self.minimal_header,
+                mirror_y=self.mirror_y_axis)
+            self.check_job_ok(res)
+        finally:
+            if save_board:
+                GS.restore_bkp(GS.pcb_file)
 
 
 @output_class
