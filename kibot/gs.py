@@ -575,14 +575,14 @@ class GS(object):
 #         return str(val*scale)+' '+GS.unit_name_to_abrev(GS.global_units)
 
     @staticmethod
-    def make_bkp(fname):
-        bkp = fname+'-bak'
+    def make_bkp(fname, suffix='-bak'):
+        bkp = fname+suffix
         if os.path.isfile(fname):
             os.replace(fname, bkp)
 
     @staticmethod
-    def restore_bkp(fname):
-        bkp = fname+'-bak'
+    def restore_bkp(fname, suffix='-bak'):
+        bkp = fname+suffix
         if os.path.isfile(bkp):
             os.replace(bkp, fname)
 
