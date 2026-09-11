@@ -29,8 +29,7 @@ Separate Pins
 
 .. _Separate_Pins_attribute:
 
-   -  ``attribute`` :index:`: <pair: filter - separate_pins; attribute>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``['testpoint']``) (choices: "bga", "local_fiducial", "global_fiducial", "testpoint", "heatsink", "castellated", "none") Fabrication
-      attribute/s of the included pads.
+   -  ``attribute`` :index:`: <pair: filter - separate_pins; attribute>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``['testpoint']``) (choices: "bga", "local_fiducial", "global_fiducial", "testpoint", "heatsink", "castellated", "pressfit", "none").
 
 
 .. _Separate_Pins_keep_component:

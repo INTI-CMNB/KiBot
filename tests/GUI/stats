@@ -1,8 +1,8 @@
-56 outputs types with a total of 2338 different parameters
-Single type parameters: 2141 (92 %)
-Multi type parameters: 197 (8 %)
+56 outputs types with a total of 2342 different parameters
+Single type parameters: 2142 (91 %)
+Multi type parameters: 200 (9 %)
 Average parameters: 42
-Maximum number of parameters: 218
+Maximum number of parameters: 222
 Minimum number of parameters: 14
 Histogram:
   0-  9: 
@@ -26,7 +26,8 @@ Histogram:
 180-189: 
 190-199: 
 200-209: 
-210-219: *
+210-219: 
+220-229: *
 Outputs sorted by parameters:
 - info: 14
 - netlist: 18
@@ -83,7 +84,7 @@ Outputs sorted by parameters:
 - pdf: 80
 - pcb_print: 117
 - bom: 168
-- panelize: 218
+- panelize: 222
 Average depth: 2.517857142857143
 Maximum depth: 5
 Minimum depth: 2
@@ -153,10 +154,10 @@ Outputs sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1014
+-             String: 1017
 -            Boolean:  606
-- ListStringSingular:  309
--             Number:  306
+- ListStringSingular:  310
+-             Number:  309
 -             Choice:  115
 -               Dict:   92
 -   ListDictOrString:   30
@@ -171,7 +172,7 @@ Outputs sorted by depth:
 Used as single data type:
 -             String:  846 
 -            Boolean:  536 
-- ListStringSingular:  305 
+- ListStringSingular:  306 
 -             Number:  212 
 -             Choice:  112 
 -               Dict:   79 
@@ -185,7 +186,7 @@ Used as single data type:
 -       NumberChoice:    1 ['gerber.options.gerber_precision']
 --------------------------------------------------------------------------------
 11 different data type combinations
--              Number,String:   92 
+-              Number,String:   95 
 -             Boolean,String:   63 
 -     Combo,ListDictOrString:   18 
 -                Dict,String:    7 ['blender_export.options.pcb3d', 'excellon.options.report', 'excellon.options.table', 'gerb_drill.options.report', 'gerb_drill.options.table', 'kibom.options.conf', 'pcbdraw.options.style']
@@ -414,11 +415,11 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2737 different parameters
-Single type parameters: 2514 (92 %)
-Multi type parameters: 223 (8 %)
+97 totals types with a total of 2741 different parameters
+Single type parameters: 2515 (92 %)
+Multi type parameters: 226 (8 %)
 Average parameters: 28
-Maximum number of parameters: 218
+Maximum number of parameters: 222
 Minimum number of parameters: 1
 Histogram:
   0-  9: **************************
@@ -442,7 +443,8 @@ Histogram:
 180-189: 
 190-199: 
 200-209: 
-210-219: *
+210-219: 
+220-229: *
 Totals sorted by parameters:
 - annotate_power: 1
 - check_zone_fills: 1
@@ -540,7 +542,7 @@ Totals sorted by parameters:
 - pdf: 80
 - pcb_print: 117
 - bom: 168
-- panelize: 218
+- panelize: 222
 Average depth: 2.185567010309278
 Maximum depth: 5
 Minimum depth: 1
@@ -651,10 +653,10 @@ Totals sorted by depth:
 - bom: 5
 --------------------------------------------------------------------------------
 14 different data types
--             String: 1183
+-             String: 1186
 -            Boolean:  709
--             Number:  359
-- ListStringSingular:  340
+-             Number:  362
+- ListStringSingular:  341
 -             Choice:  147
 -               Dict:  103
 -   ListDictOrString:   33
@@ -669,7 +671,7 @@ Totals sorted by depth:
 Used as single data type:
 -             String:  997 
 -            Boolean:  629 
-- ListStringSingular:  336 
+- ListStringSingular:  337 
 -             Number:  250 
 -             Choice:  144 
 -               Dict:   82 
@@ -683,7 +685,7 @@ Used as single data type:
 -       NumberChoice:    1 ['gerber.options.gerber_precision']
 --------------------------------------------------------------------------------
 11 different data type combinations
--              Number,String:  107 
+-              Number,String:  110 
 -             Boolean,String:   65 
 -     Combo,ListDictOrString:   18 
 -               Boolean,Dict:   10 ['pcb_print.options.include_table', 'pcb_print.options.drill', 'include_table.include_table', 'draw_fancy_stackup.draw_fancy_stackup', 'draw_stackup.draw_stackup', 'drc.drc', 'erc.erc', 'run_drc.run_drc', 'run_erc.run_erc', 'update_xml.update_xml']

@@ -9112,6 +9112,37 @@
                   null
                 ],
                 [
+                  "widenercorners",
+                  [
+                    "DataTypeListStringSingular"
+                  ],
+                  null
+                ],
+                [
+                  "widenerwidth",
+                  [
+                    "DataTypeString",
+                    "DataTypeNumber"
+                  ],
+                  null
+                ],
+                [
+                  "widenerlength",
+                  [
+                    "DataTypeString",
+                    "DataTypeNumber"
+                  ],
+                  null
+                ],
+                [
+                  "widenergap",
+                  [
+                    "DataTypeString",
+                    "DataTypeNumber"
+                  ],
+                  null
+                ],
+                [
                   "code",
                   [
                     "DataTypeString"

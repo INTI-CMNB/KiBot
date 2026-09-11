@@ -62,6 +62,13 @@ Added
 
    -  ``drawing_sheet``: to specify a particular drawing sheet
 
+-  Panelize:
+
+   -  ``framing.widenercorners``/``widenerwidth``/``widenerlength`` to
+      add a rail widener: a solid patch of extra rail material at chosen
+      outer panel corners, to give pick-and-place photoelectric sensors
+      a bigger flat target without growing the panel’s outer outline
+
 -  PcbDraw:
 
    -  ``kicad_edge_no_w`` option to ``size_detection`` for more accurate
