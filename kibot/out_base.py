@@ -1427,14 +1427,14 @@ class VariantOptions(BaseOptions):
         # Current API only works on files on disk :-(
         save_board = self.will_filter_pcb_components()
         if save_board:
-            GS.make_bkp(GS.pcb_file)
+            GS.make_bkp(GS.pcb_file, '-kicad-job')
         try:
             if save_board:
                 GS.board.save()
             yield
         finally:
             if save_board:
-                GS.restore_bkp(GS.pcb_file)
+                GS.restore_bkp(GS.pcb_file, '-kicad-job')
 
 
 class PcbMargin(Optionable):
