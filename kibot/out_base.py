@@ -4,6 +4,7 @@
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from base64 import b64encode
+from contextlib import contextmanager
 from copy import deepcopy
 import math
 import os
@@ -1420,6 +1421,20 @@ class VariantOptions(BaseOptions):
                     # Put the original image back
                     s.bitmaps[index] = img
             s._replaced_images = None
+
+    @contextmanager
+    def kipy_job_with_modified_pcb(self):
+        # Current API only works on files on disk :-(
+        save_board = self.will_filter_pcb_components()
+        if save_board:
+            GS.make_bkp(GS.pcb_file)
+        try:
+            if save_board:
+                GS.board.save()
+            yield
+        finally:
+            if save_board:
+                GS.restore_bkp(GS.pcb_file)
 
 
 class PcbMargin(Optionable):
