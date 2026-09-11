@@ -368,7 +368,8 @@ class AnyLayerOptions(VariantOptions):
 
         try:
             self.filter_pcb_components()
-            self._run_export_job(destination, plot)
+            with self.kipy_job_with_modified_pcb():
+                self._run_export_job(destination, plot)
             self.unfilter_pcb_components()
 
             # Rename the files
