@@ -24,5 +24,6 @@ include kibot/resources/pcbdraw/templates/*.handlebars
 include kibot/resources/report_templates/*.txt
 include kibot/resources/tools/*
 include kibot/blender_scripts/*.py
+include kibot/panelize_plugins/*.py
 recursive-include kibot/resources/pcbdraw/footprints/ *.svg LICENCE *.md *.py *.pl *.png
 recursive-include kibot/resources/pcbdraw/present/ *.css *.html *.json *.js
