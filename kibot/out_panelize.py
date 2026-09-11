@@ -364,16 +364,16 @@ class PanelizeFraming(PanelOptionsWithPlugin):
         if len(self.widenercorners):
             if self.type not in ('railstb', 'railslr', 'frame', 'tightframe'):
                 raise KiPlotConfigurationError('`widenercorners` needs a `type` of railstb, railslr, frame or '
-                                                f'tightframe, not `{self.type}`')
+                                               f'tightframe, not `{self.type}`')
             if self.get_user_defined('code') or self.get_user_defined('arg'):
                 raise KiPlotConfigurationError('`widenercorners` can\'t be combined with an explicit `code`/`arg`, '
-                                                'it needs both to implement the widener')
+                                               'it needs both to implement the widener')
             self.add_units(('widenerwidth', 'widenerlength', 'widenergap'), convert=True)
             self.add_units(('hspace', 'vspace'), convert=True)
             gap = self._widenergap if self.get_user_defined('widenergap') else \
                 (self._vspace if self.type in ('railstb', 'frame', 'tightframe') else self._hspace)
             self.arg = json.dumps({'type': self.type, 'corners': self.widenercorners, 'width': self._widenerwidth,
-                                    'length': self._widenerlength, 'gap': gap})
+                                  'length': self._widenerlength, 'gap': gap})
             self.code = 'kibot.panelize_plugins.rail_widener.RailWidenerFramingPlugin'
             self.type = 'plugin'
             for k in ('type', 'code', 'arg'):
