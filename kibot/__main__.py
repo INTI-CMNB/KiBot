@@ -771,6 +771,15 @@ def check_needs_convert():
     return True
 
 
+def add_kikit_plugins_dir():
+    kikit_plugin_dir = os.path.dirname(os.path.dirname(__file__))
+    current_pythonpath = os.environ.get("PYTHONPATH", "")
+    existing_paths = current_pythonpath.split(os.pathsep) if current_pythonpath else []
+    if kikit_plugin_dir not in existing_paths:
+        existing_paths.append(kikit_plugin_dir)
+    os.environ['PYTHONPATH'] = os.pathsep.join(existing_paths)
+
+
 def initialization(args, progress=None):
     detect_windows()
     detect_macos()
@@ -781,6 +790,8 @@ def initialization(args, progress=None):
     os.environ['INTERACTIVE_HTML_BOM_NO_DISPLAY'] = 'True'
     # Tell git that we don't want interactive stuff
     os.environ['GIT_TERMINAL_PROMPT'] = '0'
+    # Add KiKit plug-ins dir
+    add_kikit_plugins_dir()
 
     # Parse global overwrite options
     parse_global_redef(args)
