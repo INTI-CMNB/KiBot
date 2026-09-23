@@ -134,7 +134,6 @@ outputs:
   - layer: F.Cu
     suffix: output.dxf.layers.dict
   common_layers:
-  - all
   - layer: output.dxf.common_layers.dict
   options:
     exclude_edge_layer: false
@@ -179,7 +178,6 @@ outputs:
   - layer: F.Cu
     suffix: output.gerber.layers.dict
   common_layers:
-  - all
   - layer: output.gerber.common_layers.dict
   options:
     use_aux_axis_as_origin: true
@@ -193,7 +191,6 @@ outputs:
   - layer: F.Cu
     suffix: output.hpgl.layers.dict
   common_layers:
-  - all
   - layer: output.hpgl.common_layers.dict
   options:
     exclude_edge_layer: false
@@ -394,7 +391,6 @@ outputs:
   - layer: F.Cu
     suffix: output.pdf.layers.dict
   common_layers:
-  - all
   - layer: output.pdf.common_layers.dict
   options:
     exclude_edge_layer: false
@@ -451,7 +447,6 @@ outputs:
   - layer: F.Cu
     suffix: output.ps.layers.dict
   common_layers:
-  - all
   - layer: output.ps.common_layers.dict
   options:
     exclude_edge_layer: false
@@ -507,7 +502,6 @@ outputs:
   - layer: F.Cu
     suffix: output.svg.layers.dict
   common_layers:
-  - all
   - layer: output.svg.common_layers.dict
   options:
     exclude_edge_layer: false
