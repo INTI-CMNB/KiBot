@@ -636,7 +636,7 @@ class KiConf(object):
             logger.debug('No 3D aliases ({})'.format(fname))
             return
         logger.debug('Loading 3D aliases from '+fname)
-        with open(fname) as f:
+        with open(fname, newline='') as f:
             reader = csv.reader(f)
             head = next(reader)
             if len(head) != 1 or head[0] != '#V1':

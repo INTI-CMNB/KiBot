@@ -912,7 +912,7 @@ class BoMOptions(BaseOptions):
         """ Load components from a CSV file """
         comps = []
         logger.debug('Importing components from `{}`'.format(fname))
-        with open(fname) as csvfile:
+        with open(fname, newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=delimiter)
             header = [x.lower() for x in next(reader)]
             logger.debugl(1, '- CSV header {}'.format(header))

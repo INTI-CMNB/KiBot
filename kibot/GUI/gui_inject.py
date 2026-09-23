@@ -68,7 +68,7 @@ class InjectDialog(wx.Dialog):
         if not file_name:
             InjectDialog.enabled = False
             return
-        with open(file_name) as csvfile:
+        with open(file_name, newline='') as csvfile:
             reader = csv.reader(csvfile)
             InjectDialog.events = [[convert_to_number(cell) for cell in row] for row in reader]
         InjectDialog.enabled = True
