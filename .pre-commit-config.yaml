@@ -18,7 +18,7 @@ exclude:
   )$
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: no-commit-to-branch
         args: [--branch, main]
@@ -54,10 +54,18 @@ repos:
 #    rev: 22.1.0
 #    hooks:
 #      - id: black
-  - repo: https://github.com/fsouza/autoflake8
-    rev: v0.4.1
+#  - repo: https://github.com/fsouza/autoflake8
+#    rev: v0.4.1
+#    hooks:
+#      - id: autoflake8
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.4.0
     hooks:
-      - id: autoflake8
+      - id: autoflake
+        args:
+          - --in-place
+          - --remove-all-unused-imports
+          - --remove-unused-variables
   - repo: https://github.com/PyCQA/flake8
     rev: 7.0.0
     hooks:
@@ -100,6 +108,6 @@ repos:
 #        args: ['-t=3.7-', '--violations']
 #        # (if your target is specified in a Vermin config, you may omit the 'args' entry entirely)
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0  # Use the latest version
+    rev: v6.0.0  # Use the latest version
     hooks:
       - id: check-symlinks
