@@ -349,7 +349,7 @@ class VariantOptions(BaseOptions):
         return GS.pn.ToMM(val) if GS.pn is not None else GS.kp.util.units.to_mm(val)
 
     @staticmethod
-    def cross_module(m, rect, layer, angle):
+    def cross_module_pn(m, rect, layer, angle):
         """ Draw a cross over a module.
             The rect is a Rect object with the size.
             The layer is which layer id will be used.
@@ -385,6 +385,12 @@ class VariantOptions(BaseOptions):
         bfab = GS.B_Fab
         tlay = GS.layer_name2id(GS.global_dnp_cross_top_layer)
         blay = GS.layer_name2id(GS.global_dnp_cross_bottom_layer)
+        if GS.pn is not None:
+            self.cross_modules_pn(board, comps_hash, ffab, bfab, tlay, blay)
+        else:
+            self.cross_modules_kp(board, comps_hash, ffab, bfab, tlay, blay)
+
+    def cross_modules_pn(self, board, comps_hash, ffab, bfab, tlay, blay):
         extra_tlay_lines = []
         extra_blay_lines = []
         for m in GS.get_modules_board(board):
@@ -410,21 +416,82 @@ class VariantOptions(BaseOptions):
                 m.Rotate(center, GS.angle(fp_angle))
                 # Cross the graphics in *.Fab
                 if frect.x1 is not None:
-                    extra_tlay_lines.append(self.cross_module(m, frect, tlay, fp_angle))
+                    extra_tlay_lines.append(self.cross_module_pn(m, frect, tlay, fp_angle))
                 else:
                     extra_tlay_lines.append(None)
                 if brect.x1 is not None:
-                    extra_blay_lines.append(self.cross_module(m, brect, blay, fp_angle))
+                    extra_blay_lines.append(self.cross_module_pn(m, brect, blay, fp_angle))
                 else:
                     extra_blay_lines.append(None)
         # Remmember the data used to undo it
         self.extra_tlay_lines = extra_tlay_lines
         self.extra_blay_lines = extra_blay_lines
 
+    @staticmethod
+    def cross_module_kp(board, m, layer_ref, layer_lines):
+        items = [i for i in m.definition.shapes if i.layer == layer_ref]
+        if not len(items):
+            return
+        bbox = GS._compute_boundary_for_items_kp(board, items)
+        l1 = GS.kp.board_types.BoardSegment()
+        l2 = GS.kp.board_types.BoardSegment()
+        l1.layer = l2.layer = layer_lines
+        l1.attributes.stroke.width = l2.attributes.stroke.width = 120000
+        l1.start = bbox.pos
+        end = bbox.pos+bbox.size
+        l1.end = end
+        l2.start = GS.kp.geometry.Vector2.from_xy(bbox.pos.x, end.y)
+        l2.end = GS.kp.geometry.Vector2.from_xy(end.x, bbox.pos.y)
+        m.definition.add_item(l1)
+        m.definition.add_item(l2)
+        m._kibot_extra_items.append(l1)
+        m._kibot_extra_items.append(l2)
+
+    def cross_modules_kp(self, board, comps_hash, ffab, bfab, tlay, blay):
+        # Separate the components to process
+        to_cross = []
+        for m in GS.get_modules_board(board):
+            ref = GS.fp_get_reference(m)
+            c = comps_hash.get(ref, None)
+            if c and c.included and not c.fitted:
+                logger.debug(f"- {ref} crossed")
+                to_cross.append(m)
+        if len(to_cross) == 0:
+            return
+        # Get all the bboxes for them
+        zero = GS.kp.geometry.Angle.from_degrees(0)
+        for m in to_cross:
+            m._kibot_old_orientation = m.orientation
+            m.orientation = zero
+        board.update_items(to_cross)
+        for m in to_cross:
+            m._kibot_extra_items = []
+            self.cross_module_kp(board, m, ffab, tlay)
+            self.cross_module_kp(board, m, bfab, blay)
+            m.orientation = m._kibot_old_orientation
+        board.update_items(to_cross)
+
     def uncross_modules(self, board, comps_hash):
         """ Undo the crosses in provided top or bottom layers (default *.Fab) """
         if comps_hash is None or not GS.global_cross_footprints_for_dnp:
             return
+        if GS.pn is not None:
+            self.uncross_modules_pn(board, comps_hash)
+        else:
+            self.uncross_modules_kp(board)
+
+    def uncross_modules_kp(self, board):
+        to_update = []
+        for m in GS.get_modules_board(board):
+            if not hasattr(m, '_kibot_extra_items') or len(m._kibot_extra_items) == 0:
+                continue
+            m.items = [i for i in m.items if i not in m._kibot_extra_items]
+            m._kibot_extra_items = []
+            to_update.append(m)
+        if to_update:
+            board.update_items(to_update)
+
+    def uncross_modules_pn(self, board, comps_hash):
         # Undo the drawings
         for m in GS.get_modules_board(board):
             ref = GS.fp_get_reference(m)
