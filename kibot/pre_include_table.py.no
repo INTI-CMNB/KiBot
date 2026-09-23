@@ -138,7 +138,7 @@ def update_table_group(g, pos_x, pos_y, width, tlayer, ops, out, csv_file, out_t
 
     format_drill_table = out_type in VALID_DRILL_TABLE_OUTPUTS and ops.format_drill_table
 
-    with open(csv_file) as csvfile:
+    with open(csv_file, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=out._obj.get_csv_separator())
 
         # Parse the header if present

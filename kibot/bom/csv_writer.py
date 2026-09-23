@@ -190,7 +190,7 @@ def write_csv(filename, ext, groups, headings, head_names, cfg):
     keep_line_breaks = kops.get("keep_line_breaks", False) if is_kicad else True
     keep_tabs = kops.get("keep_tabs", False) if is_kicad else True
 
-    with open(filename, "wt") as f:
+    with open(filename, "wt", newline='') as f:
         if is_hrtxt:
             writer = HRTXT(f, delimiter=delimiter, hsep=ops.header_sep, align=ops.justify)
         else:

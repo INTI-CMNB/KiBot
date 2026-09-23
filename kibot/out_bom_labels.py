@@ -86,7 +86,7 @@ class BoMLabelsOptions(VariantOptions):
         c = canvas.Canvas(dest, pagesize=(page_w, page_h))
 
         # Read CSV data
-        with open(ori, 'r') as f:
+        with open(ori, 'r', newline='') as f:
             reader = csv.reader(f)
             rows = list(reader)
 
