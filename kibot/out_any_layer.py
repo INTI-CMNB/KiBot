@@ -506,7 +506,7 @@ class AnyLayer(BaseOutput):
             """ *[list(dict)|list(string)|string='all'] [all,selected,copper,technical,user,inners,outers,*] List
                 of PCB layers to plot """
             self.common_layers = Layer
-            """ *[list(dict)|list(string)|string='all'] [all,selected,copper,technical,user,inners,outers,*] List
+            """ *[list(dict)|list(string)|string=''] [all,selected,copper,technical,user,inners,outers,*] List
                 of PCB layers to plot on each page/file. For the most common case, the edge cuts, you don't need
                 to use it.
                 The edge cut is automatically added unless `exclude_edge_layer` is enabled (KiCad 11+) """
