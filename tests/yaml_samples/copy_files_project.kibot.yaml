@@ -1,0 +1,12 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+outputs:
+  - name: result
+    comment: 'Copy files from source, output and 3D models'
+    type: copy_files
+    options:
+      files:
+        - source_type: project
+          dest: prj

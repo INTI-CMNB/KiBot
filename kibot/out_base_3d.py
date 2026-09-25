@@ -630,7 +630,7 @@ class Base3DOptions(VariantOptions):
             if GS.sch_file:
                 GS.load_sch()
                 all_comps = GS.sch.get_components()
-                if (GS.global_kicad_dnp_applies_to_3D and any((c.kicad_dnp is not None and c.kicad_dnp for c in all_comps))):
+                if (GS.global_kicad_dnp_applies_to_3D and any((not c.compute_dnp() for c in all_comps))):
                     # One or more components are DNP, remove them
                     reset_filters(all_comps)
                     all_comps_hash = {c.ref: c for c in all_comps}

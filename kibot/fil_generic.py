@@ -183,7 +183,7 @@ class Generic(BaseFilter):  # noqa: F821
             return exclude
         if self.exclude_not_on_board and not comp.on_board:
             return exclude
-        if self.exclude_kicad_dnp and comp.kicad_dnp:
+        if self.exclude_kicad_dnp and comp.compute_dnp():
             return exclude
         # List of references to be excluded
         if self.exclude_refs and (comp.ref in self.exclude_refs or comp.ref_prefix+'*' in self.exclude_refs):

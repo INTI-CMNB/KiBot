@@ -386,7 +386,10 @@ class ComponentGroup(object):
         self.fields[ColumnList.COL_NET_LABEL_L] = comp.net_name.split('/')[-1]
         self.fields[ColumnList.COL_NET_CLASS_L] = comp.net_class
         # KiCad attributes
-        self.fields[ColumnList.COL_DNP_L] = self.solve_multiple_attributes('kicad_dnp', 'DNP')
+        # Take sheet wide DNP into account
+        for c in self.components:
+            c.solved_kicad_dnp = c.compute_dnp()
+        self.fields[ColumnList.COL_DNP_L] = self.solve_multiple_attributes('solved_kicad_dnp', 'DNP')
         self.fields[ColumnList.COL_EXCLUDE_FROM_BOARD_L] = self.solve_multiple_attributes('on_board', 'Excluded from board',
                                                                                           invert=True)
         self.fields[ColumnList.COL_EXCLUDE_FROM_SIM_L] = self.solve_multiple_attributes('exclude_from_sim',
