@@ -748,7 +748,9 @@ class Optionable(object):
         # Flags
         if v.in_bom is not None:
             c.in_bom = v.in_bom
-        if v.dnp is not None:
+        if c.is_dnp_by_sheet():
+            c.kicad_dnp = True
+        elif v.dnp is not None:
             c.kicad_dnp = v.dnp
         # Fields
         for name, value in v.fields.items():

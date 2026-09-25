@@ -916,7 +916,7 @@ class SchematicComponent(object):
         self.in_pcb_only = False    # Not in schematic
         # KiCad 7 PCB flags
         self.kicad_dnp = None       # Do Not Populate
-        self.kicad_dnp_sch = None   # back-up copy
+        self.kicad_dnp_sch = None   # back-up copy, using during filter resets
         # KiCad 10
         self.in_pos_files = None
         self.duplicate_pin_numbers_are_jumpers = None

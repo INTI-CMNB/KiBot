@@ -11,7 +11,7 @@ Documentation: https://dev-docs.kicad.org/en/file-formats/sexpr-schematic/
 """
 import base64
 from collections import OrderedDict
-from copy import deepcopy
+from copy import deepcopy, copy
 import os
 import re
 from ..gs import GS
@@ -1351,6 +1351,18 @@ class SchematicComponentV6(SchematicComponent):
             self.projects.append((name, instances))
             self.used_variants[id] = variants
 
+    def is_dnp_by_sheet(self):
+        return self.parent_sheet is not None and self.parent_sheet.sheet_flags.dnp
+
+    def compute_dnp(self):
+        """ Determines if the KiCad flag applies to this component.
+            We check the sheet flag and then the component flag. """
+        # Check if the sheet itself is DNP
+        if self.is_dnp_by_sheet():
+            return True
+        # Check if the component is DNP
+        return self.kicad_dnp is not None and self.kicad_dnp
+
     @staticmethod
     def load(c, project, parent):
         if not isinstance(c, list):
@@ -1967,6 +1979,28 @@ class SheetInstance(object):
         return _symbol('path', [self.path, _symbol('page', [self.page])])
 
 
+class SheetFlags(object):
+    def __init__(self):
+        super().__init__()
+        self.exclude_from_sim = False
+        self.in_bom = True
+        self.on_board = True
+        self.in_pos_files = True
+        self.dnp = False
+
+    def override(self, other):
+        if other.exclude_from_sim:
+            self.exclude_from_sim = True
+        if not other.in_bom:
+            self.in_bom = False
+        if not other.on_board:
+            self.on_board = False
+        if not other.in_pos_files:
+            self.in_pos_files = False
+        if other.dnp:
+            self.dnp = True
+
+
 class Sheet(object):
     def __init__(self):
         super().__init__()
@@ -1989,6 +2023,7 @@ class Sheet(object):
         self.in_bom = None
         self.on_board = None
         self.dnp = None
+        self.flags = SheetFlags()
         # KiCad 10 attributes
         self.in_pos_files = None
         self.duplicate_pin_numbers_are_jumpers = None
@@ -2032,14 +2067,18 @@ class Sheet(object):
                 sheet.exclude_from_sim = _get_yes_no(i, 1, i_type)
             elif i_type == 'in_bom':
                 sheet.in_bom = _get_yes_no(i, 1, i_type)
+                sheet.flags.in_bom = sheet.in_bom
             elif i_type == 'on_board':
                 sheet.on_board = _get_yes_no(i, 1, i_type)
+                sheet.flags.on_board = sheet.on_board
             elif i_type == 'in_pos_files':
                 sheet.in_pos_files = _get_yes_no(i, 1, i_type)
+                sheet.flags.in_pos_files = sheet.in_pos_files
             elif i_type == 'duplicate_pin_numbers_are_jumpers':
                 sheet.duplicate_pin_numbers_are_jumpers = _get_yes_no(i, 1, i_type)
             elif i_type == 'dnp':
                 sheet.dnp = _get_yes_no(i, 1, i_type)
+                sheet.flags.dnp = sheet.dnp
             elif i_type == 'property':
                 field = SchematicFieldV6.parse(i, field_id)
                 field_id += 1
@@ -2070,7 +2109,9 @@ class Sheet(object):
         sheet.sheet_path_ori = path_join(parent_obj.sheet_path_ori, self.uuid_ori)
         sheet.sheet_path_h = path_join(parent_obj.sheet_path_h, self.name)
         parent_obj.sheet_paths[sheet.sheet_path_ori] = sheet
-        sheet.load(os.path.join(parent_dir, self.file), project, parent_obj, local_properties=self.properties)
+        sheet.load(os.path.join(parent_dir, self.file), project, parent_obj, local_properties=self.properties,
+                   sheet_flags=self.flags)
+        sheet.sheet_obj = self
         # self.sheet_paths
         if self.projects is not None:
             # KiCad v7 sheet pages are here
@@ -2405,6 +2446,7 @@ class SchematicV6(Schematic):
     def __init__(self):
         super().__init__()
         self.annotation_error = False
+        self.sheet_obj = None  # The Sheet object that schematic sheet belongs to
         # The title block is optional
         self.date = self.title = self.revision = self.company = ''
         self.comment = ['']*9
@@ -2741,14 +2783,11 @@ class SchematicV6(Schematic):
             if field.value != field2.value:
                 SchematicV6.log_difference(r, c, '`{}` fields (`{}` != `{}`)'.format(name, field.value, field2.value))
                 return True
-        if c.fitted != r.fitted:
+        if c.fitted != r.fitted and (c.fitted != (not c.compute_dnp()) or r.fitted != (not r.compute_dnp())):
             SchematicV6.log_difference(r, c, 'fitted status')
             return True
         if c.included != r.included:
             SchematicV6.log_difference(r, c, 'included status')
-            return True
-        if c.fixed != r.fixed:
-            SchematicV6.log_difference(r, c, 'fixed status')
             return True
         if c.fixed != r.fixed:
             SchematicV6.log_difference(r, c, 'fixed status')
@@ -2893,7 +2932,7 @@ class SchematicV6(Schematic):
             if n not in defined:
                 logger.warning(W_PAGEMIS+f"Schematic page number `{n}` is not defined")
 
-    def load(self, fname, project, parent=None, mapped_uuid=None, local_properties=None):  # noqa: C901
+    def load(self, fname, project, parent=None, mapped_uuid=None, local_properties=None, sheet_flags=None):  # noqa: C901
         """ Load a v6.x KiCad Schematic.
             The caller must be sure the file exists.
             Only the schematics are loaded not the libs. """
@@ -2914,6 +2953,7 @@ class SchematicV6(Schematic):
             self.embedded_file_names = {}
             self.used_variants = {}
             self.sheet_properties = {}
+            self.sheet_flags = SheetFlags()
         else:
             self.fields = parent.fields
             self.fields_lc = parent.fields_lc
@@ -2929,6 +2969,9 @@ class SchematicV6(Schematic):
             self.sheet_properties = parent.sheet_properties.copy()
             if local_properties is not None:
                 self.sheet_properties.update({f.name: f.value for f in local_properties})
+            self.sheet_flags = copy(parent.sheet_flags)
+            if sheet_flags:
+                self.sheet_flags.override(sheet_flags)
         self.symbol_instances = []
         self.parent = parent
         self.fname = fname

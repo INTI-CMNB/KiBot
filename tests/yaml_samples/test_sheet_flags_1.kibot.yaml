@@ -1,0 +1,34 @@
+kibot:
+  version: 1
+
+filters:
+  - name: kicad_dnp
+    type: generic
+    exclude_kicad_dnp: true
+
+outputs:
+  - name: bom
+    type: bom
+    comment: "BoM for R3 and R4, not others"
+    options:
+      format: CSV
+      csv:
+        hide_pcb_info: true
+        hide_stats_info: true
+
+  - name: position
+    type: position
+    comment: "P&P for R3 and R4, not others"
+    options:
+      format: CSV
+      separate_files_for_front_and_back: false
+      exclude_filter: kicad_dnp
+
+  - name: schematic
+    type: copy_files
+    dir: copy
+    comment: "Copy the project"
+    options:
+      files:
+        - source_type: project
+          dest: prj

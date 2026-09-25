@@ -2307,3 +2307,22 @@ def test_wrong_sch_font(test_dir):
     ctx.run()
     ctx.search_err('Missing font `Ninja Naruto NO`, using')
     ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Using sheet wide flags")
+def test_sheet_flags_1(test_dir):
+    """ This is related to #958
+        Check we can mark a page DNP and that this is inherited """
+    prj = 'sheet_flags/repro'
+    ctx = context.TestContextSCH(test_dir, prj, 'test_sheet_flags_1', '')
+    ctx.run()
+    pos = 'repro-both_pos.csv'
+    bom = 'repro-bom.csv'
+    ctx.expect_out_file(bom)
+    ctx.expect_out_file(pos)
+    rows, _, _ = ctx.load_csv(bom)
+    assert rows[0][3] == "R3 R4", rows
+    rows, _, _ = ctx.load_csv(pos)
+    assert rows[0][0] == "R3" and rows[1][0] == "R4", rows
+    ctx.search_err('Expanding hierarchy', invert=True)
+    ctx.clean_up()
