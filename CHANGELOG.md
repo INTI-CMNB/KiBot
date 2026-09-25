@@ -78,6 +78,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PcbDraw:
   - 'svg_paths' mode for 'size_detection' avoids stuff outside the PCB and
     mirror issues. We still recommend using the default.
+- Copy Files:
+  - Missing filters reset when copying the project. The schematic might contain
+    the result of previous filters
 
 # Changed
 - Gerber/PS/PDF/SVG/DXF:

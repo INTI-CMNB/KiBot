@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2022-2025 Salvador E. Tropea
-# Copyright (c) 2022-2025 Instituto Nacional de Tecnología Industrial
+# Copyright (c) 2022-2026 Salvador E. Tropea
+# Copyright (c) 2022-2026 Instituto Nacional de Tecnología Industrial
 # License: AGPL-3.0
 # Project: KiBot (formerly KiPlot)
 from copy import copy
@@ -10,8 +10,9 @@ import os
 import re
 from shutil import copy2
 from .error import KiPlotConfigurationError
+from .fil_base import reset_filters
 from .gs import GS
-from .kiplot import config_output, get_output_dir, run_output, register_xmp_import
+from .kiplot import config_output, get_output_dir, run_output, register_xmp_import, get_all_components
 from .kicad.config import KiConf, LibAlias, FP_LIB_TABLE, SYM_LIB_TABLE
 from .misc import WRONG_ARGUMENTS, INTERNAL_ERROR, W_COPYOVER, W_MISSLIB, W_MISSCMP, W_NOFILES, EMBED_PREFIX
 from .optionable import Optionable
@@ -231,6 +232,8 @@ class Copy_FilesOptions(Base3DOptions):
                 GS.board.Save(fname)
                 if mode_project:
                     GS.check_sch()
+                    # Make sure we copy the schematic without filters applies
+                    reset_filters(get_all_components())
                     logger.debug('Saving the schematic to '+dest_dir)
                     GS.sch.save_variant(dest_dir)
                     self.add_sch_files(extra_files, dest_dir)
