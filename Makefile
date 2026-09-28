@@ -132,6 +132,8 @@ test_docker_local_1_ki9:
 
 t1k9: single_test
 
+t1: single_test
+
 # pip3 uninstall -y kiauto ; dpkg -i kiauto_2.2.5-1_all.deb ;
 test_docker_local_1_n:
 	rm -rf output
