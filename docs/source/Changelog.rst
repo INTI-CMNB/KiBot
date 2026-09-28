@@ -24,10 +24,6 @@ Added
    -  ``pcb_image_prefix``: to configure the prefix for groups used to
       insert images on PCBs
 
--  Schematic:
-
-   -  DNP save status when no variant is applied
-
 -  \*SCH Print:
 
    -  ’draw_hop_over\` to draw it at wire crossings
@@ -133,6 +129,10 @@ Fixed
 
    -  Mark KiCad 10 as good (green, not red)
    -  Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
+
+-  Copy Files:
+
+   -  Issues with the DNP status
 
 -  Navigate Results:
 
