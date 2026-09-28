@@ -232,7 +232,7 @@ class Copy_FilesOptions(Base3DOptions):
                 if mode_project:
                     GS.check_sch()
                     logger.debug('Saving the schematic to '+dest_dir)
-                    GS.sch.save_variant(dest_dir)
+                    GS.sch.save_no_variant(dest_dir)
                     self.add_sch_files(extra_files, dest_dir)
             elif mode_project:
                 self.add_sch_files(extra_files, dest_dir)
