@@ -1539,7 +1539,7 @@ class SchematicComponentV6(SchematicComponent):
             data.append(_symbol_yn('in_pos_files', self.in_pos_files))
         if self.duplicate_pin_numbers_are_jumpers is not None:
             data.append(_symbol_yn('duplicate_pin_numbers_are_jumpers', self.duplicate_pin_numbers_are_jumpers))
-        if dnp is not None:
+        if dnp is not None and GS.ki7:
             data.append(_symbol_yn('dnp', dnp))
         if self.fields_autoplaced:
             data.append(_symbol('fields_autoplaced'))
