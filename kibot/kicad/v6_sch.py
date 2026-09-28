@@ -1506,16 +1506,18 @@ class SchematicComponentV6(SchematicComponent):
 
     def write(self, exp_hierarchy, cross, alt_variants):
         lib_id = self.lib_id
-        is_crossed = not (self.fitted or not self.included)
-        native_cross = GS.ki7 and GS.global_cross_using_kicad
-        dnp = False if native_cross and GS.variant else self.kicad_dnp
-        if cross and (self.lib or self.local_name) and is_crossed:
-            if native_cross:
-                # Just inform KiCad we want to make it DNP
-                dnp = True
-            else:
-                # Use an alternative name
+        if cross:
+            # We are saving using a variant
+            is_crossed = not (self.fitted or not self.included)
+            if GS.ki7 and GS.global_cross_using_kicad:  # Native cross
+                # Just inform KiCad our variant status
+                dnp = is_crossed
+            elif is_crossed and (self.lib or self.local_name):
+                # Use an alternative symbol name
                 lib_id = CROSSED_LIB+':'+(self.local_name if self.local_name else self.name)
+                dnp = False
+        else:
+            dnp = self.kicad_dnp
         data = [_symbol('lib_id', [lib_id]),
                 _symbol('at', [self.x, self.y, self.ang])]
         if self.local_name is not None:
@@ -2740,6 +2742,11 @@ class SchematicV6(Schematic):
     def save_variant(self, dest_dir, alt_variants=False):
         fname = os.path.basename(self.fname)
         self.save(fname, dest_dir, cross=True, exp_hierarchy=self.check_exp_hierarchy(), alt_variants=alt_variants)
+        return fname
+
+    def save_no_variant(self, dest_dir):
+        fname = os.path.basename(self.fname)
+        self.save(fname, dest_dir)
         return fname
 
     def file_names_variant(self, dest_dir):

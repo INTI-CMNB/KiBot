@@ -235,7 +235,7 @@ class Copy_FilesOptions(Base3DOptions):
                     # Make sure we copy the schematic without filters applies
                     reset_filters(get_all_components())
                     logger.debug('Saving the schematic to '+dest_dir)
-                    GS.sch.save_variant(dest_dir)
+                    GS.sch.save_no_variant(dest_dir)
                     self.add_sch_files(extra_files, dest_dir)
             elif mode_project:
                 self.add_sch_files(extra_files, dest_dir)
