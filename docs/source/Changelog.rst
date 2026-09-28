@@ -24,6 +24,10 @@ Added
    -  ``pcb_image_prefix``: to configure the prefix for groups used to
       insert images on PCBs
 
+-  Schematic:
+
+   -  DNP save status when no variant is applied
+
 -  \*SCH Print:
 
    -  ’draw_hop_over\` to draw it at wire crossings
@@ -140,6 +144,11 @@ Fixed
 
    -  ‘svg_paths’ mode for ‘size_detection’ avoids stuff outside the PCB
       and mirror issues. We still recommend using the default.
+
+-  Copy Files:
+
+   -  Missing filters reset when copying the project. The schematic
+      might contain the result of previous filters
 
 Changed
 =======

@@ -26,7 +26,7 @@ Parameters:
 
 .. _DXF_common_layers:
 
--  **common_layers** :index:`: <pair: output - dxf; common_layers>`  [:ref:`Layer parameters <Layer>`] [:ref:`list(dict) <list(dict)>` | :ref:`list(string) <list(string)>` | :ref:`string <string>`] (default: ``'all'``) (choices: "all", "selected", "copper", "technical", "user", "inners", "outers") (also accepts any string) List
+-  **common_layers** :index:`: <pair: output - dxf; common_layers>`  [:ref:`Layer parameters <Layer>`] [:ref:`list(dict) <list(dict)>` | :ref:`list(string) <list(string)>` | :ref:`string <string>`] (default: ``''``) (choices: "all", "selected", "copper", "technical", "user", "inners", "outers") (also accepts any string) List
    of PCB layers to plot on each page/file. For the most common case, the edge cuts, you don't need
    to use it. |br|
    The edge cut is automatically added unless `exclude_edge_layer` is enabled (KiCad 11+).
