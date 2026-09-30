@@ -1506,16 +1506,21 @@ class SchematicComponentV6(SchematicComponent):
 
     def write(self, exp_hierarchy, cross, alt_variants):
         lib_id = self.lib_id
-        is_crossed = not (self.fitted or not self.included)
-        native_cross = GS.ki7 and GS.global_cross_using_kicad
-        dnp = False if native_cross and GS.variant else self.kicad_dnp
-        if cross and (self.lib or self.local_name) and is_crossed:
-            if native_cross:
-                # Just inform KiCad we want to make it DNP
-                dnp = True
-            else:
-                # Use an alternative name
-                lib_id = CROSSED_LIB+':'+(self.local_name if self.local_name else self.name)
+        if cross:
+            # We are saving using a variant
+            is_crossed = not (self.fitted or not self.included)
+            dnp = False
+            if is_crossed:
+                # The component is marked DNP
+                if not self.is_dnp_by_sheet() or self.kicad_dnp_sch:
+                    # Isn't from the sheet or is originally marked
+                    if GS.ki7 and GS.global_cross_using_kicad:
+                        # Native cross: Just inform KiCad our variant status
+                        dnp = True
+                    elif self.lib or self.local_name:
+                        # Use an alternative symbol name
+                        lib_id = CROSSED_LIB+':'+(self.local_name if self.local_name else self.name)
+            # Otherwise keep it not DNP
         else:
             dnp = self.kicad_dnp
         data = [_symbol('lib_id', [lib_id]),
