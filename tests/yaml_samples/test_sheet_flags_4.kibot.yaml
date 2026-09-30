@@ -1,0 +1,37 @@
+# Test case for a sheet marked as DNP the test project is tests/board_samples/kicad_*/sheet_flags/repro.kicad_sch
+# We also test the save of this schematic using the variant save.
+# As the variant does nothing the result should be equivalent to the original
+# This test checks the behavior when we don't use the KiCad native cross
+kibot:
+  version: 1
+
+globals:
+  cross_using_kicad: false
+
+variants:
+  - name: v
+    type: kibom
+
+outputs:
+  - name: bom
+    type: bom
+    comment: "BoM for R3 and R4, not others"
+    options:
+      variant: v
+      format: CSV
+      csv:
+        hide_pcb_info: true
+        hide_stats_info: true
+
+  - name: position
+    type: position
+    comment: "P&P for R3 and R4, not others"
+    options:
+      variant: v
+      format: CSV
+      separate_files_for_front_and_back: false
+
+  - name: schematic
+    type: sch_variant
+    options:
+      variant: v
