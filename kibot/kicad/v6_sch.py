@@ -2801,8 +2801,10 @@ class SchematicV6(Schematic):
             # Instances are different AND the difference is from a variant/filter (not from a sheet flag)
             SchematicV6.log_difference(r, c, 'fitted status')
             return True
-        if not c.fitted and not r.fitted and (c.is_dnp_by_sheet() ^ r.is_dnp_by_sheet()):
+        if (not c.fitted and not r.fitted and (c.is_dnp_by_sheet() ^ r.is_dnp_by_sheet()) and
+           not (c.kicad_dnp_sch and r.kicad_dnp_sch)):
             # Both instances aren't fitted, but only one of them is because of a sheet flag
+            # And isn't because they were both DNP in the schematic
             SchematicV6.log_difference(r, c, 'fitted status')
             return True
         if c.included != r.included:
