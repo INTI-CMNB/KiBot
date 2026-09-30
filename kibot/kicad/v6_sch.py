@@ -1510,12 +1510,17 @@ class SchematicComponentV6(SchematicComponent):
             # We are saving using a variant
             is_crossed = not (self.fitted or not self.included)
             dnp = False
-            if GS.ki7 and GS.global_cross_using_kicad:  # Native cross
-                # Just inform KiCad our variant status
-                dnp = is_crossed
-            elif is_crossed and (self.lib or self.local_name):
-                # Use an alternative symbol name
-                lib_id = CROSSED_LIB+':'+(self.local_name if self.local_name else self.name)
+            if is_crossed:
+                # The component is marked DNP
+                if not self.is_dnp_by_sheet() or self.kicad_dnp_sch:
+                    # Isn't from the sheet or is originally marked
+                    if GS.ki7 and GS.global_cross_using_kicad:
+                        # Native cross: Just inform KiCad our variant status
+                        dnp = True
+                    elif self.lib or self.local_name:
+                        # Use an alternative symbol name
+                        lib_id = CROSSED_LIB+':'+(self.local_name if self.local_name else self.name)
+            # Otherwise keep it not DNP
         else:
             dnp = self.kicad_dnp
         data = [_symbol('lib_id', [lib_id]),
