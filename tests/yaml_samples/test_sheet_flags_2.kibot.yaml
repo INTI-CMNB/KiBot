@@ -1,18 +1,19 @@
 # Test case for a sheet marked as DNP the test project is tests/board_samples/kicad_*/sheet_flags/repro.kicad_sch
-# We also test the save of this schematic using the "copy_files" so it should save something equivalent to the original
+# We also test the save of this schematic using the variant save. As the variant does nothing the result should be equivalent
+# to the original
 kibot:
   version: 1
 
-filters:
-  - name: kicad_dnp
-    type: generic
-    exclude_kicad_dnp: true
+variants:
+  - name: v
+    type: kibom
 
 outputs:
   - name: bom
     type: bom
     comment: "BoM for R3 and R4, not others"
     options:
+      variant: v
       format: CSV
       csv:
         hide_pcb_info: true
@@ -22,15 +23,11 @@ outputs:
     type: position
     comment: "P&P for R3 and R4, not others"
     options:
+      variant: v
       format: CSV
       separate_files_for_front_and_back: false
-      exclude_filter: kicad_dnp
 
   - name: schematic
-    type: copy_files
-    dir: copy
-    comment: "Copy the project"
+    type: sch_variant
     options:
-      files:
-        - source_type: project
-          dest: prj
+      variant: v

@@ -1,0 +1,35 @@
+# Test case for a sheet marked as DNP the test project is tests/board_samples/kicad_*/sheet_flags/repro.kicad_sch
+# We also test the save of this schematic using the variant save.
+# Now we introduce a change from the variant
+kibot:
+  version: 1
+
+variants:
+  - name: v
+    type: ibom
+    comment: "Removes R3"
+    variants_blacklist: NOR3
+
+outputs:
+  - name: bom
+    type: bom
+    comment: "BoM for R4, not others"
+    options:
+      variant: v
+      format: CSV
+      csv:
+        hide_pcb_info: true
+        hide_stats_info: true
+
+  - name: position
+    type: position
+    comment: "P&P for R4, not others"
+    options:
+      variant: v
+      format: CSV
+      separate_files_for_front_and_back: false
+
+  - name: schematic
+    type: sch_variant
+    options:
+      variant: v

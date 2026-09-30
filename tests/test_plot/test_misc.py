@@ -2298,6 +2298,17 @@ def test_panel_rotation_renamed(test_dir):
     ctx.clean_up(keep_project=True)
 
 
+def print_and_compare(ctx, schematic, output, reference=None):
+    # Check the saved schematic looks like the original
+    copied_file = ctx.get_out_path(schematic)
+    printed_pdf = ctx.get_out_path(output)
+    cmd = ['kicad-cli', 'sch', 'export', 'pdf', '--black-and-white', '--exclude-drawing-sheet',
+           '--no-background-color', '-o', printed_pdf, copied_file]
+    logging.debug(f"Running {cmd}")
+    subprocess.check_call(cmd)
+    ctx.compare_pdf(output, reference=reference)
+
+
 @pytest.mark.skipif(not context.ki10(), reason="Just checking with modern KiCad")
 def test_wrong_sch_font(test_dir):
     """ This is related to #948
@@ -2312,17 +2323,88 @@ def test_wrong_sch_font(test_dir):
 @pytest.mark.skipif(not context.ki10(), reason="Using sheet wide flags")
 def test_sheet_flags_1(test_dir):
     """ This is related to #958
-        Check we can mark a page DNP and that this is inherited """
+        Check we can mark a page DNP and that this is inherited.
+        Also check we can save the sheets without changing the DNP status """
     prj = 'sheet_flags/repro'
     ctx = context.TestContextSCH(test_dir, prj, 'test_sheet_flags_1', '')
     ctx.run()
     pos = 'repro-both_pos.csv'
     bom = 'repro-bom.csv'
-    ctx.expect_out_file(bom)
-    ctx.expect_out_file(pos)
+
+    # Only R3 and R4 are used, R1 and R2 are disabled by the sheet being DNP, R5 and R6 are DNP
     rows, _, _ = ctx.load_csv(bom)
     assert rows[0][3] == "R3 R4", rows
+    assert len(rows) == 1
+    logging.debug("BoM OK")
     rows, _, _ = ctx.load_csv(pos)
     assert rows[0][0] == "R3" and rows[1][0] == "R4", rows
+    assert len(rows) == 2
+    logging.debug("Position OK")
+
+    # Check we didn't expand the hierarchy
     ctx.search_err('Expanding hierarchy', invert=True)
+
+    # Check the saved schematic looks like the original
+    print_and_compare(ctx, 'copy/prj/repro.kicad_sch', 'test_sheet_flags_1.pdf')
+
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Using sheet wide flags")
+def test_sheet_flags_2(test_dir):
+    """ This is related to #958
+        Check we can mark a page DNP and that this is inherited
+        Also check that a neutral variant can be saved without changes """
+    prj = 'sheet_flags/repro'
+    ctx = context.TestContextSCH(test_dir, prj, 'test_sheet_flags_2', '')
+    ctx.run()
+    pos = 'repro-both_pos.csv'
+    bom = 'repro-bom.csv'
+
+    # Only R3 and R4 are used, R1 and R2 are disabled by the sheet being DNP, R5 and R6 are DNP
+    rows, _, _ = ctx.load_csv(bom)
+    assert rows[0][3] == "R3 R4", rows
+    assert len(rows) == 1
+    logging.debug("BoM OK")
+    rows, _, _ = ctx.load_csv(pos)
+    assert rows[0][0] == "R3" and rows[1][0] == "R4", rows
+    assert len(rows) == 2
+    logging.debug("Position OK")
+
+    # Check we didn't expand the hierarchy
+    ctx.search_err('Expanding hierarchy', invert=True)
+
+    # Check the saved schematic looks like the original
+    print_and_compare(ctx, 'repro.kicad_sch', 'test_sheet_flags_2.pdf', 'test_sheet_flags_1.pdf')
+
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Using sheet wide flags")
+def test_sheet_flags_3(test_dir):
+    """ This is related to #958
+        Check we can mark a page DNP and that this is inherited
+        Also check a variant can mark a component and we expand the hierarchy to show it """
+    prj = 'sheet_flags/repro'
+    ctx = context.TestContextSCH(test_dir, prj, 'test_sheet_flags_3', '')
+    ctx.run()
+    pos = 'repro-both_pos.csv'
+    bom = 'repro-bom.csv'
+
+    # Only R4 is used, R1 and R2 are disabled by the sheet being DNP, R5 and R6 are DNP, R3 is removed by the variant
+    rows, _, _ = ctx.load_csv(bom)
+    assert rows[0][3] == "R4", rows
+    assert len(rows) == 1
+    logging.debug("BoM OK")
+    rows, _, _ = ctx.load_csv(pos)
+    assert rows[0][0] == "R4", rows
+    assert len(rows) == 1
+    logging.debug("Position OK")
+
+    # Check we expanded the hierarchy
+    ctx.search_err('Expanding hierarchy')
+
+    # Check the saved schematic looks like the original
+    print_and_compare(ctx, 'repro.kicad_sch', 'test_sheet_flags_3.pdf')
+
     ctx.clean_up()

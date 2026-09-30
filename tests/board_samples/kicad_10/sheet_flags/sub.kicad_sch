@@ -211,6 +211,17 @@
 				)
 			)
 		)
+		(property "Config" "NOR3"
+			(at 100 100 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e63ab234-7b10-4b90-af3e-f3d729b07ecd")
 		)
