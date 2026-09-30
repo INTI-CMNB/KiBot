@@ -2793,6 +2793,11 @@ class SchematicV6(Schematic):
                 SchematicV6.log_difference(r, c, '`{}` fields (`{}` != `{}`)'.format(name, field.value, field2.value))
                 return True
         if c.fitted != r.fitted and (c.fitted != (not c.compute_dnp()) or r.fitted != (not r.compute_dnp())):
+            # Instances are different AND the difference is from a variant/filter (not from a sheet flag)
+            SchematicV6.log_difference(r, c, 'fitted status')
+            return True
+        if not c.fitted and not r.fitted and (c.is_dnp_by_sheet() ^ r.is_dnp_by_sheet()):
+            # Both instances aren't fitted, but only one of them is because of a sheet flag
             SchematicV6.log_difference(r, c, 'fitted status')
             return True
         if c.included != r.included:
