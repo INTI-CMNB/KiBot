@@ -2762,7 +2762,9 @@ class SchematicV6(Schematic):
         # Collect component instances (UUID -> list of instances)
         instances = {}
         for s in self.symbol_instances:
-            c_uuid = os.path.basename(s.path)
+            # We use the file name and the UUID because KiCad can easily work with copied sub-sheets where they
+            # get the same sheet UUID and components with colliding UUIDs
+            c_uuid = os.path.join(s.component.parent_sheet.fname, os.path.basename(s.path))
             instances.setdefault(c_uuid, []).append(s.component)
         # Look for variants in the instances
         for _, l_ins in instances.items():
