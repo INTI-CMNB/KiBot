@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Globals:
   - `pcb_image_prefix`: to configure the prefix for groups used to insert
     images on PCBs
+- Schematic:
+  - Support for KiCad 10 polyline with more than two points. (#959)
 - *SCH Print:
   - 'draw_hop_over` to draw it at wire crossings
   - Better sub-sheet names handling for KiCad 10+
