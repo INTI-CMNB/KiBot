@@ -1677,20 +1677,36 @@ class BusEntry(object):
 
 
 class SchematicWireV6(object):
+    def __init__(self):
+        super().__init__()
+        self.points = None
+        self.uuid = None
+        self.stroke = None
+        self.fill = None
+
     @staticmethod
     def parse(items, name):
-        if len(items) != 4:
-            _check_len_total(items, 3, name)
         wire = SchematicWireV6()
         wire.type = name  # wire, bus, polyline
-        wire.points = _get_points(items[1])
-        wire.stroke = Stroke.parse(items[2])
-        wire.uuid = get_uuid(items, 3, name)
+        for c, i in enumerate(items[1:]):
+            i_type = _check_is_symbol_list(i)
+            if i_type == 'pts':
+                wire.points = _get_points(i)
+            elif i_type == 'uuid':
+                wire.uuid = get_uuid(items, c+1, name)
+            elif i_type == 'stroke':
+                wire.stroke = Stroke.parse(i)
+            elif i_type == 'fill':
+                wire.fill = Fill.parse(i)
+            else:
+                raise SchError(f'Unknown `{name}` attribute `{i}`')
         return wire
 
     def write(self):
         points = [_symbol('xy', [p.x, p.y]) for p in self.points]
         data = [_symbol('pts', points), Sep(), self.stroke.write(), Sep()]
+        if self.fill is not None:
+            data.extend([self.fill.write(), Sep()])
         add_uuid(data, self.uuid)
         return _symbol(self.type, data)
 
