@@ -2064,8 +2064,8 @@ class Schematic(object):
                 prop = SubElement(comp, 'property')
                 prop.set('name', 'Sheetname')
                 prop.set('value', os.path.basename(c.sheet_path_h))
-                if hasattr(c, 'parent_sheet'):
-                    # Components from the PCB doesn't have "parent_sheet"
+                if getattr(c, 'parent_sheet', None) is not None:
+                    # Components from the PCB doesn't have a "parent_sheet" (it's None)
                     prop = SubElement(comp, 'property')
                     prop.set('name', 'Sheetfile')
                     prop.set('value', os.path.basename(c.parent_sheet.fname))
