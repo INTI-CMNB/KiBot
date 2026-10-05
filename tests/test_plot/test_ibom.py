@@ -111,3 +111,13 @@ def test_ibom_variant_1(test_dir):
     logging.debug("* `bla bla` variant")
     check_modules(ctx, prj+'-ibom_bla_bla.html', ['R4'])
     ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Starting with KiCad 10")
+def test_ibom_filtered_not_pcb(test_dir):
+    """ Related to #955
+        Problems with filtered iBoM and components only in the PCB """
+    prj = 'ibom_filtered_not_pcb/repro'
+    ctx = context.TestContextSCH(test_dir, prj, 'test_ibom_filtered_not_pcb')
+    ctx.run()
+    ctx.clean_up(keep_project=True)

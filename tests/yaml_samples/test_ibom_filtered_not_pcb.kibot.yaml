@@ -1,0 +1,8 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: ibom
+    type: ibom
+    options:
+      dnf_filter: _kibom_dnf_Config

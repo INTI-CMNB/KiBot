@@ -1,0 +1,7 @@
+{
+  "schematic": {
+    "top_level_sheets": [
+      {"filename": "repro.kicad_sch", "name": "repro", "uuid": "6a0c3b8e-2f1d-4c5a-9b7e-1d2c3e4f5a6b"}
+    ]
+  }
+}
