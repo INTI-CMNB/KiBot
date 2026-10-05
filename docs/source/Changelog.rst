@@ -154,6 +154,11 @@ Fixed
    -  Missing filters reset when copying the project. The schematic
       might contain the result of previous filters
 
+-  iBoM:
+
+   -  Crash when using filters and the PCB has footprints that aren’t in
+      the schematic, i.e. board only (#955)
+
 Changed
 =======
 
