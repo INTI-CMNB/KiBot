@@ -75,6 +75,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 - Copy Files:
   - Issues with the DNP status
+- Drill:
+  - Problems when compressing and no N/PTH drills found (#961)
 - Navigate Results:
   - Rotated PostScript for the PCB Print output
   - Problems when skipping outputs and the skipped output was a candidate to

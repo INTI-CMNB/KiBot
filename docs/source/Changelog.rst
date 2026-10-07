@@ -138,6 +138,10 @@ Fixed
 
    -  Issues with the DNP status
 
+-  Drill:
+
+   -  Problems when compressing and no N/PTH drills found (#961)
+
 -  Navigate Results:
 
    -  Rotated PostScript for the PCB Print output
