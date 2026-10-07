@@ -254,10 +254,10 @@ class TestContext(object):
         pro = os.path.join(self.get_board_dir(), self.board_name+PRO_EXT)
         if os.path.isfile(pro) and not keep_project:
             os.remove(pro)
-            if PRO_EXT == '.kicad_pro':
-                prl = os.path.join(self.get_board_dir(), self.board_name+'.kicad_prl')
-                if os.path.isfile(prl):
-                    os.remove(prl)
+        if PRO_EXT == '.kicad_pro':
+            prl = os.path.join(self.get_board_dir(), self.board_name+'.kicad_prl')
+            if os.path.isfile(prl):
+                os.remove(prl)
         # We don't have a footprint cache, and we don't want one
         fp_cache = os.path.join(self.get_board_dir(), 'fp-info-cache')
         if os.path.isfile(fp_cache):
