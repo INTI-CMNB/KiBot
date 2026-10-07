@@ -1,0 +1,15 @@
+kibot:
+  version: 1
+
+outputs:
+  - name: pcb_drill
+    type: gerb_drill
+    dir: "_outputs/pcb"
+
+  - name: pcb_zip
+    type: compress
+    dir: "_outputs"
+    options:
+      files:
+        - dest: "pcb"
+          from_output: "pcb_drill"
