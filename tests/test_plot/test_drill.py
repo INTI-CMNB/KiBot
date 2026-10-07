@@ -11,6 +11,7 @@ pytest-3 --log-cli-level debug
 """
 
 import os
+import pytest
 import sys
 from . import context
 
@@ -158,3 +159,33 @@ def test_drill_sub_pcb_bp(test_dir):
     ctx.search_in_file_d(fname, ['X137.5Y-102.0', 'T3C3.200'])  # Currently us
     ctx.search_not_in_file_d(fname, ['X189.0Y-59.0', 'T1C0.400'])
     ctx.clean_up(keep_project=True)
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad 10 specific")
+def test_drill_only_PTH(test_dir):
+    """ Test for KiCad 10 not creating NPTH files
+        Regression test for #961 """
+    prj = 'only_PTH'
+    ctx = context.TestContext(test_dir, prj, 'test_drill_only_PTH')
+    ctx.run()
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad 10 specific")
+def test_drill_only_NPTH(test_dir):
+    """ Test for KiCad 10 not creating PTH files
+        Regression test for #961 """
+    prj = 'only_NPTH'
+    ctx = context.TestContext(test_dir, prj, 'test_drill_only_PTH')
+    ctx.run()
+    ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad 10 specific")
+def test_drill_only_SMD(test_dir):
+    """ Test for KiCad 10 not creating N/PTH files
+        Regression test for #961 """
+    prj = 'only_SMD'
+    ctx = context.TestContext(test_dir, prj, 'test_drill_only_PTH')
+    ctx.run()
+    ctx.clean_up()

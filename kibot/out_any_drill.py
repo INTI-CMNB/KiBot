@@ -233,10 +233,9 @@ class AnyDrill(VariantOptions):
         return f"(L{top_layer}-L{bot_layer})"
 
     @staticmethod
-    def _get_drill_groups_pn(unified):
+    def _get_drill_groups_pn(groups):
         """ Get the ID for all the generated files.
             It includes buried/blind vias. """
-        groups = [''] if unified else ['PTH', 'NPTH']
         via_type = 'PCB_VIA'
         pairs = set()
         for t in GS.board.GetTracks():
@@ -259,10 +258,9 @@ class AnyDrill(VariantOptions):
         return groups
 
     @staticmethod
-    def _get_drill_groups_kp(unified):
+    def _get_drill_groups_kp(groups):
         """ Get the ID for all the generated files.
             It includes buried/blind vias. """
-        groups = [''] if unified else ['PTH', 'NPTH']
         pairs = set()
         for via in GS.board.get_items(GS.kp.proto.common.types.KiCadObjectType.KOT_PCB_VIA):
             l1i = via.padstack.drill.start_layer
@@ -275,6 +273,25 @@ class AnyDrill(VariantOptions):
         groups.extend(list(pairs))
         return groups
 
+    def _get_drill_groups(self):
+        # KiCad 10 has a feature: no files generated if the kind of drills is missing
+        has_pth, has_npth = self.look_for_drills()
+        logger.debug(f"Drills search: PTH {has_pth} NPTH {has_npth}")
+
+        if self._unified_output:
+            groups = ['']
+        else:
+            groups = []
+            if has_pth:
+                groups.append('PTH')
+            if has_npth:
+                groups.append('NPTH')
+
+        if GS.pn is not None:
+            return AnyDrill._get_drill_groups_pn(groups)
+        else:
+            return AnyDrill._get_drill_groups_kp(groups)
+
     def get_file_names(self, output_dir, just_drills=False, tmp_base=None):
         """ Returns a dict containing KiCad names and its replacement.
             If no replacement is needed the replacement is empty.
@@ -282,7 +299,7 @@ class AnyDrill(VariantOptions):
             I don't really know if variants really apply to drill files, but is currently supported """
         filenames = {}
         self._configure_writer(GS.board)
-        files = AnyDrill._get_drill_groups(self._unified_output)
+        files = self._get_drill_groups()
         logger.debug(f"Expected drill pairs: {files}")
         force_rename = tmp_base is not None
         if not force_rename:
@@ -363,7 +380,6 @@ class AnyDrill(VariantOptions):
                     break
             if found_pth and found_npth:
                 break
-        logger.debug(f"Drills search: PTH {found_pth} NPTH {found_npth}")
         return found_pth, found_npth
 
     def run_with_cli(self, output_dir, drill_writer, gen_map):
@@ -434,21 +450,16 @@ class AnyDrill(VariantOptions):
             else:
                 tmp_base = self.run_with_kipy(output_dir, gen_map)
 
-        # KiCad 10 has a feature: no files generated if the kind of drills is missing
-        has_pth, has_npth = self.look_for_drills()
-        logger.debug(f"Drills search: PTH {has_pth} NPTH {has_npth}")
-
         # Rename the files
         files = self.get_file_names(output_dir, tmp_base=tmp_base)
         for k_f, f in files.items():
             if f:
                 logger.debug(f"Renaming {k_f} -> {f}")
-                if not os.path.isfile(k_f):
-                    is_npth = 'npth' in k_f.lower()
-                    if (is_npth and has_npth) or (not is_npth and has_pth):
-                        GS.exit_with_error(f"Missing `{k_f}` drill file, KiCad bug? please report", DONT_STOP)
-                else:
+                if os.path.isfile(k_f):
                     os.replace(k_f, f)
+                else:
+                    GS.exit_with_error(f"Missing `{k_f}` drill file, KiCad bug? please report", DONT_STOP)
+
         # Generate the drill table
         if self._table_output:
 
@@ -533,8 +544,6 @@ class AnyDrill(VariantOptions):
 
 
 if GS.pn is not None:
-    AnyDrill._get_drill_groups = AnyDrill._get_drill_groups_pn
     AnyDrill.look_for_drills = AnyDrill.look_for_drills_pn
 else:
-    AnyDrill._get_drill_groups = AnyDrill._get_drill_groups_kp
     AnyDrill.look_for_drills = AnyDrill.look_for_drills_kp
