@@ -77,3 +77,6 @@ tests/.config/kicad/
 DONACIONES
 IMPORTANTE
 docs/samples/3D_Model_LCD*/run_local.sh
+experiments/kicad/API
+experiments/kicad/Boundary/test_2.py
+tests/reference/9_0_5/test_v5-schematic_(no_L).svg.909
