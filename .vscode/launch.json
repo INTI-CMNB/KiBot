@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug kibot",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/kibot",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": "${command:pickArgs}"
+        },
+        {
+            "name": "Debug regression test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/usr/bin/pytest-3",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Clean regression output",
+            "subProcess": true,
+            "justMyCode": false,
+            "args": [
+                "-n", "0",
+                "--log-cli-level", "debug",
+                "--ignore=experiments",
+                "-k", "${input:singleTest}",
+                "--test_dir=pp"
+            ],
+            "console": "integratedTerminal",
+        }
+    ],
+    "inputs": [
+        {
+            "id": "singleTest",
+            "type": "promptString",
+            "description": "SINGLE_TEST",
+            "default": "test_print_sch"
+        }
+    ]
+}
