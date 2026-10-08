@@ -365,7 +365,9 @@ class TestContext(object):
             f.write('Dummy file\n')
 
     def do_run(self, cmd, ret_val=None, use_a_tty=False, chdir_out=False):
-        cmd_base = [COVERAGE_SCRIPT, 'run']
+        # Run coverage through the current Python interpreter.
+        # Using -m lets debugpy hook the spawned Python process correctly.
+        cmd_base = [sys.executable, '-m', 'coverage', 'run']
         if chdir_out:
             cwd = os.getcwd()
             cmd_base.append('--rcfile='+os.path.join(cwd, '.coveragerc'))
