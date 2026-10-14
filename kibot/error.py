@@ -6,6 +6,7 @@
 """
 KiBot errors
 """
+from typing import NoReturn
 from .gs import GS
 from .misc import EXIT_BAD_CONFIG
 
@@ -22,5 +23,5 @@ class KiPlotConfigurationError(KiPlotError):
     pass
 
 
-def config_error(msg):
+def config_error(msg) -> NoReturn:
     GS.exit_with_error(msg, EXIT_BAD_CONFIG)
