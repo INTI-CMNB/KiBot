@@ -1254,7 +1254,7 @@ def yaml_dump(f, tree):
 
 def register_xmp_import(name, definitions=None):
     """ Register an import we need for an example """
-    global needed_imports
+    # global needed_imports
     assert name not in needed_imports
     needed_imports[name] = definitions
 
