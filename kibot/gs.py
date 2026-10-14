@@ -13,6 +13,7 @@ from shutil import copy2
 from sys import exit, exc_info
 import tempfile
 from traceback import extract_stack, format_list, print_tb
+from typing import NoReturn, TYPE_CHECKING
 from .misc import (EXIT_BAD_ARGS, W_DATEFORMAT, W_UNKVAR, WRONG_INSTALL, CORRUPTED_PRO, hide_stderr, KICAD_VERSION_9_0_5,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, MOD_SMD, MOD_THROUGH_HOLE, MOD_VIRTUAL,
                    MOD_ALLOW_MISSING_COURTYARD)
@@ -114,7 +115,11 @@ class GS(object):
     keep_temporals = False    # Selected from command line
     # KiCad API, filled by import_kicad_api() (called by detect_kicad())
     pn = None      # pcbnew module
-    kp = None      # kipy (kicad-python) module
+    if TYPE_CHECKING:
+        import kipy
+        kp = kipy
+    else:
+        kp = None      # kipy (kicad-python) module
     # kipy details
     kp_pcb = None  # KiCad object used to load the PCB, I hope it can be unified
     enabled_layers = set()  # List of layers enabled in the last loaded PCB
@@ -1114,7 +1119,7 @@ class GS(object):
                 print_tb(traceback)
 
     @staticmethod
-    def exit_with_error(msg, level, run_error=None, hints=None):
+    def exit_with_error(msg, level, run_error=None, hints=None) -> NoReturn:
         GS.trace_dump()
         if isinstance(msg, (tuple, list)):
             for m in msg:
