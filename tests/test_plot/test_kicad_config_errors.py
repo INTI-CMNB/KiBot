@@ -43,7 +43,7 @@ def test_kicad_conf_no_instance():
     with context.cover_it(cov):
         with pytest.raises(AssertionError) as pytest_wrapped_e:
             o = KiConf()  # noqa: F841
-    assert pytest_wrapped_e.type == AssertionError
+    assert pytest_wrapped_e.type is AssertionError
     assert str(pytest_wrapped_e.value) == 'KiConf is fully static, no instances allowed'
 
 

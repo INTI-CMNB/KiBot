@@ -132,13 +132,13 @@ def test_rar_fail(test_dir, caplog, monkeypatch):
         pytest_wrapped_e = run_compress(ctx)
         pytest_wrapped_e2 = run_compress(ctx, test_import_fail=True)
     # Check we exited because rar isn't installed
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == WRONG_INSTALL
     assert "Failed to invoke rar command, error 10" in caplog.text
     # Not in the docker image ... pytest issue? (TODO)
     # assert "THE_ERROR" in caplog.text
     # Check we exited because the import failed
-    assert pytest_wrapped_e2.type == SystemExit
+    assert pytest_wrapped_e2.type is SystemExit
     assert pytest_wrapped_e2.value.code == WRONG_INSTALL
     assert "Unable to import plug-ins:" in caplog.text
 
@@ -196,7 +196,7 @@ def test_ibom_parse_fail(test_dir, caplog, monkeypatch):
             out.config(None)
             with pytest.raises(SystemExit) as pytest_wrapped_e:
                 out.run('')
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == BOM_ERROR
     # logging.debug(caplog.text)
     assert "Failed to create BoM" in caplog.text
@@ -259,11 +259,11 @@ def test_pre_xrc_fail(test_dir, caplog, monkeypatch):
             out.type = 'pdf_pcb_print'
             with pytest.raises(SystemExit) as e3:
                 out.run('')
-    assert e1.type == SystemExit
+    assert e1.type is SystemExit
     assert e1.value.code == DRC_ERROR
-    assert e2.type == SystemExit
+    assert e2.type is SystemExit
     assert e2.value.code == ERC_ERROR
-    assert e3.type == SystemExit
+    assert e3.type is SystemExit
     assert e3.value.code == PDF_PCB_PRINT
     assert 'pcbnew_do returned 5' in caplog.text
     ctx.clean_up()
@@ -275,7 +275,7 @@ def test_unimplemented_layer(caplog):
     with context.cover_it(cov):
         with pytest.raises(AssertionError) as e:
             Layer.solve(1)
-    assert e.type == AssertionError
+    assert e.type is AssertionError
     assert e.value.args[0] == "Unimplemented layer type <class 'int'>"
 
 
@@ -306,7 +306,7 @@ def test_step_fail(test_dir, caplog, monkeypatch):
             with pytest.raises(SystemExit) as e:
                 out.run('')
     # Check we exited because rar isn't installed
-    assert e.type == SystemExit
+    assert e.type is SystemExit
     assert e.value.code == KICAD2STEP_ERR
     assert "kicad2step_do returned 5" in caplog.text
     mocked_call_enabled = False
