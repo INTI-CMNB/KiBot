@@ -1,3 +1,11 @@
 {
-    "explorer.excludeGitIgnore": true
+    "explorer.excludeGitIgnore": true,
+    "outline.showModules": false,
+    "outline.showVariables": false,
+    "basedpyright.analysis.typeCheckingMode": "off",
+    "basedpyright.analysis.extraPaths": ["./experiments/kicad/API/.venv/lib/python3.14/site-packages"],
+    // "basedpyright.analysis.inlayHints.variableTypes": false,
+    // "basedpyright.analysis.inlayHints.functionReturnTypes": false,
+    // "basedpyright.analysis.inlayHints.callArgumentNames": true,
+    //"editor.inlayHints.enabled": "on"   // Ctrl+Alt shows the hints
 }
