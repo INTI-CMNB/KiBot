@@ -1,0 +1,33 @@
+line-length = 127
+exclude = [".git",
+           "experiments/kicad/v6/",
+           "experiments/JLC/",
+           "experiments/resistor_colors/",
+           "experiments/EasyEDA/",
+           "experiments/grammar",
+           "experiments/Layer_numbers/",
+           "experiments/SVG/PcbDraw/",
+           "experiments/jobset_test/",
+           "experiments/kicad/API/",
+           "experiments/kicad/Delete_Field/",
+           "experiments/kicad/Plot_Layer_CLI/",
+           "experiments/kicad/Sketch_Pads/",
+           "experiments/exception/",
+           "kibot/mcpyrate/",
+           "kibot/PcbDraw/",
+           "kibot/PyPDF2/",
+           "kibot/resources",
+           "submodules/",
+           "pp/",
+           "output/",
+           "tools/msgfmt.py",
+           "tools/pygettext.py"]
+builtins = ["_"]
+
+[lint]
+select = ["E", "F", "W", "C90"]
+ignore = ["E402", "E226", "D1", "D2", "D4"]
+# E126 W504
+
+[lint.mccabe]
+max-complexity = 300
