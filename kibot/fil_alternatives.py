@@ -84,7 +84,7 @@ class Alternatives(BaseFilter):  # noqa: F821
         for fields in rule.fields:
             for name, value in fields.items():
                 full_name = self.get_expanded_name(name, n)
-                if not name.lower() in comp.dfields:
+                if name.lower() not in comp.dfields:
                     logger.warning(W_UNKFLD+f"Defining alternative `{full_name}` for `{comp.ref}`, but it doesn't "
                                    f"have `{name}` field")
                 logger.debug(f'  - {full_name} = {value}')

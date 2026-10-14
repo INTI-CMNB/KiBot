@@ -229,7 +229,7 @@ def test_check_tool_dep_get_ver_1(test_dir, caplog, monkeypatch):
     assert "Recommended extra Debian packages: foobar-extra-debian deb2" in caplog.text
     assert "Used to do this and this (v1.3.0.4)" in caplog.text
     assert "This is not an official package" in caplog.text
-    assert pytest_wrapped_e.type == SystemExit
+    assert pytest_wrapped_e.type is SystemExit
     assert pytest_wrapped_e.value.code == MISSING_TOOL
 
 
