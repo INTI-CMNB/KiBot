@@ -57,15 +57,15 @@ Added
    -  ``no_extra_pad_thickness`` option to avoid extra pads thickness
       (KiCad 10+)
 
--  iBoM:
-
-   -  ``exclude_not_in_bom``: to exclude components from the BoM using
-      the KiCad flag
-
 -  IPC 2581:
 
    -  ``drawing_sheet``: to specify a particular drawing sheet
    -  ``bom_revision``: to mention in the exported file (KiCad 10+)
+
+-  KiCost:
+
+   -  ``exclude_not_in_bom``: to exclude components from the BoM using
+      the KiCad flag
 
 -  ODB++:
 
@@ -180,6 +180,11 @@ Changed
 -  Gerber/PS/PDF/SVG:
 
    -  ``line_width`` is no longer valid (just warning) was for KiCad 5
+
+-  KiCost:
+
+   -  Components marked to be excluded from BoM are now excluded by
+      default, disable ``exclude_not_in_bom`` to include them
 
 -  PcbDraw:
 

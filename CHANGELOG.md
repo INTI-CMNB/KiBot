@@ -26,12 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Export 3D:
   - Compressed STEP (STPZ) (KiCad 10+)
   - `no_extra_pad_thickness` option to avoid extra pads thickness (KiCad 10+)
-- iBoM:
-  - `exclude_not_in_bom`: to exclude components from the BoM using the KiCad
-    flag
 - IPC 2581:
   - `drawing_sheet`: to specify a particular drawing sheet
   - `bom_revision`: to mention in the exported file (KiCad 10+)
+- KiCost:
+  - `exclude_not_in_bom`: to exclude components from the BoM using the KiCad
+    flag
 - ODB++:
   - `drawing_sheet`: to specify a particular drawing sheet
 - Panelize:
@@ -101,6 +101,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     KiCad 5
 - Gerber/PS/PDF/SVG:
   - `line_width` is no longer valid (just warning) was for KiCad 5
+- KiCost:
+  - Components marked to be excluded from BoM are now excluded by default,
+    disable `exclude_not_in_bom` to include them
 - PcbDraw:
   - Updated to v1.4.0 base code, expect some subtle differences.
 
