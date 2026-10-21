@@ -3,7 +3,17 @@
     "outline.showModules": false,
     "outline.showVariables": false,
     "basedpyright.analysis.typeCheckingMode": "off",
-    "basedpyright.analysis.extraPaths": ["./experiments/kicad/API/.venv/lib/python3.14/site-packages"],
+    "basedpyright.analysis.extraPaths": [
+        "./experiments/kicad/API/.venv/lib/python3.14/site-packages"
+    ],
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/node_modules/*/**": true,
+        "/home/*/.local/lib/**": true,
+        "/usr/lib/python3/**": true,
+        "**/experiments/kicad/API/.venv*/**": true
+    }
     // "basedpyright.analysis.inlayHints.variableTypes": false,
     // "basedpyright.analysis.inlayHints.functionReturnTypes": false,
     // "basedpyright.analysis.inlayHints.callArgumentNames": true,
