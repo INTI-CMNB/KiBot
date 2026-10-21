@@ -90,6 +90,8 @@ class KiCostOptions(VariantOptions):
             """ *Number of boards to build (components multiplier) """
             self.board_qty = None
             """ {number} """
+            self.exclude_not_in_bom = True
+            """ Exclude components marked `Exclude from bill of materials` by KiCad """
             self.kicost_config = ''
             """ KiCost configuration file. It contains the keys for the different distributors APIs.
                 The regular KiCost config is used when empty.
@@ -161,7 +163,11 @@ class KiCostOptions(VariantOptions):
             netlist = os.path.join(net_dir, GS.sch_basename+'.xml')
             logger.debug('Creating variant netlist `{}`'.format(netlist))
             with open(netlist, 'wb') as f:
-                GS.sch.save_netlist(f, self._comps, no_field=var_fields)
+                if self.exclude_not_in_bom:
+                    comps = [c for c in self._comps if c.in_bom and c.in_bom_pcb]
+                else:
+                    comps = self._comps
+                GS.sch.save_netlist(f, comps, no_field=var_fields)
         else:
             # Make sure the XML is there.
             # Currently we only support the XML mechanism.

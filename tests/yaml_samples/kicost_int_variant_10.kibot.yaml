@@ -1,0 +1,56 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+variants:
+  - name: 'V1'
+    comment: 'Test 1 Variant V1'
+    type: kicad
+    file_id: '_(V1)'
+
+  - name: 'V2'
+    comment: 'Test 1 Variant V2'
+    type: kicad
+    file_id: '_(V2)'
+
+  - name: 'V3'
+    comment: 'Test 1 Variant V3'
+    type: kicad
+    file_id: '_V3'
+
+outputs:
+  - name: 'kicost'
+    comment: "Components costs"
+    type: kicost
+    dir: KiCost
+    options:
+      variant: 'Default'
+      no_price: true
+      no_collapse: true
+
+  - name: 'kicost_v1'
+    comment: "Components costs for variant V1"
+    type: kicost
+    dir: KiCost
+    options:
+      variant: V1
+      no_price: true
+      no_collapse: true
+
+  - name: 'kicost_v2'
+    comment: "Components costs for variant V2"
+    type: kicost
+    dir: KiCost
+    options:
+      variant: V2
+      no_price: true
+      no_collapse: true
+
+  - name: 'kicost_v3'
+    comment: "Components costs for variant V3"
+    type: kicost
+    dir: KiCost
+    options:
+      variant: V3
+      no_price: true
+      no_collapse: true

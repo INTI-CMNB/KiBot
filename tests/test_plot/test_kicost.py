@@ -8,6 +8,7 @@ import os.path as op
 import re
 from . import context
 import logging
+import pytest
 import subprocess
 
 OUT_DIR = 'KiCost'
@@ -154,3 +155,36 @@ def test_kicost_spec_to_field_1(test_dir):
                     r'WARNING:\(.*\) R1 field `Tolerance` collision, has `1%`, found `5%`',
                     'C1 RoHS: ROHS3 Compliant'])
     ctx.clean_up()
+
+
+def check_modules(ctx, fname, modules):
+    convert2csv(ctx, fname)
+    rows, _, _ = ctx.load_csv(fname.replace('.xlsx', '.csv'))
+    found = rows[5][0].split(',')
+    assert len(found) == len(modules)
+    logging.debug(str(len(modules)) + " components OK")
+    for c in modules:
+        assert c in found
+    logging.debug("list of components OK")
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad 10+ variants")
+def test_kicost_variant_10(test_dir):
+    prj = 'kicad-variante'
+    ctx = context.TestContext(test_dir, prj, 'kicost_int_variant_10', OUT_DIR)
+    ctx.run(extra_debug=True)
+    extra = ['R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16']
+    # No variant
+    logging.debug("* No variant")
+    check_modules(ctx, prj+'-kicost.xlsx', ['R1', 'R2', 'R3']+extra)
+    # V1
+    logging.debug("* V1 variant")
+    check_modules(ctx, prj+'-kicost_(V1).xlsx', ['R1', 'R2']+extra)
+    # V2
+    logging.debug("* V2 variant")
+    check_modules(ctx, prj+'-kicost_(V2).xlsx', ['R1', 'R3']+extra)
+    # V3
+    logging.debug("* V3 variant")
+    # Here R4 is removed by the PCB saying this isn't in the BoM
+    check_modules(ctx, prj+'-kicost_V3.xlsx', ['R1']+extra)
+    ctx.clean_up(keep_project=True)
