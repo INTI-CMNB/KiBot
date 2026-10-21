@@ -113,11 +113,11 @@ def test_ibom_variant_1(test_dir):
     ctx.clean_up()
 
 
-@pytest.mark.skipif(not context.ki10(), reason="Target is v10+")
+@pytest.mark.skipif(not context.ki10(), reason="KiCad 10+ variants")
 def test_ibom_variant_1_10(test_dir):
     prj = 'kicad-variante'
     ctx = context.TestContext(test_dir, prj, 'ibom_variant_10', BOM_DIR)
-    ctx.run(extra_debug=True, extra=['--keep-temporals'])
+    ctx.run(extra_debug=True)
     extra = ['R13', 'R14', 'R15', 'R16']
     # No variant
     logging.debug("* No variant")
