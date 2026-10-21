@@ -772,6 +772,7 @@ class VariantOptions(BaseOptions):
         if not comps_hash or not GS.global_remove_3D_models_for_dnp:
             return
         # Remove the 3D models for not fitted components
+        logger.debug("Removing 3D models that aren't fitted")
         rem_models = []
         for m in GS.get_modules_board(board):
             ref = GS.fp_get_reference(m)
@@ -781,6 +782,7 @@ class VariantOptions(BaseOptions):
                 models = m.Models()
                 if not c.fitted:  # c.included was here, but the docs says this is for "BoM processing", not 3D
                     # Not fitted, remove the 3D model
+                    logger.debug(f"- {c.ref} models removed")
                     rem_m_models = []
                     while not models.empty():
                         rem_m_models.append(models.pop())
