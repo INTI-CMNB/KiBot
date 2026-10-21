@@ -90,6 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - iBoM:
   - Crash when using filters and the PCB has footprints that aren't in the
     schematic, i.e. board only (#955)
+  - DNP and exclude from BoM flags issues (#963)
 
 # Changed
 - Gerber/PS/PDF/SVG/DXF:
