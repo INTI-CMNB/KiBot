@@ -57,6 +57,11 @@ Added
    -  ``no_extra_pad_thickness`` option to avoid extra pads thickness
       (KiCad 10+)
 
+-  iBoM:
+
+   -  ``exclude_not_in_bom``: to exclude components from the BoM using
+      the KiCad flag
+
 -  IPC 2581:
 
    -  ``drawing_sheet``: to specify a particular drawing sheet

@@ -2456,6 +2456,8 @@ outputs:
       # Can be used to fine-tune a variant for a particular output that needs extra filtering done before the
       # variant
       exclude_filter: '_null'
+      # [boolean=true] Exclude components marked `Exclude from bill of materials` by KiCad
+      exclude_not_in_bom: true
       # [string|list(string)=[]] {comma_sep} List of fields to be added to the global data section
       fields: []
       # [string|list(string)=[]] {comma_sep} List of fields that can be different for a group.

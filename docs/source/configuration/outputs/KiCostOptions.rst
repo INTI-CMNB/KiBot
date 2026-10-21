@@ -59,6 +59,10 @@ KiCostOptions parameters
    variant.
 
 
+.. _KiCostOptions_exclude_not_in_bom:
+
+-  ``exclude_not_in_bom`` :index:`: <pair: output - kicost - options; exclude_not_in_bom>` [:ref:`boolean <boolean>`] (default: ``true``) Exclude components marked `Exclude from bill of materials` by KiCad.
+
 .. _KiCostOptions_fields:
 
 -  ``fields`` :index:`: <pair: output - kicost - options; fields>` [:ref:`string <string>` | :ref:`list(string) <list(string)>`] (default: ``[]``) [:ref:`comma separated <comma_sep>`] List of fields to be added to the global data section.

@@ -7305,6 +7305,13 @@
           null
         ],
         [
+          "exclude_not_in_bom",
+          [
+            "DataTypeBoolean"
+          ],
+          null
+        ],
+        [
           "kicost_config",
           [
             "DataTypeString"
