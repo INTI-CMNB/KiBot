@@ -752,6 +752,9 @@ class Optionable(object):
             c.kicad_dnp = True
         elif v.dnp is not None:
             c.kicad_dnp = v.dnp
+            if GS.global_kicad_dnp_applied:
+                # The variant overrides the DNP flag already applied by reset_filters
+                c.set_fitted(not v.dnp)
         # Fields
         for name, value in v.fields.items():
             c.set_field(name, value)

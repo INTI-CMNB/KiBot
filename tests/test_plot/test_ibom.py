@@ -113,6 +113,27 @@ def test_ibom_variant_1(test_dir):
     ctx.clean_up()
 
 
+@pytest.mark.skipif(not context.ki10(), reason="Target is v10+")
+def test_ibom_variant_1_10(test_dir):
+    prj = 'kicad-variante'
+    ctx = context.TestContext(test_dir, prj, 'ibom_variant_10', BOM_DIR)
+    ctx.run(extra_debug=True, extra=['--keep-temporals'])
+    extra = ['R13', 'R14', 'R15', 'R16']
+    # No variant
+    logging.debug("* No variant")
+    check_modules(ctx, prj+'-ibom.html', ['R1', 'R2', 'R3']+extra)
+    # V1
+    logging.debug("* V1 variant")
+    check_modules(ctx, prj+'-ibom_(V1).html', ['R1', 'R2']+extra)
+    # V2
+    logging.debug("* V2 variant")
+    check_modules(ctx, prj+'-ibom_(V2).html', ['R1', 'R3']+extra)
+    # V3
+    logging.debug("* V3 variant")
+    check_modules(ctx, prj+'-ibom_V3.html', ['R1', 'R4']+extra)
+    ctx.clean_up(keep_project=True)
+
+
 @pytest.mark.skipif(not context.ki10(), reason="Starting with KiCad 10")
 def test_ibom_filtered_not_pcb(test_dir):
     """ Related to #955

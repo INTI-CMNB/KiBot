@@ -331,10 +331,16 @@ class VariantOptions(BaseOptions):
             return []
         return [c.ref for c in self._comps if c.fitted and c.included]
 
-    def get_not_fitted_refs(self, parent=False):
+    def get_not_fitted_refs(self, parent=False, is_bom=False):
         """ List of 'not fitted' components, also includes 'not included' """
         if not self._comps:
             return []
+        if is_bom:
+            # Also take the BoM flag
+            if not parent:
+                return [c.ref for c in self._comps if not c.fitted or not c.included or not c.in_bom]
+            # Here we want only parent components
+            return list({c.get_parent_ref() for c in self._comps if not c.fitted or not c.included or not c.in_bom})
         if not parent:
             return [c.ref for c in self._comps if not c.fitted or not c.included]
         # Here we want only parent components

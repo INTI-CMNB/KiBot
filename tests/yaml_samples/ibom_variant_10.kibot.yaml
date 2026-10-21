@@ -1,0 +1,48 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+variants:
+  - name: 'V1'
+    comment: 'Test 1 Variant V1'
+    type: kicad
+    file_id: '_(V1)'
+
+  - name: 'V2'
+    comment: 'Test 1 Variant V2'
+    type: kicad
+    file_id: '_(V2)'
+
+  - name: 'V3'
+    comment: 'Test 1 Variant V3'
+    type: kicad
+    file_id: '_V3'
+
+outputs:
+  - name: 'ibom'
+    comment: "Interactive HTML BoM"
+    type: ibom
+    dir: BoM
+    options:
+      variant: 'Default'
+
+  - name: 'ibom_v1'
+    comment: "Interactive HTML BoM for variant V1"
+    type: ibom
+    dir: BoM
+    options:
+      variant: V1
+
+  - name: 'ibom_v2'
+    comment: "Interactive HTML BoM for variant V2"
+    type: ibom
+    dir: BoM
+    options:
+      variant: V2
+
+  - name: 'ibom_v3'
+    comment: "Interactive HTML BoM for variant V3"
+    type: ibom
+    dir: BoM
+    options:
+      variant: V3

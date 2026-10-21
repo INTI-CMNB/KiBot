@@ -1769,6 +1769,26 @@ class GS(object):
                 bool(attrs & MOD_EXCLUDE_FROM_BOM))
 
     @staticmethod
+    def fp_set_exclude_from_bom_pn(footprint, value):
+        attrs = footprint.GetAttributes()
+        old_in_bom = bool(attrs & MOD_EXCLUDE_FROM_BOM)
+        if value:
+            footprint.SetAttributes(attrs | MOD_EXCLUDE_FROM_BOM)
+        else:
+            footprint.SetAttributes(attrs & (~MOD_EXCLUDE_FROM_BOM))
+        return old_in_bom
+
+    @staticmethod
+    def fp_set_dnp_k8(footprint, value):
+        old_dnp = footprint.IsDNP()
+        footprint.SetDNP(value)
+        return old_dnp
+
+    @staticmethod
+    def fp_set_dnp_k5(footprint, value):
+        return False
+
+    @staticmethod
     def fp_get_attributes_kp(footprint):
         attrs = footprint.attributes
         return (attrs.mounting_style == GS.FMS_SMD,
@@ -1777,6 +1797,22 @@ class GS(object):
                 attrs.not_in_schematic,
                 attrs.exclude_from_position_files,
                 attrs.exclude_from_bill_of_materials)
+
+    @staticmethod
+    def fp_set_exclude_from_bom_kp(footprint, value):
+        old_in_bom = footprint.attributes.exclude_from_bill_of_materials
+        if value != old_in_bom:
+            footprint.attributes.exclude_from_bill_of_materials = value
+            GS.board.update_items(footprint.attributes)
+        return old_in_bom
+
+    @staticmethod
+    def fp_set_dnp_kp(footprint, value):
+        old_dnp = footprint.attributes.do_not_populate
+        if value != old_dnp:
+            footprint.attributes.do_not_populate = value
+            GS.board.update_items(footprint.attributes)
+        return old_dnp
 
     @staticmethod
     def fp_get_allow_missing_courtyard_pn(footprint):
@@ -1939,9 +1975,11 @@ class GS(object):
             if GS.ki8:
                 GS.get_fields = GS.get_fields_k8
                 GS.fp_clear_fields_pn = GS.fp_clear_fields_k8
+                GS.fp_set_dnp = GS.fp_set_dnp_k8
             else:
                 GS.get_fields = GS.get_fields_k6
                 GS.fp_clear_fields_pn = GS.fp_clear_fields_k6
+                GS.fp_set_dnp = GS.fp_set_dnp_k5
             if GS.ki9:
                 GS.layer_is_inner = GS.layer_is_inner_k9
                 GS.ordinal_to_copper_layer = GS.ordinal_to_copper_layer_k9
@@ -1976,6 +2014,7 @@ class GS(object):
             GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_pn
             GS.fp_get_allow_missing_courtyard = GS.fp_get_allow_missing_courtyard_pn
             GS.fp_get_mounting_style_str = GS.fp_get_mounting_style_str_pn
+            GS.fp_set_exclude_from_bom = GS.fp_set_exclude_from_bom_pn
             GS.pad_get_net_name = GS.pad_get_net_name_pn
             GS.pad_get_net_class = GS.pad_get_net_class_pn
             GS.pad_get_position = GS.pad_get_position_pn
@@ -2029,6 +2068,8 @@ class GS(object):
             GS.fp_get_lib_and_name = GS.fp_get_lib_and_name_kp
             GS.fp_get_allow_missing_courtyard = GS.fp_get_allow_missing_courtyard_kp
             GS.fp_get_mounting_style_str = GS.fp_get_mounting_style_str_kp
+            GS.fp_set_dnp = GS.fp_set_dnp_kp
+            GS.fp_set_exclude_from_bom = GS.fp_set_exclude_from_bom_kp
             GS.pad_get_net_name = GS.pad_get_net_name_kp
             GS.pad_get_net_class = GS.pad_get_net_class_kp
             GS.pad_get_position = GS.pad_get_position_kp

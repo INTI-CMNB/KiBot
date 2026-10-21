@@ -203,7 +203,18 @@ class IBoMOptions(VariantOptions):
                 GS.sch.save_netlist(f, self._comps)
             # Write a board with the filtered values applied
             self.filter_pcb_components()
+            # Clear the in bom and DNP flags, we handle it using --blacklist
+            # Modern iBoM reads the in bom and dnp flags
+            old_is_bom = []
+            old_dnp = []
+            for m in GS.get_modules():
+                old_dnp.append(GS.fp_set_dnp(m, False))
+                old_is_bom.append(GS.fp_set_exclude_from_bom(m, False))
             pcb_name, _ = self.save_tmp_dir_board('ibom', force_dir=net_dir, forced_name=prj_name)
+            # Restore the flags
+            for m, dnp, is_bom in zip(GS.get_modules(), old_dnp, old_is_bom):
+                GS.fp_set_dnp(m, dnp)
+                GS.fp_set_exclude_from_bom(m, is_bom)
             self.unfilter_pcb_components()
         else:
             # Check if the user wants extra_fields but there is no data about them (#68)
@@ -220,7 +231,7 @@ class IBoMOptions(VariantOptions):
             # Plugin could be installed without execute flags
             cmd.insert(0, 'python3')
         # Apply variants/filters
-        to_remove = ','.join(self.get_not_fitted_refs(parent=True))
+        to_remove = ','.join(self.get_not_fitted_refs(parent=True, is_bom=True))
         if self.blacklist and to_remove:
             self.blacklist += ','
         self.blacklist += to_remove
@@ -250,7 +261,7 @@ class IBoMOptions(VariantOptions):
                                [("'PCB_SHAPE' object has no attribute 'GetAngle'",
                                 "Update Interactive HTML BoM your version doesn't support KiCad 6 files")])
         finally:
-            if net_dir:
+            if net_dir and not GS.keep_temporals:
                 logger.debug('Removing temporal variant dir `{}`'.format(net_dir))
                 rmtree(net_dir)
             # Restore the real name selected
