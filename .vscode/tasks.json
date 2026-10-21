@@ -6,6 +6,12 @@
             "type": "shell",
             "command": "rm -rf pp",
             "problemMatcher": []
+        },
+        {
+            "label": "Generate docs",
+            "type": "shell",
+            "command": "make doc ",
+            "problemMatcher": []
         }
     ]
 }
