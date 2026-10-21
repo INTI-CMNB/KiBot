@@ -1322,7 +1322,10 @@ class VariantOptions(BaseOptions):
             else:
                 logger.debug("Not setting VARIANT*")
             if GS.board and GS.kicad_variant_name(variant):
-                GS.pcb_set_variant(variant.name)
+                logger.debug(f"Switching the PCB to {variant.name}")
+                # TODO: kipy implementation, lacks it
+                if GS.pn is not None:
+                    GS.board.SetCurrentVariant(variant.name)
         else:
             # KiCad 10 behavior when "Default" variant is selected
             if GS.pro_variables:
