@@ -11,6 +11,7 @@ pytest-3 --log-cli-level debug
 import os
 import pytest
 from glob import glob
+import logging
 from . import context
 
 
@@ -248,3 +249,31 @@ def test_blender_export_2(test_dir):
     name = prj+'.pcb3d'
     ctx.expect_out_file(name, sub=True)
     ctx.clean_up()
+
+
+def check_modules(ctx, fname, cmps, all):
+    ctx.search_in_file_d(fname, [f"'{v}'" for v in cmps])
+    ctx.search_not_in_file_d(fname, [f"'{v}'" for v in all-set(cmps)])
+
+
+@pytest.mark.skipif(not context.ki10(), reason="KiCad 10+ variants")
+def test_step_variant_10(test_dir):
+    prj = 'kicad-variante'
+    ctx = context.TestContext(test_dir, prj, 'step_variant_10', 'Step')
+    ctx.run(extra_debug=True)
+    # R9-12 not in board, R17-R20 DNP
+    extra = ['R5', 'R6', 'R7', 'R8', 'R13', 'R14', 'R15', 'R16']
+    all = {f"R{v+1}" for v in range(20)}
+    # No variant
+    logging.debug("* No variant")
+    check_modules(ctx, prj+'-3D.step', ['R1', 'R2', 'R3']+extra, all)
+    # V1
+    logging.debug("* V1 variant")
+    check_modules(ctx, prj+'-3D_(V1).step', ['R1', 'R2']+extra, all)
+    # V2
+    logging.debug("* V2 variant")
+    check_modules(ctx, prj+'-3D_(V2).step', ['R1', 'R3']+extra, all)
+    # V3
+    logging.debug("* V3 variant")
+    check_modules(ctx, prj+'-3D_V3.step', ['R1', 'R4']+extra, all)
+    ctx.clean_up(keep_project=True)
