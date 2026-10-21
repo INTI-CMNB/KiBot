@@ -1803,7 +1803,7 @@ class GS(object):
         old_in_bom = footprint.attributes.exclude_from_bill_of_materials
         if value != old_in_bom:
             footprint.attributes.exclude_from_bill_of_materials = value
-            GS.board.update_items(footprint.attributes)
+            GS.board.update_items(footprint)
         return old_in_bom
 
     @staticmethod
@@ -1811,7 +1811,7 @@ class GS(object):
         old_dnp = footprint.attributes.do_not_populate
         if value != old_dnp:
             footprint.attributes.do_not_populate = value
-            GS.board.update_items(footprint.attributes)
+            GS.board.update_items(footprint)
         return old_dnp
 
     @staticmethod
