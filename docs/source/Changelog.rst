@@ -133,6 +133,10 @@ Added
 Fixed
 -----
 
+-  KiCad 10 native variants:
+
+   -  Issues when a variant reverted the DNP status (#963)
+
 -  Quick Start: avoid including HPGL for KiCad 10
 -  KiBot Check:
 
