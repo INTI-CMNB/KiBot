@@ -363,6 +363,13 @@
             "DataTypeString"
           ],
           null
+        ],
+        [
+          "use_text_box_for_note",
+          [
+            "DataTypeBoolean"
+          ],
+          null
         ]
       ]
     ]

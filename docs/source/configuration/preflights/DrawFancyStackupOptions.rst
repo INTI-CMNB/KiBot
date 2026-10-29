@@ -83,6 +83,10 @@ DrawFancyStackupOptions parameters
 
 -  ``stackup_to_text_lines_spacing`` :index:`: <pair: preflight - draw_fancy_stackup - draw_fancy_stackup; stackup_to_text_lines_spacing>` [:ref:`number <number>`] (default: ``3``) Space (in number of characters) between stackup drawing and stackup table.
 
+.. _DrawFancyStackupOptions_use_text_box_for_note:
+
+-  ``use_text_box_for_note`` :index:`: <pair: preflight - draw_fancy_stackup - draw_fancy_stackup; use_text_box_for_note>` [:ref:`boolean <boolean>`] (default: ``true``) Put the note inside a text box.
+
 .. _DrawFancyStackupOptions_via_spacing:
 
 -  ``via_spacing`` :index:`: <pair: preflight - draw_fancy_stackup - draw_fancy_stackup; via_spacing>` [:ref:`number <number>`] (default: ``8``) Space (in number of characters) between vias in the stackup drawing.

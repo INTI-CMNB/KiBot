@@ -28,6 +28,11 @@ Added
 
    -  Support for KiCad 10 polyline with more than two points. (#959)
 
+-  Preflights:
+
+   -  Draw Fancy Stackup: ``use_text_box_for_note`` to avoid overflowing
+      notes. Enabled by default. (See #964)
+
 -  \*SCH Print:
 
    -  ’draw_hop_over\` to draw it at wire crossings

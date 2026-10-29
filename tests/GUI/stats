@@ -199,11 +199,11 @@ Used as single data type:
 -          String,StringDict:    1 ['pcbdraw.options.remap']
 ================================================================================
 ================================================================================
-24 preflights types with a total of 173 different parameters
-Single type parameters: 162 (94 %)
+24 preflights types with a total of 174 different parameters
+Single type parameters: 163 (94 %)
 Multi type parameters: 11 (6 %)
 Average parameters: 7
-Maximum number of parameters: 23
+Maximum number of parameters: 24
 Minimum number of parameters: 1
 Histogram:
   0-  9: *****************
@@ -233,7 +233,7 @@ Preflights sorted by parameters:
 - erc: 18
 - include_table: 19
 - drc: 21
-- draw_fancy_stackup: 23
+- draw_fancy_stackup: 24
 Average depth: 1.9166666666666667
 Maximum depth: 3
 Minimum depth: 1
@@ -270,7 +270,7 @@ Preflights sorted by depth:
 --------------------------------------------------------------------------------
 9 different data types
 -             String:   53
--            Boolean:   52
+-            Boolean:   53
 -             Number:   34
 -             Choice:   17
 -               Dict:   11
@@ -281,7 +281,7 @@ Preflights sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:   50 
--            Boolean:   42 
+-            Boolean:   43 
 -             Number:   34 
 -             Choice:   17 
 - ListStringSingular:    6 ['check_fields.check_fields.exclude_filter', 'drc.drc.format', 'drc.drc.category', 'erc.erc.format', 'erc.erc.category', 'update_footprint.update_footprint']
@@ -415,8 +415,8 @@ Used as single data type:
 -              Number,String:   15 
 ================================================================================
 ================================================================================
-97 totals types with a total of 2742 different parameters
-Single type parameters: 2516 (92 %)
+97 totals types with a total of 2743 different parameters
+Single type parameters: 2517 (92 %)
 Multi type parameters: 226 (8 %)
 Average parameters: 28
 Maximum number of parameters: 222
@@ -493,8 +493,8 @@ Totals sorted by parameters:
 - populate: 22
 - rot_footprint: 22
 - download_datasheets: 23
-- draw_fancy_stackup: 23
 - kicanvas: 24
+- draw_fancy_stackup: 24
 - kibom: 24
 - jobset: 25
 - qr_lib: 25
@@ -654,7 +654,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 14 different data types
 -             String: 1186
--            Boolean:  710
+-            Boolean:  711
 -             Number:  362
 - ListStringSingular:  341
 -             Choice:  147
@@ -670,7 +670,7 @@ Totals sorted by depth:
 --------------------------------------------------------------------------------
 Used as single data type:
 -             String:  997 
--            Boolean:  630 
+-            Boolean:  631 
 - ListStringSingular:  337 
 -             Number:  250 
 -             Choice:  144 
