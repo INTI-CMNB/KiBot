@@ -19,7 +19,7 @@ outputs:
       map:
         output: ''
         type: 'pdf'
-  
+
   - name: gerber_drills
     comment: "Gerber drill files"
     type: gerb_drill

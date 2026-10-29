@@ -32,7 +32,6 @@ outputs:
     options:
       # generic layer options
       exclude_edge_layer: false
-      exclude_pads_from_silkscreen: false
       use_aux_axis_as_origin: false
       plot_sheet_reference: false
       plot_footprint_refs: true
@@ -41,7 +40,6 @@ outputs:
       tent_vias: true
 
       # gerber options
-      line_width: 0.15
       subtract_mask_from_silk: true
       use_protel_extensions: true
       gerber_precision: 4.6
