@@ -1,0 +1,64 @@
+# Example KiBot config file
+kibot:
+  version: 1
+
+globals:
+  str_no: niet
+
+preflight:
+  update_pcb_characteristics: false
+  update_stackup: false
+  draw_fancy_stackup:
+    note: "This is a footnote, very long, very long, very long, very long, very long, very long, very long, very long, very long, very long, very long"
+#    draw_vias: true
+#    gerber: gerbers
+#    border: 0
+#    columns:
+#      - type: gerber
+#        width: 10
+#      - type: drawing
+#        width: 15
+#      - type: thickness
+#        width: 5
+#        # side: right
+#      - type: description
+#        width: 20
+
+outputs:
+  - name: 'gerbers'
+    comment: "Gerbers for the Gerber god"
+    type: gerber
+    dir: gerberdir
+    run_by_default: false
+    options:
+      # generic layer options
+      exclude_edge_layer: false
+      exclude_pads_from_silkscreen: false
+      use_aux_axis_as_origin: false
+      plot_sheet_reference: false
+      plot_footprint_refs: true
+      plot_footprint_values: true
+      force_plot_invisible_refs_vals: false
+      tent_vias: true
+
+      # gerber options
+      line_width: 0.15
+      subtract_mask_from_silk: true
+      use_protel_extensions: true
+      gerber_precision: 4.6
+      create_gerber_job_file: false
+      gerber_job_file: 'test-%f.%x'
+      use_gerber_x2_attributes: true
+      use_gerber_net_attributes: false
+      output: '%f_%i.%x'
+
+    layers: all
+
+  - name: PDF
+    comment: "PDF files"
+    type: pdf
+    run_by_default: false
+    options:
+      output: draw_fancy_stackup_1.pdf
+    layers:
+      - layer: Cmts.User

@@ -80,3 +80,8 @@ docs/samples/3D_Model_LCD*/run_local.sh
 experiments/kicad/API
 experiments/kicad/Boundary/test_2.py
 tests/reference/9_0_5/test_v5-schematic_(no_L).svg.909
+draw_fancy_stackup_1.kicad_pcb
+draw_fancy_stackup_1.kicad_prl
+draw_fancy_stackup_1.kicad_pro
+draw_stackup.kicad_prl
+draw_stackup.kicad_pro

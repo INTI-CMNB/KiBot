@@ -659,6 +659,19 @@ def get_layer_number(stackup, number):
     return n
 
 
+def get_anchor_boundary(g):
+    """ Corners of the invisible box drawn by update_drawing_group, None if not found """
+    points = [(item.GetStart().x, item.GetStart().y) for item in g.GetItems()
+              if isinstance(item, pcbnew.PCB_SHAPE) and item.GetShape() == pcbnew.SHAPE_T_SEGMENT and
+              item.GetStart() == item.GetEnd()]
+    if len(points) != 2:
+        return None
+    (x1, y1), (x2, y2) = sorted(points)
+    if x2 <= x1 or y2 <= y1:
+        return None
+    return x1, y1, x2, y2
+
+
 def update_drawing(ops, parent):
     load_board()
     gerber = look_for_output(ops.gerber, 'gerber', parent, {'gerber'}) if ops.gerber else None
@@ -676,7 +689,8 @@ def update_drawing(ops, parent):
     for g in GS.board.Groups():
         if g.GetName() == ops.group_name:
             # Found the group
-            x1, y1, x2, y2 = GS.compute_group_boundary(g)
+            # The texts can go beyond the invisible box, using them the stackup grows on each run
+            x1, y1, x2, y2 = get_anchor_boundary(g) or GS.compute_group_boundary(g)
             item = g.GetItems()[0]
             layer = item.GetLayer()
             logger.debug(f'- Found group @{GS.to_mm(x1)},{GS.to_mm(y1)} mm ({GS.to_mm(x2-x1)}x{GS.to_mm(y2-y1)} mm)'

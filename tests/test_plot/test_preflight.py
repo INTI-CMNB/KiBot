@@ -695,6 +695,27 @@ def test_draw_stackup_1(test_dir):
 #     ctx.clean_up()
 
 
+@pytest.mark.skipif(not context.ki9(), reason="Just testing with 9+")
+def test_draw_fancy_stackup_1(test_dir):
+    """ Draw a fancy stackup and compare
+        The stackup has a nite with very long text (wider than the table)
+        We run 2 passes to check the group size doesn't grow like in #964 """
+    prj = 'draw_fancy_stackup_1'
+    ctx = context.TestContext(test_dir, prj, 'draw_fancy_stackup_1', relaxed=True)
+    # Copy the ref file
+    shutil.copy2(ctx.board_file+'.ok', ctx.board_file)
+    ctx.run(extra=['PDF'])
+    ctx.compare_pdf(prj+'.pdf')
+    # Second pass, should be the same
+    ctx.run(extra=['PDF'])
+    ctx.compare_pdf(prj+'.pdf')
+    # Remove the back-up
+    file_back = ctx.board_file + '-bak'
+    assert os.path.isfile(file_back), file_back
+    os.remove(file_back)
+    ctx.clean_up()
+
+
 @pytest.mark.skipif(not context.ki8(), reason="Test for 8 and up")
 def test_check_fields_1(test_dir):
     """ Simple check for temperature range """
