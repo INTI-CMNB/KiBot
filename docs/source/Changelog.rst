@@ -143,6 +143,10 @@ Fixed
    -  Mark KiCad 10 as good (green, not red)
    -  Avoid bogus messages when importing pcbnew (KiCad 10 workaround)
 
+-  Preflights:
+
+   -  Draw Fancy Stackup: group enlarged by very long footnotes (#964)
+
 -  Copy Files:
 
    -  Issues with the DNP status
