@@ -73,15 +73,18 @@ class Optionable(object):
         if not isinstance(val, str):
             raise KiPlotConfigurationError("Option `{}` must be a string".format(key))
         new_val, is_list = Optionable._promote_str_to_list(val, doc, valid)
-        if '{no_case}' in doc:
+        no_case_sensitive = '{no_case}' in doc
+        if no_case_sensitive:
             new_val = new_val.lower() if not is_list else [v.lower() for v in new_val]
         # If the docstring specifies the allowed values in the form [v1,v2...] enforce it
         m = Optionable._str_values_re.search(doc)
         if m:
             vals = [v.strip() for v in m.group(1).split(',')]
+            if no_case_sensitive:
+                vals = [v.lower() for v in vals]
             if '*' not in vals:
                 if not is_list:
-                    wrong = val not in vals
+                    wrong = new_val not in vals
                 else:
                     for v in new_val:
                         if v not in vals:
