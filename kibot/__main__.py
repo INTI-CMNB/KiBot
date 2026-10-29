@@ -20,6 +20,7 @@ Usage:
   kibot [-v...] [-c PLOT_CONFIG] [--banner N] [-E DEF] ... [--only-names]
         [--sub-pcbs] [-e SCHEMA] --list-variants
   kibot [-v...] [-b BOARD] [-d OUT_DIR] [-p | -P] [--banner N] --example
+  kibot [-v...] [-d OUT_DIR] [--banner N] --schema
   kibot [-v...] [--start PATH] [-d OUT_DIR] [--dry] [--banner N]
          [-t, --type TYPE]... --quick-start
   kibot [-v...] [--rst] [-d OUT_DIR] --help-filters
@@ -86,6 +87,7 @@ Options:
   --output-name-first              Use the output name first when listing
   -P, --copy-and-expand            As -p but expand the list of layers
   -q, --quiet                      Remove information logs
+  --schema                         Create a schema for the KiBot configs.
   -s PRE, --skip-pre PRE           Skip preflights, comma separated or `all`
   --sub-pcbs                       When listing variants also include sub-PCBs
   -v, --verbose                    Show debugging information
@@ -169,9 +171,9 @@ from .misc import (EXIT_BAD_ARGS, W_VARCFG, NO_PCBNEW_MODULE, hide_stderr, TRY_I
                    W_ONMAC, IGNORED_ERRORS, GOT_WARNINGS, W_NOCONFIG, W_NOLIBS, W_NOKIENV, W_KIAUTO, W_NODEFSYMLIB,
                    W_MISLIBTAB, MISSING_TOOL, MIN_KICAD_VERSION)
 from .pre_base import BasePreFlight
-from .config_reader import (print_outputs_help, print_output_help, print_preflights_help, create_example, print_filters_help,
+from .config_reader import (create_schema, print_outputs_help, print_output_help, print_preflights_help, create_example,
                             print_global_options_help, print_dependencies, print_variants_help, print_errors,
-                            print_list_rotations, print_list_offsets)
+                            print_list_rotations, print_list_offsets, print_filters_help)
 from .kiplot import (generate_outputs, load_actions, config_output, generate_makefile, generate_examples, solve_schematic,
                      solve_board_file, solve_project_file, check_board_file, exec_with_retry, load_config)
 from .registrable import RegOutput
@@ -916,6 +918,9 @@ def main():
         if args.copy_options and not args.board_file:
             GS.exit_with_error('Asked to copy options but no PCB specified.', EXIT_BAD_ARGS)
         create_example(args.board_file, GS.out_dir, args.copy_options, args.copy_and_expand)
+        sys.exit(0)
+    if args.schema:
+        create_schema(GS.out_dir)
         sys.exit(0)
 
     if GS.ci_cd_detected:

@@ -6,7 +6,7 @@ BUILDDIR      = build
 SPHINXTARGETS = html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf latexpdfja text man texinfo info gettext changes xml pseudoxml linkcheck doctest coverage clean
 
 
-all: html samples/generic_plot.kibot.yaml ../kibot/resources/report_templates/report_full_svg.txt ../src/kibot-check ../tests/GUI/stats
+all: html samples/generic_plot.kibot.yaml ../kibot/resources/report_templates/report_full_svg.txt ../src/kibot-check ../tests/GUI/stats kibot_schema.json
 
 ../src/kibot-check: ../src/kibot-check.in replace_tags.pl ../kibot/out_*.py ../kibot/pre_*.py ../kibot/var_*.py ../kibot/registrable.py ../kibot/misc.py ../kibot/config_reader.py ../kibot/dep_downloader.py
 	cat ../src/kibot-check.in | perl replace_tags.pl > ../src/kibot-check
@@ -15,6 +15,10 @@ samples/generic_plot.kibot.yaml: ../kibot/out_*.py ../kibot/pre_*.py ../kibot/co
 	rm -f example_template.kibot.yaml
 	../src/kibot -v --example
 	mv example_template.kibot.yaml $@
+
+kibot_schema.json: ../kibot/out_*.py ../kibot/pre_*.py ../kibot/config_reader.py
+	rm -f kibot_schema.json
+	../src/kibot --schema
 
 ../kibot/resources/report_templates/report_full_svg.txt: ../kibot/resources/report_templates/report_full.txt
 	cp $< $@

@@ -1702,3 +1702,262 @@ def print_list_offsets():
     for v in offs:
         print(fmt % ('``'+v[0]+'``', v[1][0], v[1][1]))
     print(sep)
+
+
+#########################################################################################
+# JSON Schema for the YAML config
+# Original implementation by Claude Sonnet 5.5 medium
+#########################################################################################
+
+
+SCHEMA_FILE = 'kibot_schema.json'
+SCHEMA_DRAFT = 'http://json-schema.org/draft-07/schema#'
+_STRING_DICT = {'type': 'object', 'additionalProperties': {'type': 'string'}}
+
+
+def _class_key(cls):
+    """ Name used for a class inside "definitions" (unique, as many classes are just called Options) """
+    return re.sub(r'[^A-Za-z0-9_.-]', '_', cls.__module__+'.'+cls.__qualname__)
+
+
+def _clean_help(text):
+    """ Converts KiBot's help text into a plain one-paragraph description """
+    text = text.replace('{comma_sep}', '').replace('{no_case} ', '')
+    text = re.sub(RE_LEN, r'(must contain \1 elements)', text, count=1)
+    lines = [ln.strip().lstrip('.').strip() for ln in text.replace('|br|', '').split('\n')]
+    return ' '.join(ln for ln in lines if ln).strip()
+
+
+def _no_case_pattern(choices):
+    """ Case-insensitive match of any of the choices (ECMA-262 has no (?i)) """
+    def one(c):
+        return ''.join('['+ch.lower()+ch.upper()+']' if ch.isalpha() else re.escape(ch) for ch in c)
+    return '^(?:'+'|'.join(one(c) for c in choices)+')$'
+
+
+def _schema_for_type(tp, validation, no_enum, nested, in_list=False, no_case=False):
+    """ JSON schema for one KiBot data type name (string, number, boolean, dict, list(...)) """
+    if tp.startswith('list(') and tp.endswith(')'):
+        # KiBot doesn't check choices/ranges for the elements of a real list
+        return {'type': 'array', 'items': _schema_for_type(tp[5:-1], validation, no_enum, nested, True)}
+    if tp == 'string_dict':
+        return deepcopy(_STRING_DICT)
+    if tp == 'dict':
+        return nested if nested is not None else {'type': 'object'}
+    if tp == 'boolean':
+        return {'type': 'boolean'}
+    if tp == 'string':
+        sch = {'type': 'string'}
+        # `*` anywhere means "any string is also accepted"
+        if validation and not in_list and '*' not in validation:
+            if no_case:
+                sch['pattern'] = _no_case_pattern(validation)
+            elif not no_enum:
+                sch['enum'] = list(validation)
+        return sch
+    if tp == 'number':
+        sch = {'type': 'number'}
+        if validation and not in_list:
+            if validation[0] == 'C':
+                try:
+                    sch['enum'] = [float(c) if '.' in str(c) else int(c) for c in validation[1]]
+                except ValueError:
+                    pass  # contains `*`
+            else:
+                sch['minimum'], sch['maximum'] = validation[0], validation[1]
+        return sch
+    # Unknown type, don't be strict
+    return {}
+
+
+def _merge_list_schemas(schemas):
+    """ list(dict)|list(string) -> one array where each item can be a dict or a string """
+    out = []
+    merged = None
+    for s in schemas:
+        if s.get('type') == 'array' and 'items' in s:
+            if merged is None:
+                merged = {'type': 'array', 'items': []}
+                out.append(merged)
+            if s['items'] not in merged['items']:
+                merged['items'].append(s['items'])
+        else:
+            out.append(s)
+    if merged is not None:
+        items = merged['items']
+        merged['items'] = items[0] if len(items) == 1 else {'anyOf': items}
+    return out
+
+
+def _attr_schema(obj, k, v, defs):
+    """ JSON schema for the attribute `k` of the Optionable `obj` (`v` is what get_attrs_gen returned) """
+    help, _, _ = obj.get_doc(k)
+    if not help:
+        return {}
+    if help[0] == '*':
+        help = help[1:]
+    try:
+        valid, validations, _, real_help = obj.get_valid_types(help)
+    except Exception as e:
+        logger.debug(f'Schema: unable to get the type for `{k}` ({e}), accepting anything')
+        return {}
+    no_case = '{no_case}' in real_help
+    no_enum = '{comma_sep}' in real_help
+    is_class = isinstance(v, type)
+    nested = None
+    # `Optionable` is just a placeholder for simple types, only real classes are dicts
+    if is_class and v.__name__ != 'Optionable' and ('dict' in valid or 'list(dict)' in valid):
+        nested = _class_def(v, defs, _class_key(v))
+    schemas = []
+    for tp, validation in zip(valid, validations):
+        nest = nested
+        # With string_dict KiBot doesn't create the class, the values just must be strings
+        if (tp == 'dict' and 'string_dict' in valid) or (tp == 'list(dict)' and 'list(string_dict)' in valid):
+            nest = _STRING_DICT
+        s = _schema_for_type(tp, validation, no_enum, nest, no_case=no_case)
+        if not s:
+            schemas = []
+            break
+        if s not in schemas:
+            schemas.append(s)
+    if 'list(string)' in valid:
+        # An empty string is promoted to an empty list, so it skips the choices check
+        for s in schemas:
+            if s.get('type') != 'string':
+                continue
+            if 'enum' in s and '' not in s['enum']:
+                s['enum'].append('')
+            elif 'pattern' in s:
+                s['pattern'] = s['pattern'][:-2]+'|)$'   # '^(?:a|b)$' -> '^(?:a|b|)$'
+    if is_class:
+        # Only class-typed attributes validate the list elements one by one (mixed lists)
+        schemas = _merge_list_schemas(schemas)
+    if not schemas:
+        result = {}
+    elif len(schemas) == 1:
+        result = dict(schemas[0])
+    else:
+        result = {'anyOf': schemas}
+    desc = _clean_help(real_help)
+    if desc:
+        result['description'] = desc
+    return result
+
+
+def _class_def(cls, defs, key, fixed=None, skip=(), required=None):
+    """ Adds the schema for the Optionable class `cls` to `defs` and returns a $ref to it """
+    ref = {'$ref': '#/definitions/'+key}
+    if key in defs:
+        return ref
+    # Register first, so recursive structures don't loop forever
+    schema = defs[key] = {'type': 'object', 'additionalProperties': False, 'properties': {}}
+    if required:
+        schema['required'] = list(required)
+    props = schema['properties']
+    obj = cls()
+    aliases = []
+    for k, v in obj.get_attrs_gen():
+        if k in skip or (fixed and k in fixed):
+            continue
+        _, alias, is_alias = obj.get_doc(k)
+        if is_alias:
+            aliases.append((k, alias))
+            continue
+        props[k] = _attr_schema(obj, k, v, defs)
+    for k, alias in aliases:
+        props[k] = deepcopy(props.get(alias, {}))
+    if fixed:
+        props.update(fixed)
+    if cls.__doc__:
+        lines = trim(cls.__doc__)
+        if lines:
+            schema['title'] = lines[0]
+            if len(lines) > 1 and lines[1]:
+                schema['description'] = lines[1]
+    return ref
+
+
+def _typed_list_schema(registered, defs, prefix):
+    """ Schema for a list of items selected by `type` (outputs, filters and variants) """
+    all_of = []
+    for n, cls in sorted(registered.items()):
+        ref = _class_def(cls, defs, prefix+'.'+n, fixed={'type': {'const': n}}, required=['name', 'type'])
+        all_of.append({'if': {'properties': {'type': {'const': n}}, 'required': ['type']}, 'then': ref})
+    return {'type': 'array',
+            'items': {'type': 'object',
+                      'required': ['name', 'type'],
+                      'properties': {'type': {'enum': sorted(registered)}},
+                      'allOf': all_of}}
+
+
+def _preflights_schema(defs):
+    props = {}
+    for n in sorted(BasePreFlight.get_registered()):
+        obj = BasePreFlight.get_object_for(n)
+        attrs = dict(obj.get_attrs_gen())
+        # The value of the preflight is described by the attribute that has the preflight name
+        props[n] = _attr_schema(obj, n, attrs[n], defs) if n in attrs else {}
+    return {'type': 'object', 'additionalProperties': False, 'properties': props}
+
+
+def generate_schema():
+    """ Returns a JSON Schema (draft-07) for KiBot configuration files, as a dict """
+    from .var_base import BaseVariant
+    defs = {}
+    str_or_list = {'anyOf': [{'type': 'string'}, {'type': 'array', 'items': {'type': 'string'}}]}
+    glb = _class_def(GS.class_for_global_opts, defs, 'global')
+    import_item = {'type': 'object',
+                   'required': ['file'],
+                   'additionalProperties': False,
+                   'properties': {'file': {'type': 'string'},
+                                  'is_external': {'type': 'boolean'},
+                                  'outputs': str_or_list,
+                                  'preflights': str_or_list,
+                                  'filters': str_or_list,
+                                  'variants': str_or_list,
+                                  'global': str_or_list,
+                                  'globals': str_or_list,
+                                  'groups': str_or_list,
+                                  'definitions': {'type': 'object'}}}
+    kibot_sec = {'type': 'object',
+                 'required': ['version'],
+                 'additionalProperties': False,
+                 'properties': {'version': {'const': 1},
+                                'imported_global_has_less_priority': {'type': 'boolean'},
+                                'merge_pre': str_or_list}}
+    groups = {'type': 'array',
+              'items': {'type': 'object',
+                        'required': ['name'],
+                        'additionalProperties': False,
+                        'properties': {'name': {'type': 'string'},
+                                       'outputs': {'type': 'array', 'items': {'type': 'string'}}}}}
+    schema = {'$schema': SCHEMA_DRAFT,
+              'title': 'KiBot configuration file',
+              'type': 'object',
+              'additionalProperties': False,
+              'oneOf': [{'required': ['kibot']}, {'required': ['kiplot']}],
+              'properties': {'kibot': kibot_sec,
+                             'kiplot': kibot_sec,
+                             'import': {'type': 'array', 'items': {'anyOf': [{'type': 'string'}, import_item]}},
+                             'global': glb,
+                             'globals': glb,
+                             'filters': _typed_list_schema(RegFilter.get_registered(), defs, 'filter'),
+                             'variants': _typed_list_schema(BaseVariant.get_registered(), defs, 'variant'),
+                             'preflight': _preflights_schema(defs),
+                             'outputs': _typed_list_schema(RegOutput.get_registered(), defs, 'output'),
+                             'groups': groups}}
+    schema['definitions'] = defs
+    return schema
+
+
+def create_schema(out_dir, file_name=SCHEMA_FILE):
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    fname = os.path.join(out_dir, file_name)
+    if os.path.isfile(fname):
+        GS.exit_with_error(fname+" already exists, won't overwrite", WONT_OVERWRITE)
+    logger.info('Creating {} YAML schema'.format(fname))
+    schema = generate_schema()
+    with open(fname, 'wt', encoding='utf-8') as f:
+        json.dump(schema, f, indent=2, ensure_ascii=False)
+        f.write('\n')
