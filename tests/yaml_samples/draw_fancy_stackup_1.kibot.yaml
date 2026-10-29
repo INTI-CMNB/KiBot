@@ -10,6 +10,7 @@ preflight:
   update_stackup: false
   draw_fancy_stackup:
     note: "This is a footnote, very long, very long, very long, very long, very long, very long, very long, very long, very long, very long, very long"
+    use_text_box_for_note: false
 #    draw_vias: true
 #    gerber: gerbers
 #    border: 0

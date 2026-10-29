@@ -97,6 +97,46 @@ def draw_text(g, x, y, text, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY
     return nt, tb.GetWidth()
 
 
+def draw_text_box(g, x, y, width, height, text, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY_LEFT, font=None,
+                  v_align=GR_TEXT_VJUSTIFY_TOP, border=False, border_width_mm=0.1):
+    tb = pcbnew.PCB_TEXTBOX(GS.board)
+
+    # Geometry: a textbox is defined by its start/end corners
+    tb.SetStart(pcbnew.VECTOR2I(x, y))
+    tb.SetEnd(pcbnew.VECTOR2I(x + width, y + height))
+
+    tb.SetText(text)
+    tb.SetLayer(layer)
+
+    if font:
+        # segfault if overbars (~{text}) with custom fonts
+        remove_overbars(tb)
+        tb.SetFont(font)
+
+    # Font size / weight
+    tb.SetTextSize(pcbnew.VECTOR2I(w, h))
+    if bold:
+        tb.SetBold(bold)
+
+    # Alignment
+    tb.SetHorizJustify(alignment)
+    tb.SetVertJustify(v_align)
+
+    # Border
+    tb.SetBorderEnabled(border)
+    if border:
+        tb.SetBorderWidth(GS.from_mm(border_width_mm))
+
+    tb.SetMarginTop(0)
+    tb.SetMarginBottom(0)
+    tb.SetMarginLeft(0)
+    tb.SetMarginRight(0)
+
+    g.AddItem(tb)
+    GS.board.Add(tb)
+    return tb
+
+
 def remove_overbars(txt):
     current_text = txt.GetText()
 

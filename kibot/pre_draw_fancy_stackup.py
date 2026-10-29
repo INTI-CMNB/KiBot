@@ -8,7 +8,7 @@
 import os
 from .error import KiPlotConfigurationError
 from .gs import GS
-from .kicad.pcb_draw_helpers import draw_rect, draw_line, draw_text, draw_poly, get_text_width
+from .kicad.pcb_draw_helpers import draw_rect, draw_line, draw_text, draw_poly, draw_text_box, get_text_width
 from .kiplot import load_board, get_output_targets, look_for_output
 from .layer import Layer
 from .optionable import Optionable
@@ -102,6 +102,8 @@ class DrawFancyStackupOptions(Optionable):
             """ Thickness of the borders of stackup drawing and stackup table """
             self.note = ''
             """ Note to write at the bottom of the stackup table. Leave empty if no note is to be written """
+            self.use_text_box_for_note = True
+            """ Put the note inside a text box """
         super().__init__()
         self._unknown_is_error = True
 
@@ -520,8 +522,11 @@ def update_drawing_group(g, pos_x, pos_y, width, tlayer, ops, gerber, via_layer_
 
     # Draw note
     if ops.note != '':
-        draw_text(g, table_x, int(pos_y + table_h + font_w/2 + 2*font_w),
-                  "Note: " + ops.note, font_w, font_w, tlayer, font=font)
+        note_y = int(pos_y + table_h + font_w/2 + 2*font_w)
+        if ops.use_text_box_for_note:
+            draw_text_box(g, table_x, note_y, table_w, font_w, "Note: " + ops.note, font_w, font_w, tlayer, font=font)
+        else:
+            draw_text(g, table_x, note_y, "Note: " + ops.note, font_w, font_w, tlayer, font=font)
 
     if not ops.draw_stackup:
         return True
