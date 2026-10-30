@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # KiBot Blender export test 2
 # Generating the PCB3D in the blender_export
 # src/kibot -vv -b tests/data/ArduinoLearningKitStarter.kicad_pcb -c tests/yaml_samples/blender_export_1.kibot.yaml -d r3d_lst

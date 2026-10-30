@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Example KiBot config file
 # kibot -b tests/data/ArduinoLearningKitStarter.kicad_pcb -c tests/yaml_samples/render_3d_list.kibot.yaml -d r3d_lst
 # r3d_lst/ArduinoLearningKitStarter-3D_top.png

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Test case for a sheet marked as DNP the test project is tests/board_samples/kicad_*/sheet_flags/repro.kicad_sch
 # We also test the save of this schematic using the variant save.
 # As the variant does nothing the result should be equivalent to the original

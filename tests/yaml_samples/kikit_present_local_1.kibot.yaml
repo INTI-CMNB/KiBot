@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Here we use internal outputs, 2 automagically selected and one specified
 kiplot:
   version: 1

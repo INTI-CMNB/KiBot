@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Example showing how we can change a footprint using the variants mechanism
 # To get the resistor footprint (default) use:
 # $ kibot -g variant=production -c variant_var.kibot.yaml -b variant_var.kicad_pcb

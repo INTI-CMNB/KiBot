@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Here we use internal outputs, but the PCB comes from an output (panelize in this case)
 kiplot:
   version: 1

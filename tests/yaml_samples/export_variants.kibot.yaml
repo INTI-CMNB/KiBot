@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # This config is used to export KiBoM/iBoM/KiCost variants to native KiCad 10 variants
 kibot:
   version: 1

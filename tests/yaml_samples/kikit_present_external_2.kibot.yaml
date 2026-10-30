@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Here we use an external config.
 # So KiBot calls another instance to create the files.
 # The external config must create the results at specific places.
