@@ -1,1646 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "KiBot configuration file",
+  "description": "`definitions` is only valid in its own document (after a `...` line)",
   "type": "object",
-  "additionalProperties": false,
-  "oneOf": [
-    {
-      "required": [
-        "kibot"
-      ]
-    },
-    {
-      "required": [
-        "kiplot"
-      ]
-    }
-  ],
-  "properties": {
-    "kibot": {
-      "type": "object",
-      "required": [
-        "version"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "version": {
-          "const": 1
-        },
-        "imported_global_has_less_priority": {
-          "type": "boolean"
-        },
-        "merge_pre": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
-        }
-      }
-    },
-    "kiplot": {
-      "type": "object",
-      "required": [
-        "version"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "version": {
-          "const": 1
-        },
-        "imported_global_has_less_priority": {
-          "type": "boolean"
-        },
-        "merge_pre": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ]
-        }
-      }
-    },
-    "import": {
-      "type": "array",
-      "items": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "object",
-            "required": [
-              "file"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "file": {
-                "type": "string"
-              },
-              "is_external": {
-                "type": "boolean"
-              },
-              "outputs": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "preflights": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "filters": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "variants": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "global": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "globals": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "groups": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
-              },
-              "definitions": {
-                "type": "object"
-              }
-            }
-          }
-        ]
-      }
-    },
-    "global": {
-      "$ref": "#/definitions/global"
-    },
-    "globals": {
-      "$ref": "#/definitions/global"
-    },
-    "filters": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "name",
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "enum": [
-              "alternatives",
-              "expand_text_vars",
-              "field_modify",
-              "field_rename",
-              "generic",
-              "rot_footprint",
-              "separate_pins",
-              "spec_to_field",
-              "subparts",
-              "urlify",
-              "value_split",
-              "var_rename",
-              "var_rename_kicost"
-            ]
-          }
-        },
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "alternatives"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.alternatives"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "expand_text_vars"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.expand_text_vars"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "field_modify"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.field_modify"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "field_rename"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.field_rename"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "generic"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.generic"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "rot_footprint"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.rot_footprint"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "separate_pins"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.separate_pins"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "spec_to_field"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.spec_to_field"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "subparts"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.subparts"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "urlify"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.urlify"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "value_split"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.value_split"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "var_rename"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.var_rename"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "var_rename_kicost"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/filter.var_rename_kicost"
-            }
-          }
-        ]
-      }
-    },
-    "variants": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "name",
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "enum": [
-              "ibom",
-              "kibom",
-              "kicad",
-              "kicost"
-            ]
-          }
-        },
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "ibom"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/variant.ibom"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kibom"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/variant.kibom"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kicad"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/variant.kicad"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kicost"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/variant.kicost"
-            }
-          }
-        ]
-      }
-    },
-    "preflight": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "annotate_pcb": {
-          "$ref": "#/definitions/kibot.pre_annotate_pcb.Annotate_PCBOptions",
-          "description": "Options for the `annotate_pcb` preflight"
-        },
-        "annotate_power": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "check_fields": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/kibot.pre_check_fields.FieldCheck"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/kibot.pre_check_fields.FieldCheck"
-              }
-            }
-          ],
-          "description": "One or more check rules"
-        },
-        "check_zone_fills": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "consolidate_pcbs": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/kibot.pre_consolidate_pcbs.PCB_Reference"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/kibot.pre_consolidate_pcbs.PCB_Reference"
-              }
-            }
-          ],
-          "description": "One or more PCBs to include"
-        },
-        "draw_fancy_stackup": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_draw_fancy_stackup.DrawFancyStackupOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "draw_stackup": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_draw_stackup.DrawStackupOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "drc": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_any_xrc.DRCOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "erc": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_any_xrc.ERCOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "erc_warnings": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "fill_zones": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "filters": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/kibot.pre_filters.FilterOptions"
-          },
-          "description": "One or more filters"
-        },
-        "ignore_unconnected": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "include_table": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_include_table.IncludeTableOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "pcb_replace": {
-          "$ref": "#/definitions/kibot.pre_pcb_replace.PCB_ReplaceOptions",
-          "description": "Options for the `pcb_replace` preflight"
-        },
-        "run_drc": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_run_drc.Run_DRCOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "run_erc": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_run_erc.Run_ERCOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        },
-        "sch_replace": {
-          "$ref": "#/definitions/kibot.pre_sch_replace.SCH_ReplaceOptions",
-          "description": "Options for the `sch_replace` preflight"
-        },
-        "set_text_variables": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/kibot.pre_set_text_variables.KiCadVariable"
-            },
-            {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/kibot.pre_set_text_variables.KiCadVariable"
-              }
-            }
-          ],
-          "description": "One or more variable definition"
-        },
-        "update_footprint": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          ],
-          "description": "One or more component references"
-        },
-        "update_pcb_characteristics": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "update_qr": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "update_stackup": {
-          "type": "boolean",
-          "description": "Enable this preflight"
-        },
-        "update_xml": {
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/kibot.pre_update_xml.Update_XMLOptions"
-            }
-          ],
-          "description": "Use a boolean for simple cases or fine-tune its behavior"
-        }
-      }
-    },
-    "outputs": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "name",
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "enum": [
-              "blender_export",
-              "boardview",
-              "bom",
-              "bom_labels",
-              "compress",
-              "copy_files",
-              "diff",
-              "download_datasheets",
-              "dxf",
-              "dxf_sch_print",
-              "excellon",
-              "export_3d",
-              "gencad",
-              "gerb_drill",
-              "gerber",
-              "hpgl",
-              "hpgl_sch_print",
-              "ibom",
-              "info",
-              "ipc2581",
-              "jobset",
-              "kibom",
-              "kicad_site",
-              "kicanvas",
-              "kicost",
-              "kikit_present",
-              "kiri",
-              "navigate_results",
-              "navigate_results_rb",
-              "netlist",
-              "odb",
-              "panelize",
-              "pcb2blender_tools",
-              "pcb_print",
-              "pcb_stats",
-              "pcb_variant",
-              "pcbdraw",
-              "pdf",
-              "pdf_pcb_print",
-              "pdf_sch_print",
-              "pdfunite",
-              "populate",
-              "position",
-              "ps",
-              "ps_sch_print",
-              "qr_lib",
-              "render_3d",
-              "report",
-              "sch_variant",
-              "stencil_3d",
-              "stencil_for_jig",
-              "step",
-              "svg",
-              "svg_pcb_print",
-              "svg_sch_print",
-              "vrml"
-            ]
-          }
-        },
-        "allOf": [
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "blender_export"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.blender_export"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "boardview"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.boardview"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "bom"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.bom"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "bom_labels"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.bom_labels"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "compress"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.compress"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "copy_files"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.copy_files"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "diff"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.diff"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "download_datasheets"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.download_datasheets"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "dxf"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.dxf"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "dxf_sch_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.dxf_sch_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "excellon"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.excellon"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "export_3d"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.export_3d"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "gencad"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.gencad"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "gerb_drill"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.gerb_drill"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "gerber"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.gerber"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "hpgl"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.hpgl"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "hpgl_sch_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.hpgl_sch_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "ibom"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.ibom"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "info"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.info"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "ipc2581"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.ipc2581"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "jobset"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.jobset"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kibom"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.kibom"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kicad_site"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.kicad_site"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kicanvas"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.kicanvas"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kicost"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.kicost"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kikit_present"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.kikit_present"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "kiri"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.kiri"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "navigate_results"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.navigate_results"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "navigate_results_rb"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.navigate_results_rb"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "netlist"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.netlist"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "odb"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.odb"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "panelize"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.panelize"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pcb2blender_tools"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pcb2blender_tools"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pcb_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pcb_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pcb_stats"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pcb_stats"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pcb_variant"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pcb_variant"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pcbdraw"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pcbdraw"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pdf"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pdf"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pdf_pcb_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pdf_pcb_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pdf_sch_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pdf_sch_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "pdfunite"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.pdfunite"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "populate"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.populate"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "position"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.position"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "ps"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.ps"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "ps_sch_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.ps_sch_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "qr_lib"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.qr_lib"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "render_3d"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.render_3d"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "report"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.report"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "sch_variant"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.sch_variant"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "stencil_3d"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.stencil_3d"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "stencil_for_jig"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.stencil_for_jig"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "step"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.step"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "svg"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.svg"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "svg_pcb_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.svg_pcb_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "svg_sch_print"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.svg_sch_print"
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "type": {
-                  "const": "vrml"
-                }
-              },
-              "required": [
-                "type"
-              ]
-            },
-            "then": {
-              "$ref": "#/definitions/output.vrml"
-            }
-          }
-        ]
-      }
-    },
-    "groups": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "name"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "outputs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    }
+  "if": {
+    "required": [
+      "definitions"
+    ]
+  },
+  "then": {
+    "$ref": "#/definitions/definitions_doc"
+  },
+  "else": {
+    "$ref": "#/definitions/config_file"
   },
   "definitions": {
     "global": {
@@ -20836,6 +19208,1681 @@
             }
           ],
           "description": "Name of the filter to mark components as not fitted. Is a short-cut to use for simple cases where a variant is an overkill. Can be used to fine-tune a variant for a particular output that needs extra filtering done before the variant"
+        }
+      }
+    },
+    "config_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "kibot"
+          ]
+        },
+        {
+          "required": [
+            "kiplot"
+          ]
+        }
+      ],
+      "properties": {
+        "kibot": {
+          "type": "object",
+          "required": [
+            "version"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "imported_global_has_less_priority": {
+              "type": "boolean"
+            },
+            "merge_pre": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "kiplot": {
+          "type": "object",
+          "required": [
+            "version"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "imported_global_has_less_priority": {
+              "type": "boolean"
+            },
+            "merge_pre": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "import": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "file"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "file": {
+                    "type": "string"
+                  },
+                  "is_external": {
+                    "type": "boolean"
+                  },
+                  "outputs": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "preflights": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "variants": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "global": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "globals": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "groups": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ]
+                  },
+                  "definitions": {
+                    "type": "object",
+                    "minProperties": 1,
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "description": "Values for @NAME@ replacements"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "global": {
+          "$ref": "#/definitions/global"
+        },
+        "globals": {
+          "$ref": "#/definitions/global"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "alternatives",
+                  "expand_text_vars",
+                  "field_modify",
+                  "field_rename",
+                  "generic",
+                  "rot_footprint",
+                  "separate_pins",
+                  "spec_to_field",
+                  "subparts",
+                  "urlify",
+                  "value_split",
+                  "var_rename",
+                  "var_rename_kicost"
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "alternatives"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.alternatives"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "expand_text_vars"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.expand_text_vars"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "field_modify"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.field_modify"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "field_rename"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.field_rename"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "generic"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.generic"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "rot_footprint"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.rot_footprint"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "separate_pins"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.separate_pins"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "spec_to_field"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.spec_to_field"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "subparts"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.subparts"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "urlify"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.urlify"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "value_split"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.value_split"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "var_rename"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.var_rename"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "var_rename_kicost"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/filter.var_rename_kicost"
+                }
+              }
+            ]
+          }
+        },
+        "variants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "ibom",
+                  "kibom",
+                  "kicad",
+                  "kicost"
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "ibom"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/variant.ibom"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kibom"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/variant.kibom"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kicad"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/variant.kicad"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kicost"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/variant.kicost"
+                }
+              }
+            ]
+          }
+        },
+        "preflight": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "annotate_pcb": {
+              "$ref": "#/definitions/kibot.pre_annotate_pcb.Annotate_PCBOptions",
+              "description": "Options for the `annotate_pcb` preflight"
+            },
+            "annotate_power": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "check_fields": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/kibot.pre_check_fields.FieldCheck"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/kibot.pre_check_fields.FieldCheck"
+                  }
+                }
+              ],
+              "description": "One or more check rules"
+            },
+            "check_zone_fills": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "consolidate_pcbs": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/kibot.pre_consolidate_pcbs.PCB_Reference"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/kibot.pre_consolidate_pcbs.PCB_Reference"
+                  }
+                }
+              ],
+              "description": "One or more PCBs to include"
+            },
+            "draw_fancy_stackup": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_draw_fancy_stackup.DrawFancyStackupOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "draw_stackup": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_draw_stackup.DrawStackupOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "drc": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_any_xrc.DRCOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "erc": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_any_xrc.ERCOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "erc_warnings": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "fill_zones": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "filters": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/kibot.pre_filters.FilterOptions"
+              },
+              "description": "One or more filters"
+            },
+            "ignore_unconnected": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "include_table": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_include_table.IncludeTableOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "pcb_replace": {
+              "$ref": "#/definitions/kibot.pre_pcb_replace.PCB_ReplaceOptions",
+              "description": "Options for the `pcb_replace` preflight"
+            },
+            "run_drc": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_run_drc.Run_DRCOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "run_erc": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_run_erc.Run_ERCOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            },
+            "sch_replace": {
+              "$ref": "#/definitions/kibot.pre_sch_replace.SCH_ReplaceOptions",
+              "description": "Options for the `sch_replace` preflight"
+            },
+            "set_text_variables": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/kibot.pre_set_text_variables.KiCadVariable"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/kibot.pre_set_text_variables.KiCadVariable"
+                  }
+                }
+              ],
+              "description": "One or more variable definition"
+            },
+            "update_footprint": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "description": "One or more component references"
+            },
+            "update_pcb_characteristics": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "update_qr": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "update_stackup": {
+              "type": "boolean",
+              "description": "Enable this preflight"
+            },
+            "update_xml": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "$ref": "#/definitions/kibot.pre_update_xml.Update_XMLOptions"
+                }
+              ],
+              "description": "Use a boolean for simple cases or fine-tune its behavior"
+            }
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "blender_export",
+                  "boardview",
+                  "bom",
+                  "bom_labels",
+                  "compress",
+                  "copy_files",
+                  "diff",
+                  "download_datasheets",
+                  "dxf",
+                  "dxf_sch_print",
+                  "excellon",
+                  "export_3d",
+                  "gencad",
+                  "gerb_drill",
+                  "gerber",
+                  "hpgl",
+                  "hpgl_sch_print",
+                  "ibom",
+                  "info",
+                  "ipc2581",
+                  "jobset",
+                  "kibom",
+                  "kicad_site",
+                  "kicanvas",
+                  "kicost",
+                  "kikit_present",
+                  "kiri",
+                  "navigate_results",
+                  "navigate_results_rb",
+                  "netlist",
+                  "odb",
+                  "panelize",
+                  "pcb2blender_tools",
+                  "pcb_print",
+                  "pcb_stats",
+                  "pcb_variant",
+                  "pcbdraw",
+                  "pdf",
+                  "pdf_pcb_print",
+                  "pdf_sch_print",
+                  "pdfunite",
+                  "populate",
+                  "position",
+                  "ps",
+                  "ps_sch_print",
+                  "qr_lib",
+                  "render_3d",
+                  "report",
+                  "sch_variant",
+                  "stencil_3d",
+                  "stencil_for_jig",
+                  "step",
+                  "svg",
+                  "svg_pcb_print",
+                  "svg_sch_print",
+                  "vrml"
+                ]
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "blender_export"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.blender_export"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "boardview"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.boardview"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "bom"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.bom"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "bom_labels"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.bom_labels"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "compress"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.compress"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "copy_files"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.copy_files"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "diff"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.diff"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "download_datasheets"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.download_datasheets"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "dxf"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.dxf"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "dxf_sch_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.dxf_sch_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "excellon"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.excellon"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "export_3d"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.export_3d"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "gencad"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.gencad"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "gerb_drill"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.gerb_drill"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "gerber"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.gerber"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "hpgl"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.hpgl"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "hpgl_sch_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.hpgl_sch_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "ibom"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.ibom"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "info"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.info"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "ipc2581"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.ipc2581"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "jobset"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.jobset"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kibom"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.kibom"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kicad_site"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.kicad_site"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kicanvas"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.kicanvas"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kicost"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.kicost"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kikit_present"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.kikit_present"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "kiri"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.kiri"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "navigate_results"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.navigate_results"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "navigate_results_rb"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.navigate_results_rb"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "netlist"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.netlist"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "odb"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.odb"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "panelize"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.panelize"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pcb2blender_tools"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pcb2blender_tools"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pcb_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pcb_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pcb_stats"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pcb_stats"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pcb_variant"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pcb_variant"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pcbdraw"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pcbdraw"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pdf"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pdf"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pdf_pcb_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pdf_pcb_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pdf_sch_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pdf_sch_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "pdfunite"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.pdfunite"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "populate"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.populate"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "position"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.position"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "ps"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.ps"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "ps_sch_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.ps_sch_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "qr_lib"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.qr_lib"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "render_3d"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.render_3d"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "report"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.report"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "sch_variant"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.sch_variant"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "stencil_3d"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.stencil_3d"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "stencil_for_jig"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.stencil_for_jig"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "step"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.step"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "svg"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.svg"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "svg_pcb_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.svg_pcb_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "svg_sch_print"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.svg_sch_print"
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "vrml"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ]
+                },
+                "then": {
+                  "$ref": "#/definitions/output.vrml"
+                }
+              }
+            ]
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions_doc": {
+      "type": "object",
+      "required": [
+        "definitions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "definitions": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "description": "Values for @NAME@ replacements"
         }
       }
     }

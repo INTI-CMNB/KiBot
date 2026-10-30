@@ -1900,6 +1900,14 @@ def _preflights_schema(defs):
     return {'type': 'object', 'additionalProperties': False, 'properties': props}
 
 
+def _definitions_schema():
+    """ The `definitions` dict: values are substituted as text, so only simple types make sense """
+    return {'type': 'object',
+            'minProperties': 1,
+            'additionalProperties': {'type': ['string', 'number', 'boolean', 'null']},
+            'description': 'Values for @NAME@ replacements'}
+
+
 def generate_schema():
     """ Returns a JSON Schema (draft-07) for KiBot configuration files, as a dict """
     from .var_base import BaseVariant
@@ -1918,7 +1926,7 @@ def generate_schema():
                                   'global': str_or_list,
                                   'globals': str_or_list,
                                   'groups': str_or_list,
-                                  'definitions': {'type': 'object'}}}
+                                  'definitions': _definitions_schema()}}
     kibot_sec = {'type': 'object',
                  'required': ['version'],
                  'additionalProperties': False,
@@ -1931,21 +1939,33 @@ def generate_schema():
                         'additionalProperties': False,
                         'properties': {'name': {'type': 'string'},
                                        'outputs': {'type': 'array', 'items': {'type': 'string'}}}}}
+    defs['config_file'] = {'type': 'object',
+                           'additionalProperties': False,
+                           'oneOf': [{'required': ['kibot']}, {'required': ['kiplot']}],
+                           'properties': {'kibot': kibot_sec,
+                                          'kiplot': kibot_sec,
+                                          'import': {'type': 'array',
+                                                     'items': {'anyOf': [{'type': 'string'}, import_item]}},
+                                          'global': glb,
+                                          'globals': glb,
+                                          'filters': _typed_list_schema(RegFilter.get_registered(), defs, 'filter'),
+                                          'variants': _typed_list_schema(BaseVariant.get_registered(), defs,
+                                                                         'variant'),
+                                          'preflight': _preflights_schema(defs),
+                                          'outputs': _typed_list_schema(RegOutput.get_registered(), defs,
+                                                                        'output'),
+                                          'groups': groups}}
+    defs['definitions_doc'] = {'type': 'object',
+                               'required': ['definitions'],
+                               'additionalProperties': False,
+                               'properties': {'definitions': _definitions_schema()}}
     schema = {'$schema': SCHEMA_DRAFT,
               'title': 'KiBot configuration file',
+              'description': '`definitions` is only valid in its own document (after a `...` line)',
               'type': 'object',
-              'additionalProperties': False,
-              'oneOf': [{'required': ['kibot']}, {'required': ['kiplot']}],
-              'properties': {'kibot': kibot_sec,
-                             'kiplot': kibot_sec,
-                             'import': {'type': 'array', 'items': {'anyOf': [{'type': 'string'}, import_item]}},
-                             'global': glb,
-                             'globals': glb,
-                             'filters': _typed_list_schema(RegFilter.get_registered(), defs, 'filter'),
-                             'variants': _typed_list_schema(BaseVariant.get_registered(), defs, 'variant'),
-                             'preflight': _preflights_schema(defs),
-                             'outputs': _typed_list_schema(RegOutput.get_registered(), defs, 'output'),
-                             'groups': groups}}
+              'if': {'required': ['definitions']},
+              'then': {'$ref': '#/definitions/definitions_doc'},
+              'else': {'$ref': '#/definitions/config_file'}}
     schema['definitions'] = defs
     return schema
 
