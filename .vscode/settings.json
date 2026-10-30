@@ -13,9 +13,12 @@
         "/home/*/.local/lib/**": true,
         "/usr/lib/python3/**": true,
         "**/experiments/kicad/API/.venv*/**": true
-    }
+    },
     // "basedpyright.analysis.inlayHints.variableTypes": false,
     // "basedpyright.analysis.inlayHints.functionReturnTypes": false,
     // "basedpyright.analysis.inlayHints.callArgumentNames": true,
     //"editor.inlayHints.enabled": "on"   // Ctrl+Alt shows the hints
+    "yaml.schemas": {
+        "https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json": ["*.kibot.yaml", "*kibot*.yaml"]
+    }
 }
