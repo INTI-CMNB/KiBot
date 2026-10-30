@@ -13,6 +13,7 @@ Usage:
   kibot [-v...] [-c PLOT_CONFIG] [--banner N] [-E DEF] ... [--only-names]
         [--sub-pcbs] [-e SCHEMA] --list-variants
   kibot [-v...] [-b BOARD] [-d OUT_DIR] [-p | -P] [--banner N] --example
+  kibot [-v...] [-d OUT_DIR] [--banner N] --schema
   kibot [-v...] [--start PATH] [-d OUT_DIR] [--dry] [--banner N]
          [-t, --type TYPE]... --quick-start
   kibot [-v...] [--rst] [-d OUT_DIR] --help-filters
@@ -79,6 +80,7 @@ Options:
   --output-name-first              Use the output name first when listing
   -P, --copy-and-expand            As -p but expand the list of layers
   -q, --quiet                      Remove information logs
+  --schema                         Create a schema for the KiBot configs.
   -s PRE, --skip-pre PRE           Skip preflights, comma separated or `all`
   --sub-pcbs                       When listing variants also include sub-PCBs
   -v, --verbose                    Show debugging information

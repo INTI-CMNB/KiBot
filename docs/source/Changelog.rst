@@ -19,6 +19,10 @@ Versioning <https://semver.org/spec/v2.0.0.html>`__.
 Added
 ~~~~~
 
+-  CLI:
+
+   -  –schema: To generate the YAML schema in JSON format.
+
 -  Globals:
 
    -  ``pcb_image_prefix``: to configure the prefix for groups used to

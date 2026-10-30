@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.2] - Unreleased
 ### Added
+- CLI:
+  - --schema: To generate the YAML schema in JSON format.
 - Globals:
   - `pcb_image_prefix`: to configure the prefix for groups used to insert
     images on PCBs
