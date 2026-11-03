@@ -186,7 +186,7 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         data['text_variables'] = text_variables
         GS.make_bkp(pro_name)
         with open(pro_name, 'wt') as f:
-            f.write(json.dumps(data, sort_keys=True, indent=2))
+            f.write(json.dumps(data, sort_keys=True, indent=2, ensure_ascii=False))
         if GS.board:
             # Force a project and PCB reload
             GS.reload_project(pro_name)

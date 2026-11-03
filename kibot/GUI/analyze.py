@@ -181,7 +181,7 @@ def scan_items(category, iterable, accum, totals, config):
     report(accum, category)
     if GS.out_dir_in_cmd_line:
         with open(op.join(GS.out_dir, category), 'w') as f:
-            f.write(json.dumps(entries, sort_keys=True, indent=2))
+            f.write(json.dumps(entries, sort_keys=True, indent=2, ensure_ascii=False))
 
 
 CATS = (('outputs', RegOutput.get_registered, True),

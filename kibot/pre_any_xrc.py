@@ -206,7 +206,7 @@ class XRC(BasePreFlight):
         return html
 
     def create_json(self, data):
-        return json.dumps(data, indent=4)
+        return json.dumps(data, indent=4, ensure_ascii=False)
 
     def create_html_top(self, data):
         # HTML Head

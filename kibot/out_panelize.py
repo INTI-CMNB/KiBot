@@ -819,7 +819,7 @@ class PanelizeOptions(VariantOptions):
         for k, v in cfg.get_attrs_gen():
             if isinstance(v, PanelOptions):
                 cfg_d[k] = {ky: va for ky, va in v.get_attrs_gen() if va is not None and v.get_user_defined(ky)}
-        js = json.dumps(cfg_d, indent=4)
+        js = json.dumps(cfg_d, indent=4, ensure_ascii=False)
         logger.debugl(1, js)
         return GS.tmp_file(content=js, suffix='.json', prefix='panel_cfg', what='panel config', a_logger=logger)
 

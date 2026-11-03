@@ -77,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       pad number
 
 ## Fixed
+- General: Avoid pure ASCII in JSON files, use native UTF-8.
 - KiCad 10 native variants:
   - Issues when a variant reverted the DNP status (#963)
 - Quick Start: avoid including HPGL for KiCad 10

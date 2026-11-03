@@ -118,7 +118,7 @@ class GerberOptions(AnyLayerOptions):
                 logger.warning(W_GRBJOB+'Unknown gerber file {path} in gerber job file')
 
         with open(job_file, 'wt') as f:
-            f.write(json.dumps(data, indent=2))
+            f.write(json.dumps(data, indent=2, ensure_ascii=False))
 
     def _do_extra_rename(self, output_dir, kicad_output_base_name, changed_names, renamed):
         """ KiPy: Called after generating all layers and before removing the temporal output dir.

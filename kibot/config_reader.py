@@ -74,7 +74,7 @@ def _definition_to_str(k, v):
     if isinstance(v, (int, float)):
         return str(v)
     if isinstance(v, (list, dict)):
-        return json.dumps(v)  # Valid YAML (flow style)
+        return json.dumps(v, ensure_ascii=False)  # Valid YAML (flow style)
     if not isinstance(v, str):
         logger.warning(W_DEFNOSTR+f'Please only use simple data types for definitions (`{k}` contains `{v}`'
                        f' which is `{type(v).__name__}` type)')
@@ -1583,7 +1583,7 @@ def print_dependencies(markdown=True, jsn=False, rst=False):
         dep.importance = importance
     # The JSON output is just a dump
     if jsn:
-        print(json.dumps(RegDependency.get_registered(), cls=MyEncoder, indent=4, sort_keys=True))
+        print(json.dumps(RegDependency.get_registered(), cls=MyEncoder, indent=4, sort_keys=True, ensure_ascii=False))
         return
     # Now print them sorted by importance (and by name as a second criteria)
     rst_images = []

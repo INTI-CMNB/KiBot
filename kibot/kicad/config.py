@@ -698,7 +698,7 @@ class KiConf(object):
             layouts[0] = KiConf.fix_page_layout_k6_key('schematic', data, dest_dir, force_sch, no_copy_embedded, is_pcb=False)
             logger.debug(f'Saving modified project to {project}')
             with open(project, 'wt') as f:
-                f.write(json.dumps(data, sort_keys=True, indent=2))
+                f.write(json.dumps(data, sort_keys=True, indent=2, ensure_ascii=False))
         else:
             aux = data.get('schematic', None)
             if aux:

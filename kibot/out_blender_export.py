@@ -606,7 +606,7 @@ class Blender_ExportOptions(BaseOptions):
                                  'view': pov._view})
                     last_pov = pov
             scene['point_of_view'] = povs
-            text = json.dumps(scene, sort_keys=True, indent=2)
+            text = json.dumps(scene, sort_keys=True, indent=2, ensure_ascii=False)
             logger.debug('Scene:\n'+text)
             f.write(text)
             f.flush()

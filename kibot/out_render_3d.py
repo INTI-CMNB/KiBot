@@ -536,7 +536,7 @@ class Render3DOptions(Base3DOptionsWithHL):
         old_cfg['layer_presets'] = new_presets
         # Save the new config
         with open(cfg, 'wt') as f:
-            f.write(json.dumps(old_cfg, sort_keys=True, indent=2))
+            f.write(json.dumps(old_cfg, sort_keys=True, indent=2, ensure_ascii=False))
 
         return cmd
 

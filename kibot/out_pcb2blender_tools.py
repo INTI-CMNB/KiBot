@@ -287,7 +287,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
                         parsed_layer['thickness'] = la.thickness/1000
                     layers_parsed.append(parsed_layer)
                 board_info['stackup'] = layers_parsed
-            data = json.dumps(board_info, indent=3)
+            data = json.dumps(board_info, indent=3, ensure_ascii=False)
             logger.debug('Stackup: '+str(data))
             with open(fname, 'wt') as f:
                 f.write(data)

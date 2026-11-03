@@ -137,7 +137,7 @@ def write_json(filename, groups, headings, head_names, cfg):
         data['rows_dnf'] = do_groups(True)
 
     with open(filename, "wt") as output:
-        text = json.dumps(data, sort_keys=True, indent=2)
+        text = json.dumps(data, sort_keys=True, indent=2, ensure_ascii=False)
         output.write(text)
 
     return True
