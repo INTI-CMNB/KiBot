@@ -4,10 +4,10 @@ kibot:
   version: 1
 
 outputs:
-  - name: _macrofab_xyrs@_KIBOT_IMPORT_ID@
+  - name: _macrofab_xyrs$_KIBOT_IMPORT_ID$
     comment: "Pick and place file, XYRS style"
     type: bom
-    dir: @_KIBOT_IMPORT_DIR@
+    dir: $_KIBOT_IMPORT_DIR$
     options:
       pre_transform: ['_kicost_rename', '_rot_footprint']
       dnf_filter: _only_smd
@@ -45,7 +45,7 @@ outputs:
         - field: Footprint
         - field: Footprint Populate
           name: Populate
-        @_KIBOT_MPN_FIELD@
+        #$_KIBOT_MPN_FIELD$
 
 ...
 definitions:

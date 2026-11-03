@@ -3,20 +3,20 @@ kibot:
   version: 1
 
 outputs:
-  - name: _blender_3d@_KIBOT_IMPORT_ID@
+  - name: _blender_3d$_KIBOT_IMPORT_ID$
     comment: "HQ 3D Render of the PCB"
     type: blender_export
-    dir: @_KIBOT_IMPORT_DIR@
+    dir: $_KIBOT_IMPORT_DIR$
     options:
       render_options:
         transparent_background: true
         samples: 10
       point_of_view:
-        rotate_x: @_KIBOT_ROT_X@
-        rotate_y: @_KIBOT_ROT_Y@
-        rotate_z: @_KIBOT_ROT_Z@
-        view: @_KIBOT_3D_VIEW@
-        file_id: @_KIBOT_3D_FILE_ID@
+        rotate_x: $_KIBOT_ROT_X$
+        rotate_y: $_KIBOT_ROT_Y$
+        rotate_z: $_KIBOT_ROT_Z$
+        view: $_KIBOT_3D_VIEW$
+        file_id: $_KIBOT_3D_FILE_ID$
       outputs:
         - type: blender
         - type: render
@@ -26,7 +26,7 @@ definitions:
   _KIBOT_IMPORT_ID: ''
   _KIBOT_IMPORT_DIR: 'Render_3D'
   _KIBOT_3D_VIEW: top
-  _KIBOT_3D_FILE_ID: '@_KIBOT_IMPORT_ID@'
+  _KIBOT_3D_FILE_ID: '$_KIBOT_IMPORT_ID$'
   _KIBOT_ROT_X: 0
   _KIBOT_ROT_Y: 0
   _KIBOT_ROT_Z: 0

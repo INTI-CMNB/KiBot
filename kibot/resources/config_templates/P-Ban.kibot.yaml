@@ -5,22 +5,21 @@ kibot:
   version: 1
 
 groups:
-  - name: _P-Ban@_KIBOT_IMPORT_ID@
+  - name: _P-Ban$_KIBOT_IMPORT_ID$
     outputs:
-      - _P-Ban_gerbers@_KIBOT_IMPORT_ID@
-      - _P-Ban_drill@_KIBOT_IMPORT_ID@
+      - _P-Ban_gerbers$_KIBOT_IMPORT_ID$
+      - _P-Ban_drill$_KIBOT_IMPORT_ID$
 
 outputs:
-  - name: _P-Ban_gerbers@_KIBOT_IMPORT_ID@
+  - name: _P-Ban_gerbers$_KIBOT_IMPORT_ID$
     comment: Gerbers compatible with P-Ban
     type: gerber
-    dir: @_KIBOT_MANF_DIR@
-    options: &gerber_options
+    dir: $_KIBOT_MANF_DIR$
+    options:
       exclude_edge_layer: true
-      exclude_pads_from_silkscreen: true
       plot_sheet_reference: false
-      plot_footprint_refs: @_KIBOT_PLOT_FOOTPRINT_REFS@
-      plot_footprint_values: @_KIBOT_PLOT_FOOTPRINT_VALUES@
+      plot_footprint_refs: $_KIBOT_PLOT_FOOTPRINT_REFS$
+      plot_footprint_values: $_KIBOT_PLOT_FOOTPRINT_VALUES$
       force_plot_invisible_refs_vals: false
       tent_vias: true
       use_protel_extensions: true
@@ -28,24 +27,23 @@ outputs:
       gerber_precision: 4.6
       use_gerber_x2_attributes: true
       use_gerber_net_attributes: false
-      line_width: 0.15
       subtract_mask_from_silk: false
       inner_extension_pattern: '.g%n'
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
       custom_reports:
         - output: '製造基準書.txt'
           content: '部品面パターン : ${filename(F.Cu)}\r\n半田面パターン : ${filename(B.Cu)}\r\n内層パターン1 : ${filename(In1.Cu)}\r\n内層パターン2 : ${filename(In2.Cu)}\r\n内層パターン3 : ${filename(In3.Cu)}\r\n内層パターン4 : ${filename(In4.Cu)}\r\n内層パターン5 : ${filename(In5.Cu)}\r\n内層パターン6 : ${filename(In6.Cu)}\r\n部品面レジスト : ${filename(F.Mask)}\r\n半田面レジスト : ${filename(B.Mask)}\r\n部品面シルク : ${filename(F.SilkS)}\r\n半田面シルク : ${filename(B.SilkS)}\r\n基板外形 : ${filename(Edge.Cuts)}\r\n\nドリルデータ : ${basename}.drl\r\nドリルマップ : ${basename}-drl_map.gbr\r\nドリルリスト : ${basename}-drl.rpt\r\n'
     layers:
       # Note: a more generic approach is to use 'copper' but then the filenames
       # are slightly different.
-      @_KIBOT_GERBER_LAYERS@
-      @_KIBOT_F_PASTE@
-      @_KIBOT_B_PASTE@
+      $_KIBOT_GERBER_LAYERS$
+      $_KIBOT_F_PASTE$
+      $_KIBOT_B_PASTE$
 
-  - name: _P-Ban_drill@_KIBOT_IMPORT_ID@
+  - name: _P-Ban_drill$_KIBOT_IMPORT_ID$
     comment: Drill files compatible with P-Ban
     type: excellon
-    dir: @_KIBOT_MANF_DIR@
+    dir: $_KIBOT_MANF_DIR$
     options:
       pth_and_npth_single_file: true
       map:
@@ -56,18 +54,18 @@ outputs:
       left_digits: 3
       right_digits: 3
       output: "%f.drl"
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
 
-  - name: _P-Ban_compress@_KIBOT_IMPORT_ID@
+  - name: _P-Ban_compress$_KIBOT_IMPORT_ID$
     comment: ZIP file for P-Ban
     type: compress
-    dir: @_KIBOT_MANF_DIR_COMP@
+    dir: $_KIBOT_MANF_DIR_COMP$
     options:
-      move_files: @_KIBOT_COMPRESS_MOVE@
+      move_files: $_KIBOT_COMPRESS_MOVE$
       files:
-        - from_output: _P-Ban_gerbers@_KIBOT_IMPORT_ID@
+        - from_output: _P-Ban_gerbers$_KIBOT_IMPORT_ID$
           dest: /
-        - from_output: _P-Ban_drill@_KIBOT_IMPORT_ID@
+        - from_output: _P-Ban_drill$_KIBOT_IMPORT_ID$
           dest: /
 
 ...
@@ -76,8 +74,8 @@ definitions:
   _KIBOT_B_PASTE: ''
   _KIBOT_IMPORT_ID: ''
   _KIBOT_IMPORT_DIR: 'P-Ban'
-  _KIBOT_MANF_DIR: '@_KIBOT_IMPORT_DIR@'
-  _KIBOT_MANF_DIR_COMP: '@_KIBOT_IMPORT_DIR@'
+  _KIBOT_MANF_DIR: '$_KIBOT_IMPORT_DIR$'
+  _KIBOT_MANF_DIR_COMP: '$_KIBOT_IMPORT_DIR$'
   _KIBOT_PLOT_FOOTPRINT_REFS: true
   _KIBOT_PLOT_FOOTPRINT_VALUES: true
   _KIBOT_COMPRESS_MOVE: true

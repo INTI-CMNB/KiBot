@@ -3,27 +3,27 @@ kibot:
   version: 1
 
 outputs:
-  - name: _ExportProject@_KIBOT_IMPORT_ID@
+  - name: _ExportProject$_KIBOT_IMPORT_ID$
     comment: Project with all needed files
     type: copy_files
-    dir: @_KIBOT_IMPORT_DIR@
+    dir: $_KIBOT_IMPORT_DIR$
     run_by_default: false
     options:
       files:
         - source_type: project
 
-  - name: _ExportProject_compress@_KIBOT_IMPORT_ID@
+  - name: _ExportProject_compress$_KIBOT_IMPORT_ID$
     comment: ZIP file for the exported project
     type: compress
-    dir: @_KIBOT_DIR_COMP@
+    dir: $_KIBOT_DIR_COMP$
     options:
-      move_files: @_KIBOT_COMPRESS_MOVE@
+      move_files: $_KIBOT_COMPRESS_MOVE$
       files:
-        - from_output: _ExportProject@_KIBOT_IMPORT_ID@
+        - from_output: _ExportProject$_KIBOT_IMPORT_ID$
 
 ...
 definitions:
   _KIBOT_IMPORT_ID: ''
   _KIBOT_IMPORT_DIR: 'ExportedProject'
-  _KIBOT_DIR_COMP: '@_KIBOT_IMPORT_DIR@'
+  _KIBOT_DIR_COMP: '$_KIBOT_IMPORT_DIR$'
   _KIBOT_COMPRESS_MOVE: true

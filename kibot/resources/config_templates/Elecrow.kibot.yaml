@@ -5,22 +5,21 @@ kibot:
   version: 1
 
 groups:
-  - name: _Elecrow@_KIBOT_IMPORT_ID@
+  - name: _Elecrow$_KIBOT_IMPORT_ID$
     outputs:
-      - _Elecrow_gerbers@_KIBOT_IMPORT_ID@
-      - _Elecrow_drill@_KIBOT_IMPORT_ID@
+      - _Elecrow_gerbers$_KIBOT_IMPORT_ID$
+      - _Elecrow_drill$_KIBOT_IMPORT_ID$
 
 outputs:
-  - name: _Elecrow_gerbers@_KIBOT_IMPORT_ID@
+  - name: _Elecrow_gerbers$_KIBOT_IMPORT_ID$
     comment: Gerbers compatible with Elecrow
     type: gerber
-    dir: @_KIBOT_MANF_DIR@
-    options: &gerber_options
+    dir: $_KIBOT_MANF_DIR$
+    options:
       exclude_edge_layer: true
-      exclude_pads_from_silkscreen: true
       plot_sheet_reference: false
-      plot_footprint_refs: @_KIBOT_PLOT_FOOTPRINT_REFS@
-      plot_footprint_values: @_KIBOT_PLOT_FOOTPRINT_VALUES@
+      plot_footprint_refs: $_KIBOT_PLOT_FOOTPRINT_REFS$
+      plot_footprint_values: $_KIBOT_PLOT_FOOTPRINT_VALUES$
       force_plot_invisible_refs_vals: false
       tent_vias: true
       use_protel_extensions: true
@@ -30,38 +29,37 @@ outputs:
       use_gerber_x2_attributes: false
       use_gerber_net_attributes: false
       disable_aperture_macros: true
-      line_width: 0.1
       uppercase_extensions: true
       subtract_mask_from_silk: true
       inner_extension_pattern: '.g%n'
       edge_cut_extension: '.gml'
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
     layers:
-      @_KIBOT_GERBER_LAYERS@
-      @_KIBOT_F_PASTE@
-      @_KIBOT_B_PASTE@
+      $_KIBOT_GERBER_LAYERS$
+      $_KIBOT_F_PASTE$
+      $_KIBOT_B_PASTE$
 
-  - name: _Elecrow_drill@_KIBOT_IMPORT_ID@
+  - name: _Elecrow_drill$_KIBOT_IMPORT_ID$
     comment: Drill files compatible with Elecrow
     type: excellon
-    dir: @_KIBOT_MANF_DIR@
+    dir: $_KIBOT_MANF_DIR$
     options:
       pth_and_npth_single_file: false
       pth_id: ''
       npth_id: '-NPTH'
       output: "%f%i.TXT"
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
 
-  - name: _Elecrow_compress@_KIBOT_IMPORT_ID@
+  - name: _Elecrow_compress$_KIBOT_IMPORT_ID$
     comment: ZIP file for Elecrow
     type: compress
-    dir: @_KIBOT_MANF_DIR_COMP@
+    dir: $_KIBOT_MANF_DIR_COMP$
     options:
-      move_files: @_KIBOT_COMPRESS_MOVE@
+      move_files: $_KIBOT_COMPRESS_MOVE$
       files:
-        - from_output: _Elecrow_gerbers@_KIBOT_IMPORT_ID@
+        - from_output: _Elecrow_gerbers$_KIBOT_IMPORT_ID$
           dest: /
-        - from_output: _Elecrow_drill@_KIBOT_IMPORT_ID@
+        - from_output: _Elecrow_drill$_KIBOT_IMPORT_ID$
           dest: /
 
 ...
@@ -70,8 +68,8 @@ definitions:
   _KIBOT_B_PASTE: ''
   _KIBOT_IMPORT_ID: ''
   _KIBOT_IMPORT_DIR: 'Elecrow'
-  _KIBOT_MANF_DIR: '@_KIBOT_IMPORT_DIR@'
-  _KIBOT_MANF_DIR_COMP: '@_KIBOT_IMPORT_DIR@'
+  _KIBOT_MANF_DIR: '$_KIBOT_IMPORT_DIR$'
+  _KIBOT_MANF_DIR_COMP: '$_KIBOT_IMPORT_DIR$'
   _KIBOT_PLOT_FOOTPRINT_REFS: true
   _KIBOT_PLOT_FOOTPRINT_VALUES: true
   _KIBOT_COMPRESS_MOVE: true

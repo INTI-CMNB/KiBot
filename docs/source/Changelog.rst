@@ -189,6 +189,9 @@ Fixed
 Changed
 =======
 
+-  Variables substitution: The use of @VAR@ is now deprecated in favor
+   of one of :math:`VAR` (normal use), *:math:`VAR`* (for replacement of
+   non-strings) or #\ :math:`VAR` when replacing by a YAML block.
 -  Gerber/PS/PDF/SVG/DXF:
 
    -  ``exclude_pads_from_silkscreen`` is no longer valid (just warning)

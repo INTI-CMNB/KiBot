@@ -26,7 +26,7 @@ outputs:
     options:
       cache_dir: .cache
       diff_mode: stats
-      threshold: @_KIBOT_CHKZONE_THRESHOLD@
+      threshold: $_KIBOT_CHKZONE_THRESHOLD$
       old: ''
       old_type: file
       new_type: current

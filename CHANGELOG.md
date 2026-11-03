@@ -105,6 +105,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - DNP and exclude from BoM flags issues (#963)
 
 # Changed
+- Variables substitution: The use of @VAR@ is now deprecated in favor of one
+  of $VAR$ (normal use), _$VAR$_ (for replacement of non-strings) or #$VAR$
+  when replacing by a YAML block.
 - Gerber/PS/PDF/SVG/DXF:
   - `exclude_pads_from_silkscreen` is no longer valid (just warning) was for
     KiCad 5

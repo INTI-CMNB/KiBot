@@ -8,20 +8,20 @@ filters:
     type: separate_pins
 
 outputs:
-  - name: _testpoints_attr@_KIBOT_IMPORT_ID@
+  - name: _testpoints_attr$_KIBOT_IMPORT_ID$
     comment: "Testpoints report by fabrication attribute"
     type: bom
-    dir: @_KIBOT_IMPORT_DIR@
+    dir: $_KIBOT_IMPORT_DIR$
     options:
-      pre_transform: @_KIBOT_PRE_TRANSFORM@
-      exclude_filter: @_KIBOT_EXCLUDE_FILTER@
-      dnf_filter: @_KIBOT_DNF_FILTER@
+      pre_transform: _$_KIBOT_PRE_TRANSFORM$_
+      exclude_filter: $_KIBOT_EXCLUDE_FILTER$
+      dnf_filter: $_KIBOT_DNF_FILTER$
       exclude_marked_in_sch: false
       group_fields: []
       sort_style: ref
       use_aux_axis_as_origin: true
       ignore_dnf: false
-      format: @_KIBOT_TESTPOINTS_FORMAT@
+      format: $_KIBOT_TESTPOINTS_FORMAT$
       xlsx:
         logo_scale: 1.7
       csv:
@@ -45,10 +45,10 @@ outputs:
         - field: Footprint Type
           name: Pad Type
 
-  - name: _testpoints_summary@_KIBOT_IMPORT_ID@
+  - name: _testpoints_summary$_KIBOT_IMPORT_ID$
     comment: "Testpoints summary by fabrication attribute"
     type: report
-    dir: @_KIBOT_IMPORT_DIR@
+    dir: $_KIBOT_IMPORT_DIR$
     output_id: _testpoints
     options:
       template: testpoints

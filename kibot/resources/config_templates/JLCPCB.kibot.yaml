@@ -22,30 +22,29 @@ filters:
         regex: "^KiKit_"
 
 groups:
-  - name: _JLCPCB_fab@_KIBOT_IMPORT_ID@
+  - name: _JLCPCB_fab$_KIBOT_IMPORT_ID$
     outputs:
-      - _JLCPCB_gerbers@_KIBOT_IMPORT_ID@
-      - _JLCPCB_drill@_KIBOT_IMPORT_ID@
-  - name: _JLCPCB_assembly@_KIBOT_IMPORT_ID@
+      - _JLCPCB_gerbers$_KIBOT_IMPORT_ID$
+      - _JLCPCB_drill$_KIBOT_IMPORT_ID$
+  - name: _JLCPCB_assembly$_KIBOT_IMPORT_ID$
     outputs:
-      - _JLCPCB_position@_KIBOT_IMPORT_ID@
-      - _JLCPCB_bom@_KIBOT_IMPORT_ID@
-  - name: _JLCPCB@_KIBOT_IMPORT_ID@
+      - _JLCPCB_position$_KIBOT_IMPORT_ID$
+      - _JLCPCB_bom$_KIBOT_IMPORT_ID$
+  - name: _JLCPCB$_KIBOT_IMPORT_ID$
     outputs:
-      - _JLCPCB_fab@_KIBOT_IMPORT_ID@
-      - _JLCPCB_assembly@_KIBOT_IMPORT_ID@
+      - _JLCPCB_fab$_KIBOT_IMPORT_ID$
+      - _JLCPCB_assembly$_KIBOT_IMPORT_ID$
 
 outputs:
-  - name: _JLCPCB_gerbers@_KIBOT_IMPORT_ID@
+  - name: _JLCPCB_gerbers$_KIBOT_IMPORT_ID$
     comment: Gerbers compatible with JLCPCB
     type: gerber
-    dir: @_KIBOT_MANF_DIR@
-    options: &gerber_options
+    dir: $_KIBOT_MANF_DIR$
+    options:
       exclude_edge_layer: true
-      exclude_pads_from_silkscreen: true
       plot_sheet_reference: false
-      plot_footprint_refs: @_KIBOT_PLOT_FOOTPRINT_REFS@
-      plot_footprint_values: @_KIBOT_PLOT_FOOTPRINT_VALUES@
+      plot_footprint_refs: $_KIBOT_PLOT_FOOTPRINT_REFS$
+      plot_footprint_values: $_KIBOT_PLOT_FOOTPRINT_VALUES$
       force_plot_invisible_refs_vals: false
       tent_vias: true
       use_protel_extensions: true
@@ -54,19 +53,18 @@ outputs:
       gerber_precision: 4.6
       use_gerber_x2_attributes: false
       use_gerber_net_attributes: false
-      line_width: 0.1
       subtract_mask_from_silk: true
       inner_extension_pattern: '.g%n'
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
     layers:
-      @_KIBOT_GERBER_LAYERS@
-      @_KIBOT_F_PASTE@
-      @_KIBOT_B_PASTE@
+      $_KIBOT_GERBER_LAYERS$
+      $_KIBOT_F_PASTE$
+      $_KIBOT_B_PASTE$
 
-  - name: _JLCPCB_drill@_KIBOT_IMPORT_ID@
+  - name: _JLCPCB_drill$_KIBOT_IMPORT_ID$
     comment: Drill files compatible with JLCPCB
     type: excellon
-    dir: @_KIBOT_MANF_DIR@
+    dir: $_KIBOT_MANF_DIR$
     options:
       pth_and_npth_single_file: false
       pth_id: '-PTH'
@@ -75,22 +73,22 @@ outputs:
       map: gerber
       route_mode_for_oval_holes: false
       output: "%f%i.%x"
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
 
-  - name: _JLCPCB_position@_KIBOT_IMPORT_ID@
+  - name: _JLCPCB_position$_KIBOT_IMPORT_ID$
     comment: "Pick and place file, JLCPCB style"
     type: position
-    dir: @_KIBOT_MANF_DIR@
-    run_by_default: @_KIBOT_POS_ENABLED@
+    dir: $_KIBOT_MANF_DIR$
+    run_by_default: $_KIBOT_POS_ENABLED$
     options:
-      pre_transform: @_KIBOT_POS_PRE_TRANSFORM@
-      dnf_filter: @_KIBOT_POS_DNF_FILTER@
+      pre_transform: $_KIBOT_POS_PRE_TRANSFORM$
+      dnf_filter: $_KIBOT_POS_DNF_FILTER$
       output: '%f_cpl_jlc.%x'
       format: CSV
       units: millimeters
       separate_files_for_front_and_back: false
-      only_smd: @_KIBOT_POS_ONLY_SMD@
-      use_aux_axis_as_origin: @_KIBOT_DRILL_AUX_ORIGIN@
+      only_smd: $_KIBOT_POS_ONLY_SMD$
+      use_aux_axis_as_origin: $_KIBOT_DRILL_AUX_ORIGIN$
       columns:
         - id: Ref
           name: Designator
@@ -105,11 +103,11 @@ outputs:
         - id: Side
           name: Layer
 
-  - name: _JLCPCB_bom@_KIBOT_IMPORT_ID@
+  - name: _JLCPCB_bom$_KIBOT_IMPORT_ID$
     comment: "BoM for JLCPCB"
     type: bom
-    dir: @_KIBOT_MANF_DIR@
-    run_by_default: @_KIBOT_BOM_ENABLED@
+    dir: $_KIBOT_MANF_DIR$
+    run_by_default: $_KIBOT_BOM_ENABLED$
     options:
       output: '%f_%i_jlc.%x'
       exclude_filter: '_only_jlc_parts'
@@ -127,18 +125,18 @@ outputs:
         hide_stats_info: true
         quote_all: true
 
-  - name: _JLCPCB_compress@_KIBOT_IMPORT_ID@
+  - name: _JLCPCB_compress$_KIBOT_IMPORT_ID$
     comment: ZIP file for JLCPCB
     type: compress
-    dir: @_KIBOT_MANF_DIR_COMP@
+    dir: $_KIBOT_MANF_DIR_COMP$
     options:
       # Position and BoM can be disabled
       skip_not_run: true
-      move_files: @_KIBOT_COMPRESS_MOVE@
+      move_files: $_KIBOT_COMPRESS_MOVE$
       files:
-        - from_output: _JLCPCB_gerbers@_KIBOT_IMPORT_ID@
+        - from_output: _JLCPCB_gerbers$_KIBOT_IMPORT_ID$
           dest: /
-        - from_output: _JLCPCB_drill@_KIBOT_IMPORT_ID@
+        - from_output: _JLCPCB_drill$_KIBOT_IMPORT_ID$
           dest: /
 
 ...
@@ -148,8 +146,8 @@ definitions:
   _KIBOT_B_PASTE: ''
   _KIBOT_IMPORT_ID: ''
   _KIBOT_IMPORT_DIR: 'JLCPCB'
-  _KIBOT_MANF_DIR: '@_KIBOT_IMPORT_DIR@'
-  _KIBOT_MANF_DIR_COMP: '@_KIBOT_IMPORT_DIR@'
+  _KIBOT_MANF_DIR: '$_KIBOT_IMPORT_DIR$'
+  _KIBOT_MANF_DIR_COMP: '$_KIBOT_IMPORT_DIR$'
   _KIBOT_POS_PRE_TRANSFORM: _rot_footprint_jlcpcb
   _KIBOT_POS_DNF_FILTER: _remove_extra
   _KIBOT_POS_ENABLED: true
