@@ -240,7 +240,8 @@ class KiCost(BaseOutput):  # noqa: F821
         Generates a spreadsheet containing components costs.
         For more information: https://github.com/INTI-CMNB/KiCost
         This output is what you get from the KiCost plug-in (eeschema).
-        You can get KiCost costs using the internal BoM output (`bom`). """
+        You can get KiCost costs using the internal BoM output (`bom`).
+        For examples integrating it to CI/CD consult the BoM output.  """
     def __init__(self):
         super().__init__()
         self._sch_related = True

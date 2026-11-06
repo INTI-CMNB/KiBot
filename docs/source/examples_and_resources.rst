@@ -7,6 +7,8 @@ Examples
 
 - `KiBot variants example <https://github.com/INTI-CMNB/kibot_variants_arduprog/>`__
 - `Spora CI/CD <https://github.com/INTI-CMNB/kicad-ci-test-spora>`__
+- `Computing component costs on CI/CD (GitHub) <https://github.com/set-soft/kicost_ci_test>`__
+- `Computing component costs on CI/CD (GitLab) <https://gitlab.com/set-soft/kicost_ci_test>`__
 - `Λmulet Motion Controller <https://github.com/nguyen-v/amulet_controller_kibot>`__
 
 Resources
@@ -21,5 +23,3 @@ Resources
   It helps to create sites using KiBot's generated resources. You can see a
   `Live demo <https://laenzlinger.github.io/hugo-kicad-site/latest/>`__ and
   a `Real-world project (Granit) <https://laenzlinger.github.io/granit/latest/>`__  using it.
-
-

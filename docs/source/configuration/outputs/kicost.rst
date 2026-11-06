@@ -10,6 +10,7 @@ Generates a spreadsheet containing components costs.
 For more information: https://github.com/INTI-CMNB/KiCost
 This output is what you get from the KiCost plug-in (eeschema). |br|
 You can get KiCost costs using the internal BoM output (`bom`). |br|
+For examples integrating it to CI/CD consult the BoM output. |br|
 
 Type: ``kicost``
 

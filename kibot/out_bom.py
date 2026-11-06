@@ -1171,7 +1171,10 @@ class BoM(BaseOutput):  # noqa: F821
         are loaded from the schematic.
         Important differences with KiBoM output:
         - All options are in the main `options` section, not in `conf` subsection.
-        - The `Component` column is named `Row` and works just like any other column. """
+        - The `Component` column is named `Row` and works just like any other column.
+        You can include costs using the KiCost engine, for examples using it on CI/CD consult
+        [kicost_ci_test GitHub](https://github.com/set-soft/kicost_ci_test) or
+        [kicost_ci_test GitLab](https://gitlab.com/set-soft/kicost_ci_test) """
     def __init__(self):
         super().__init__()
         with document:
