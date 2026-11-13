@@ -1844,6 +1844,7 @@ def _attr_schema(obj, k, v, defs):
         return {}
     no_case = '{no_case}' in real_help
     no_enum = '{comma_sep}' in real_help
+    can_be_null = '{null}' in real_help
     is_class = isinstance(v, type)
     nested = None
     # `Optionable` is just a placeholder for simple types, only real classes are dicts
@@ -1873,6 +1874,8 @@ def _attr_schema(obj, k, v, defs):
     if is_class:
         # Only class-typed attributes validate the list elements one by one (mixed lists)
         schemas = _merge_list_schemas(schemas)
+    if can_be_null:
+        schemas.append({'type': 'null'})
     if not schemas:
         result = {}
     elif len(schemas) == 1:

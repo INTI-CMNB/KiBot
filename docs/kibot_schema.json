@@ -16508,7 +16508,14 @@
         "pth_id": {
           "anyOf": [
             {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             {
               "type": "string",
@@ -16516,13 +16523,20 @@
               "description": "Replaced by a definition that can expand to anything"
             }
           ],
-          "description": "Force this replacement for %i when generating PTH and unified files",
+          "description": "{null} Force this replacement for %i when generating PTH and unified files",
           "title": "pth_id"
         },
         "npth_id": {
           "anyOf": [
             {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             {
               "type": "string",
@@ -16530,7 +16544,7 @@
               "description": "Replaced by a definition that can expand to anything"
             }
           ],
-          "description": "Force this replacement for %i when generating NPTH files",
+          "description": "{null} Force this replacement for %i when generating NPTH files",
           "title": "npth_id"
         },
         "variant": {
@@ -18352,7 +18366,14 @@
         "pth_id": {
           "anyOf": [
             {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             {
               "type": "string",
@@ -18360,13 +18381,20 @@
               "description": "Replaced by a definition that can expand to anything"
             }
           ],
-          "description": "Force this replacement for %i when generating PTH and unified files",
+          "description": "{null} Force this replacement for %i when generating PTH and unified files",
           "title": "pth_id"
         },
         "npth_id": {
           "anyOf": [
             {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             {
               "type": "string",
@@ -18374,7 +18402,7 @@
               "description": "Replaced by a definition that can expand to anything"
             }
           ],
-          "description": "Force this replacement for %i when generating NPTH files",
+          "description": "{null} Force this replacement for %i when generating NPTH files",
           "title": "npth_id"
         },
         "variant": {
