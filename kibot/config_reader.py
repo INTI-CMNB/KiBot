@@ -1883,6 +1883,7 @@ def _attr_schema(obj, k, v, defs):
     desc = _clean_help(real_help)
     if desc:
         result['description'] = desc
+    result['title'] = k
     return result
 
 
