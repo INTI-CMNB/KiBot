@@ -68,7 +68,7 @@ class Environment(Optionable):
             """ Also define legacy versions of the variables.
                 Useful when using KiCad 6+ and some libs uses old KiCad 5 names """
             self.extra_os = OSVariables
-            """ [list(dict)=[]] Extra variables to export as OS environment variables.
+            """ [list(dict)|list(string_dict)=[]] Extra variables to export as OS environment variables.
                 Note that you can also define them using `- NAME: VALUE` """
 
     def define_k5_vars(self, defs):
@@ -121,10 +121,15 @@ class Environment(Optionable):
                 logger.debug('- {} = "{}"'.format(n, v))
                 os.environ[n] = v
         for v in self.extra_os:
-            if v.name in os.environ:
-                logger.warning(W_ENVEXIST+"Overwriting {} environment variable".format(v.name))
-            logger.debug('- {} = "{}"'.format(v.name, v.value))
-            os.environ[v.name] = v.value
+            # We support the class and also free style NAME: VALUE
+            # So we always get an unconfigured dict
+            new_v = OSVariables()
+            new_v.set_tree(v)
+            new_v.config(self)
+            if new_v.name in os.environ:
+                logger.warning(W_ENVEXIST+f"Overwriting {new_v.name} environment variable")
+            logger.debug(f'- {new_v.name} = "{new_v.value}"')
+            os.environ[new_v.name] = new_v.value
 
 
 class KiCadAlias(Optionable):

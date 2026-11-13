@@ -199,7 +199,7 @@
 
 .. _Environment_extra_os:
 
-            -  ``extra_os`` :index:`: <pair: global options - environment; extra_os>` [:ref:`list(dict) <list(dict)>`] (default: ``[]``) Extra variables to export as OS environment variables.
+            -  ``extra_os`` :index:`: <pair: global options - environment; extra_os>` [:ref:`list(dict) <list(dict)>` | :ref:`list(string_dict) <list(string_dict)>`] (default: ``[]``) Extra variables to export as OS environment variables.
                Note that you can also define them using `- NAME: VALUE`.
 
                -  Valid keys:
