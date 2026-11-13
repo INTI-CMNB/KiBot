@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Gerber and drill files for JLCPCB, without stencil
 # URL: https://jlcpcb.com/
 # Based on setting used by Gerber Zipper (https://github.com/g200kg/kicad-gerberzipper)

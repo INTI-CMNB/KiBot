@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # Run a diff between the current PCB on disk and the one loaded in memory after
 # refilling the zones.
 # Can be used to implement a check to detect if the committed file needs a

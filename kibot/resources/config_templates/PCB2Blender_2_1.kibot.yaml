@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
 # PCB2Blender (PCB3D) format for plug-in v2.1
 # URL: https://github.com/30350n/pcb2blender
 kibot:
