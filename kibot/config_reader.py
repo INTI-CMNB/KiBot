@@ -1798,10 +1798,11 @@ def _merge_list_schemas(schemas):
     return out
 
 
-_VAR_DOLLAR = {'type': 'string', 'pattern': r'^\$[^$\s]+\$$', 'description': 'Replaced by a definition'}
-_VAR_AT = {'type': 'string', 'pattern': r'^@[^@\s]+@$'}
-_VAR_ANY = {'type': 'string', 'pattern': r'^_\$[^$\s]+\$_$',
+_VAR_DOLLAR = {'type': 'string', 'pattern': r'^\$\w+\$$', 'description': 'Replaced by a definition'}
+_VAR_AT = {'type': 'string', 'pattern': r'^@\w+@$'}
+_VAR_ANY = {'type': 'string', 'pattern': r'^_\$\w+\$_$',
             'description': 'Replaced by a definition that can expand to anything'}
+_FLAT_VAR = r'^(?:\$\w+\$|_\$\w+\$_)$'
 
 
 def _allow_dollar(s):
@@ -1811,6 +1812,9 @@ def _allow_dollar(s):
     t = s.get('type')
     if t == 'array' and 'items' in s:
         return dict(s, items={'anyOf': [_allow_dollar(s['items']), _VAR_ANY]})
+    if t in ('boolean', 'number') and 'enum' not in s:
+        # `pattern` only applies to strings, so no anyOf is needed
+        return dict(s, type=[t, 'string'], pattern=_FLAT_VAR)
     if t in ('boolean', 'number'):
         return {'anyOf': [s, _VAR_DOLLAR]}
     if t == 'string' and ('enum' in s or 'pattern' in s):
@@ -1821,7 +1825,9 @@ def _allow_dollar(s):
 def _allow_vars(s):
     """ Any option can be replaced by `_$VAR$_` (the definition can expand to anything) """
     s = _allow_dollar(s)
-    return {'anyOf': [s, _VAR_ANY]} if s else s
+    if not s or s.get('pattern') == _FLAT_VAR:
+        return s    # already accepts `_$VAR$_`
+    return {'anyOf': [s, _VAR_ANY]}
 
 
 def _attr_schema(obj, k, v, defs):
@@ -1977,7 +1983,8 @@ def generate_schema():
                                        'outputs': {'type': 'array', 'items': {'type': 'string'}}}}}
     defs['config_file'] = {'type': 'object',
                            'additionalProperties': False,
-                           'oneOf': [{'required': ['kibot']}, {'required': ['kiplot']}],
+                           # `kibot` is only mandatory in the main file, imported files don't have it
+                           'not': {'required': ['kibot', 'kiplot']},
                            'properties': {'kibot': kibot_sec,
                                           'kiplot': kibot_sec,
                                           'import': {'type': 'array',
@@ -1998,10 +2005,8 @@ def generate_schema():
     schema = {'$schema': SCHEMA_DRAFT,
               'title': 'KiBot configuration file',
               'description': '`definitions` is only valid in its own document (after a `...` line)',
-              'type': 'object',
-              'if': {'required': ['definitions']},
-              'then': {'$ref': '#/definitions/definitions_doc'},
-              'else': {'$ref': '#/definitions/config_file'}}
+              'anyOf': [{'$ref': '#/definitions/config_file'},
+                        {'$ref': '#/definitions/definitions_doc'}]}
     schema['definitions'] = defs
     return schema
 
