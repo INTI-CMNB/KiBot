@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 kiplot:
   version: 1
 
@@ -9,7 +9,6 @@ outputs:
     dir: PDF
     options:
       exclude_edge_layer: false
-      exclude_pads_from_silkscreen: false
       plot_sheet_reference: false
       plot_footprint_refs: true
       plot_footprint_values: true

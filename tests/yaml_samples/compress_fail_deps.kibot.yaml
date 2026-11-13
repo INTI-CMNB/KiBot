@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 # Example KiBot config file
 kibot:
   version: 1
@@ -6,6 +6,7 @@ kibot:
 outputs:
   - name: 'do_test'
     comment: "Test plug-in, dummy"
+    # This is wrong, there is not such an output type
     type: test
     dir: Test
 

@@ -3,11 +3,11 @@ kibot:
   version: 1
 
 outputs:
-  - name: 'gerbers_@ID@'
+  - name: 'gerbers_$ID$'
     comment: "Gerbers with definitions"
     type: gerber
-    output_id: _@ID@
-    layers: @LAYERS@
+    output_id: _$ID$
+    layers: $LAYERS$
 ...
 ---
 definitions:

@@ -1,9 +1,10 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 kiplot:
   version: 1
 
 outputs:
   - name: Test_Unknown
     comment: "Testing an unknown type"
+    # Wrong, there is not such an output
     type: bogus
     dir: FooBar

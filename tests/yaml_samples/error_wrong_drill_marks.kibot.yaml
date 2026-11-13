@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 kiplot:
   version: 1
 
@@ -28,4 +28,3 @@ outputs:
         suffix: F_Cu
       - layer: F.Fab
         suffix: F_Fab
-

@@ -6,8 +6,8 @@ import:
   # Copy 1
   - file: definitions_gerbers.kibot.yaml
     definitions:
-      ID: @ID@_1
+      ID: $ID$_1
   # Copy 2
   - file: definitions_gerbers.kibot.yaml
     definitions:
-      ID: @ID@_2
+      ID: $ID$_2

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 # Drills and Gerber drills
 kibot:
   version: 1
@@ -25,4 +25,3 @@ bogus:
     dir: Drill
     options:
       use_aux_axis_as_origin: false
-

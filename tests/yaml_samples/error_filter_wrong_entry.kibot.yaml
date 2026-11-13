@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 # Example KiBot config file
 kibot:
   version: 1
@@ -11,6 +11,3 @@ preflight:
       regex:  'Pad 2 of C3'
     - regex:  'Pad 2 of C4'
       numerito: 2
-
-
-

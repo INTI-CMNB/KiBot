@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 # Example KiBot config file
 kibot:
   version: 1
@@ -9,6 +9,7 @@ outputs:
     type: kibom
     dir: BoM
     options:
+      # Wrong format, is `HTML`
       format: HTM  # HTML or CSV
 
   - name: 'bom_csv'
@@ -17,4 +18,3 @@ outputs:
     dir: BoM
     options:
       format: CSV  # HTML or CSV
-

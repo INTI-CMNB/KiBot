@@ -1,7 +1,8 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 kibot:
   version: 1
 
+# Wrong global, should be a dict
 global:
   - output: '%f_(%i)_%d.%x'
   - date_format: '%Y_%m_%d'

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 # Example KiBot config file
 kibot:
   version: 1
@@ -12,5 +12,3 @@ preflight:
       filter: 'Ignore unconnected pad 2 of C4'
       number: 2
       regex:  'Pad 2 of C4'
-
-

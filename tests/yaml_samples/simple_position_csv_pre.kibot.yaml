@@ -5,12 +5,12 @@ kibot:
 
 outputs:
 
-  - name: 'position_@UNITS@'
-    comment: 'Position file in @UNITS@ units'
+  - name: 'position_$UNITS$'
+    comment: 'Position file in $UNITS$ units'
     type: position
-    dir: positiondir_@UNITS@
+    dir: positiondir_$UNITS$
     options:
       format: CSV   # CSV or ASCII format
-      units: @UNITS@  # millimeters or inches
+      units: $UNITS$  # millimeters or inches
       separate_files_for_front_and_back: true
       only_smd: true

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 # A fail target plus a valid target
 kibot:
   version: 1
@@ -7,6 +7,7 @@ outputs:
   - name: 'kibom_fail'
     type: 'kibom'
     options:
+      # Wrong option, is `conf`
       config: bogus.ini
 
   - name: 'position'

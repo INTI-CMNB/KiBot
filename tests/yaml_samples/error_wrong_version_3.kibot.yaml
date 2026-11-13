@@ -1,8 +1,6 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# This file is invalid and used only for test purposes
 kiplot:
   versiona: 1
 
 preflight:
   run_drc: true
-
-

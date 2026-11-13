@@ -17,7 +17,6 @@ outputs:
     dir: SVG
     options:
       exclude_edge_layer: false
-      exclude_pads_from_silkscreen: false
       use_aux_axis_as_origin: false
       plot_sheet_reference: false
       plot_footprint_refs: true
@@ -26,7 +25,6 @@ outputs:
       tent_vias: true
 
       # SVG options
-      line_width: 0.25
       drill_marks: full
       mirror_plot: true
       negative_plot: true

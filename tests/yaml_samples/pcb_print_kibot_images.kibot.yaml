@@ -10,7 +10,7 @@ outputs:
     options:
       plot_sheet_reference: true
       format: 'PDF'
-      keep_temporals: true
+      keep_temporal_files: true
       # frame_plot_mechanism: plot
       pages:
         - layers:
@@ -30,4 +30,3 @@ outputs:
       vcuts: True
       warnings: all
       show_components: all
-
