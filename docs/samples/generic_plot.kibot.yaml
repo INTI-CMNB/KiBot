@@ -58,7 +58,9 @@ preflight:
   # An example can be found [here](https://github.com/INTI-CMNB/KiBot/tree/dev/docs/samples/Consolidate_PCBs)
   # .
   # [dict|list(dict)=[]] One or more PCBs to include.
-  consolidate_pcbs: true
+  consolidate_pcbs:
+    - name: 'A name for the PCB'
+      file: 'PATH/TO/PCB/FILE'
   # Draw Fancy Stackup
   # Draw the PCB stackup. Needs KiCad 7 or newer.
   # To specify the position and size of the drawing you can use two methods.
@@ -1422,7 +1424,7 @@ outputs:
       minimal_header: false
       # [boolean=false] Invert the Y axis
       mirror_y_axis: false
-      # [string] Force this replacement for %i when generating NPTH files
+      # [string] {null} Force this replacement for %i when generating NPTH files
       npth_id: null
       # [string='%f-%i%I%v.%x'] name for the drill file, KiCad defaults if empty (%i='PTH_drill'). Affected by global options
       output: '%f-%i%I%v.%x'
@@ -1433,7 +1435,7 @@ outputs:
       pre_transform: '_null'
       # [boolean=true] Generate one file for both, plated holes and non-plated holes, instead of two separated files
       pth_and_npth_single_file: true
-      # [string] Force this replacement for %i when generating PTH and unified files
+      # [string] {null} Force this replacement for %i when generating PTH and unified files
       pth_id: null
       # [dict|string=''] Name of the drill report. Not generated unless a name is specified
       report:
@@ -1656,7 +1658,7 @@ outputs:
         # [string='pdf'] [hpgl,ps,gerber,dxf,svg,pdf] Format for a graphical drill map.
         # KiCad 10 doesn't support HPGL
         type: 'pdf'
-      # [string] Force this replacement for %i when generating NPTH files
+      # [string] {null} Force this replacement for %i when generating NPTH files
       npth_id: null
       # [string='%f-%i%I%v.%x'] name for the drill file, KiCad defaults if empty (%i='PTH_drill'). Affected by global options
       output: '%f-%i%I%v.%x'
@@ -1667,7 +1669,7 @@ outputs:
       pre_transform: '_null'
       # [number=6] [5,6] Decimals used for coordinates
       precision: 6
-      # [string] Force this replacement for %i when generating PTH and unified files
+      # [string] {null} Force this replacement for %i when generating PTH and unified files
       pth_id: null
       # [dict|string=''] Name of the drill report. Not generated unless a name is specified
       report:

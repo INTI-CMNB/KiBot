@@ -62,7 +62,7 @@ ExcellonOptions parameters
 
 .. _ExcellonOptions_npth_id:
 
--  ``npth_id`` :index:`: <pair: output - excellon - options; npth_id>` [:ref:`string <string>`] Force this replacement for %i when generating NPTH files.
+-  ``npth_id`` :index:`: <pair: output - excellon - options; npth_id>` [:ref:`string <string>`] {null} Force this replacement for %i when generating NPTH files.
 
 .. _ExcellonOptions_pre_transform:
 
@@ -74,7 +74,7 @@ ExcellonOptions parameters
 
 .. _ExcellonOptions_pth_id:
 
--  ``pth_id`` :index:`: <pair: output - excellon - options; pth_id>` [:ref:`string <string>`] Force this replacement for %i when generating PTH and unified files.
+-  ``pth_id`` :index:`: <pair: output - excellon - options; pth_id>` [:ref:`string <string>`] {null} Force this replacement for %i when generating PTH and unified files.
 
 .. _ExcellonOptions_report:
 
