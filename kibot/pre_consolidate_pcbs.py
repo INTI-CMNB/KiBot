@@ -80,6 +80,10 @@ class Consolidate_PCBs(BasePreFlight):  # noqa: F821
     def __str__(self):
         return f'{pretty_list([v.name for v in self.consolidate_pcbs])}'
 
+    def get_example():
+        """ Returns a YAML value for the example config """
+        return "\n    - name: 'A name for the PCB'\n      file: 'PATH/TO/PCB/FILE'"
+
     def apply(self):
         o = self.consolidate_pcbs
         if len(o) == 0:
