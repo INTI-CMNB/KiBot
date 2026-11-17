@@ -2470,3 +2470,30 @@ def test_sheet_flags_5(test_dir):
     print_and_compare(ctx, 'repro.kicad_sch', 'test_sheet_flags_5.pdf')
 
     ctx.clean_up()
+
+
+@pytest.mark.skipif(not context.ki10(), reason="Using sheet wide flags")
+def test_sheet_flags_6(test_dir):
+    """ This is related to #906
+        Check we can mark a page DNP using a variant and that this is inherited
+    """
+    prj = 'sheet_flags_variant/repro'
+    ctx = context.TestContextSCH(test_dir, prj, 'test_sheet_flags_6', '')
+    ctx.run()
+    bom_def = 'default-bom.csv'
+    bom_low = 'lowspec-bom.csv'
+
+    # Only R4 is used
+    rows, _, _ = ctx.load_csv(bom_low)
+    assert rows[0][0] == "R4", rows
+    assert len(rows) == 1
+    logging.debug("LowSpec BoM OK")
+    rows, _, _ = ctx.load_csv(bom_def)
+    assert rows[0][0] == "R1", rows
+    assert rows[1][0] == "R2", rows
+    assert rows[2][0] == "R3", rows
+    assert rows[3][0] == "R4", rows
+    assert len(rows) == 4
+    logging.debug("Default BoM OK")
+
+    ctx.clean_up()

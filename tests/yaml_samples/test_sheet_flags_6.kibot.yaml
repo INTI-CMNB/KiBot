@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json
+# Test case for a sheet marked as DNP by a variant the test project is tests/board_samples/kicad_*/sheet_flags/repro.kicad_sch
+kibot:
+  version: 1
+
+variants:
+  - name: lowspec
+    type: kicad
+
+outputs:
+  - name: default_bom
+    type: bom
+    options:
+      variant: Default
+      format: CSV
+      output: default-bom.csv
+      group_fields: []
+      columns: [References, Value]
+      exclude_filter: _null
+      dnf_filter: _null
+      ignore_dnf: true
+      count_smd_tht: false
+
+  - name: lowspec_bom
+    type: bom
+    extends: default_bom
+    options:
+      variant: lowspec
+      output: lowspec-bom.csv
