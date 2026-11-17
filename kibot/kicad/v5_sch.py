@@ -939,7 +939,7 @@ class SchematicComponent(object):
     def is_field(self, field):
         return field in self.dfields
 
-    def compute_dnp(self):
+    def compute_dnp(self, variant=None):
         return False
 
     def get_free_field_number(self):
