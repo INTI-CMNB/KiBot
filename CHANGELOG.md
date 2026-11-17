@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     images on PCBs
 - Schematic:
   - Support for KiCad 10 polyline with more than two points. (#959)
+  - Support for sheet level DNP flag by a variant (#906)
 - Preflights:
   - Draw Fancy Stackup: `use_text_box_for_note` to avoid overflowing notes.
     Enabled by default. (See #964)

@@ -31,6 +31,7 @@ Added
 -  Schematic:
 
    -  Support for KiCad 10 polyline with more than two points. (#959)
+   -  Support for sheet level DNP flag by a variant (#906)
 
 -  Preflights:
 
