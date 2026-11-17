@@ -1351,14 +1351,26 @@ class SchematicComponentV6(SchematicComponent):
             self.projects.append((name, instances))
             self.used_variants[id] = variants
 
-    def is_dnp_by_sheet(self):
-        return self.parent_sheet is not None and self.parent_sheet.sheet_flags.dnp
+    def is_dnp_by_sheet(self, variant=None):
+        if self.parent_sheet is None:
+            return False
+        if variant:
+            # If the caller specifies a variant compute the sheet instance variant inheritance
+            # A sheet symbol can be DNP for this variant making all the child DNP
+            parent = self.parent_sheet
+            while parent is not None:
+                v = parent.sheet_variants.get(variant)
+                if v is not None and v.dnp:
+                    logger.debug(f"{self.ref} made DNP for `{variant}` by page `{parent.sheet}`")
+                    return True
+                parent = parent.parent
+        return self.parent_sheet.sheet_flags.dnp
 
-    def compute_dnp(self):
+    def compute_dnp(self, variant=None):
         """ Determines if the KiCad flag applies to this component.
             We check the sheet flag and then the component flag. """
         # Check if the sheet itself is DNP
-        if self.is_dnp_by_sheet():
+        if self.is_dnp_by_sheet(variant):
             return True
         # Check if the component is DNP
         return self.kicad_dnp is not None and self.kicad_dnp
@@ -1986,20 +1998,40 @@ class HSPin(object):
 
 
 class SheetInstance(object):
+    def __init__(self):
+        super().__init__()
+        # KiCad 10
+        self.variants = OrderedDict()
+
     @staticmethod
     def parse(items):
         name = 'sheet instance'
         instances = []
         for c, _ in enumerate(items[1:]):
             v = _check_symbol_value(items, c+1, name, 'path')
-            instance = SheetInstance()
-            instance.path = _check_str(v, 1, name+' path')
-            instance.page = _check_symbol_str(v, 2, name, 'page')
-            instances.append(instance)
+            instances.append(SheetInstance.load_one_instance(v))
         return instances
 
+    @staticmethod
+    def load_one_instance(items):
+        name = 'sheet instance'
+        instance = SheetInstance()
+        instance.path = _check_str(items, 1, name+' path')
+        for i in items[2:]:
+            i_type = _check_is_symbol_list(i)
+            if i_type == 'page':
+                instance.page = _check_str(i, 1, name+' page')
+            elif i_type == 'variant':
+                # KiCad 10 (not documented 2026/11/17)
+                variant = Variant.parse(i)
+                instance.variants[variant.name] = variant
+        return instance
+
     def write(self):
-        return _symbol('path', [self.path, _symbol('page', [self.page])])
+        data = [self.path, _symbol('page', [self.page])]
+        for v in self.variants.values():
+            data.extend([v.write(), Sep()])
+        return _symbol('path', data)
 
 
 class SheetFlags(object):
@@ -2040,7 +2072,7 @@ class Sheet(object):
         # Instances classified by project
         self.projects = None
         # All instances, by path (page look-up)
-        self.all_instances = {}
+        self.pages_for_all_instances = {}
         # KiCad 9 attributes
         self.exclude_from_sim = None
         self.in_bom = None
@@ -2050,12 +2082,14 @@ class Sheet(object):
         # KiCad 10 attributes
         self.in_pos_files = None
         self.duplicate_pin_numbers_are_jumpers = None
+        self.variants_for_all_instances = {}
 
     def load_project(self, prj):
         name = _check_str(prj, 1, 'instance project')
         instances = SheetInstance().parse(prj[1:])
         for i in instances:
-            self.all_instances[i.path] = i.page
+            self.pages_for_all_instances[i.path] = i.page
+            self.variants_for_all_instances[i.path] = i.variants
         return name, instances
 
     def load_instances(self, i):
@@ -2139,12 +2173,16 @@ class Sheet(object):
         if self.projects is not None:
             # KiCad v7 sheet pages are here
             p_path = parent_obj.get_full_path()
-            page = self.all_instances.get(p_path)
+            page = self.pages_for_all_instances.get(p_path)
             if page is None:
                 raise SchError('Missing sheet instance for `{}`'.format(p_path))
             else:
                 sheet.sheet = page
                 parent_obj.all_sheets.append(sheet)
+            # KiCad v10 variants
+            variant = self.variants_for_all_instances.get(p_path)
+            if variant is not None:
+                sheet.sheet_variants = variant
             # Memorize its path
             self.p_path_ori = p_path
             self.p_path = parent_obj.get_full_path(False)
@@ -2477,6 +2515,7 @@ class SchematicV6(Schematic):
         self.max_comments = 9
         self.title_ori = self.date_ori = self.revision_ori = self.company_ori = None
         self.netlist_version = 'E'
+        self.sheet_variants = []
 
     def _fill_missing_title_block(self):
         # Fill in some missing info
@@ -3167,6 +3206,7 @@ class SchematicV6(Schematic):
             sheet = self.sheet_paths.get(i.path)
             if sheet:
                 sheet.sheet = i.page
+                sheet.sheet_variants = i.variants
                 self.all_sheets.append(sheet)
         # Page consistency check
         self.check_pages_consistency()

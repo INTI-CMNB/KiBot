@@ -388,7 +388,7 @@ class ComponentGroup(object):
         # KiCad attributes
         # Take sheet wide DNP into account
         for c in self.components:
-            c.solved_kicad_dnp = c.compute_dnp()
+            c.solved_kicad_dnp = c.compute_dnp(GS.kicad_variant_name(GS.solved_global_variant))
         self.fields[ColumnList.COL_DNP_L] = self.solve_multiple_attributes('solved_kicad_dnp', 'DNP')
         self.fields[ColumnList.COL_EXCLUDE_FROM_BOARD_L] = self.solve_multiple_attributes('on_board', 'Excluded from board',
                                                                                           invert=True)

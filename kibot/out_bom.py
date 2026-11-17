@@ -1039,7 +1039,7 @@ class BoMOptions(BaseOptions):
         # DNP (aka DNF)
         if self._kicad_dnp_applied_solved:
             # dnp = v.dnp if v is not None and v.dnp is not None else c.kicad_dnp
-            dnp = c.compute_dnp()
+            dnp = c.compute_dnp(self.kicad_variant_name())
             if dnp:
                 c.set_fitted(False)
                 logger.debugl(3, f'- {c.ref} DNP by `{vname}`')
