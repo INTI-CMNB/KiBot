@@ -19,6 +19,7 @@
     // "basedpyright.analysis.inlayHints.callArgumentNames": true,
     //"editor.inlayHints.enabled": "on"   // Ctrl+Alt shows the hints
     "yaml.schemas": {
-        "https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@master/docs/kibot_schema.json": ["*.kibot.yaml", "*kibot*.yaml"]
+        "https://cdn.jsdelivr.net/gh/INTI-CMNB/KiBot@dev/docs/kibot_schema.json": ["*.kibot.yaml", "*kibot*.yaml"]
+        //"./docs/kibot_schema.json": ["*.kibot.yaml", "*kibot*.yaml"]
     }
 }
