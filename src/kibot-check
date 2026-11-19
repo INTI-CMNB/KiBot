@@ -8,12 +8,13 @@
 # This is the installation checker, should help people to detect installation issues and install needed tools
 import argparse
 from contextlib import contextmanager
+import ctypes
 import importlib
 import json
 import os
 import platform
 import re
-from shutil import which
+from shutil import which, disk_usage
 import site
 import subprocess
 import sys
@@ -1941,6 +1942,39 @@ BOGUS_PDF = """%PDF-1.0
 endobj 3 0 obj<</Type/Page/MediaBox[0 0 3 3]>>endobj
 trailer<</Root 1 0 R>>"""
 checked_multiple = set()
+SYSTEM = platform.system()
+
+
+def p(label, value):
+    label += ':'
+    print(f"  {label:<16}{do_color(value,0)}")
+
+
+def u(v, fmt=str):
+    return "unknown" if v is None else fmt(v)
+
+
+def _int(s):
+    try:
+        return int(s)
+    except (TypeError, ValueError):
+        return None
+
+
+def fmt_bytes(n):
+    if n is None:
+        return "unknown"
+    n = float(n)
+    for unit in ("B", "KiB", "MiB", "GiB", "TiB"):
+        if n < 1024 or unit == "TiB":
+            return f"{n:.0f} {unit}" if unit == "B" else f"{n:.1f} {unit}"
+        n /= 1024
+
+
+def fmt_mhz(mhz):
+    if mhz is None:
+        return "unknown"
+    return f"{mhz / 1000:.2f} GHz" if mhz >= 1000 else f"{mhz:.0f} MHz"
 
 
 def check_tool_binary_python(name):
@@ -2309,6 +2343,254 @@ def binary_tool(severity, name, url, url_down, deb_package, deb, extra_deb, role
     print(RESET)
 
 
+def _read(path):
+    """Return stripped file content or None."""
+    try:
+        with open(path, "r", encoding="utf-8", errors="replace") as f:
+            return f.read().strip()
+    except OSError:
+        return None
+
+
+def _run(*cmd):
+    """Run a command, return stdout or None. Never raises."""
+    try:
+        out = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                             universal_newlines=True, timeout=5, check=True)
+        return out.stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
+# --------------------------------------------------------------------------
+# CPU
+# --------------------------------------------------------------------------
+def _cpu_linux():
+    info = {"model": None, "sockets": None, "physical_cores": None,
+            "freq_mhz": None, "max_mhz": None}
+    text = _read("/proc/cpuinfo") or ""
+    cores, sockets, mhz = set(), set(), []
+    phys = None
+    for line in text.splitlines():
+        if ":" not in line:
+            continue
+        key, _, val = line.partition(":")
+        key, val = key.strip(), val.strip()
+        if key in ("model name", "Model Name") and not info["model"]:
+            info["model"] = val
+        elif key in ("Hardware", "Model", "cpu model", "Processor") and not info["model"]:
+            # ARM / PowerPC / MIPS fallbacks (x86 "model name" wins)
+            info["model"] = val
+        elif key == "physical id":
+            phys = val
+            sockets.add(val)
+        elif key == "core id":
+            cores.add((phys, val))
+        elif key == "cpu MHz":
+            try:
+                mhz.append(float(val))
+            except ValueError:
+                pass
+    if sockets:
+        info["sockets"] = len(sockets)
+    if cores:  # absent on many ARM boards and some VMs -> stay unknown
+        info["physical_cores"] = len(cores)
+    if mhz:
+        info["freq_mhz"] = sum(mhz) / len(mhz)
+
+    # cpufreq sysfs (kHz): more reliable on ARM and gives the real max
+    base = "/sys/devices/system/cpu/cpu0/cpufreq/"
+    cur, mx = _int(_read(base + "scaling_cur_freq")), _int(_read(base + "cpuinfo_max_freq"))
+    if cur and not info["freq_mhz"]:
+        info["freq_mhz"] = cur / 1000
+    if mx:
+        info["max_mhz"] = mx / 1000
+    return info
+
+
+def _cpu_macos():
+    info = {"model": _run("sysctl", "-n", "machdep.cpu.brand_string"),
+            "sockets": _int(_run("sysctl", "-n", "hw.packages")),
+            "physical_cores": _int(_run("sysctl", "-n", "hw.physicalcpu")),
+            "freq_mhz": None, "max_mhz": None}
+    hz = _int(_run("sysctl", "-n", "hw.cpufrequency_max")) or _int(_run("sysctl", "-n", "hw.cpufrequency"))
+    if hz:  # not exposed on Apple Silicon -> stays unknown
+        info["max_mhz"] = hz / 1e6
+    return info
+
+
+def _cpu_windows():
+    info = {"model": None, "sockets": None, "physical_cores": None, "freq_mhz": None, "max_mhz": None}
+    try:
+        import winreg
+        key = winreg.OpenKey(
+            winreg.HKEY_LOCAL_MACHINE,
+            r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
+        with key:
+            info["model"] = winreg.QueryValueEx(key, "ProcessorNameString")[0].strip()
+            info["max_mhz"] = float(winreg.QueryValueEx(key, "~MHz")[0])
+    except Exception:
+        pass
+    return info
+
+
+def _cgroup_cpu_limit():
+    """CPU quota (in CPUs) imposed by a container, cgroup v2 then v1."""
+    v2 = _read("/sys/fs/cgroup/cpu.max")
+    if v2:
+        quota, _, period = v2.partition(" ")
+        if quota != "max" and _int(quota) and _int(period):
+            return int(quota) / int(period)
+    q = _int(_read("/sys/fs/cgroup/cpu/cpu.cfs_quota_us"))
+    p = _int(_read("/sys/fs/cgroup/cpu/cpu.cfs_period_us"))
+    if q and q > 0 and p:
+        return q / p
+    return None
+
+
+def cpu_info():
+    try:
+        info = {"Linux": _cpu_linux, "Darwin": _cpu_macos,
+                "Windows": _cpu_windows}.get(SYSTEM, lambda: {})()
+    except Exception:
+        info = {}
+    info.setdefault("model", None)
+    info["model"] = info["model"] or platform.processor() or None
+    info["logical_cpus"] = os.cpu_count()
+    # CPUs this process may actually use (affinity / taskset / cpuset)
+    try:
+        info["usable_cpus"] = len(os.sched_getaffinity(0))
+    except (AttributeError, OSError):
+        info["usable_cpus"] = None
+    info["cgroup_cpu_limit"] = _cgroup_cpu_limit() if SYSTEM == "Linux" else None
+    return info
+
+
+# --------------------------------------------------------------------------
+# Memory
+# --------------------------------------------------------------------------
+def _mem_linux():
+    mem = {"total": None, "available": None, "swap_total": None,
+           "swap_free": None, "limit": None}
+    vals = {}
+    for line in (_read("/proc/meminfo") or "").splitlines():
+        k, _, v = line.partition(":")
+        parts = v.split()
+        if parts and parts[0].isdigit():
+            vals[k] = int(parts[0]) * 1024  # kB -> bytes
+    mem["total"] = vals.get("MemTotal")
+    if "MemAvailable" in vals:
+        mem["available"] = vals["MemAvailable"]
+    elif "MemFree" in vals:  # kernels < 3.14: rough estimate
+        mem["available"] = vals["MemFree"] + vals.get("Cached", 0) + vals.get("Buffers", 0)
+    mem["swap_total"] = vals.get("SwapTotal")
+    mem["swap_free"] = vals.get("SwapFree")
+
+    # container memory limit (cgroup v2, then v1); ignore "unlimited" values
+    for path in ("/sys/fs/cgroup/memory.max",
+                 "/sys/fs/cgroup/memory/memory.limit_in_bytes"):
+        lim = _int(_read(path))
+        if lim and (mem["total"] is None or lim < mem["total"]):
+            mem["limit"] = lim
+            break
+    return mem
+
+
+def _mem_macos():
+    mem = {"total": _int(_run("sysctl", "-n", "hw.memsize")), "available": None,
+           "swap_total": None, "swap_free": None, "limit": None}
+    out = _run("vm_stat")
+    if out:
+        page = 4096
+        stats = {}
+        for line in out.splitlines():
+            if "page size of" in line:
+                page = _int(line.split("page size of")[1].split()[0]) or page
+            elif ":" in line:
+                k, _, v = line.partition(":")
+                n = _int(v.strip().rstrip("."))
+                if n is not None:
+                    stats[k.strip()] = n
+        # free + inactive + speculative approximates "available" on macOS
+        keys = ("Pages free", "Pages inactive", "Pages speculative")
+        if all(k in stats for k in keys[:2]):
+            mem["available"] = sum(stats.get(k, 0) for k in keys) * page
+    return mem
+
+
+def _mem_windows():
+    mem = {"total": None, "available": None, "swap_total": None,
+           "swap_free": None, "limit": None}
+
+    class MEMORYSTATUSEX(ctypes.Structure):
+        _fields_ = [("dwLength", ctypes.c_ulong),
+                    ("dwMemoryLoad", ctypes.c_ulong),
+                    ("ullTotalPhys", ctypes.c_ulonglong),
+                    ("ullAvailPhys", ctypes.c_ulonglong),
+                    ("ullTotalPageFile", ctypes.c_ulonglong),
+                    ("ullAvailPageFile", ctypes.c_ulonglong),
+                    ("ullTotalVirtual", ctypes.c_ulonglong),
+                    ("ullAvailVirtual", ctypes.c_ulonglong),
+                    ("sullAvailExtendedVirtual", ctypes.c_ulonglong)]
+    try:
+        st = MEMORYSTATUSEX()
+        st.dwLength = ctypes.sizeof(MEMORYSTATUSEX)
+        if ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(st)):
+            mem["total"], mem["available"] = st.ullTotalPhys, st.ullAvailPhys
+            # page file includes physical RAM, so subtract it for "swap"
+            mem["swap_total"] = max(st.ullTotalPageFile - st.ullTotalPhys, 0)
+            mem["swap_free"] = max(st.ullAvailPageFile - st.ullAvailPhys, 0)
+    except Exception:
+        pass
+    return mem
+
+
+def memory_info():
+    try:
+        return {"Linux": _mem_linux, "Darwin": _mem_macos,
+                "Windows": _mem_windows}.get(SYSTEM, lambda: {})()
+    except Exception:
+        return {}
+
+
+# --------------------------------------------------------------------------
+# Disk
+# --------------------------------------------------------------------------
+def disk_info(paths=None):
+    """Free/total space of the filesystems holding the given paths."""
+    if paths is None:
+        paths = [("current dir", os.getcwd()),
+                 ("temp dir", tempfile.gettempdir()),
+                 ("home", os.path.expanduser("~"))]
+    seen, result = set(), []
+    for label, p in paths:
+        try:
+            u = disk_usage(p)
+            key = (u.total, u.free)  # cheap de-dup of same filesystem
+            if key in seen:
+                continue
+            seen.add(key)
+            result.append((label, p, u.total, u.free))
+        except OSError:
+            result.append((label, p, None, None))
+    return result
+
+
+def os_description():
+    if SYSTEM == "Linux":
+        # platform.freedesktop_os_release() needs 3.10+; parse by hand
+        for line in (_read("/etc/os-release") or "").splitlines():
+            if line.startswith("PRETTY_NAME="):
+                return line.split("=", 1)[1].strip('"')
+    if SYSTEM == "Darwin":
+        ver = platform.mac_ver()[0]
+        if ver:
+            return f"macOS {ver}"
+    if SYSTEM == "Windows":
+        return f"Windows {platform.release()} ({platform.version()})"
+    return f"{SYSTEM} {platform.release()}"
+
+
 parser = argparse.ArgumentParser(description='KiBot installation checker')
 parser.add_argument('--show-paths', '-p', help='Show paths to tools', action='store_true')
 args = parser.parse_args()
@@ -2324,10 +2606,9 @@ print('KiBot installation checker\n')
 
 print(do_bright('Core:'))
 # Operating system
-system = platform.system()
-if system == 'Linux':
+if SYSTEM == 'Linux':
     linux_version = simple_run_command(['uname', '-a'])
-    print('Linux: '+linux_version)
+    print('Linux:  '+linux_version)
     if args.show_paths:
         print('  '+str(which('uname')))
     os_ok = True
@@ -2335,8 +2616,10 @@ if system == 'Linux':
     is_64 = ('x86_64' in linux_version) or ('amd64' in linux_version)
     is_linux = True
 else:
-    print(system)
+    print(SYSTEM)
     os_ok = False
+print("OS:     "+do_color(os_description(), 0))
+print("Arch:   "+do_color(platform.machine() or "unknown", 0))
 # Python version
 if sys.version_info >= (3, 6):
     py_ok = True
@@ -2344,7 +2627,12 @@ if sys.version_info >= (3, 6):
 else:
     py_ok = False
     sev = 4
-print('Python: '+do_color(sys.version.replace('\n', ' '), sev))
+pyver = sys.version.replace('\n', ' ')
+try:
+    pyver += f" ({platform.python_implementation()}, {platform.architecture()[0]})"
+except Exception:
+    pass
+print('Python: '+do_color(pyver, sev))
 if args.show_paths:
     print('  '+os.__file__)
     print('  '+str(which('python3')))
@@ -2426,7 +2714,7 @@ if not is_k11:
                 if kicad_version[0] >= 6 and home:
                     # KiCad 6.0 PCM
                     ver_dir = str(kicad_version[0])+'.'+str(kicad_version[1])
-                    if system == 'Linux':
+                    if SYSTEM == 'Linux':
                         local_share = os.path.join(home, '.local', 'share', 'kicad', ver_dir)
                     else:
                         local_share = os.path.join(home, 'Documents', 'KiCad', ver_dir)
@@ -2441,7 +2729,7 @@ if kicad_version >= (6, 0, 0) and kicad_version < (10, 99):
     sev = 0
 else:
     sev = 4
-print('KiCad: '+do_color(version, sev))
+print('KiCad:  '+do_color(version, sev))
 if args.show_paths and kicad_ok:
     if is_k11:
         print('  '+str(which('kicad-cli')))
@@ -2458,7 +2746,7 @@ except Exception:
     version = NOT_AVAIL
     kibot_ok = False
     sev = 4
-print('KiBot: '+do_color(version, sev))
+print('KiBot:  '+do_color(version, sev))
 if args.show_paths and kibot_ok:
     print('  '+kibot.__main__.__file__)
     print('  '+str(which('kibot')))
@@ -2471,6 +2759,46 @@ if kibot_ok and which('kibot') is None:
             print('  Try adding `{}` to your PATH'.format(v[:-5]))
             print('  I.e.: export PATH=$PATH:'+v[:-5])
     sys.exit(1)
+
+# ######################################################################################################################
+#  Hardware information
+# ######################################################################################################################
+
+print(do_bright('\nHardware:'))
+
+c = cpu_info()
+print("CPU")
+p("Model", u(c["model"]))
+p("Sockets", u(c.get("sockets")))
+p("Physical cores", u(c.get("physical_cores")))
+p("Logical CPUs", u(c["logical_cpus"]))
+if c["usable_cpus"] is not None and c["usable_cpus"] != c["logical_cpus"]:
+    p("Usable by us", f"{c['usable_cpus']} (CPU affinity)")
+if c["cgroup_cpu_limit"] is not None:
+    p("Container limit", f"{c['cgroup_cpu_limit']:.2f} CPUs")
+p("Current freq", u(c.get("freq_mhz"), fmt_mhz))
+p("Max freq", u(c.get("max_mhz"), fmt_mhz))
+m = memory_info()
+
+print("Memory")
+p("RAM total", fmt_bytes(m.get("total")))
+p("RAM available", fmt_bytes(m.get("available")))
+if m.get("limit"):
+    p("Container limit", fmt_bytes(m["limit"]))
+if m.get("swap_total") is not None:
+    p("Swap total", fmt_bytes(m["swap_total"]))
+    p("Swap free", fmt_bytes(m.get("swap_free")))
+
+print("Disk")
+for label, path, total, free in disk_info():
+    if total is None:
+        p(label, f"{path}: unknown")
+    else:
+        p(label, f"{fmt_bytes(free)} free of {fmt_bytes(total)}  ({path})")
+
+# ######################################################################################################################
+#  Modules
+# ######################################################################################################################
 
 dependencies = json.loads(deps)
 print(do_bright('\nModules:'))
@@ -2489,7 +2817,8 @@ for name, d in dependencies.items():
     sev, ver = check_version(version, d['role'])
     d['sev'] = sev
     version = version.split('\n')[0]
-    print(name+': '+do_color(version, sev, version=ver))
+    name += ':'
+    print(f"{name:<13}{do_color(version, sev, version=ver)}")
     if args.show_paths and mod:
         print('  '+mod.__file__)
 
@@ -2544,9 +2873,9 @@ elif which('pip'):
 
 if not os_ok:
     print(sev2color(4)+'* KiBot is currently tested under Linux')
-    if system == 'Darwin':
+    if SYSTEM == 'Darwin':
         print('  MacOSX should be supported for KiCad 6.x or newer')
-    elif system == 'Windows':
+    elif SYSTEM == 'Windows':
         print('  Windows may work with some limitations for KiCad 6.x or newer')
         print('  Consider using a docker image, Windows docker can run Linux images (using virtualization)')
         print('  You can also try WSL (Windows Subsystem for Linux)')
