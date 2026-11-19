@@ -1976,7 +1976,8 @@ def check_multiple_installs(command):
         return
     checked_multiple.add(command)
     path_components = os.environ.get('PATH', '').split(os.pathsep)
-    found = set([os.path.realpath(os.path.join(p, command)) for p in path_components if os.path.isfile(os.path.join(p, command))])
+    found = set([os.path.realpath(os.path.join(p, command)) for p in path_components
+                if os.path.isfile(os.path.join(p, command))])
     other = check_tool_binary_python(command)
     if other:
         found.add(other)
@@ -2003,7 +2004,7 @@ def run_command(cmd, only_first_line=False, pre_ver_text=None, no_err_2=False, n
     try:
         res_run = subprocess.run(cmd, check=True, capture_output=True)
         last_cmd = cmd[0]
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         last_ok = False
         return NOT_AVAIL
     except subprocess.CalledProcessError as e:
@@ -2077,7 +2078,7 @@ def check_kipy_api():
     # 2. Check we can start a headless API server and ask for the version
     try:
         with KiCad(headless=True) as kicad:
-            version = kicad.get_version()
+            kicad.get_version()
     except Exception as e:
         error(f"Failed to connect to KiCad API ({e})")
         return False
@@ -2097,7 +2098,7 @@ def check_tests(tests):
         cmd[0] = cmd_full
         try:
             cmd_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             tests_ok = False
             tests_msg = 'Missing test tool `{}`'.format(cmd[0])
             return True
@@ -2403,7 +2404,7 @@ except ModuleNotFoundError:
                         if len(cand) == 1:
                             dname = os.path.dirname(cand[0])
                             if dname in sys.path:
-                                error(f"The pcbnew module should be loadable, but fails to load")
+                                error("The pcbnew module should be loadable, but fails to load")
                             else:
                                 error(f"Broken Python support {dname} not in sys.path ({sys.path})")
                         else:
@@ -2432,7 +2433,7 @@ if not is_k11:
                     kicad_plugins_dirs.append(os.path.join(local_share, 'scripting'))
                     kicad_plugins_dirs.append(os.path.join(local_share, 'scripting', 'plugins'))
                     kicad_plugins_dirs.append(os.path.join(local_share, '3rdparty', 'plugins'))  # KiCad 6.0 PCM
-        except:
+        except Exception:
             version = 'Older than 5.1.6'
     else:
         version = NOT_AVAIL
@@ -2453,7 +2454,7 @@ try:
     version = kibot.__main__.__version__
     kibot_ok = True
     sev = 0
-except:
+except Exception:
     version = NOT_AVAIL
     kibot_ok = False
     sev = 4
@@ -2483,7 +2484,7 @@ for name, d in dependencies.items():
             version = mod.__version__
         else:
             version = 'Ok'
-    except:
+    except Exception:
         version = NOT_AVAIL
     sev, ver = check_version(version, d['role'])
     d['sev'] = sev
@@ -2586,9 +2587,9 @@ for name, d in dependencies.items():
                     d['cmd_found'])
 
 if sys.stdout.isatty():
-    labels = ('ok', 'optional for an output', 'optional for general use', 'mandatory for an output', 'mandatory for general use')
-    text = ', '.join([sev2color(c)+l+RESET for c, l in enumerate(labels)])
+    labels = ('ok', 'optional for an output', 'optional for general use', 'mandatory for an output',
+              'mandatory for general use')
+    text = ', '.join([sev2color(c)+lb+RESET for c, lb in enumerate(labels)])
     print(do_bright('\nColor reference:')+' '+text)
 
     print('\nDid this help? Please consider commenting it on https://github.com/INTI-CMNB/KiBot/discussions/categories/kibot-check')
-
