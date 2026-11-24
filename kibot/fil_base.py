@@ -192,7 +192,7 @@ def apply_exclude_filter(comps, filter):
                     logger.debugl(3, f'- {c.ref} excluded')
 
 
-def reset_filters(comps, kicad_dnp_applied='global'):
+def reset_filters(comps, kicad_dnp_applied='global', variant=None):
     logger.debug('Filters reset')
     if kicad_dnp_applied == 'global':
         dnp_applied = GS.global_kicad_dnp_applied
@@ -202,7 +202,7 @@ def reset_filters(comps, kicad_dnp_applied='global'):
         c.included = True
         c.kicad_dnp = c.kicad_dnp_sch
         # If the dnp_applied variable is True try to copy the DNP flag from KiCad v7
-        fitted = not (dnp_applied and c.compute_dnp())
+        fitted = not (dnp_applied and c.compute_dnp(variant))
         if not fitted:
             logger.debugl(3, f'- {c.ref} is DNP by KiCad')
         c.set_fitted(fitted)

@@ -633,7 +633,7 @@ class Base3DOptions(VariantOptions):
                 variant = self.kicad_variant_name()
                 if GS.global_kicad_dnp_applies_to_3D and any(c.compute_dnp(variant) for c in all_comps):
                     # One or more components are DNP, remove them
-                    reset_filters(all_comps)
+                    reset_filters(all_comps, variant=self.kicad_variant_name())
                     all_comps_hash = {c.ref: c for c in all_comps}
                     self.remove_3D_models(GS.board, all_comps_hash)
                     dnp_removed = True

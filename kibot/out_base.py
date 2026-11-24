@@ -1303,7 +1303,7 @@ class VariantOptions(BaseOptions):
         # Get the components list from the schematic
         comps = get_all_components(collapse=self._collapse_components)
         # Apply the filter
-        reset_filters(comps)
+        reset_filters(comps, variant=self.kicad_variant_name())
         comps = apply_pre_transform(comps, self.pre_transform)
         apply_exclude_filter(comps, self.exclude_filter)
         apply_fitted_filter(comps, self.dnf_filter)
