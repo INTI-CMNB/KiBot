@@ -69,7 +69,7 @@ class JobSet(Base3D):
         self._both_related = True
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.ki9:
             return None
         jobfile = GS.pro_file.replace('.kicad_pro', '.kicad_jobset')

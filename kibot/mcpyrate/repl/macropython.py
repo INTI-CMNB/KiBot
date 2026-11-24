@@ -25,7 +25,7 @@ _macropython_module = None  # sys.modules doesn't always seem to keep it, so sta
 
 # --------------------------------------------------------------------------------
 
-def import_module_as_main(name, script_mode):
+def import_module_as_main(name: str, script_mode):
     """Import a module, pretending it's __main__.
 
     We support only new-style loaders that provide `exec_module`; old-style

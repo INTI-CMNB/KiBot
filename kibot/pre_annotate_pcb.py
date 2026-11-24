@@ -132,11 +132,11 @@ class Annotate_PCB(BasePreFlight):  # noqa: F821
             self.annotate_pcb = Annotate_PCBOptions
             """ [dict={}]  Options for the `annotate_pcb` preflight """
 
-    def __str__(self):
+    def __str__(self) -> str:
         v = self.annotate_pcb
         return f'{self.type} (top: {v.top_main_axis}/{v.top_start} bot: {v.bottom_main_axis}/{v.bottom_start})'
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return ("\n    top_main_axis: y"
                 "\n    top_main_ascending: true"

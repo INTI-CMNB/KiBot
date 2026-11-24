@@ -24,7 +24,7 @@ class ERC_Warnings(BasePreFlight):  # noqa: F821
         super().config(parent)
         logger.warning(W_DEPR+'The `erc_warnings` preflight is deprecated, use the `warnings_as_errors` option')
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return 'false'
 

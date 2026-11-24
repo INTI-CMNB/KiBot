@@ -11,6 +11,8 @@ import wx
 from . import gui_config
 from .gui_inject import create_id, InjectDialog
 from .. import log
+from typing import Optional
+
 logger = log.get_logger()
 # loaded_btns = {}
 emp_font = None
@@ -48,7 +50,7 @@ def init_vars():
 
 
 class MessageDialog(InjectDialog):
-    def __init__(self, msg, title, icon=None, ok_btn=True, name=None):
+    def __init__(self, msg, title, icon=None, ok_btn=True, name: Optional[str] = None):
         InjectDialog.__init__(self, None, title=title, name=name,
                               style=wx.DEFAULT_DIALOG_STYLE | wx.STAY_ON_TOP | wx.BORDER_DEFAULT)
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -121,7 +123,7 @@ def pop_info(msg):
         MessageBox(msg, 'Information', wx.ART_INFORMATION)
 
 
-def move_sel_up(box):
+def move_sel_up(box) -> bool:
     """ Helper to move the selection up """
     selection = box.Selection
     if selection == wx.NOT_FOUND or selection < 1:
@@ -134,7 +136,7 @@ def move_sel_up(box):
     return True
 
 
-def move_sel_down(box):
+def move_sel_down(box) -> bool:
     """ Helper to move the selection down """
     selection = box.Selection
     size = box.Count
@@ -148,7 +150,7 @@ def move_sel_down(box):
     return True
 
 
-def remove_item(lbox, confirm=None, callback=None):
+def remove_item(lbox, confirm=None, callback=None) -> bool:
     selection = lbox.Selection
     if selection == wx.NOT_FOUND:
         return False
@@ -313,7 +315,7 @@ def choose_from_list(parent, items, what, multiple=False, search_on=None):
     return res
 
 
-def get_res_bitmap(resource, size=wx.DefaultSize):
+def get_res_bitmap(resource, size: int = wx.DefaultSize):
     # return wx.BitmapBundle(wx.ArtProvider.GetBitmap(resource))
     return wx.ArtProvider.GetBitmapBundle(resource, size=size)
 

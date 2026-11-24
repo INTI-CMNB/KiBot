@@ -23,6 +23,8 @@ from .. import log
 from ..misc import W_NOKICOST, W_UNKDIST, KICOST_ERROR, W_BADFIELD
 from ..gs import GS
 from .. import __version__
+from typing import Sequence
+
 # Init the logger first
 logger = log.get_logger()
 # XLSX Writer support
@@ -77,12 +79,12 @@ SPECS_GENERATED = {ColumnList.COL_REFERENCE_L, ColumnList.COL_ROW_NUMBER_L, 'sep
 # This filter is needed because we have full debug enabled and we filter the log_level manually
 # So we can generate a full log when in --quick-start mode (using a file)
 class ProgressConsole2(ProgressConsole):
-    def __init__(self, total, logger):
+    def __init__(self, total: int, logger):
         super().__init__(total, logger)
         self.logTqdmHandler.addFilter(log.FilterNoInfo())
 
 
-def bg_color(col):
+def bg_color(col) -> int:
     """ Return a background color for a given column title """
     col = col.lower()
     # Auto-generated columns
@@ -95,7 +97,7 @@ def bg_color(col):
     return 2
 
 
-def add_info(worksheet, column_widths, row, col_offset, formats, text, value):
+def add_info(worksheet, column_widths, row, col_offset, formats, text: str, value):
     worksheet.write_string(row, col_offset, text, formats[0])
     if isinstance(value, (int, float)):
         worksheet.write_number(row, col_offset+1, value, formats[1])
@@ -125,7 +127,7 @@ def compute_head_size(cfg):
     return head_size
 
 
-def get_bg_color(style_name):
+def get_bg_color(style_name: str):
     head_color = None
     if style_name.startswith('modern-'):
         if style_name.endswith('green'):
@@ -137,7 +139,7 @@ def get_bg_color(style_name):
     return head_color
 
 
-def create_fmt_head(workbook, style_name):
+def create_fmt_head(workbook, style_name: str):
     fmt_head = workbook.add_format(DEFAULT_FMT)
     fmt_head.set_bold()
     if style_name.startswith('modern-'):
@@ -233,7 +235,7 @@ def create_fmt_info(workbook, cfg):
     return [fmt_name, fmt_data]
 
 
-def insert_logo(worksheet, image_data, scale):
+def insert_logo(worksheet, image_data, scale) -> int:
     """ Inserts the logo, returns how many columns we used """
     if image_data:
         # Note: OpenOffice doesn't support using images in the header for XLSXs
@@ -281,7 +283,7 @@ def create_color_ref(workbook, col_colors, hl_empty, fmt_cols, do_kicost, kicost
     worksheet.set_column(0, 0, max_w)
 
 
-def get_spec(part, name):
+def get_spec(part, name: str):
     if name[0] != '_':
         return part.specs.get(name, ['', ''])
     name = name[1:]
@@ -292,7 +294,8 @@ def get_spec(part, name):
     return ['', '']
 
 
-def create_meta(workbook, name, columns, parts, fmt_head, fmt_cols, max_w, rename, levels, comments, join):
+def create_meta(workbook, name: str, columns, parts, fmt_head, fmt_cols, max_w, rename: str, levels, comments: Sequence[str],
+                join):
     worksheet = workbook.add_worksheet(name)
     col_w = []
     row_h = 1
@@ -361,7 +364,7 @@ def adjust_widths(worksheet, column_widths, max_width, levels):
             worksheet.set_column(i, i, width, None, {'level': levels[i]})
 
 
-def adjust_heights(worksheet, rows, max_width, head_size):
+def adjust_heights(worksheet, rows, max_width, head_size: int):
     for rn, r in enumerate(rows):
         max_h = 1
         for c in r:
@@ -573,7 +576,7 @@ def dis_enable_apis(api_options, cfg):
             api_options[api]['enable'] = True
 
 
-def do_title(cfg, worksheet, col1, length, fmt_title, fmt_info):
+def do_title(cfg, worksheet, col1, length: int, fmt_title, fmt_info):
     r_extra = 0
     if cfg.xlsx.title:
         worksheet.set_row(0, 32)
@@ -735,7 +738,7 @@ def create_kicost_sheet(workbook, groups, image_data, fmt_title, fmt_info, fmt_s
         GS.exit_with_error('KiCost error: `{}` ({})'.format(e.msg, e.id), KICOST_ERROR)
 
 
-def write_xlsx(filename, groups, col_fields, head_names, cfg):
+def write_xlsx(filename, groups, col_fields, head_names: Sequence[str], cfg) -> bool:
     """
     Write BoM out to a XLSX file
     filename = path to output file (must be a .csv, .txt or .tsv file)

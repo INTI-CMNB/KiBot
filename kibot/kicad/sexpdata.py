@@ -36,6 +36,8 @@ License
 See the source code for more information.
 
 """
+from typing import Optional
+
 # [[[end]]]
 
 # Copyright (c) 2012 Takafumi Arakaki
@@ -159,7 +161,7 @@ def load(filelike, **kwds):
     return loads(filelike.read(), **kwds)
 
 
-def loads(string, **kwds):
+def loads(string: str, **kwds):
     r"""
     Load object from S-expression `string`.
 
@@ -422,7 +424,7 @@ class SExpBase(object):
     def __init__(self, val):
         self._val = val
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{0}({1!r})".format(self.__class__.__name__, self._val)
 
     def __eq__(self, other):
@@ -444,13 +446,13 @@ class SExpBase(object):
         raise NotImplementedError
 
     @classmethod
-    def quote(cls, string):
+    def quote(cls, string: str):
         for (s, q) in cls._lisp_quoted_specials:
             string = string.replace(s, q)
         return string
 
     @classmethod
-    def unquote(cls, string):
+    def unquote(cls, string: str):
         return cls._lisp_quoted_to_raw.get(string, string)
 
 
@@ -479,13 +481,13 @@ class String(SExpBase):
 
     _lisp_quoted_to_raw = {q: r for (r, q) in _lisp_quoted_specials}
 
-    def tosexp(self, tosexp=None):
+    def tosexp(self, tosexp=None) -> str:
         return '"{0}"'.format(self.quote(self._val))
 
 
 class Quoted(SExpBase):
 
-    def tosexp(self, tosexp=tosexp):
+    def tosexp(self, tosexp=tosexp) -> str:
         return "'{0}".format(tosexp(self._val))
 
 
@@ -496,10 +498,10 @@ class Bracket(SExpBase):
         super(Bracket, self).__init__(val)
         self._bra = bra
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "{0}({1!r}, {2!r})".format(self.__class__.__name__, self._val, self._bra)
 
-    def tosexp(self, tosexp=tosexp):
+    def tosexp(self, tosexp=tosexp) -> str:
         bra = self._bra
         ke = BRACKETS[self._bra]
         c = ''
@@ -548,7 +550,7 @@ class Parser(object):
                                                     _atom_end_basic | set('\\')))
     quote_or_escape_re = re.compile(r'"|\\')
 
-    def __init__(self, string, string_to=None, nil='nil', true='t', false=None,
+    def __init__(self, string: str, string_to: Optional[str] = None, nil='nil', true='t', false=None,
                  line_comment=';'):
         self.string = string
         self.nil = nil
@@ -672,7 +674,7 @@ class Parser(object):
         return sexp
 
 
-def parse(string, **kwds):
+def parse(string: str, **kwds):
     r"""
     Parse s-expression.
 

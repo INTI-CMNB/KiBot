@@ -14,6 +14,7 @@ import re
 # Internal dependencies
 from .path import Path, Line, is_path_segment
 from .misctools import open_in_browser
+from typing import Optional
 
 # Used to convert a string colors (identified by single chars) to a list.
 color_dict = {'a': 'aqua',
@@ -87,8 +88,8 @@ def disvg(paths=None, colors=None,
           filename=os_path.join(getcwd(), 'disvg_output.svg'),
           stroke_widths=None, nodes=None, node_colors=None, node_radii=None,
           openinbrowser=True, timestamp=False,
-          margin_size=0.1, mindim=600, dimensions=None,
-          viewbox=None, text=None, text_path=None, font_size=None,
+          margin_size: int=0.1, mindim=600, dimensions=None,
+          viewbox=None, text: Optional[str]=None, text_path=None, font_size: Optional[int]=None,
           attributes=None, svg_attributes=None, svgwrite_debug=False, paths2Drawing=False):
     """Takes in a list of paths and creates an SVG file containing said paths.
     REQUIRED INPUTS:
@@ -409,8 +410,8 @@ def wsvg(paths=None, colors=None,
           filename=os_path.join(getcwd(), 'disvg_output.svg'),
           stroke_widths=None, nodes=None, node_colors=None, node_radii=None,
           openinbrowser=False, timestamp=False,
-          margin_size=0.1, mindim=600, dimensions=None,
-          viewbox=None, text=None, text_path=None, font_size=None,
+          margin_size: int=0.1, mindim=600, dimensions=None,
+          viewbox=None, text: Optional[str]=None, text_path=None, font_size: Optional[int]=None,
           attributes=None, svg_attributes=None, svgwrite_debug=False, paths2Drawing=False):
     """Convenience function; identical to disvg() except that
     openinbrowser=False by default.  See disvg() docstring for more info."""
@@ -428,8 +429,8 @@ def paths2Drawing(paths=None, colors=None,
           filename=os_path.join(getcwd(), 'disvg_output.svg'),
           stroke_widths=None, nodes=None, node_colors=None, node_radii=None,
           openinbrowser=False, timestamp=False,
-          margin_size=0.1, mindim=600, dimensions=None,
-          viewbox=None, text=None, text_path=None, font_size=None,
+          margin_size: int=0.1, mindim=600, dimensions=None,
+          viewbox=None, text: Optional[str]=None, text_path=None, font_size: Optional[int]=None,
           attributes=None, svg_attributes=None, svgwrite_debug=False, paths2Drawing=True):
     """Convenience function; identical to disvg() except that
     paths2Drawing=True by default.  See disvg() docstring for more info."""

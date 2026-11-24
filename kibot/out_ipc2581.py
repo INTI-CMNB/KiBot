@@ -73,7 +73,7 @@ class IPC2581Options(VariantOptions):
             if val and val not in valid:
                 logger.warning(W_BADFIELD+f'Invalid column name `{val}` for `{fld}`. Valid columns are {sorted(valid)}.')
 
-    def run_kipy(self, name):
+    def run_kipy(self, name: str):
         self.filter_pcb_components()
 
         settings = GS.kp.board_jobs.Ipc2581ExportSettings()
@@ -99,7 +99,7 @@ class IPC2581Options(VariantOptions):
         self.unfilter_pcb_components()
         self.check_job_ok(res)
 
-    def run_kicli(self, name):
+    def run_kicli(self, name: str):
         board_name = self.save_tmp_board_if_variant()
         cmd = [GS.kicad_cli, 'pcb', 'export', 'ipc2581', '-o', name, '--units', UNITS_2_KICAD[self.units],
                '--precision', str(int(self.precision)), '--version', self.version]
@@ -123,7 +123,7 @@ class IPC2581Options(VariantOptions):
         cmd.append(board_name)
         run_command(cmd)
 
-    def run(self, name):
+    def run(self, name: str):
         if not GS.ki9:
             GS.exit_with_error("`IPC2581` needs KiCad 9+", MISSING_TOOL)
         super().run(name)
@@ -147,7 +147,7 @@ class IPC2581(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `ipc2581` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.ki9:
             return None
         return BaseOutput.simple_conf_examples(name, 'PCB in IPC-2581 format', 'Export')  # noqa: F821

@@ -32,7 +32,7 @@ class Dialect:
         self.lineno = None
         self.col_offset = None
 
-    def transform_source(self, text):
+    def transform_source(self, text: str):
         """Override this to add a whole-module source transformer to your dialect.
 
         If not overridden, the default is to return `NotImplemented`, which
@@ -138,7 +138,7 @@ class StepExpansion(Dialect):  # actually part of public API of mcpyrate.debug, 
 
     This dialect has no other effects.
     """
-    def transform_source(self, text):
+    def transform_source(self, text: str):
         # We pass through the input (instead of returning `NotImplemented`) to
         # consider this as having taken a step, thus triggering the debug mode
         # output printer. (If this was the first dialect applied, our output is
@@ -189,7 +189,7 @@ class DialectExpander:
         self._step = 0
         self._seen = set()
 
-    def transform_source(self, text):
+    def transform_source(self, text: str):
         """Apply all whole-module source transformers.
 
         Return value is the transformed text.
@@ -331,7 +331,7 @@ class DialectExpander:
 
         return content
 
-    def find_dialectimport_source(self, text):
+    def find_dialectimport_source(self, text: str):
         """Find the first dialect-import statement by scanning source code `text`.
 
         As a side effect, import the dialect definition module.

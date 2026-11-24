@@ -176,7 +176,7 @@ class Layer(Optionable):
         raise AssertionError("Unimplemented layer type "+str(type(values)))
 
     @classmethod
-    def name2id(cls, name):
+    def name2id(cls, name: str):
         vals = Layer.solve(name)
         if len(vals) > 1:
             raise KiPlotConfigurationError(f"Layer name `{name}` represents more than one layer")
@@ -270,7 +270,7 @@ class Layer(Optionable):
         return GS.DEFAULT_LAYER_DESC.get(self.layer, 'No description')
 
     @classmethod
-    def create_layer(cls, name):
+    def create_layer(cls, name: str):
         layer = cls()
         if isinstance(name, str):
             layer.layer = name
@@ -345,7 +345,7 @@ class Layer(Optionable):
     def is_bottom(self):
         return self._id == GS.B_Cu
 
-    def __str__(self):
+    def __str__(self) -> str:
         if hasattr(self, '_id'):
             return "{} ({} '{}' {})".format(self.layer, self._id, self.description, self.suffix)
         return "{} ('{}' {})".format(self.layer, self.description, self.suffix)

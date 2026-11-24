@@ -96,7 +96,7 @@ class Template:
         """
         self.extraResources.append(resource)
 
-    def addBoard(self, name, comment, boardfile, front, back, gerbers):
+    def addBoard(self, name: str, comment: str, boardfile, front, back, gerbers):
         """
         Add board
         """
@@ -147,7 +147,7 @@ class Template:
     def currentDateTime(self):
         return datetime.now().strftime("%d. %m. %Y %H:%M")
 
-    def setName(self, name):
+    def setName(self, name: str):
         self.name = name
 
     def setRepository(self, rep):
@@ -158,7 +158,7 @@ class HtmlTemplate(Template):
     def __init__(self, path):
         super().__init__(path)
 
-    def addDescriptionFile(self, description):
+    def addDescriptionFile(self, description: str):
         if not description.endswith(".md"):
             raise RuntimeError("Only markdown descriptions are supported for now")
         self.description = markdown2.markdown_path(description, extras=["fenced-code-blocks"])
@@ -179,7 +179,7 @@ class HtmlTemplate(Template):
         with open(os.path.join(outputDirectory, "index.html"),"w") as outFile:
             outFile.write(content)
 
-def boardpage(outdir, description, board, resource, template, repository, name, git_command):
+def boardpage(outdir, description: str, board, resource, template, repository, name: str, git_command):
     Path(outdir).mkdir(parents=True, exist_ok=True)
     template = readTemplate(template)
     template.git_command = git_command

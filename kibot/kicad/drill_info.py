@@ -9,6 +9,7 @@
 # https://gitlab.com/kicad/code/kicad/-/blob/master/pcbnew/exporters/gendrill_file_writer_base.cpp
 from ..gs import GS
 from kibot import log
+from typing import Sequence
 
 logger = log.get_logger()
 
@@ -160,7 +161,8 @@ def get_full_holes_list(merge_PTH_NPTH=True, group_slots_and_round_holes=True):
     return hole_list, tool_list, hole_sets, doing_npth
 
 
-def get_layer_pair_name(index, use_layer_names=False, merge_PTH_NPTH=True, group_slots_and_round_holes=True):
+def get_layer_pair_name(index, use_layer_names: Sequence[str] = False, merge_PTH_NPTH=True,
+                        group_slots_and_round_holes=True) -> str:
     hole_sets = get_unique_layer_pairs()
 
     if not merge_PTH_NPTH:

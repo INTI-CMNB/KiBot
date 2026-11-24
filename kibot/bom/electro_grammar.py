@@ -201,7 +201,7 @@ def initialize():
     parser = Lark(g, start='main')  # , debug=DEBUG)
 
 
-def parse(text, with_extra=False, stronger=False):
+def parse(text: str, with_extra=False, stronger=False):
     initialize()
     if stronger:
         text = text.replace('+/-', ' +/-')

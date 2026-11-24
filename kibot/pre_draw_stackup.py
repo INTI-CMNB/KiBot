@@ -41,7 +41,7 @@ class SUColumns(Optionable):
             """ [auto,right,left] Side for the dimension used for the *thickness* type.
                 When using *auto* the side is detected looking for a *drawing* column """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.type} {self.width} {self.side}'
 
 
@@ -228,7 +228,7 @@ def draw_thickness(g, x, y, w, font_h, first, last, layer, right=True):
     GS.board.Add(dim)
 
 
-def update_drawing_group(g, pos_x, pos_y, width, height, tlayer, border, gerber, cols):
+def update_drawing_group(g, pos_x, pos_y, width: int, height, tlayer, border, gerber, cols) -> bool:
     # Purge all content
     for item in g.GetItems():
         GS.board.Delete(item)

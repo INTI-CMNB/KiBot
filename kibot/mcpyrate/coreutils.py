@@ -72,7 +72,7 @@ def match_syspath(filename):
 
 # --------------------------------------------------------------------------------
 
-def ismacroimport(statement, magicname='macros'):
+def ismacroimport(statement, magicname: str='macros') -> bool:
     """Return whether `statement` is a macro-import.
 
     A macro-import is a statement of the form::
@@ -200,7 +200,7 @@ def get_macros(macroimport, *, filename, reload=False, allow_asname=True, self_m
 
 # --------------------------------------------------------------------------------
 
-def _mcpyrate_attr(dotted_name, *, force_import=False):
+def _mcpyrate_attr(dotted_name: str, *, force_import=False):
     """Create an AST that, when compiled and run, looks up an attribute of `mcpyrate`.
 
     `dotted_name` is an `str`. Examples::

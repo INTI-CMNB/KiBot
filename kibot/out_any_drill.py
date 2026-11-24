@@ -227,7 +227,7 @@ class AnyDrill(VariantOptions):
         return 'in'+m.group(1)
 
     @staticmethod
-    def _get_layer_pair_names(layer_pair):
+    def _get_layer_pair_names(layer_pair) -> str:
         top_layer = GS.copper_layer_to_ordinal(layer_pair[0])+1
         bot_layer = GS.copper_layer_to_ordinal(layer_pair[1])+1
         return f"(L{top_layer}-L{bot_layer})"

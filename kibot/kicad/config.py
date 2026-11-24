@@ -80,7 +80,7 @@ def parse_len_str(val):
     return value
 
 
-def fix_windows(name):
+def fix_windows(name: str):
     if not name or name.startswith(EMBED_PREFIX):
         return name
     if not os.path.isfile(name):
@@ -374,7 +374,7 @@ class KiConf(object):
         else:
             logger.warning(W_SILLY + W_NOKIENV + 'KiCad config without environment.vars section')
 
-    def _look_env_var(base_name, old, only_old, ki6_diff, no_dir):
+    def _look_env_var(base_name: str, old, only_old, ki6_diff, no_dir):
         """ Looks for a KiCad variable definition.
             First in the OS environment, then in the config.
             Sync the other source. """
@@ -420,7 +420,7 @@ class KiConf(object):
                     KiConf.kicad_env[n] = ret_val
         return ret_val
 
-    def _set_env_var(base_name, val, ki6_diff, no_dir):
+    def _set_env_var(base_name: str, val, ki6_diff, no_dir):
         """ Sets the environment and the internal list """
         if not no_dir:
             base_name += '_DIR'
@@ -432,7 +432,8 @@ class KiConf(object):
         os.environ[name] = val
         logger.debug('Using {}="{}" (guessed)'.format(name, val))
 
-    def _solve_var(name, member, desc, guesser, old=None, only_old=False, ki6_diff=True, only_k6=False, no_dir=False):
+    def _solve_var(name: str, member, desc: str, guesser, old=None, only_old=False, ki6_diff=True, only_k6=False,
+                   no_dir=False):
         if only_k6 and GS.ki5:
             return
         val = KiConf._look_env_var(name, old, only_old, ki6_diff, no_dir)
@@ -487,7 +488,7 @@ class KiConf(object):
                         logger.debug('Also exporting {}="{}"'.format(kv, v))
         KiConf.kicad_env.update(to_add)
 
-    def load_lib_aliases(fname, lib_aliases):
+    def load_lib_aliases(fname, lib_aliases) -> bool:
         if not os.path.isfile(fname):
             return False
         logger.debug('Loading symbols lib table `{}`'.format(fname))
@@ -517,7 +518,7 @@ class KiConf(object):
                 logger.warning(W_LIBTUNK+"Unknown lib table entry `{}`".format(e_type))
         return True
 
-    def load_all_lib_aliases(table_name, sys_dir, pattern):
+    def load_all_lib_aliases(table_name: str, sys_dir, pattern: str):
         # Load the default symbol libs table.
         # This is the list of libraries enabled by the user.
         loaded = False
@@ -574,7 +575,7 @@ class KiConf(object):
             fname = GS.sch_file
         KiConf.check_lib_table(fname, SYM_LIB_TABLE)
 
-    def check_lib_table(fname, table_name):
+    def check_lib_table(fname, table_name: str):
         KiConf.init(fname)
         if GS.kicad_conf_path:
             fp_name = os.path.join(GS.kicad_conf_path, table_name)
@@ -594,7 +595,7 @@ class KiConf(object):
             logger.debug('Removing '+fname)
             os.remove(fname)
 
-    def rel_uri(uri, ref, is_fp):
+    def rel_uri(uri, ref, is_fp: bool):
         """ Used to adapt the lib table URIs when copying to another dir """
         if ref is None:
             return uri
@@ -605,7 +606,7 @@ class KiConf(object):
         # Make others relative
         return os.path.join('${KIPRJMOD}', os.path.relpath(uri, ref))
 
-    def save_fp_lib_aliases(fname, aliases, is_fp=True, rel_ref=None):
+    def save_fp_lib_aliases(fname, aliases, is_fp: bool = True, rel_ref=None):
         logger.debug(f'Writing lib table `{fname}`')
         table = [Symbol('fp_lib_table' if is_fp else 'sym_lib_table'), Sep()]
         for name in sorted(aliases.keys(), key=str.casefold):
@@ -652,7 +653,7 @@ class KiConf(object):
                 KiConf.aliases_3D[name] = value
         logger.debugl(1, 'Finished loading 3D aliases')
 
-    def fix_page_layout_k6_key(key, data, dest_dir, forced, no_copy_embedded, is_pcb):
+    def fix_page_layout_k6_key(key, data, dest_dir, forced, no_copy_embedded, is_pcb: bool):
         if key in data:
             section = data[key]
             pl = section.get('page_layout_descr_file', None) if not forced else forced
@@ -762,7 +763,7 @@ class KiConf(object):
             return KiConf.fix_page_layout_k5(project, dry, force_sch, force_pcb)
         return KiConf.fix_page_layout_k6(project, dry, force_sch, force_pcb, no_copy_embedded)
 
-    def expand_env(name, used_extra=None, ref_dir=None):
+    def expand_env(name: str, used_extra=None, ref_dir=None):
         if used_extra is None:
             used_extra = [False]
         if not name or name.startswith(EMBED_PREFIX):

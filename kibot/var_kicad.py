@@ -96,7 +96,7 @@ class KiCad(BasicVariant):
             KiCad.add_default()
 
     @staticmethod
-    def get_from_pro():
+    def get_from_pro() -> bool:
         """ Add variants from the project """
         if not GS.ki10 or not GS.pro_file or not os.path.isfile(GS.pro_file):
             return False

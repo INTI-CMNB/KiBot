@@ -59,7 +59,7 @@ def isBytes(b):
 
 
 #custom implementation of warnings.formatwarning
-def formatWarning(message, category, filename, lineno, line=None):
+def formatWarning(message, category, filename, lineno, line=None) -> str:
     file = filename.replace("/", "\\").rsplit("\\", 1)[1] # find the file name
     return "%s: %s [%s:%s]\n" % (category.__name__, message, file, lineno)
 
@@ -263,7 +263,7 @@ def hexencode(b):
     return coder(b)[0]
 
 
-def hexStr(num):
+def hexStr(num: int):
     return hex(num).replace('L', '')
 
 

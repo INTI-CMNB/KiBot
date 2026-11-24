@@ -3,6 +3,7 @@
 # numpy replacement for PcbDraw
 import builtins
 from operator import itemgetter
+from typing import Sequence
 
 # A value that is not None
 float32 = 1
@@ -30,12 +31,12 @@ def matmul(A, B):
     return [[sum(a*b for a, b in zip(A_row, B_col)) for B_col in zip(*B)] for A_row in A]
 
 
-def ones(count, dtype=None):
+def ones(count: int, dtype=None):
     assert dtype == bool
     return [True] * count
 
 
-def empty(sizes):
+def empty(sizes: Sequence[int]):
     return []
 
 

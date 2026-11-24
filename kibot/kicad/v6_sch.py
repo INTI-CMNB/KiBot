@@ -106,7 +106,7 @@ class Box(object):
                 self.y2 = max(p.y, self.y2)
             self.set = True
 
-    def __str__(self):
+    def __str__(self) -> str:
         if not self.set:
             return "Box *uninitialized*"
         return "Box({},{} to {},{})".format(self.x1, self.y1, self.x2, self.y2)
@@ -561,7 +561,7 @@ class DrawTextV6(object):
         return _symbol('text', data)
 
 
-def _get_effects(items, pos, name):
+def _get_effects(items, pos, name: str):
     values = _check_symbol_value(items, pos, name, 'effects')
     return FontEffects.parse(values)
 
@@ -583,7 +583,7 @@ class PinAlternate(object):
         return _symbol('alternate', [self.name, Symbol(self.type), Symbol(self.gtype)])
 
 
-def _get_alternate(items, pos, name):
+def _get_alternate(items, pos, name: str):
     values = _check_symbol_value(items, pos, name, 'alternate')
     return PinAlternate.parse(values)
 
@@ -665,7 +665,7 @@ class SchematicFieldV6(object):
     # 2 Footprint
     # 3 Datasheet
     # Reserved names: ki_keywords, ki_description, ki_locked, ki_fp_filters
-    def __init__(self, name='', value='', id=0, x=0, y=0, ang=0):
+    def __init__(self, name: str = '', value='', id=0, x=0, y=0, ang=0):
         super().__init__()
         self.name = name
         self.value = value
@@ -683,7 +683,7 @@ class SchematicFieldV6(object):
     def visible(self, v):
         self.effects.hide = not v
 
-    def is_visible(self):
+    def is_visible(self) -> bool:
         return not self.effects.hide
 
     def get_height(self):
@@ -700,7 +700,7 @@ class SchematicFieldV6(object):
             self.effects.hjustify = hjustify
 
     @staticmethod
-    def parse(items, number):
+    def parse(items, number: int):
         field = SchematicFieldV6()
         name = 'field'
         offset = 0
@@ -1306,7 +1306,7 @@ class SchematicComponentV6(SchematicComponent):
         return new_c
 
     @staticmethod
-    def get_lib_and_name(comp, i, name):
+    def get_lib_and_name(comp, i, name: str):
         comp.lib_id = comp.name = _check_str(i, 1, name+' lib_id')
         res = comp.name.split(':')
         comp.lib = None
@@ -1319,7 +1319,7 @@ class SchematicComponentV6(SchematicComponent):
         else:
             logger.warning(W_NOLIB + "Component `{}` with more than one `:`".format(comp.name))
 
-    def load_pin(self, i, name):
+    def load_pin(self, i, name: str):
         pin_name = _check_str(i, 1, name + 'pin name')
         pin_uuid = get_uuid(i, 2, name)
         self.pins[pin_name] = pin_uuid
@@ -1697,7 +1697,7 @@ class SchematicWireV6(object):
         self.fill = None
 
     @staticmethod
-    def parse(items, name):
+    def parse(items, name: str):
         wire = SchematicWireV6()
         wire.type = name  # wire, bus, polyline
         for c, i in enumerate(items[1:]):
@@ -1798,7 +1798,7 @@ class Group(object):
 
 class Text(object):
     @staticmethod
-    def parse(items, name):
+    def parse(items, name: str):
         text = Text()
         text.name = name
         text.exclude_from_sim = None
@@ -1830,7 +1830,7 @@ class Text(object):
 
 class TextBox(object):
     @staticmethod
-    def parse(items, name):
+    def parse(items, name: str):
         text = TextBox()
         text.name = name
         text.exclude_from_sim = None
@@ -2359,7 +2359,7 @@ class Table(object):
         return _symbol(self.name, data)
 
 
-def not_imp(name, i_type):
+def not_imp(name: str, i_type):
     logger.warning(W_SCHNOTIMP+f"`{i_type}` attribute of `{name}` not implemented")
 
 
@@ -2466,11 +2466,11 @@ class PCBLayer(object):
         return layers
 
 
-def _symbol_yn(name, val):
+def _symbol_yn(name: str, val):
     return [Symbol(name), NO_YES[val]]
 
 
-def _add_items(items, sch, sep=False, cross=None, pre_sep=True, exp_hierarchy=None, alt_variants=None):
+def _add_items(items, sch, sep: str = False, cross=None, pre_sep=True, exp_hierarchy=None, alt_variants=None):
     if len(items):
         if pre_sep:
             sch.append(Sep())
@@ -2490,7 +2490,7 @@ def _add_items(items, sch, sep=False, cross=None, pre_sep=True, exp_hierarchy=No
             sch.pop()
 
 
-def _add_items_list(name, items, sch, alt_variants=None):
+def _add_items_list(name: str, items, sch, alt_variants=None):
     if not len(items):
         return
     data = [Sep()]
@@ -2635,7 +2635,7 @@ class SchematicV6(Schematic):
                 data.extend([s.write(cross), Sep()])
         return [Sep(), Sep(), _symbol('lib_symbols', data), Sep()]
 
-    def write_lib(self, path, name, comps, do_back_up=False):
+    def write_lib(self, path, name: str, comps, do_back_up=False):
         """ Creates a lib path/name containing the specified comps """
         lib = [Symbol('kicad_symbol_lib')]
         # TODO: How do I know which is the valid version? Doesn't match the schematic version!
@@ -2816,7 +2816,7 @@ class SchematicV6(Schematic):
         self.save(fname, dest_dir, cross=True, exp_hierarchy=self.check_exp_hierarchy(), dry=True, saved=saved)
         return saved
 
-    def check_exp_hierarchy(self):
+    def check_exp_hierarchy(self) -> bool:
         """ Check if we really need to expand the hierarchy """
         # KiCad v6: we can change the value and footprint, but won't work when imported by v7
         # Collect component instances (UUID -> list of instances)
@@ -2838,7 +2838,7 @@ class SchematicV6(Schematic):
         return False
 
     @staticmethod
-    def compare_component(r, c):
+    def compare_component(r, c) -> bool:
         """ Returns True if the components need separated instances (are different) """
         if len(r.dfields) != len(c.dfields):
             SchematicV6.log_difference(r, c, 'list of field names {} vs {}'.format(len(r.dfields), len(c.dfields)))

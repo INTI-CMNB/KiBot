@@ -55,7 +55,7 @@ def parse_color(val):
     return res
 
 
-def load_color_theme(name):
+def load_color_theme(name: str):
     logger.debug('Looking for color theme `{}`'.format(name))
     is_built_in = name in BUILT_IN
     if not is_built_in and GS.ki5:

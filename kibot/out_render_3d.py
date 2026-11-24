@@ -253,7 +253,7 @@ class Render3DOptions(Base3DOptionsWithHL):
             raise KiPlotConfigurationError("Choose to disable `realistic` or enable `force_stackup_colors`, not both")
         self._expand_ext = self.format
 
-    def setup_renderer(self, components, active_components, bottom, name):
+    def setup_renderer(self, components, active_components, bottom, name: str):
         super().setup_renderer(components, active_components)
         self.view = 'Z' if bottom else 'z'
         self.output = name
@@ -273,7 +273,7 @@ class Render3DOptions(Base3DOptionsWithHL):
         self.view = self.old_view
         self.output = self.old_output
 
-    def add_step(self, cmd, steps, ops):
+    def add_step(self, cmd, steps: int, ops):
         if steps:
             cmd.extend([ops, str(steps)])
 
@@ -540,7 +540,7 @@ class Render3DOptions(Base3DOptionsWithHL):
 
         return cmd
 
-    def check_kicad_cli_bug(self):
+    def check_kicad_cli_bug(self) -> bool:
         if GS.kicad_version_n >= KICAD_VERSION_10_0_5:
             return True
         res = _run_command([GS.kicad_cli, 'pcb', 'render', '--help'])
@@ -616,7 +616,7 @@ class Render_3D(Base3D):  # noqa: F821
         return self.options
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         has_top = False
         has_bottom = False

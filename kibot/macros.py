@@ -11,6 +11,7 @@ from .gs import GS  # noqa: F401
 from ast import (Assign, Name, Attribute, Expr, Load, Store, UnaryOp, USub,
                  ClassDef, Call, ImportFrom, copy_location, alias, Constant)
 from .mcpyrate import unparse
+from typing import Sequence
 
 
 def is_num(value):
@@ -21,7 +22,7 @@ def is_str(value):
     return isinstance(value, Constant) and isinstance(value.value, str)
 
 
-def document(sentences, **kw):
+def document(sentences: Sequence[str], **kw):
     """ This macro takes literal strings and converts them into:
         _help_ID = type_hint+STRING
         where:

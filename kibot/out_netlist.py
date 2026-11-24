@@ -67,7 +67,7 @@ class NetlistOptions(VariantOptions):
         self._expand_id, self._expand_ext = EXTENSIONS[self.format]
         self._category = 'PCB/fabrication/verification' if self.format == 'ipc' else 'PCB/export'
 
-    def run_cli(self, name, format):
+    def run_cli(self, name: str, format):
         super().run(name)
         sch_file = self.save_tmp_sch_if_variant()
         cmd = [GS.kicad_cli, 'sch', 'export', 'netlist', '--format', format, '--output', name]
@@ -75,7 +75,7 @@ class NetlistOptions(VariantOptions):
         cmd.append(sch_file)
         run_command(cmd)
 
-    def run(self, name):
+    def run(self, name: str):
         if self.format == 'classic' and GS.ki8:
             self.run_cli(name, 'kicadsexpr')
             return
@@ -117,7 +117,7 @@ class Netlist(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `netlist` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         gb1 = {}
         gb1['name'] = 'classic_'+name
         gb1['comment'] = 'Schematic netlist in KiCad format'

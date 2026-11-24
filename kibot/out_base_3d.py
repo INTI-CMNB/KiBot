@@ -201,7 +201,7 @@ class Base3DOptions(VariantOptions):
         logger.debug(f'- Downloaded {dest} ({os.path.getsize(dest)})')
         return dest
 
-    def wrl_name(self, name, force_wrl, force_step):
+    def wrl_name(self, name: str, force_wrl, force_step):
         """ Try to use the WRL version """
         if not force_wrl and not force_step:
             return name
@@ -229,7 +229,7 @@ class Base3DOptions(VariantOptions):
             kicad_3d_url_suffix = kicad_3d_url_suffix.replace('VERSION', branch)
         return kicad_3d_url+urllib.parse.quote_plus(fname)+kicad_3d_url_suffix
 
-    def try_download_kicad(self, model, full_name, downloaded, rel_dirs, force_wrl, force_step):
+    def try_download_kicad(self, model, full_name: str, downloaded, rel_dirs, force_wrl, force_step):
         if not (model.startswith('${KISYS3DMOD}/') or re.search(r"^\$\{KICAD\d+_3DMODEL_DIR\}\/", model)):
             logger.debugl(2, f"{model} is missing but doesn't look like a KiCad internal model")
             return None
@@ -265,7 +265,7 @@ class Base3DOptions(VariantOptions):
             self.download_model(url, extra_fname, rel_dirs)
         return replace
 
-    def try_download_easyeda(self, model, full_name, downloaded, sch_comp, lcsc_field):
+    def try_download_easyeda(self, model, full_name: str, downloaded, sch_comp, lcsc_field):
         if not lcsc_field or not sch_comp:
             return None
         lcsc_id = sch_comp.get_field_value(lcsc_field)
@@ -292,12 +292,12 @@ class Base3DOptions(VariantOptions):
         downloaded.add(full_name)
         return replace
 
-    def is_tht_resistor(self, name):
+    def is_tht_resistor(self, name: str):
         # Works for R_Axial_DIN* KiCad 6.0.10 3D models
         name = os.path.splitext(os.path.basename(name))[0]
         return name.startswith('R_Axial_DIN')
 
-    def colored_tht_resistor_name(self, name, bars):
+    def colored_tht_resistor_name(self, name: str, bars):
         name = os.path.splitext(os.path.basename(name))[0]
         return os.path.join(self._tmp_dir, name+'_'+'_'.join(map(str, bars))+'.wrl')
 
@@ -342,7 +342,7 @@ class Base3DOptions(VariantOptions):
         file.write("appearance Appearance{material USE "+mat+" }\n")
         file.write("}\n")
 
-    def create_colored_tht_resistor(self, ori, name, bars, r_len):
+    def create_colored_tht_resistor(self, ori, name: str, bars, r_len):
         # ** Process the 3D model
         # Fill the starts
         ac = 0
@@ -400,7 +400,7 @@ class Base3DOptions(VariantOptions):
         else:
             logger.warning(W_MISS3D+'Missing 3D model {}'.format(step_ori))
 
-    def do_colored_tht_resistor(self, name, c, changed):
+    def do_colored_tht_resistor(self, name: str, c, changed):
         if not GS.global_colored_tht_resistors or not self.is_tht_resistor(name) or c is None:
             return name
 
@@ -498,7 +498,7 @@ class Base3DOptions(VariantOptions):
         logger.debug(f' - {c.ref} {c.value} {tol}% {bars} ({status})')
         return cache_name
 
-    def replace_model(self, replace, m3d, force_wrl, force_step, is_copy_mode, rename_function, rename_data):
+    def replace_model(self, replace, m3d, force_wrl, force_step, is_copy_mode: bool, rename_function, rename_data):
         """ Helper function to replace the 3D model in m3d using the `replace` file """
         self.source_models.add(replace)
         old_name = m3d.m_Filename

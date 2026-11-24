@@ -66,7 +66,7 @@ def setcolor(*colors, reset=True):
     return "".join(out)
 
 
-def colorize(text, *colors):
+def colorize(text: str, *colors) -> str:
     """Colorize string `text` for terminal display.
 
     Always reset style and color at the start of `text`, as well as after it.

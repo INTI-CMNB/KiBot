@@ -39,6 +39,7 @@ from .registrable import RegOutput
 from .out_any_diff import AnyDiffOptions, has_repo
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
+from typing import Optional
 
 logger = log.get_logger()
 STASH_MSG = 'KiBot_Changes_Entry'
@@ -159,7 +160,7 @@ class DiffOptions(AnyDiffOptions):
                 self.h.update(chunk)
         return self.h.hexdigest()
 
-    def cache_pcb(self, name, force_exist):
+    def cache_pcb(self, name: str, force_exist):
         if name:
             if not os.path.isfile(name) and not force_exist:
                 raise KiPlotConfigurationError('Missing file to compare: `{}`'.format(name))
@@ -175,7 +176,7 @@ class DiffOptions(AnyDiffOptions):
         self.add_to_cache(name, hash)
         return hash
 
-    def cache_sch(self, name, force_exist):
+    def cache_sch(self, name: str, force_exist):
         if name:
             if not os.path.isfile(name) and not force_exist:
                 raise KiPlotConfigurationError('Missing file to compare: `{}`'.format(name))
@@ -198,7 +199,7 @@ class DiffOptions(AnyDiffOptions):
         self.add_to_cache(name, hash)
         return hash
 
-    def cache_file(self, name=None, force_exist=False):
+    def cache_file(self, name: Optional[str] = None, force_exist=False):
         self.git_hash = 'Current' if not name else 'FILE'
         return self.cache_pcb(name, force_exist) if self.pcb else self.cache_sch(name, force_exist)
 
@@ -234,7 +235,7 @@ class DiffOptions(AnyDiffOptions):
             for sub in self.git_submodules():
                 self.stash_pop(sub)
 
-    def process_tags(self, num):
+    def process_tags(self, num: int):
         # Get a list of all tags ... and commits (how can I filter it?)
         logger.debug('Looking for git tags')
         res = self.run_git(['rev-list', '--format=format:%D', 'HEAD'])
@@ -257,7 +258,7 @@ class DiffOptions(AnyDiffOptions):
                 if v.startswith('commit '):
                     commit = v[7:]
 
-    def solve_kibot_magic(self, name, tag):
+    def solve_kibot_magic(self, name: str, tag):
         # The magic KIBOT_*
         ori = name
         malformed = 'Malformed `{0}` value, must be `{0}-n`, not: {1}'.format(tag, ori)
@@ -281,7 +282,7 @@ class DiffOptions(AnyDiffOptions):
         logger.debug('- '+res)
         return res
 
-    def solve_git_name(self, name):
+    def solve_git_name(self, name: str):
         logger.debug('Finding '+name)
         if name.startswith('KIBOT_LAST'):
             return self.solve_kibot_magic(name, 'KIBOT_LAST')
@@ -289,7 +290,7 @@ class DiffOptions(AnyDiffOptions):
             return self.solve_kibot_magic(name, 'KIBOT_TAG')
         return name
 
-    def get_git_point_desc(self, user_name, cwd=None):
+    def get_git_point_desc(self, user_name: str, cwd=None) -> str:
         # Are we at a tagged point?
         name = None
         try:
@@ -326,7 +327,7 @@ class DiffOptions(AnyDiffOptions):
                     name += '-dirty'
         return '{}({})'.format(self.run_git(['rev-parse', '--short', 'HEAD'], cwd=cwd), name)
 
-    def cache_git_use_stash(self, name):
+    def cache_git_use_stash(self, name: str):
         self.stashed = False
         self.checkedout = False
         # Which file
@@ -371,7 +372,7 @@ class DiffOptions(AnyDiffOptions):
             self.undo_git_use_stash()
         return hash
 
-    def cache_git(self, name):
+    def cache_git(self, name: str):
         self.stashed = False
         self.checkedout = False
         # Which file
@@ -411,7 +412,7 @@ class DiffOptions(AnyDiffOptions):
         if out.type != must_be:
             raise KiPlotConfigurationError('Output `{}` must be `{}` type, not `{}`'.format(out.name, must_be, out.type))
 
-    def cache_output(self, name):
+    def cache_output(self, name: str):
         logger.debugl(2, 'From output `{}`'.format(name))
         out = RegOutput.get_output(name)
         if out is None:
@@ -455,7 +456,7 @@ class DiffOptions(AnyDiffOptions):
         self.git_hash = 'Current'
         return res
 
-    def cache_obj(self, name, type):
+    def cache_obj(self, name: str, type):
         if type == 'git':
             return self.cache_git(name) if GS.global_git_diff_strategy == 'worktree' else self.cache_git_use_stash(name)
         if type == 'file':
@@ -467,7 +468,7 @@ class DiffOptions(AnyDiffOptions):
     def create_layers_incl(self, layers):
         return self.save_layers_incl(Layer.solve(layers)) if self.pcb else None
 
-    def do_compare(self, old, old_type, new, new_type, name, name_ori):
+    def do_compare(self, old, old_type, new, new_type, name: str, name_ori):
         dir_name = os.path.dirname(name)
         file_name = os.path.basename(name)
         # Populate the cache
@@ -515,7 +516,7 @@ class DiffOptions(AnyDiffOptions):
                     os.remove(target)
                 os.symlink(os.path.basename(name), target)
 
-    def run(self, name):
+    def run(self, name: str):
         self.command = self.ensure_tool('KiDiff')
         self._to_remove = []
         self._worktrees_to_remove = []
@@ -600,7 +601,7 @@ class Diff(BaseOutput):  # noqa: F821
         return {'layer': la.layer, 'suffix': la.suffix, 'description': la.description}
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         git_command = GS.check_tool(name, 'Git')
         if GS.pcb_file and has_repo(git_command, GS.pcb_file) > 1:
@@ -624,6 +625,6 @@ class Diff(BaseOutput):  # noqa: F821
             outs.append(gb)
         return outs
 
-    def run(self, name):
+    def run(self, name: str):
         self.options.layers = self.layers
         super().run(name)

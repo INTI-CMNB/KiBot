@@ -106,7 +106,7 @@ class Generic(BaseFilter):  # noqa: F821
         # Config field must be lowercase
         self.config_field = self.config_field.lower()
 
-    def test_reg_include(self, c):
+    def test_reg_include(self, c) -> bool:
         """ Reject components that doesn't match the provided regex.
             So we include only the components that matches any of the regexs. """
         if not self.include_only:  # Nothing to match against, means include all
@@ -133,7 +133,7 @@ class Generic(BaseFilter):  # noqa: F821
         # Default, could not find a match
         return False
 
-    def test_reg_exclude(self, c):
+    def test_reg_exclude(self, c) -> bool:
         """ Test if this part should be included, based on any regex expressions provided in the preferences """
         if not self.exclude_any:  # Nothing to match against, means don't exclude any
             return False

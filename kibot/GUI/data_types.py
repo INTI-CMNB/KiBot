@@ -23,6 +23,8 @@ from ..error import KiPlotConfigurationError
 from ..misc import typeof, try_int, RE_LEN, BASE_HELP_CFG
 from ..optionable import Optionable
 from .. import log
+from typing import Optional
+
 logger = log.get_logger()
 TYPE_PRIORITY = {'list(string_dict)': 120, 'list(dict|string)': 110, 'list(dict)': 100, 'dict_s': 100,
                  'list(list(string))': 90, 'list(string)': 80, 'string_s': 80, 'dict': 60, 'string_dict': 55,
@@ -39,12 +41,12 @@ BMP_CLEAR = wx.ART_DELETE
 # BMP_CLEAR = wx.ART_CROSS_MARK
 
 
-def name_remove_end(name, count):
+def name_remove_end(name: str, count: int):
     return '.'.join(name.split('.')[:-count])
 
 
 class DataTypeBase(object):
-    def __init__(self, kind, restriction, default, name):
+    def __init__(self, kind, restriction, default, name: str):
         self.kind = kind
         self.restriction = restriction
         self.default = self.reset_value = default
@@ -52,7 +54,7 @@ class DataTypeBase(object):
         self.is_list_dict = kind == 'list(dict)' or kind == 'list(dict|string)' or kind == 'dict_s'
         self.is_list = kind.startswith('list(') or kind in {'string_s', 'dict_s'}
 
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         self.entry = entry
         entry.edited = False
         help = entry.help
@@ -70,7 +72,7 @@ class DataTypeBase(object):
         self.input.Bind(wx.EVT_TEXT, self.OnChange)
         return e_sizer
 
-    def get_restriction_help(self):
+    def get_restriction_help(self) -> str:
         return ''
 
     def get_label(self, entry):
@@ -91,7 +93,7 @@ class DataTypeBase(object):
     def matches_type(self, data_type):
         return self.kind == data_type
 
-    def update_shown(self, sizer, w, show):
+    def update_shown(self, sizer, w, show: bool):
         """ Regular update when all widgets are visible together """
         sizer.Show(w, show)
 
@@ -100,14 +102,14 @@ class DataTypeBase(object):
 
 
 class DataTypeString(DataTypeBase):
-    def define_input(self, window, value, init, name):
+    def define_input(self, window, value, init, name: str):
         self.input = wx.TextCtrl(window, size=wx.Size(def_text, -1), id=create_id(name))
         if init:
             self.input.SetValue(value)
         self.ori_value = self.input.Value
         self.input.Bind(wx.EVT_TEXT, self.OnChange)
 
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         res = super().get_widget(obj, window, entry, level, init, value, name, **kwargs)
         if '{no_case}' in entry.help:
             self.input.SetValidator(LowerCaseValidator(self.input, self.OnChange))
@@ -115,7 +117,7 @@ class DataTypeString(DataTypeBase):
 
 
 class DataTypeNumber(DataTypeString):
-    def __init__(self, kind, restriction, default, name):
+    def __init__(self, kind, restriction, default, name: str):
         super().__init__(kind, restriction, default, name)
         self.has_min = False
         self.has_max = False
@@ -139,7 +141,7 @@ class DataTypeNumber(DataTypeString):
             logger.error(f'Missing default for {name}')
             self.reset_value = '0'
 
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         if init:
             value = str(value)
         sizer = super().get_widget(obj, window, entry, level, init, value, name, **kwargs)
@@ -151,7 +153,7 @@ class DataTypeNumber(DataTypeString):
             return entry.name
         return entry.name + f' [{self.restriction[0]},{self.restriction[1]}]'
 
-    def get_restriction_help(self):
+    def get_restriction_help(self) -> str:
         return f'\nRange: {self.restriction[0]} to {self.restriction[1]}'
 
     def get_value(self):
@@ -162,7 +164,7 @@ class DataTypeNumber(DataTypeString):
 
 
 class DataTypeBoolean(DataTypeBase):
-    def define_input(self, window, value, init, name):
+    def define_input(self, window, value, init, name: str):
         self.input = wx.CheckBox(window, id=create_id(name))
         if init:
             self.input.SetValue(value)
@@ -171,7 +173,7 @@ class DataTypeBoolean(DataTypeBase):
 
 
 class DataTypeChoice(DataTypeBase):
-    def define_input(self, window, value, init, name):
+    def define_input(self, window, value, init, name: str):
         self.input = wx.Choice(window, choices=self.restriction, id=create_id(name))
         if init:
             try:
@@ -200,12 +202,12 @@ class DataTypeChoice(DataTypeBase):
 
 
 class DataTypeNumberChoice(DataTypeChoice):
-    def __init__(self, kind, restriction, default, name):
+    def __init__(self, kind, restriction, default, name: str):
         super().__init__(kind, restriction, default, name)
         self.restriction = self.restriction[1]
         self.default = str(self.default)
 
-    def define_input(self, window, value, init, name):
+    def define_input(self, window, value, init, name: str):
         super().define_input(window, str(value), init, name)
 
     def get_value(self):
@@ -213,7 +215,7 @@ class DataTypeNumberChoice(DataTypeChoice):
 
 
 class DataTypeCombo(DataTypeBase):
-    def define_input(self, window, value, init, name):
+    def define_input(self, window, value, init, name: str):
         self.input = wx.ComboBox(window, choices=[v for v in self.restriction if v != '*'], id=create_id(name))
         if init:
             self.input.SetValue(value)
@@ -244,7 +246,7 @@ def create_new_optionable(cls, parent, extra=None):
 
 
 class DataTypeDict(DataTypeBase):
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         entry.edited = False
         help = entry.help
         lbl = self.get_label(entry)
@@ -372,7 +374,7 @@ class InputStringDialog(InjectDialog):
 
 
 class DataTypeList(DataTypeBase):
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         entry.edited = False
         self.label = entry.name
         self.help = entry.help
@@ -423,7 +425,7 @@ class DataTypeList(DataTypeBase):
             return
         self.edit_item(string, obj, index)
 
-    def create_edit_title(self, index):
+    def create_edit_title(self, index) -> str:
         if index == -1:
             return f'New {self.label} entry'
         return f'Edit {self.label} entry {index+1}'
@@ -476,7 +478,7 @@ class DataTypeListString(DataTypeList):
         # The value is more reliable for a string. I.e. filters are solved and become objects
         self.lbox.SetItems(value)
 
-    def edit_item(self, string='', obj=None, index=-1):
+    def edit_item(self, string: str = '', obj=None, index=-1):
         ori = string
         dlg = InputStringDialog(self.window, self.label, self.create_edit_title(index), self.help, initial=string,
                                 no_case='{no_case}' in self.entry.help)
@@ -495,7 +497,7 @@ class DataTypeListString(DataTypeList):
 
 
 class DataTypeListStringSingular(DataTypeString, DataTypeListString):
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         if isinstance(value, str):
             # If we get a plain string promote it to a list
@@ -534,7 +536,7 @@ class DataTypeListStringSingular(DataTypeString, DataTypeListString):
         super().OnChange(event)
         self.but_plural.Enable(len(self.input.Value) != 0)
 
-    def update_shown(self, sizer, w, show):
+    def update_shown(self, sizer, w, show: bool):
         """ Apply the global visibility and then adjust which sub-widget is visible """
         sizer.Show(w, show)
         self.main_sizer.Show(self.sizer_lbox, not self.use_str)
@@ -597,7 +599,7 @@ class DataTypeListDict(DataTypeList):
             val = []
         set_items(self.lbox, val)
 
-    def edit_item(self, string='', obj=None, index=-1):
+    def edit_item(self, string: str = '', obj=None, index=-1):
         if obj is None:
             obj = create_new_optionable(self.entry.cls, self.entry.obj)
         res = edit_dict(self.window.Parent, obj, self.entry.sub, self.entry.name, self.create_edit_title(index),
@@ -614,7 +616,7 @@ class DataTypeListDict(DataTypeList):
 
 
 class DataTypeListDictSingular(DataTypeDict, DataTypeListDict):
-    def get_widget(self, obj, window, entry, level, init, value, name, **kwargs):
+    def get_widget(self, obj, window, entry, level, init, value, name: str, **kwargs):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         if isinstance(value, dict):
             # If we get a plain string promote it to a list
@@ -693,7 +695,7 @@ class DataTypeListDictSingular(DataTypeDict, DataTypeListDict):
         self.sub_obj = self.lbox.GetClientData(0)
         self.switch_to_dict()
 
-    def update_shown(self, sizer, w, show):
+    def update_shown(self, sizer, w, show: bool):
         """ Apply the global visibility and then adjust which sub-widget is visible """
         sizer.Show(w, show)
         self.main_sizer.Show(self.sizer_lbox, not self.use_dict)
@@ -736,7 +738,7 @@ class DummyForDictOrString(object):
 
 
 class DataTypeListDictOrString(DataTypeListDict):
-    def edit_item(self, string='', obj=None, index=-1):
+    def edit_item(self, string: str = '', obj=None, index=-1):
         name = self.entry.name
         str_cls = get_class_for('string', self.restriction)
         valids = [str_cls('string', self.restriction, self.default, name),
@@ -787,13 +789,13 @@ class StringPair(object):
             self.value = value
             self._tree = {'key': key, 'value': value}
 
-    def config(self, name):
+    def config(self, name: str):
         self.key = self._tree.get('key', self.key)
         self.value = self._tree.get('value', self.value)
         if not self.key:
             raise KiPlotConfigurationError("The `key` can't be empty")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'{self.key} -> {self.value}'
 
 
@@ -806,7 +808,7 @@ class DataTypeStringDict(DataTypeList):
             val = {}
         set_items(self.lbox, [StringPair(k, v) for k, v in val.items()])
 
-    def edit_item(self, string='', obj=None, index=-1):
+    def edit_item(self, string: str = '', obj=None, index=-1):
         new_obj = StringPair() if obj is None else obj
         new_entries = [DataEntry('key', [DataTypeString('string', None, '', 'key')], None, self.help, False, new_obj, 0),
                        DataEntry('value', [DataTypeString('string', None, '', 'value')], None, self.help, False, new_obj, 0)]
@@ -829,7 +831,7 @@ class DummyForList(object):
 
 
 class DataTypeListListString(DataTypeListDict):
-    def edit_item(self, string='', obj=None, index=-1):
+    def edit_item(self, string: str = '', obj=None, index=-1):
         # Here we create a dummy object with a data member named with the same name as the list
         # We then use the "dict" edition
         name = self.entry.name
@@ -858,7 +860,7 @@ class DataTypeListListString(DataTypeListDict):
 
 class EditDict(InjectDialog):
     """ Dialog for a group of options """
-    def __init__(self, parent, o, title, data_tree=None, validator=None, can_remove=True, w_name=''):
+    def __init__(self, parent, o, title, data_tree=None, validator=None, can_remove=True, w_name: str = ''):
         # Generated code
         InjectDialog.__init__(self, parent, title=title, name=w_name,
                               style=wx.STAY_ON_TOP | wx.BORDER_DEFAULT | wx.CAPTION)  # wx.RESIZE_BORDER
@@ -989,8 +991,8 @@ class EditDict(InjectDialog):
         return True, False
 
 
-def edit_dict(parent_dialog, obj, entries, entry_name, title=None, validator=None, force_changed=False, can_remove=True,
-              name=None):
+def edit_dict(parent_dialog, obj, entries, entry_name: str, title=None, validator=None, force_changed=False, can_remove=True,
+              name: Optional[str] = None):
     if title is None:
         title = parent_dialog.GetTitle()+' | '+entry_name
     if name is None:
@@ -1103,7 +1105,7 @@ def add_widgets(obj, entries, window, sizer, level=0, parent=None, can_remove=Tr
 
 class DataEntry(object):
     """ Class to represent one data value to be edited """
-    def __init__(self, name, valids, def_val, help, is_basic, obj, level, parent=None, ori_def_val=None):
+    def __init__(self, name: str, valids, def_val, help, is_basic: bool, obj, level, parent=None, ori_def_val=None):
         self.name = name
         self.valids = valids
         self.def_val = def_val
@@ -1156,7 +1158,7 @@ class DataEntry(object):
     def get_label(self):
         return self.valids[0].get_label(self)
 
-    def show_status(self, label):
+    def show_status(self, label: str):
         if self.is_basic:
             label.SetFont(get_emp_font())
         if self.user_defined:
@@ -1307,7 +1309,7 @@ class DataEntry(object):
             self.ori_val = sel_dt.get_value()
 
 
-def adapt_default(val, name):
+def adapt_default(val, name: str):
     if val is None:
         pass
     elif val[0] == "'" and val[-1] == "'":

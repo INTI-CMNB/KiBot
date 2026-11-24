@@ -139,7 +139,7 @@ def destructure_candidate(tree, *, filename, _validate_call_syntax=True):
 class MacroExpander(BaseMacroExpander):
     """The actual macro expander."""
 
-    def ismacrocall(self, macroname, macroargs, syntax):
+    def ismacrocall(self, macroname: str, macroargs, syntax):
         """Shorthand to check `destructure_candidate` output.
 
         Return whether that output is a macro call to a macro (of invocation
@@ -352,7 +352,7 @@ class MacroExpander(BaseMacroExpander):
 
         return macros, others
 
-    def visit_Name(self, name):
+    def visit_Name(self, name: str):
         """Detect an identifier (name) macro invocation.
 
         Detected syntax::
@@ -370,7 +370,7 @@ class MacroExpander(BaseMacroExpander):
         # because things like `q[h[some_expr_macro][...]]` are valid.
         if self.ismacrocall(name.id, None, "name"):
             macroname = name.id
-            def ismodified(tree):
+            def ismodified(tree) -> bool:
                 return not (type(tree) is Name and tree.id == macroname)
             with self._recursive_mode(False):
                 kw = {"args": None}
@@ -498,7 +498,7 @@ class MacroCollector(NodeVisitor):
         else:
             self.generic_visit(decorated)
 
-    def visit_Name(self, name):
+    def visit_Name(self, name: str):
         macroname = name.id
         if self.expander.ismacrocall(macroname, None, "name"):
             key = (macroname, "name")
@@ -507,7 +507,7 @@ class MacroCollector(NodeVisitor):
                 self._seen.add(key)
 
 
-def _insert_coverage_dummy_stmt(tree, macronode, macroname, filename):
+def _insert_coverage_dummy_stmt(tree, macronode, macroname: str, filename):
     """Force statement `macronode` to be reported as covered by coverage tools.
 
     A dummy node will be injected to `tree`. The `tree` must appear in a

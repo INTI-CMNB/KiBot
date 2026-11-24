@@ -63,7 +63,7 @@ class KiCost(BaseVariant):  # noqa: F821
         else:
             self._var_re = None
 
-    def matches_variant(self, variants):
+    def matches_variant(self, variants) -> bool:
         if self._var_re is None or not variants:
             return True
         # The component belongs to one or more variant

@@ -20,7 +20,7 @@ class BootOMetaGrammar(OMetaBase):
         self._ruleNames = []
 
 
-    def parseGrammar(self, name, builder, *args):
+    def parseGrammar(self, name: str, builder, *args):
         """
         Entry point for converting a grammar to code (of some variety).
 

@@ -17,6 +17,7 @@ from .gs import GS
 from .misc import W_NOLAYER, KICAD_VERSION_7_0_1, MISSING_TOOL, AUTO_SCALE, KICAD_VERSION_9_0_1
 from .macros import macros, document  # noqa: F401
 from . import log
+from typing import Sequence
 
 logger = log.get_logger()
 
@@ -135,7 +136,7 @@ class AnyLayerOptions(VariantOptions):
                 po.SetAutoScale(False)
                 po.SetScale(self.scaling)
 
-    def compute_name(self, k_filename, output_dir, output, id, suffix):
+    def compute_name(self, k_filename, output_dir, output, id, suffix: str):
         if output:
             filename = self.expand_filename(output_dir, output, suffix, os.path.splitext(k_filename)[1][1:])
         else:
@@ -152,7 +153,7 @@ class AnyLayerOptions(VariantOptions):
             filename = os.path.splitext(filename)[0]+os.path.splitext(filename)[1].upper()
         return filename
 
-    def compute_kicad_name(self, kicad_output_base_name, layer, check=True):
+    def compute_kicad_name(self, kicad_output_base_name: str, layer, check=True):
         extension = self.solve_extension(layer)
         file = kicad_output_base_name+'-'+GS.board.get_layer_name(layer.id).replace('.', '_')+'.'+extension
         if check and not os.path.isfile(file):
@@ -325,7 +326,7 @@ class AnyLayerOptions(VariantOptions):
         if kicad_variant:
             plot.variant = kicad_variant
 
-    def _do_extra_rename(self, output_dir, kicad_output_base_name, changed_names, renamed):
+    def _do_extra_rename(self, output_dir, kicad_output_base_name: str, changed_names: Sequence[str], renamed):
         """ KiPy hook called after layers creation, but before removing the output dir """
         return
 
@@ -519,7 +520,7 @@ class AnyLayer(BaseOutput):
         return {'layer': la.layer, 'suffix': la.suffix, 'description': la.description}
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if name == 'hpgl' and GS.ki10:
             return None
         gb = {}

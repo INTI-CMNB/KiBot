@@ -44,7 +44,7 @@ class KiBoM(BaseVariant):  # noqa: F821
         self.exclude_filter = self.dnf_filter = self.dnc_filter = self.pre_transform = None
 
     @staticmethod
-    def fix_dnx_filter(name, config_field):
+    def fix_dnx_filter(name: str, config_field):
         if isinstance(name, list):
             name = name[0]
         if name.startswith('_kibom_dn') and name.endswith('_CONFIG_FIELD'):
@@ -63,7 +63,7 @@ class KiBoM(BaseVariant):  # noqa: F821
         # Config field must be lowercase
         self.config_field = self.config_field.lower()
 
-    def matches_variant(self, config):
+    def matches_variant(self, config) -> bool:
         """ Apply the variants to determine if this component will be fitted.
             config: content of the 'Config' field. """
         # Variants logic

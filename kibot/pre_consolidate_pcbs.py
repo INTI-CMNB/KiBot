@@ -33,7 +33,7 @@ class PCB_Reference(Optionable):
         self._name_example = 'First'
         self._file_example = 'first_pcb.kicad_pcb'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} -> {self.file}'
 
     def config(self, parent):
@@ -77,10 +77,10 @@ class Consolidate_PCBs(BasePreFlight):  # noqa: F821
             self.consolidate_pcbs = PCB_Reference
             """ [dict|list(dict)=[]] One or more PCBs to include """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{pretty_list([v.name for v in self.consolidate_pcbs])}'
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return "\n    - name: 'A name for the PCB'\n      file: 'PATH/TO/PCB/FILE'"
 

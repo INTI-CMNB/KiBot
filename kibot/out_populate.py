@@ -81,7 +81,7 @@ class PopulateOptions(VariantOptions):
         img_dir = os.path.dirname(self._parent.expand_filename(out_dir, self.imgname))
         return [self._parent.expand_filename(out_dir, self.get_out_file_name()), img_dir]
 
-    def generate_image(self, side, components, active_components, name, options):
+    def generate_image(self, side, components, active_components, name: str, options):
         logger.debug('Starting renderer with side: {}, components: {}, high: {}, image: {}'.
                      format(side, components, active_components, name))
         # Configure it according to our needs
@@ -91,7 +91,7 @@ class PopulateOptions(VariantOptions):
         run_output(self._renderer)
         return o_name
 
-    def generate_images(self, dir_name, content):
+    def generate_images(self, dir_name: str, content):
         options = self._renderer.get_renderer_options()
         if options is None:
             raise KiPlotConfigurationError('No suitable renderer ({})'.format(self._renderer))
@@ -112,7 +112,7 @@ class PopulateOptions(VariantOptions):
         options.restore_renderer_options()
         return content
 
-    def run(self, dir_name):
+    def run(self, dir_name: str):
         # Now we can use populate
         from .PcbDraw.populate import (load_content, get_data_path, read_template, create_renderer, parse_content,
                                        generate_html, generate_markdown, find_data_file)

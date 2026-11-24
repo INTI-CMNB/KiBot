@@ -50,7 +50,7 @@ class AnyDiffOptions(VariantOptions):
         elif self.zones == 'unfill':
             cmd.extend(['--zones', 'unfill'])
 
-    def add_to_cache(self, name, hash):
+    def add_to_cache(self, name: str, hash):
         cmd = [self.command, '--no_reader', '--only_cache', '--old_file_hash', hash, '--cache_dir', self.cache_dir]
         if GS.debug_level > 0:
             cmd.append('-'+'v'*GS.debug_level)
@@ -79,11 +79,11 @@ class AnyDiffOptions(VariantOptions):
             ops.append(file)
         return self.run_git(ops)
 
-    def remove_git_worktree(self, name):
+    def remove_git_worktree(self, name: str):
         logger.debug('Removing temporal checkout at '+name)
         self.run_git(['worktree', 'remove', '--force', name])
 
-    def write_empty_file(self, name, create_tmp=False):
+    def write_empty_file(self, name: str, create_tmp=False):
         base, ext = os.path.splitext(name)
         kind = 'PCB' if ext == '.kicad_pcb' else 'schematic'
         if create_tmp:

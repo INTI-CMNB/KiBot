@@ -425,7 +425,7 @@ class Copy_Files(BaseOutput):  # noqa: F821
         return self.options.get_dependencies()
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if GS.pcb_file and GS.sch_file and GS.pro_file:
             # Add it only when we have a full project
             register_xmp_import('ExportProject')

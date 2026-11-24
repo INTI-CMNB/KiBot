@@ -124,7 +124,7 @@ def step_expansion(tree, *, args, syntax, expander, **kw):
                 mc.visit(tree)
 
         if print_details:
-            def print_step(invocationsubtreeid, invocationtree, expandedtree, macroname, macrofunction):
+            def print_step(invocationsubtreeid, invocationtree, expandedtree, macroname: str, macrofunction):
                 print(f"{c(CS.HEADING1)}{stars}Tree {c(CS.HEADING2)}0x{tag:x} ({expander.filename}) {c(CS.HEADING1)}processing step {step}:",
                       file=sys.stderr)
                 print(textwrap.indent(f"{c(CS.HEADING2)}Applying {c(CS.MACRONAME)}{macroname}{c(CS.HEADING2)} at subtree 0x{invocationsubtreeid:x}:{c()}", codeindent * ' '), file=sys.stderr)
@@ -189,7 +189,7 @@ def format_bindings(expander, *, globals_too=False, color=False):
         if not color:
             return ""
         return setcolor(*colors)
-    def maybe_colorize(text, *colors):
+    def maybe_colorize(text: str, *colors):
         if not color:
             return text
         return colorize(text, *colors)

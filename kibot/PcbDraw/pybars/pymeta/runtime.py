@@ -181,7 +181,7 @@ class InputStream(object):
     def prev(self):
         return InputStream(self.data, self.position-1)
 
-    def getMemo(self, name):
+    def getMemo(self, name: str):
         """
         Returns the memo record for the named rule.
         @param name: A rule name.
@@ -189,7 +189,7 @@ class InputStream(object):
         return self.memo.get(name, None)
 
 
-    def setMemo(self, name, rec):
+    def setMemo(self, name: str, rec):
         """
         Store a memo record for the given value and position for the given
         rule.
@@ -222,7 +222,7 @@ class ArgInput(object):
         return self.parent.nullError()
 
 
-    def getMemo(self, name):
+    def getMemo(self, name: str):
         """
         Returns the memo record for the named rule.
         @param name: A rule name.
@@ -230,7 +230,7 @@ class ArgInput(object):
         return self.memo.get(name, None)
 
 
-    def setMemo(self, name, rec):
+    def setMemo(self, name: str, rec):
         """
         Store a memo record for the given value and position for the given
         rule.
@@ -253,7 +253,7 @@ class OMetaBase(object):
     operations. Built-in rules are defined here.
     """
     globals = None
-    def __init__(self, string, globals=None):
+    def __init__(self, string: str, globals=None):
         """
         @param string: The string to be parsed.
 

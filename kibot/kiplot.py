@@ -39,6 +39,8 @@ from .kicad.v5_sch import Schematic, SchFileError, SchError, SchematicField
 from .kicad.v6_sch import SchematicV6, SchematicComponentV6
 from .kicad.config import KiConfError, KiConf, expand_env
 from . import log
+from typing import Sequence
+
 INTERNAL_FIELDS = {'reference', 'value', 'footprint', 'datasheet', 'description'}
 
 logger = log.get_logger()
@@ -59,7 +61,7 @@ def cased_path(path):
     return r and r[0] or path
 
 
-def try_register_deps(mod, name):
+def try_register_deps(mod, name: str):
     if mod.__doc__:
         try:
             data = yaml.safe_load(mod.__doc__)
@@ -68,7 +70,7 @@ def try_register_deps(mod, name):
         register_deps(name, data)
 
 
-def _import(name, path):
+def _import(name: str, path):
     # Python 3.4+ import mechanism
     spec = spec_from_file_location("kibot."+name, path)
     mod = module_from_spec(spec)
@@ -120,7 +122,7 @@ def load_actions(progress=None):
         activate.deactivate()
 
 
-def extract_errors(text):
+def extract_errors(text: str):
     in_error = in_warning = False
     msg = ''
     for line in text.split('\n'):
@@ -791,7 +793,7 @@ def configure_and_run(tree, out_dir, msg):
     return out
 
 
-def look_for_output(name, op_name, parent, valids):
+def look_for_output(name: str, op_name: str, parent, valids):
     out = RegOutput.get_output(name)
     if out is None:
         raise KiPlotConfigurationError('Unknown output `{}` selected in {}'.format(name, parent))
@@ -878,7 +880,7 @@ def generate_outputs(targets, invert, skip_pre, cli_order, no_priority, dont_sto
         GS.write_pro(prj)
 
 
-def adapt_file_name(name):
+def adapt_file_name(name: str):
     if not name.startswith('/usr'):
         name = os.path.relpath(name)
     name = name.replace(' ', r'\ ')
@@ -909,7 +911,7 @@ def gen_global_targets(f, pre_targets, out_targets, type):
     return extra_targets
 
 
-def get_pre_targets(targets, dependencies, is_pre):
+def get_pre_targets(targets, dependencies, is_pre: bool):
     pcb_targets = sch_targets = ''
     BasePreFlight.configure_all()
     prefs = BasePreFlight.get_in_use_objs()
@@ -931,7 +933,7 @@ def get_pre_targets(targets, dependencies, is_pre):
     return pcb_targets, sch_targets
 
 
-def get_out_targets(outputs, ori_names, targets, dependencies, comments, no_default):
+def get_out_targets(outputs, ori_names: Sequence[str], targets, dependencies, comments: Sequence[str], no_default):
     pcb_targets = sch_targets = ''
     try:
         for out in outputs:
@@ -1247,7 +1249,7 @@ def yaml_dump(f, tree):
         f.write(yaml.dump(tree, sort_keys=False))
 
 
-def register_xmp_import(name, definitions=None):
+def register_xmp_import(name: str, definitions=None):
     """ Register an import we need for an example """
     # global needed_imports
     assert name not in needed_imports
@@ -1379,7 +1381,7 @@ def generate_targets(config_file):
     generate_outputs([], False, None, False, False, dont_stop=True)
 
 
-def _walk(path, depth):
+def _walk(path, depth: int):
     """ Recursively list files and directories up to a certain depth """
     depth -= 1
     try:

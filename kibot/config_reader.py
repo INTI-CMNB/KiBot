@@ -30,6 +30,7 @@ from .pre_base import BasePreFlight
 from . import __pypi_deps__
 # Logger
 from . import log
+from typing import Optional
 
 logger = log.get_logger()
 LOCAL_OPTIONAL = 1
@@ -241,7 +242,7 @@ class CfgYamlReader(object):
             raise KiPlotConfigurationError("`groups` must be a list")
         return groups
 
-    def _parse_variant_or_filter(self, o_tree, kind, reg_class, is_internal=False):
+    def _parse_variant_or_filter(self, o_tree, kind, reg_class, is_internal: bool = False):
         kind_f = kind[0].upper()+kind[1:]
         try:
             name = str(o_tree['name'])
@@ -269,7 +270,7 @@ class CfgYamlReader(object):
         # Don't configure it yet, wait until we finish loading (could be an import)
         return o_var
 
-    def _parse_variants(self, v, is_internal=False):
+    def _parse_variants(self, v, is_internal: bool = False):
         variants = {}
         if isinstance(v, list):
             for o in v:
@@ -279,7 +280,7 @@ class CfgYamlReader(object):
             raise KiPlotConfigurationError("`variants` must be a list")
         return variants
 
-    def _parse_filters(self, v, is_internal=False):
+    def _parse_filters(self, v, is_internal: bool = False):
         filters = {}
         if isinstance(v, list):
             for o in v:
@@ -398,7 +399,7 @@ class CfgYamlReader(object):
             logger.warning(W_NOPREFLIGHTS+"No preflights found in `{}`".format(fn_rel))
         return sel_pres
 
-    def _parse_import_filters(self, filters, explicit_fils, fn_rel, data, imported, is_internal):
+    def _parse_import_filters(self, filters, explicit_fils, fn_rel, data, imported, is_internal: bool):
         sel_fils = {}
         if filters is None or len(filters) > 0:
             if 'filters' in data:
@@ -444,7 +445,7 @@ class CfgYamlReader(object):
             logger.warning(W_NOGROUPS+"No groups found in `{}`".format(fn_rel))
         return sel_grps
 
-    def _parse_import_variants(self, vars, explicit_vars, fn_rel, data, imported, is_internal):
+    def _parse_import_variants(self, vars, explicit_vars, fn_rel, data, imported, is_internal: bool):
         sel_vars = {}
         if vars is None or len(vars) > 0:
             if 'variants' in data:
@@ -505,7 +506,7 @@ class CfgYamlReader(object):
         for o_var in variants.values():
             self.configure_variant_or_filter(o_var)
 
-    def check_import_file_name(self, dir_name, fn, is_external):
+    def check_import_file_name(self, dir_name: str, fn, is_external: bool):
         fn = os.path.expandvars(os.path.expanduser(fn))
         is_internal = False
         if not is_external and not os.path.splitext(fn)[1] and not os.path.isabs(fn):
@@ -526,7 +527,7 @@ class CfgYamlReader(object):
                 raise KiPlotConfigurationError("Missing import file `{}`".format(fn))
         return fn, is_internal
 
-    def _parse_import(self, imp, name, collected_definitions, apply=True, depth=0):
+    def _parse_import(self, imp, name: str, collected_definitions, apply=True, depth: int = 0):
         """ Get imports """
         logger.debug("Parsing imports: {}".format(imp))
         depth += 1
@@ -799,7 +800,7 @@ class CfgYamlReader(object):
         return outs
 
 
-def trim(docstring):
+def trim(docstring: str):
     """ PEP 257 recommended trim for __doc__ """
     if docstring is None:
         return []
@@ -872,7 +873,7 @@ def process_help_data_type(obj, help, v):
     return help, 'dict' in valid or 'list(dict)' in valid
 
 
-def print_output_options(name, cl, indent, context=None, skip_keys=False, skip_options=None, force_is_basic=False,
+def print_output_options(name: str, cl, indent, context=None, skip_keys=False, skip_options=None, force_is_basic=False,
                          separate_files=False, id=''):
     ind_str = indent*' '
     sub_pages = set()
@@ -1099,7 +1100,7 @@ def print_outputs_help(rst, details=False):
         print_one_out_help(details, n, o)
 
 
-def print_output_help(name):
+def print_output_help(name: str):
     if not RegOutput.is_registered(name):
         GS.exit_with_error(f'Unknown output type `{name}`, try --help-list-outputs', EXIT_BAD_ARGS)
     print_one_out_help(True, name, RegOutput.get_class_for(name))
@@ -1219,7 +1220,7 @@ def print_variants_help(rst):
             f.close()
 
 
-def adapt_text(text, cl=None):
+def adapt_text(text: str, cl=None):
     if rst_mode:
         text = text.replace("\\", "\\\\")
         text = text.replace("_'", "\\_'")
@@ -1291,7 +1292,7 @@ def adapt_text(text, cl=None):
     return text
 
 
-def adapt_to_rst_urls(text, cl=None):
+def adapt_to_rst_urls(text: str, cl=None):
     if text is None:
         return None
     if rst_mode and cl is not None:
@@ -1306,7 +1307,7 @@ def adapt_to_rst_urls(text, cl=None):
     return re.sub(r'\[([^\]]*)\]\(([^\)]*)\)', r'`\1 <\2>`__', text)
 
 
-def reformat_text(txt, ind_size):
+def reformat_text(txt: str, ind_size: int):
     # Keep first line
     lines = txt.splitlines(True)
     first = lines[0]
@@ -1367,13 +1368,13 @@ def print_global_options_help(rst):
     print_output_options('Global options', GS.class_for_global_opts, 3 if rst_mode else 2, 'global options')
 
 
-def quoted(val):
+def quoted(val) -> str:
     if "'" in val:
         return '"{}"'.format(val)
     return "'{}'".format(val)
 
 
-def print_example_options(f, cls, name, indent, po, is_list=False):
+def print_example_options(f, cls, name: str, indent, po, is_list: bool = False):
     ind_str = indent*' '
     obj = cls()
     first = True
@@ -1527,7 +1528,7 @@ def create_example(pcb_file, out_dir, copy_options, copy_expand):
                     f.write('    layers: {}\n'.format(layers))
 
 
-def global2human(name):
+def global2human(name: str):
     return '`'+name+'`' if name != 'global' else 'general use'
 
 
@@ -1563,7 +1564,7 @@ def print_needed(needed, extra):
             print(f'- {extra}Mandatory for: '+', '.join(sorted(needed)))
 
 
-def add_rst_image(img, url, rst_images):
+def add_rst_image(img, url, rst_images) -> str:
     rst_images.append((img, url))
     return f' |image{len(rst_images)}|'
 
@@ -1729,7 +1730,7 @@ def _class_key(cls):
     return re.sub(r'[^A-Za-z0-9_.-]', '_', cls.__module__+'.'+cls.__qualname__)
 
 
-def _clean_help(text):
+def _clean_help(text: str):
     """ Converts KiBot's help text into a plain one-paragraph description """
     text = text.replace('{comma_sep}', '').replace('{no_case} ', '')
     text = re.sub(RE_LEN, r'(must contain \1 elements)', text, count=1)
@@ -1890,7 +1891,7 @@ def _attr_schema(obj, k, v, defs):
     return result
 
 
-def _class_def(cls, defs, key, fixed=None, skip=(), required=None):
+def _class_def(cls, defs, key, fixed=None, skip=(), required: Optional[bool] = None):
     """ Adds the schema for the Optionable class `cls` to `defs` and returns a $ref to it """
     ref = {'$ref': '#/definitions/'+key}
     if key in defs:
@@ -1923,7 +1924,7 @@ def _class_def(cls, defs, key, fixed=None, skip=(), required=None):
     return ref
 
 
-def _typed_list_schema(registered, defs, prefix):
+def _typed_list_schema(registered, defs, prefix: str):
     """ Schema for a list of items selected by `type` (outputs, filters and variants) """
     all_of = []
     for n, cls in sorted(registered.items()):

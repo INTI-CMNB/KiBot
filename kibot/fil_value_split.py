@@ -9,6 +9,7 @@ from .bom.units import comp_match, get_decima_point, get_prefix, ParsedValue
 from .gs import GS
 from .macros import macros, document, filter_class  # noqa: F401
 from . import log
+from typing import Sequence
 
 logger = log.get_logger()
 
@@ -49,7 +50,7 @@ class Value_Split(BaseFilter):  # noqa: F821
             self.visible = False
             """ Make visible the modified fields """
 
-    def do_split(self, c, res, val, attr, policy, field_names, pattern="{}", units=""):
+    def do_split(self, c, res, val, attr, policy, field_names: Sequence[str], pattern: str = "{}", units=""):
         if policy != 'no' and field_names and len(field_names) > 0:
             field_name = field_names[0]
             if field_name:

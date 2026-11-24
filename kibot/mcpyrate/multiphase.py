@@ -222,7 +222,7 @@ def phase(tree, syntax, **kw):
     raise SyntaxError("Misplaced `with phase`; must appear at the module top level only.")
 
 
-def ismultiphase(tree):
+def ismultiphase(tree) -> bool:
     """Scan a module body to determine whether it requests multi-phase compilation.
 
     Primarily meant to be called with `tree` the AST of a module that
@@ -288,7 +288,7 @@ def step_phases(tree, **kw):
     raise SyntaxError("`step_phases` is a compiler flag; it may only appear in its macro-import.")
 
 
-def isdebug(tree):
+def isdebug(tree) -> bool:
     """Scan a module body to determine whether it requests debug mode for multi-phase compilation.
 
     Primarily meant to be called with `tree` the AST of a module that

@@ -25,6 +25,7 @@ from .out_base import VariantOptions
 from .registrable import RegOutput
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
+from typing import Optional
 
 logger = log.get_logger()
 
@@ -732,7 +733,7 @@ class PanelizeOptions(VariantOptions):
             return name
         return str(self._tree['configs'].index(cfg)+1)
 
-    def solve_extends(self, tree, level=0, used=None, our_name=None):
+    def solve_extends(self, tree, level=0, used=None, our_name: Optional[str] = None):
         base = tree.get('extends')
         if our_name is None:
             our_name = '{}[{}]'.format(self._parent.name, self.solve_cfg_name(tree))
@@ -858,7 +859,7 @@ class PanelizeOptions(VariantOptions):
         with open(new, 'w') as f:
             f.write(new_pcb)
 
-    def create_preview_file(self, name):
+    def create_preview_file(self, name: str):
         if not self.create_preview or not os.path.isfile(name):
             return
         img_name = os.path.splitext(name)[0]+'.png'
@@ -951,7 +952,7 @@ class Panelize(BaseOutput):  # noqa: F821
         self._category = 'PCB/fabrication'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.check_tool(name, 'KiKit'):
             return None
         outs = []

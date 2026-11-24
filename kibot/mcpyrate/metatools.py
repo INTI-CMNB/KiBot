@@ -396,7 +396,7 @@ def expandr(tree, *, syntax, expander, **kw):
     return _expandr_impl(tree, syntax, expander, macroname="expandr")
 
 
-def _expandr_impl(tree, syntax, expander, macroname):
+def _expandr_impl(tree, syntax, expander, macroname: str):
     if syntax not in ("expr", "block"):
         raise SyntaxError(f"`{macroname}` is an expr and block macro only")
 

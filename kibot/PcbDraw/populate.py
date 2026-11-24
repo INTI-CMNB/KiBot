@@ -105,7 +105,7 @@ def Renderer(BaseRenderer, initial_components: List[str], format: str): # type: 
                 items.append(self.current_item)
             return items
 
-        def pcbdraw_v3(self, text, **attrs) -> str:
+        def pcbdraw_v3(self, text: str, **attrs) -> str:
             side = attrs['side']
             components = attrs['components']
             return self.pcbdraw(side, components)

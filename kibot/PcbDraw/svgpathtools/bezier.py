@@ -239,7 +239,7 @@ def interval_intersection_width(a, b, c, d):
     return max(0, min(b, d) - max(a, c))
 
 
-def boxes_intersect(box1, box2):
+def boxes_intersect(box1, box2) -> bool:
     """Determines if two rectangles, each input as a tuple
         (xmin, xmax, ymin, ymax), intersect."""
     xmin1, xmax1, ymin1, ymax1 = box1
@@ -256,10 +256,10 @@ def boxes_intersect(box1, box2):
 class ApproxSolutionSet(list):
     """A class that behaves like a set but treats two elements , x and y, as
     equivalent if abs(x-y) < self.tol"""
-    def __init__(self, tol):
+    def __init__(self, tol: float):
         self.tol = tol
 
-    def __contains__(self, x):
+    def __contains__(self, x) -> bool:
         for y in self:
             if abs(x - y) < self.tol:
                 return True
@@ -278,7 +278,7 @@ class BPair(object):
         self.t2 = t2  # t value to get the mid point of this curve from cub2
 
 
-def bezier_intersections(bez1, bez2, longer_length, tol=1e-8, tol_deC=1e-8):
+def bezier_intersections(bez1, bez2, longer_length, tol: float=1e-8, tol_deC=1e-8):
     """INPUT:
     bez1, bez2 = [P0,P1,P2,...PN], [Q0,Q1,Q2,...,PN] defining the two
     Bezier curves to check for intersections between.

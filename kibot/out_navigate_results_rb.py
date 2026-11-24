@@ -1369,7 +1369,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
         self.logo_force_height = 50
         self.add_to_doc('logo_force_height', 'Using -1 a default height of 50 is used')
 
-    def get_image_for_cat(self, cat, pname):
+    def get_image_for_cat(self, cat, pname: str):
         if self.display_category_images:
             img = None
             if cat in CAT_REP and self.convert_command is not None:
@@ -1411,7 +1411,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
         </div>
         ''')  # Fallback if no image
 
-    def get_image_for_file(self, file, out_name, no_icon=False, is_category=False, category_path='', image=None):
+    def get_image_for_file(self, file, out_name: str, no_icon=False, is_category: bool = False, category_path='', image=None):
         tg_rel = os.path.relpath(os.path.abspath(file), start=self.out_dir)
         ext = os.path.splitext(file)[1][1:].lower()
         wide = False
@@ -1463,7 +1463,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
         file += '''        </div>\n'''
         return file, wide
 
-    def generate_cat_page_for(self, name, node, prev, category):
+    def generate_cat_page_for(self, name: str, node, prev, category):
         logger.debug('- Categories: ' + str(node.keys()))
         with open(os.path.join(self.out_dir, name), 'wt') as f:
             self.write_head(f, category)
@@ -1534,7 +1534,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
             # Close the items container and category box
             f.write('</div>\n</div>\n')
 
-    def generate_end_page_for(self, name, node, prev, category):
+    def generate_end_page_for(self, name: str, node, prev, category):
         logger.debug('- Outputs: '+str(node.keys()))
         with open(os.path.join(self.out_dir, name), 'wt') as f:
             self.write_head(f, category)
@@ -1548,7 +1548,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
             self.write_kibot_version(f)
             f.write('</body>\n</html>\n')
 
-    def generate_page_for(self, node, name, prev=None, category=''):
+    def generate_page_for(self, node, name: str, prev=None, category=''):
         logger.debug('Generating page for ' + name)
         self.top_menu = self.generate_top_menu(category)  # Update top menu with the current folder name
         if isinstance(list(node.values())[0], dict):
@@ -1556,7 +1556,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
         else:
             self.generate_end_page_for(name, node, prev, category)
 
-    def generate_navbar_one(self, node, lvl, name, ext):
+    def generate_navbar_one(self, node, lvl, name: str, ext):
         indent = ' ' * lvl
         code = f"{indent}<ul class='navbar-category'>\n"
         for k, v in node.items():
@@ -1575,7 +1575,7 @@ class Navigate_Results_RBOptions(Any_Navigate_ResultsOptions):
         code += f"{indent}</ul>\n"
         return code
 
-    def generate_navbar(self, node, name):
+    def generate_navbar(self, node, name: str):
         name, ext = os.path.splitext(name)
         code = '''
         <div id="theSideNav" class="navbar">
@@ -1732,7 +1732,7 @@ class Navigate_Results_RB(BaseOutput):  # noqa: F821
         self._any_related = True
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = BaseOutput.simple_conf_examples(name, 'Web page to browse the results', 'Browse')  # noqa: F821
         outs[0]['options'] = {'link_from_root': 'index.html', 'skip_not_run': True}
         return outs

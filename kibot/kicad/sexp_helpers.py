@@ -11,7 +11,7 @@ from .sexpdata import Symbol, Sep, SExpData, load
 #                'kicad_sch', 'lib_symbols', 'symbol', 'sheet', 'sheet_instances', 'symbol_instances'}
 
 
-def _symbol(name, content=None):
+def _symbol(name: str, content=None):
     if content is None:
         return [Symbol(name)]
     return [Symbol(name)] + content
@@ -90,25 +90,25 @@ def _check_is_symbol_list(e, allow_orphan_symbol=()):
     return e[0].value()
 
 
-def _check_len(items, pos, name):
+def _check_len(items, pos, name: str):
     if len(items) < pos+1:
         raise SchError('Missing argument {} in `{}`'.format(pos, name))
     return items[pos]
 
 
-def _check_len_total(items, num, name):
+def _check_len_total(items, num: int, name: str):
     if len(items) != num:
         raise SchError('Wrong number of attributes for {} `{}`'.format(name, items))
 
 
-def _check_symbol(items, pos, name):
+def _check_symbol(items, pos, name: str):
     value = _check_len(items, pos, name)
     if not isinstance(value, Symbol):
         raise SchError('{} is not a Symbol `{}` ({})'.format(name, value, type(value)))
     return value.value()
 
 
-def _check_hide(items, pos, name):
+def _check_hide(items, pos, name: str):
     # hide alone as a symbol or (hide yes/no)
     value = _check_len(items, pos, name)
     name += ' hide'
@@ -123,35 +123,35 @@ def _check_hide(items, pos, name):
     return True
 
 
-def _check_integer(items, pos, name):
+def _check_integer(items, pos, name: str):
     value = _check_len(items, pos, name)
     if not isinstance(value, int):
         raise SchError('{} is not an integer `{}`'.format(name, value))
     return value
 
 
-def _check_float(items, pos, name):
+def _check_float(items, pos, name: str):
     value = _check_len(items, pos, name)
     if not isinstance(value, (float, int)):
         raise SchError('{} is not a float `{}`'.format(name, value))
     return value
 
 
-def _check_floats(items, pos, name):
+def _check_floats(items, pos, name: str):
     value = _check_len(items, pos, name)
     if not isinstance(value, (float, int)):
         raise SchError('{} is not a float `{}`'.format(name, value))
     return items[pos:]
 
 
-def _check_str(items, pos, name):
+def _check_str(items, pos, name: str):
     value = _check_len(items, pos, name)
     if not isinstance(value, str):
         raise SchError('{} is not a string `{}`'.format(name, value))
     return value
 
 
-def _check_relaxed(items, pos, name):
+def _check_relaxed(items, pos, name: str):
     value = _check_len(items, pos, name)
     if isinstance(value, str):
         return value
@@ -162,42 +162,42 @@ def _check_relaxed(items, pos, name):
     raise SchError('{} is not a string, Symbol or number `{}`'.format(name, value))
 
 
-def _check_symbol_value(items, pos, name, sym):
+def _check_symbol_value(items, pos, name: str, sym):
     value = _check_len(items, pos, name)
     if not isinstance(value, list) or not isinstance(value[0], Symbol) or value[0].value() != sym:
         raise SchError('Missing `{}` in `{}`'.format(sym, name))
     return value
 
 
-def _check_symbol_float(items, pos, name, sym):
+def _check_symbol_float(items, pos, name: str, sym):
     name += ' ' + sym
     values = _check_symbol_value(items, pos, name, sym)
     return _check_float(values, 1, name)
 
 
-def _check_symbol_int(items, pos, name, sym):
+def _check_symbol_int(items, pos, name: str, sym):
     name += ' ' + sym
     values = _check_symbol_value(items, pos, name, sym)
     return _check_integer(values, 1, name)
 
 
-def _check_symbol_str(items, pos, name, sym):
+def _check_symbol_str(items, pos, name: str, sym):
     name += ' ' + sym
     values = _check_symbol_value(items, pos, name, sym)
     return _check_str(values, 1, name)
 
 
-def _get_offset(items, pos, name):
+def _get_offset(items, pos, name: str):
     value = _check_symbol_value(items, pos, name, 'offset')
     return _check_float(value, 1, 'offset')
 
 
-def _get_yes_no(items, pos, name):
+def _get_yes_no(items, pos, name: str):
     sym = _check_symbol(items, pos, name)
     return sym == 'yes'
 
 
-def _get_yes_no_maybe_alone(items, pos, name):
+def _get_yes_no_maybe_alone(items, pos, name: str):
     # ATTRIBUTE alone used to indicate "yes"
     if len(items) < pos+1:
         return True
@@ -205,12 +205,12 @@ def _get_yes_no_maybe_alone(items, pos, name):
     return sym == 'yes'
 
 
-def _get_id(items, pos, name):
+def _get_id(items, pos, name: str):
     value = _check_symbol_value(items, pos, name, 'id')
     return _check_integer(value, 1, 'id')
 
 
-def _get_at(items, pos, name):
+def _get_at(items, pos, name: str):
     value = _check_symbol_value(items, pos, name, 'at')
     angle = 0
     if len(value) > 3:
@@ -244,7 +244,7 @@ def _get_pin_groups(items):
     return groups
 
 
-def _get_size(items, pos, name):
+def _get_size(items, pos, name: str):
     value = _check_symbol_value(items, pos, name, 'size')
     return _get_xy(value)
 

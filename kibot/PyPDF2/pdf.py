@@ -35,6 +35,7 @@
 A pure-Python PDF library with an increasing number of capabilities.
 See README for links to FAQ, documentation, homepage, etc.
 """
+from typing import Optional
 
 __author__ = "Mathieu Fenniak"
 __author_email__ = "biziqe@mathieu.fenniak.net"
@@ -154,7 +155,7 @@ class PdfFileWriter(object):
         pages = self.getObject(self._pages)
         return int(pages[NameObject("/Count")])
 
-    def addBlankPage(self, width=None, height=None):
+    def addBlankPage(self, width: Optional[int]=None, height=None):
         """
         Appends a blank page to this PDF file and returns it. If no page size
         is specified, use the size of the last page.
@@ -172,7 +173,7 @@ class PdfFileWriter(object):
         self.addPage(page)
         return page
 
-    def insertBlankPage(self, width=None, height=None, index=0):
+    def insertBlankPage(self, width: Optional[int]=None, height=None, index=0):
         """
         Inserts a blank page to this PDF file and returns it. If no page size
         is specified, use the size of the last page.
@@ -1042,7 +1043,7 @@ class PdfFileReader(object):
         ``warnings.py`` module with a custom implementation (defaults to
         ``True``).
     """
-    def __init__(self, stream, strict=True, warndest = None, overwriteWarnings = True):
+    def __init__(self, stream, strict: bool=True, warndest = None, overwriteWarnings = True):
         if overwriteWarnings:
             # have to dynamically override the default showwarning since there are no
             # public methods that specify the 'file' parameter
@@ -1810,7 +1811,7 @@ class PdfFileReader(object):
                     if i == 0:  return 1 # First value defaults to 1
                     else:       return 0
 
-                def used_before(num, generation):
+                def used_before(num: int, generation) -> bool:
                     # We move backwards through the xrefs, don't replace any.
                     return num in self.xref.get(generation, []) or \
                             num in self.xref_objStm
@@ -1946,7 +1947,7 @@ class PdfFileReader(object):
         if debug: print("leaving RNEL")
         return line
 
-    def decrypt(self, password):
+    def decrypt(self, password: str):
         """
         When using an encrypted / secured PDF file with the PDF Standard
         encryption handler, this function will allow the file to be decrypted.
@@ -1972,7 +1973,7 @@ class PdfFileReader(object):
         finally:
             self._override_encryption = False
 
-    def _decrypt(self, password):
+    def _decrypt(self, password: str) -> int:
         encrypt = self.trailer['/Encrypt'].getObject()
         if encrypt['/Filter'] != '/Standard':
             raise NotImplementedError("only Standard PDF encryption handler is available")
@@ -2006,7 +2007,7 @@ class PdfFileReader(object):
                 return 2
         return 0
 
-    def _authenticateUserPassword(self, password):
+    def _authenticateUserPassword(self, password: str):
         encrypt = self.trailer['/Encrypt'].getObject()
         rev = encrypt['/R'].getObject()
         owner_entry = encrypt['/O'].getObject()
@@ -2024,7 +2025,7 @@ class PdfFileReader(object):
             U, real_U = U[:16], real_U[:16]
         return U == real_U, key
 
-    def getIsEncrypted(self):
+    def getIsEncrypted(self) -> bool:
         return "/Encrypt" in self.trailer
 
     isEncrypted = property(lambda self: self.getIsEncrypted(), None, None)
@@ -2035,7 +2036,7 @@ class PdfFileReader(object):
     """
 
 
-def getRectangle(self, name, defaults):
+def getRectangle(self, name: str, defaults):
     retval = self.get(name)
     if isinstance(retval, RectangleObject):
         return retval
@@ -2051,17 +2052,17 @@ def getRectangle(self, name, defaults):
     return retval
 
 
-def setRectangle(self, name, value):
+def setRectangle(self, name: str, value):
     if not isinstance(name, NameObject):
         name = NameObject(name)
     self[name] = value
 
 
-def deleteRectangle(self, name):
+def deleteRectangle(self, name: str):
     del self[name]
 
 
-def createRectangleAccessor(name, fallback):
+def createRectangleAccessor(name: str, fallback):
     return \
         property(
             lambda self: getRectangle(self, name, fallback),
@@ -2088,7 +2089,7 @@ class PageObject(DictionaryObject):
         self.pdf = pdf
         self.indirectRef = indirectRef
 
-    def createBlankPage(pdf=None, width=None, height=None):
+    def createBlankPage(pdf=None, width: Optional[int]=None, height=None):
         """
         Returns a new blank page.
         If ``width`` or ``height`` is ``None``, try to get the page size
@@ -2123,7 +2124,7 @@ class PageObject(DictionaryObject):
         return page
     createBlankPage = staticmethod(createBlankPage)
 
-    def rotateClockwise(self, angle):
+    def rotateClockwise(self, angle: float):
         """
         Rotates a page clockwise by increments of 90 degrees.
 
@@ -2134,7 +2135,7 @@ class PageObject(DictionaryObject):
         self._rotate(angle)
         return self
 
-    def rotateCounterClockwise(self, angle):
+    def rotateCounterClockwise(self, angle: float):
         """
         Rotates a page counter-clockwise by increments of 90 degrees.
 
@@ -2145,7 +2146,7 @@ class PageObject(DictionaryObject):
         self._rotate(-angle)
         return self
 
-    def _rotate(self, angle):
+    def _rotate(self, angle: float):
         currentAngle = self.get("/Rotate", 0)
         self[NameObject("/Rotate")] = NumberObject(currentAngle + angle)
 
@@ -2164,7 +2165,7 @@ class PageObject(DictionaryObject):
         return newRes, renameRes
     _mergeResources = staticmethod(_mergeResources)
 
-    def _contentStreamRename(stream, rename, pdf):
+    def _contentStreamRename(stream, rename: str, pdf):
         if not rename:
             return stream
         stream = ContentStream(stream, pdf)
@@ -2534,7 +2535,7 @@ class PageObject(DictionaryObject):
         """
         self.scale(factor, factor)
 
-    def scaleTo(self, width, height):
+    def scaleTo(self, width: int, height):
         """
         Scales a page to the specified dimentions by appling a
         transformation matrix to its content and updating the page size.
@@ -2826,7 +2827,7 @@ class DocumentInformation(DictionaryObject):
     """The "raw" version of producer; can return a ``ByteStringObject``."""
 
 
-def convertToInt(d, size):
+def convertToInt(d, size: int):
     if size > 8:
         raise utils.PdfReadError("invalid size in convertToInt")
     d = b_("\x00\x00\x00\x00\x00\x00\x00\x00") + b_(d)
@@ -2841,7 +2842,7 @@ _encryption_padding = b_('\x28\xbf\x4e\x5e\x4e\x75\x8a\x41\x64\x00\x4e\x56') + \
 
 # Implementation of algorithm 3.2 of the PDF standard security handler,
 # section 3.5.2 of the PDF 1.6 reference.
-def _alg32(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encrypt=True):
+def _alg32(password: str, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encrypt=True):
     # 1. Pad or truncate the password string to exactly 32 bytes.  If the
     # password string is more than 32 bytes long, use only its first 32 bytes;
     # if it is less than 32 bytes long, pad it by appending the required number
@@ -2912,7 +2913,7 @@ def _alg33(owner_pwd, user_pwd, rev, keylen):
 
 
 # Steps 1-4 of algorithm 3.3
-def _alg33_1(password, rev, keylen):
+def _alg33_1(password: str, rev, keylen):
     # 1. Pad or truncate the owner password string as described in step 1 of
     # algorithm 3.2.  If there is no owner password, use the user password
     # instead.
@@ -2936,7 +2937,7 @@ def _alg33_1(password, rev, keylen):
 
 # Implementation of algorithm 3.4 of the PDF standard security handler,
 # section 3.5.2 of the PDF 1.6 reference.
-def _alg34(password, owner_entry, p_entry, id1_entry):
+def _alg34(password: str, owner_entry, p_entry, id1_entry):
     # 1. Create an encryption key based on the user password string, as
     # described in algorithm 3.2.
     key = _alg32(password, 2, 5, owner_entry, p_entry, id1_entry)
@@ -2951,7 +2952,7 @@ def _alg34(password, owner_entry, p_entry, id1_entry):
 
 # Implementation of algorithm 3.4 of the PDF standard security handler,
 # section 3.5.2 of the PDF 1.6 reference.
-def _alg35(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encrypt):
+def _alg35(password: str, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encrypt):
     # 1. Create an encryption key based on the user password string, as
     # described in Algorithm 3.2.
     key = _alg32(password, rev, keylen, owner_entry, p_entry, id1_entry)

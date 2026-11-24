@@ -15,7 +15,7 @@ def parse_path(pathdef, current_pos=0j, tree_element=None):
     return Path(pathdef, current_pos=current_pos, tree_element=tree_element)
 
 
-def _check_num_parsed_values(values, allowed):
+def _check_num_parsed_values(values, allowed) -> bool:
     if not any(num == len(values) for num in allowed):
         if len(allowed) > 1:
             warnings.warn('Expected one of the following number of values {0}, but found {1} values instead: {2}'

@@ -105,7 +105,7 @@ class Filters(BasePreFlight, FiltersOptions):  # noqa: F821
     def __str__(self):
         return super().__str__()+f' ({pretty_list([v.filter for v in self.filters])})'
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return "\n    - filter: 'Filter description'\n      error: '10'\n      regex: 'Regular expression to match'"
 

@@ -28,7 +28,7 @@ def round_point(point, precision=-4):
     return (round(point.x, precision), round(point.y, precision))
 
 
-def point_str(point):
+def point_str(point) -> str:
     if isinstance(point, tuple):
         return '({} mm, {} mm)'.format(GS.to_mm(point[0]), GS.to_mm(point[1]))
     return '({} mm, {} mm)'.format(GS.to_mm(point.x), GS.to_mm(point.y))
@@ -60,7 +60,7 @@ class Edge(object):
             KiKit uses the value in this way. """
         return GS.get_shape_bbox(self.shape)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '{} {}-{}'.format(self.cls, point_str(self.start), point_str(self.end))
 
 
@@ -451,11 +451,11 @@ class BasicVariant(RegVariant):
         """ Returns the name of the field used to determine if the component belongs to the variant """
         return None
 
-    def matches_variant(self, text):
+    def matches_variant(self, text: str):
         """ This is a generic match mechanism used by variants that doesn't really have a matching mechanism """
         return self.name.lower() == text.lower()
 
-    def fix_doc(self, name, value=None):
+    def fix_doc(self, name: str, value=None):
         what = '_null'
         if value is None:
             value = ''

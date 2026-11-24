@@ -240,7 +240,7 @@ class Export_3D(Base3D):
         self._category = 'PCB/3D'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.ki9:
             return None
         outs = []

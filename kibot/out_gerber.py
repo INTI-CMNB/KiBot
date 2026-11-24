@@ -16,6 +16,7 @@ from .optionable import Optionable
 from .out_any_layer import AnyLayer, AnyLayerOptions
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
+from typing import Sequence
 
 logger = log.get_logger()
 USEFUL_LAYERS = ['F.SilkS', 'B.SilkS', 'F.Mask', 'B.Mask', 'F.Paste', 'B.Paste', 'Edge.Cuts']
@@ -120,7 +121,7 @@ class GerberOptions(AnyLayerOptions):
         with open(job_file, 'wt') as f:
             f.write(json.dumps(data, indent=2, ensure_ascii=False))
 
-    def _do_extra_rename(self, output_dir, kicad_output_base_name, changed_names, renamed):
+    def _do_extra_rename(self, output_dir, kicad_output_base_name: str, changed_names: Sequence[str], renamed):
         """ KiPy: Called after generating all layers and before removing the temporal output dir.
                   Renamed the job file and adjusts it. """
         if not self.create_gerber_job_file:
@@ -167,7 +168,7 @@ class Gerber(AnyLayer):
         self._category = 'PCB/fabrication/gerber'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         gb = {}
         outs = [gb]
         # Create a generic version

@@ -26,6 +26,8 @@ Dependencies:
 """
 import datetime
 import glob
+from typing import Optional
+
 try:
     # Not available on Windows?!
     import pwd
@@ -112,7 +114,7 @@ class KiRiOptions(AnyDiffOptions):
     def _log_format(self):
         return ['log', '-1', "--date=format:%Y-%m-%d %H:%M:%S", '--pretty=format:%H | %ad | %an | %s']
 
-    def _parse_log_entry(self, res, label=None):
+    def _parse_log_entry(self, res, label: Optional[str] = None):
         if not res:
             return None
         entry = res.split(' | ')
@@ -158,7 +160,7 @@ class KiRiOptions(AnyDiffOptions):
         """ Targets for the navigate results, just the index """
         return self._get_targets(out_dir, True)
 
-    def create_layers_incl(self, layers):
+    def create_layers_incl(self, layers) -> bool:
         self.incl_file = None
         if not layers:
             self._solved_layers = None
@@ -166,7 +168,7 @@ class KiRiOptions(AnyDiffOptions):
         self.save_layers_incl(Layer.solve(layers))
         return True
 
-    def do_cache(self, name, tmp_wd, hash):
+    def do_cache(self, name: str, tmp_wd, hash):
         name_copy = os.path.join(tmp_wd, name)
         if not os.path.isfile(name_copy):
             self.write_empty_file(name_copy)
@@ -342,7 +344,7 @@ class KiRiOptions(AnyDiffOptions):
         pcb_dirty = self.git_dirty(GS.pcb_file)
         return hashes, sch_dirty, pcb_dirty, sch_files
 
-    def run(self, name):
+    def run(self, name: str):
         self.init_tools(self._parent.output_dir)
         hashes, sch_dirty, pcb_dirty, sch_files = self.collect_hashes()
         # Ensure we have at least 2
@@ -448,7 +450,7 @@ class KiRi(BaseOutput):  # noqa: F821
         return {'layer': la.layer, 'suffix': la.suffix, 'description': la.description}
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         git_command = GS.check_tool(name, 'Git')
         if not git_command or not GS.check_tool(name, 'KiDiff'):
@@ -480,6 +482,6 @@ class KiRi(BaseOutput):  # noqa: F821
         return (self.options.get_navigate_targets(out_dir),
                 [os.path.join(GS.get_resource_path('kiri'), 'images', 'icon.svg')])
 
-    def run(self, name):
+    def run(self, name: str):
         self.options.layers = self.layers
         super().run(name)

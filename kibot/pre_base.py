@@ -42,7 +42,7 @@ class BasePreFlight(Optionable, Registrable):
 
     # Compatibility with outputs for navigate_results
     @property
-    def comment(self):
+    def comment(self) -> str:
         return ''
 
     def config(self, parent):
@@ -65,7 +65,7 @@ class BasePreFlight(Optionable, Registrable):
         BasePreFlight._configured = False
 
     @staticmethod
-    def get_object_for(name, value=None):
+    def get_object_for(name: str, value=None):
         obj = BasePreFlight._registered[name]()
         assert name == obj.type
         if value is None:
@@ -102,7 +102,7 @@ class BasePreFlight(Optionable, Registrable):
         del BasePreFlight._in_use[o_pre.type]
 
     @staticmethod
-    def get_preflight(name):
+    def get_preflight(name: str):
         return BasePreFlight._in_use.get(name)
 
     @staticmethod
@@ -118,11 +118,11 @@ class BasePreFlight(Optionable, Registrable):
         return BasePreFlight._registered
 
     @staticmethod
-    def _set_option(name, value):
+    def _set_option(name: str, value):
         BasePreFlight._options[name] = value
 
     @staticmethod
-    def get_option(name):
+    def get_option(name: str):
         return BasePreFlight._options.get(name)
 
     @staticmethod
@@ -175,7 +175,7 @@ class BasePreFlight(Optionable, Registrable):
     # def is_enabled(self):
     #     return self._enabled
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "{}: {}".format(self.type, self._enabled)
 
     def is_sch(self):
@@ -190,7 +190,7 @@ class BasePreFlight(Optionable, Registrable):
         """ True for outputs that needs the schematic and/or the PCB """
         return self._any_related
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return 'true'
 
@@ -241,11 +241,11 @@ class BasePreFlight(Optionable, Registrable):
             return self._variant._sub_pcb.name
         return Optionable._find_global_subpcb()
 
-    def ensure_tool(self, name):
+    def ensure_tool(self, name: str):
         """ Looks for a mandatory dependency """
         return GS.check_tool_dep(self.type, name, fatal=True)
 
-    def check_tool(self, name):
+    def check_tool(self, name: str):
         """ Looks for a dependency """
         return GS.check_tool_dep(self.type, name, fatal=False)
 
@@ -283,7 +283,7 @@ class BasePreFlight(Optionable, Registrable):
         self._files_to_remove = []
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         return None
 
     def get_category(self):

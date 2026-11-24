@@ -96,7 +96,7 @@ class Stencil_For_Jig_Options(Stencil_Options):
             cmd.extend(['--coutout', self.cutout])
         return cmd
 
-    def move_outputs(self, tmp, prj_name, do_top, do_bottom):
+    def move_outputs(self, tmp, prj_name: str, do_top, do_bottom):
         replacements = {}
         # Top side
         if do_top:
@@ -134,7 +134,7 @@ class Stencil_For_Jig(BaseOutput):  # noqa: F821
         self._category = 'PCB/fabrication/assembly'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.check_tool(name, 'KiKit') or not GS.check_tool(name, 'OpenSCAD'):
             return None
         res = BaseOutput.simple_conf_examples(name, 'Steel stencil for alignment jig', 'Assembly')  # noqa: F821

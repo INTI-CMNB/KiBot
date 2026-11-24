@@ -25,7 +25,7 @@ class Ignore_Unconnected(BasePreFlight):  # noqa: F821
         super().config(parent)
         logger.warning(W_DEPR+'The `ignore_unconnected` preflight is deprecated, use the `ignore_unconnected` option')
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return 'false'
 

@@ -161,7 +161,7 @@ class Spec_to_Field(BaseFilter):  # noqa: F821
             run_output(out)
         self._from = out
 
-    def update_extra_info(self, res, attr, ei, dattr, pattern="{}", units=""):
+    def update_extra_info(self, res, attr, ei, dattr, pattern: str = "{}", units=""):
         if dattr in ei:
             # Don't overwrite collected data
             return

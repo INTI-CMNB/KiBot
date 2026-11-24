@@ -31,6 +31,7 @@ from .dep_downloader import get_dep_data
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
 from . import __version__
+from typing import Sequence
 
 logger = log.get_logger()
 INF = float('inf')
@@ -114,7 +115,7 @@ def get_drill_class(drill, case, target=None):
     return res
 
 
-def to_top_bottom(front, bottom):
+def to_top_bottom(front, bottom) -> str:
     """ Returns a text indicating if the feature is in top/bottom layers """
     if front and bottom:
         return "TOP / BOTTOM"
@@ -125,7 +126,7 @@ def to_top_bottom(front, bottom):
     return "NONE"
 
 
-def to_smd_tht(smd, tht):
+def to_smd_tht(smd, tht) -> str:
     """ Returns a text indicating if the components are SMD/THT """
     if smd and tht:
         return "SMD + THT"
@@ -153,13 +154,13 @@ def solve_edge_connector(val):
     return val
 
 
-def get_pad_info(pad):
+def get_pad_info(pad) -> str:
     return ("Position {} on layer {}, size {} drill size {}".
             format(to_mm(pad.GetPosition()), GS.board.GetLayerName(pad.GetLayer()),
                    to_mm(pad.GetSize(), 4), to_mm(pad.GetDrillSize(), 4)))
 
 
-def adjust_drill(val, is_pth=True, pad=None):
+def adjust_drill(val, is_pth: bool = True, pad=None):
     """ Add drill_size_increment if this is a PTH hole and round it to global_extra_pth_drill """
     if val == INF:
         return val
@@ -174,7 +175,7 @@ def adjust_drill(val, is_pth=True, pad=None):
     return res
 
 
-def list_nice(names):
+def list_nice(names: Sequence[str]):
     if len(names) == 1:
         return '`{}`'.format(names[0])
     res = ''
@@ -560,7 +561,7 @@ class ReportOptions(VariantOptions):
         return is_smd and not is_tht
 
     @staticmethod
-    def is_not_virtual(m):
+    def is_not_virtual(m) -> bool:
         _, _, _, _, no_pos, _ = GS.fp_get_attributes(m)
         return not no_pos
 
@@ -586,7 +587,7 @@ class ReportOptions(VariantOptions):
             hole_ec = hole
         return oar, oar_ec, hole_ec
 
-    def analyze_oar(self, oar_t, oar_ec_t, is_pth, min_oar, pad, dr_x_real, dr_y_real, pad_sz, dr):
+    def analyze_oar(self, oar_t, oar_ec_t, is_pth: bool, min_oar, pad, dr_x_real, dr_y_real, pad_sz, dr):
         """ Check the computed OAR and choose if we use it or not.
             Inform anomalies to the user. """
         if oar_t > 0:
@@ -1262,7 +1263,7 @@ class Report(BaseOutput):  # noqa: F821
         self._category = 'PCB/docs'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         pandoc = GS.check_tool(name, 'PanDoc')
         gb = {}
         outs = [gb]

@@ -51,7 +51,7 @@ class PCB_Variant_Options(VariantOptions):
             if v not in variants and v != '_all_':
                 raise KiPlotConfigurationError(f"Unknown {v} variant")
 
-    def export_ki10_variants(self):
+    def export_ki10_variants(self) -> bool:
         """ Convert the variants to native KiCad variants.
             The variant indicated in self.variant becomes the `Default`.
             All variants listed in self.include are converted """

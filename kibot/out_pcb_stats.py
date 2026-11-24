@@ -56,7 +56,7 @@ class PCB_StatsOptions(VariantOptions):
         if self._files_to_remove:
             self.remove_temporals()
 
-    def run_kipy(self, name):
+    def run_kipy(self, name: str):
         self.filter_pcb_components()
 
         res = GS.board.export_stats(
@@ -93,7 +93,7 @@ class PCB_Stats(BaseOutput):  # noqa: F821
         self._category = 'PCB/docs'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.ki10:
             return None
         return BaseOutput.simple_conf_examples(name, 'PCB Statistics', '')  # noqa: F821

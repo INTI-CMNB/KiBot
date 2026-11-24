@@ -31,19 +31,19 @@ class Bunch:
             raise TypeError(f"expected Bunch, got {type(other)} with value {repr(other)}")
         self._data = other.copy()._data
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str):
         return self._data[name]
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value):
         if name in ("_data", "_reserved_names"):
             return super().__setattr__(name, value)
         if name in self._reserved_names:  # prevent shadowing get, pop, et al.
             raise AttributeError(f"Cannot write to reserved attribute '{name}'")
         self._data[name] = value
-    def __delattr__(self, name):
+    def __delattr__(self, name: str):
         del self._data[name]
 
     # Container, Iterable, Sized
-    def __contains__(self, name):
+    def __contains__(self, name: str):
         return self._data.__contains__(name)
     def __iter__(self):
         return self._data.__iter__()
@@ -51,11 +51,11 @@ class Bunch:
         return len(self._data)
 
     # Mapping
-    def __getitem__(self, name):
+    def __getitem__(self, name: str):
         return self._data.__getitem__(name)
-    def __setitem__(self, name, value):
+    def __setitem__(self, name: str, value):
         return self._data.__setitem__(name, value)
-    def __delitem__(self, name):
+    def __delitem__(self, name: str):
         return self._data.__delitem__(name)
     def keys(self):
         return self._data.keys()
@@ -63,7 +63,7 @@ class Bunch:
         return self._data.items()
     def values(self):
         return self._data.values()
-    def get(self, name, default=None):
+    def get(self, name: str, default=None):
         return self[name] if name in self else default
     def __eq__(self, other):
         return other == self._data
@@ -71,7 +71,7 @@ class Bunch:
         return other != self._data
 
     # MutableMapping
-    def pop(self, name, *default):
+    def pop(self, name: str, *default):
         return self._data.pop(name, *default)
     def popitem(self):
         return self._data.popitem()
@@ -79,10 +79,10 @@ class Bunch:
         return self._data.clear()
     def update(self, **bindings):
         self._data.update(**bindings)
-    def setdefault(self, name, *default):
+    def setdefault(self, name: str, *default):
         return self._data.setdefault(name, *default)
 
-    def __repr__(self):  # pragma: no cover
+    def __repr__(self) -> str:  # pragma: no cover
         bindings = [f"{name:s}={repr(value)}" for name, value in self._data.items()]
         args = ", ".join(bindings)
         return f"Bunch({args})"

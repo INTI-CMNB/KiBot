@@ -31,7 +31,7 @@ logger = log.get_logger()
 SHEET_FILE = {'Sheet file', 'Sheetfile'}
 
 
-def is_symbol(name, sexp):
+def is_symbol(name: str, sexp):
     return isinstance(sexp, list) and len(sexp) >= 1 and isinstance(sexp[0], Symbol) and sexp[0].value() == name
 
 
@@ -46,7 +46,7 @@ def is_field(s):
             isinstance(s[2], str))
 
 
-def compute_size(qr, is_sch=True, use_mm=True):
+def compute_size(qr, is_sch: bool = True, use_mm=True):
     if is_sch:
         qrc = qr._code_sch
         full_size = qr.size_sch
@@ -94,7 +94,7 @@ class QRCodeOptions(Optionable):
         super().config(parent)
         self.layer = 'F.SilkS' if self.layer == 'silk' else 'F.Cu'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'`{self.name} "{self.text}" ({self.size_sch}/{self.size_pcb} {self.size_units}) [{self.layer}]'
 
 
@@ -155,7 +155,7 @@ class QR_LibOptions(BaseOptions):
         f.write("ENDDRAW\n")
         f.write("ENDDEF\n")
 
-    def fp_field(self, center, name, value, layer, id):
+    def fp_field(self, center, name: str, value, layer, id):
         if id == 0:
             pos_y = center+1.25
         else:
@@ -173,7 +173,7 @@ class QR_LibOptions(BaseOptions):
         fld.append(Sep())
         return fld
 
-    def qr_draw_fp(self, size, size_rect, center, qrc, negative, layer, do_sep=True):
+    def qr_draw_fp(self, size: int, size_rect, center, qrc, negative, layer, do_sep=True):
         mod = []
         is_bottom = layer[0] == 'B'
         for y in range(size):
@@ -201,7 +201,7 @@ class QR_LibOptions(BaseOptions):
                         mod.append(Sep())
         return mod
 
-    def qr_draw_sym(self, size, size_rect, center, qrc, do_sep=True):
+    def qr_draw_sym(self, size: int, size_rect, center, qrc, do_sep=True):
         mod = []
         for y in range(size):
             for x in range(size):
@@ -271,7 +271,7 @@ class QR_LibOptions(BaseOptions):
                 self.symbol_k5(f, qr)
             f.write("#\n#End Library\n")
 
-    def sym_field(self, center, name, value, id):
+    def sym_field(self, center, name: str, value, id):
         if id == 0:
             pos_y = center+1.25
         else:
@@ -343,7 +343,7 @@ class QR_LibOptions(BaseOptions):
             return def_layer
         return layer[1]
 
-    def update_footprint(self, name, sexp, qr):
+    def update_footprint(self, name: str, sexp, qr):
         logger.debug('- Updating QR footprint: '+name)
         # Compute the size
         qrc, size, full_size, center, size_rect = compute_size(qr, is_sch=False)
@@ -393,7 +393,7 @@ class QR_LibOptions(BaseOptions):
         if updated:
             save_pcb_from_sexp(pcb, logger)
 
-    def update_symbol(self, name, c_name, sexp, qr):
+    def update_symbol(self, name: str, c_name: str, sexp, qr):
         logger.debug('- Updating QR symbol: '+name)
         # Compute the size
         qrc, size, full_size, center, size_rect = compute_size(qr)
@@ -548,7 +548,7 @@ class QR_Lib(BaseOutput):  # noqa: F821
         self.fix_priority_help()
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         gb = {}
         gb['name'] = 'basic_qr_lib_example'
         gb['comment'] = 'QR code symbol and footprint example'

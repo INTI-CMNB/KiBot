@@ -13,7 +13,7 @@ class OMeta(OMetaBase):
     Base class for grammar definitions.
     """
     metagrammarClass = BootOMetaGrammar
-    def makeGrammar(cls, grammar, globals, name="Grammar"):
+    def makeGrammar(cls, grammar, globals, name: str="Grammar"):
         """
         Define a new subclass with the rules in the given grammar.
 
@@ -191,7 +191,7 @@ class OMetaGrammarMixin(object):
     """
     Helpers for the base grammar for parsing grammar definitions.
     """
-    def parseGrammar(self, name, builder, *args):
+    def parseGrammar(self, name: str, builder, *args):
         """
         Entry point for converting a grammar to code (of some variety).
 

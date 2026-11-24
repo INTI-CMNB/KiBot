@@ -38,7 +38,7 @@ class InfoOptions(BaseOptions):
         self._none_related = True
         self.get_targets = self._get_targets
 
-    def run(self, name):
+    def run(self, name: str):
         dir = os.path.dirname(os.path.abspath(sys.argv[0]))
         ret = run_command([os.path.join(dir, 'kibot-check'), '-p'])
         with open(name, 'wt') as f:
@@ -74,5 +74,5 @@ class Info(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `info` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         return BaseOutput.simple_conf_examples(name, 'Information about the run', '.')  # noqa: F821

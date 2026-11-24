@@ -71,10 +71,10 @@ class ParsedValue(object):
         self.prefix = PREFIXES[pow]
         self.extra = extra
 
-    def __str__(self):
+    def __str__(self) -> str:
         return '{} {}{}'.format(self.norm_val, self.prefix, self.unit)
 
-    def get_sortable(self):
+    def get_sortable(self) -> str:
         mult = pow(10, self.exp)
         if self.unit in "FH":
             # femto Farads
@@ -106,7 +106,7 @@ def get_unit(unit, ref_prefix):
         return "H"
 
 
-def get_prefix_simple(prefix):
+def get_prefix_simple(prefix: str):
     """ Return the (numerical) value of a given prefix """
     if not prefix:
         return 0
@@ -134,7 +134,7 @@ def get_prefix_simple(prefix):
     return 0
 
 
-def get_prefix(val, prefix):
+def get_prefix(val, prefix: str):
     if val == 0:
         return 0, 0
     pow = get_prefix_simple(prefix)

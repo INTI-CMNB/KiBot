@@ -132,6 +132,7 @@ from .misc import MISSING_TOOL, TRY_INSTALL_CHECK, W_DOWNTOOL, W_MISSTOOL, USER_
 from .gs import GS
 from .registrable import RegDependency
 from . import log
+from typing import Optional, Sequence
 
 logger = log.get_logger()
 ver_re = re.compile(r'(\d+)\.(\d+)(?:\.(\d+))?(?:[\.-](\d+))?')
@@ -149,7 +150,7 @@ base_deps = {}
 used_deps = {}
 
 
-def search_as_plugin(cmd, names):
+def search_as_plugin(cmd, names: Sequence[str]):
     """ If a command isn't in the path look for it in the KiCad plugins """
     name = which(cmd)
     if name is not None:
@@ -227,7 +228,7 @@ def write_executable(command, content):
     return dest_bin
 
 
-def try_download_tar_ball(dep, url, name, name_in_tar=None):
+def try_download_tar_ball(dep, url, name: str, name_in_tar=None):
     if name_in_tar is None:
         name_in_tar = name
     content = download(url)
@@ -303,7 +304,7 @@ def check_pip():
     return pip_command
 
 
-def pip_install(pip_command, dest=None, name='.'):
+def pip_install(pip_command, dest=None, name: str = '.') -> bool:
     cmd = [pip_command, 'install', '-U', '--no-warn-script-location']
     if name == '.':
         # Applied only when installing a downloaded tarball
@@ -396,7 +397,7 @@ def pytool_downloader(dep, system, plat):
     return check_tool_binary_version(full_name, dep, no_cache=True)
 
 
-def python_downloader(dep):
+def python_downloader(dep) -> bool:
     logger.info('- Trying to install {} (from PyPi)'.format(dep.name))
     # Check if we have pip and wheel
     pip_command = check_pip()
@@ -663,7 +664,7 @@ def run_command(cmd, only_first_line=False, pre_ver_text=None, no_err_2=False):
     return None
 
 
-def check_tool_binary_version(full_name, dep, no_cache=False):
+def check_tool_binary_version(full_name: str, dep, no_cache=False):
     logger.debugl(2, '- Checking version for `{}`'.format(full_name))
     global version_check_fail
     version_check_fail = False
@@ -916,7 +917,8 @@ GS.check_tool_dep_get_ver = check_tool_dep_get_ver
 
 class ToolDependencyRole(object):
     """ Class used to define the role of a tool """
-    def __init__(self, desc=None, version=None, output=None, max_version=None, all_versions=None, min_version=None):
+    def __init__(self, desc: Optional[str] = None, version=None, output=None, max_version=None, all_versions=None,
+                 min_version=None):
         # Is this tool mandatory
         self.mandatory = desc is None
         # If not mandatory, for what?
@@ -932,9 +934,10 @@ class ToolDependencyRole(object):
 
 class ToolDependency(object):
     """ Class used to define tools needed for an output """
-    def __init__(self, output, name, url=None, url_down=None, is_python=False, deb=None, in_debian=True, extra_deb=None,
-                 role=None, plugin_dirs=None, command=None, pypi_name=None, module_name=None, no_cmd_line_version=False,
-                 help_option=None, no_cmd_line_version_old=False, downloader=None, arch=None, extra_arch=None, tests=None,
+    def __init__(self, output, name: str, url=None, url_down=None, is_python: bool = False, deb=None, in_debian=True,
+                 extra_deb=None, role=None, plugin_dirs=None, command=None, pypi_name: Optional[str] = None,
+                 module_name: Optional[str] = None, no_cmd_line_version=False, help_option=None,
+                 no_cmd_line_version_old=False, downloader=None, arch=None, extra_arch=None, tests=None,
                  extra_checks=None):
         # The associated output
         self.output = output

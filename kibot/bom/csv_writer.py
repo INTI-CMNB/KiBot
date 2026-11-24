@@ -12,6 +12,7 @@ CSV Writer: Generates a CSV, TSV, TXT or HRTXT BoM file.
 from ..gs import GS
 import csv
 from .. import log
+from typing import Sequence
 
 logger = log.get_logger()
 ALIGN_CODE = {'right': '>', 'left': '<', 'center': '^'}
@@ -142,7 +143,7 @@ def process_special_chars(row, keep_line_breaks, keep_tabs):
             row[index] = row[index].replace('\t', '')
 
 
-def write_csv(filename, ext, groups, headings, head_names, cfg):
+def write_csv(filename, ext, groups, headings, head_names: Sequence[str], cfg) -> bool:
     """
     Write BoM out to a CSV file
     filename = path to output file (must be a .csv, .txt or .tsv file)

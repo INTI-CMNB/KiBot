@@ -1,6 +1,7 @@
 from lxml import etree
 from copy import deepcopy
 import codecs
+from typing import Optional
 
 try:
     from StringIO import StringIO
@@ -42,7 +43,7 @@ class FigureElement(object):
             % (x, y, scale_x, scale_y, self.root.get("transform") or ""),
         )
 
-    def rotate(self, angle, x=0, y=0):
+    def rotate(self, angle: float, x=0, y=0):
         """Rotate element by given angle around given pivot.
 
         Parameters
@@ -154,8 +155,8 @@ class TextElement(FigureElement):
         self,
         x,
         y,
-        text,
-        size=8,
+        text: str,
+        size: int = 8,
         font="Verdana",
         weight="normal",
         letterspacing=0,
@@ -189,7 +190,7 @@ class ImageElement(FigureElement):
     Corresponds to SVG ``<image>`` tag. Image data encoded as base64 string.
     """
 
-    def __init__(self, stream, width, height, format="png"):
+    def __init__(self, stream, width: int, height, format="png"):
         base64str = codecs.encode(stream.read(), "base64").rstrip()
         uri = "data:image/{};base64,{}".format(format, base64str.decode("ascii"))
         attrs = {"width": str(width), "height": str(height), XLINK + "href": uri}
@@ -204,7 +205,7 @@ class LineElement(FigureElement):
     straight segments
     """
 
-    def __init__(self, points, width=1, color="black"):
+    def __init__(self, points, width: int = 1, color="black"):
         linedata = "M{} {} ".format(*points[0])
         linedata += " ".join(("L{} {}".format(*x) for x in points[1:]))
         line = etree.Element(
@@ -248,7 +249,7 @@ class SVGFigure(object):
     It setups standalone SVG tree. It corresponds to SVG ``<svg>`` tag.
     """
 
-    def __init__(self, width=None, height=None):
+    def __init__(self, width: Optional[int] = None, height=None):
         self.root = etree.Element(SVG + "svg", nsmap=NSMAP)
         self.root.set("version", "1.1")
 
@@ -353,7 +354,7 @@ class SVGFigure(object):
         """Get figure size"""
         return self.root.get("width"), self.root.get("height")
 
-    def set_size(self, size):
+    def set_size(self, size: int):
         """Set figure size"""
         w, h = size
         self.root.set("width", w)
@@ -381,7 +382,7 @@ def fromfile(fname):
     return fig
 
 
-def fromstring(text):
+def fromstring(text: str):
     """Create a SVG figure from a string.
 
     Parameters

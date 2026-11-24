@@ -66,7 +66,7 @@ class Alternatives(BaseFilter):  # noqa: F821
             logger.warning(W_NONUMBER+"The alternative pattern should contain `%d` ({self.pattern})")
         self._lib_ids = {p.library_link: p for p in self.parts}
 
-    def get_expanded_name(self, name, n):
+    def get_expanded_name(self, name: str, n):
         res = self.pattern
         res = res.replace('%f', name)
         res = res.replace('%d', str(n))

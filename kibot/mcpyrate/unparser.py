@@ -55,7 +55,7 @@ class Unparser:
     """
 
     def __init__(self, tree, *, file=sys.stdout,
-                 debug=False, color=False, expander=None):
+                 debug: bool=False, color=False, expander=None):
         """Print the source for `tree` to `file`.
 
         `tree`:  an AST, or a `list` of ASTs.
@@ -103,7 +103,7 @@ class Unparser:
 
     # --------------------------------------------------------------------------------
 
-    def maybe_colorize(self, text, *colors):
+    def maybe_colorize(self, text: str, *colors):
         "Colorize text if color is enabled."
         if self._color_override:
             return text
@@ -111,7 +111,7 @@ class Unparser:
             return text
         return colorize(text, *colors)
 
-    def maybe_colorize_python_keyword(self, text):
+    def maybe_colorize_python_keyword(self, text: str):
         "Shorthand to colorize a language keyword such as `def`, `for`, ..."
         return self.maybe_colorize(text, ColorScheme.LANGUAGEKEYWORD)
 
@@ -134,7 +134,7 @@ class Unparser:
 
     # --------------------------------------------------------------------------------
 
-    def fill(self, text="", *, lineno_node=None):
+    def fill(self, text: str="", *, lineno_node=None):
         """Begin a new line, indent to the current level, then write `text`.
 
         If in debug mode, then from `lineno_node`, get the `lineno` attribute
@@ -152,7 +152,7 @@ class Unparser:
                                            ColorScheme.LINENUMBER))
         self.write("    " * self._indent + text)
 
-    def write(self, text):
+    def write(self, text: str):
         "Append a piece of text to the current line."
         self.f.write(text)
 
@@ -815,7 +815,7 @@ class Unparser:
         self.write("'")
 
     def _FormattedValue_helper(self, t):
-        def c(text):
+        def c(text: str):
             return self.maybe_colorize(text, ColorScheme.STRING)
         self.write(c("{"))
         self.dispatch(t.value)
@@ -1005,7 +1005,7 @@ class Unparser:
             self.dispatch(t.optional_vars)
 
 
-def unparse(tree, *, debug=False, color=False, expander=None):
+def unparse(tree, *, debug: bool=False, color=False, expander=None):
     """Convert the AST `tree` into source code. Return the code as a string.
 
     `debug`: bool, print invisible nodes (`Module`, `Expr`).
@@ -1034,7 +1034,7 @@ def unparse(tree, *, debug=False, color=False, expander=None):
             raise UnparserError(msg) from err
 
 
-def unparse_with_fallbacks(tree, *, debug=False, color=False, expander=None):
+def unparse_with_fallbacks(tree, *, debug: bool=False, color=False, expander=None):
     """Like `unparse`, but upon error, don't raise; return the error message.
 
     Usually you'll want the exception to be raised. This is mainly useful to

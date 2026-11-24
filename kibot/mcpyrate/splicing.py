@@ -293,7 +293,7 @@ def splice_dialect(body, template, tag="__paste_here__", lineno=None, col_offset
     body, user_magic_all = extract_magic_all(body)
     template, ignored_template_magic_all = extract_magic_all(template)
 
-    def extract_macroimports(tree, *, magicname="macros"):
+    def extract_macroimports(tree, *, magicname: str="macros"):
         class MacroImportExtractor(ASTTransformer):
             def transform(self, tree):
                 if ismacroimport(tree, magicname):

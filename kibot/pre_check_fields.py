@@ -100,7 +100,7 @@ class Check_Fields(BasePreFlight):  # noqa: F821
             """ [dict|list(dict)=[]] One or more check rules """
 
     @classmethod
-    def get_example(cls):
+    def get_example(cls) -> str:
         """ Returns a YAML value for the example config """
         return ("\n    - field: 'temperature'\n"
                 r"      regex: '(-?\d+).+?(?:-?\d+).*'"
@@ -118,7 +118,7 @@ class Check_Fields(BasePreFlight):  # noqa: F821
             logger.info(msg)
         return severity == 'skip'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.type} ({[v.field for v in self.check_fields]})'
 
     def run(self):

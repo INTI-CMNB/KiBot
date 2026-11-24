@@ -21,6 +21,8 @@ from .optionable import Optionable
 from .registrable import RegOutput
 from .macros import macros, document, pre_class  # noqa: F401
 from . import log
+from typing import Optional
+
 logger = log.get_logger()
 ALIGNMENT = {'left': GR_TEXT_HJUSTIFY_LEFT,
              'center': GR_TEXT_HJUSTIFY_CENTER,
@@ -31,7 +33,7 @@ VALID_DRILL_TABLE_OUTPUTS = {'excellon', 'gerb_drill'}
 
 class IncTableOutputOptions(Optionable):
     """ Data for a layer """
-    def __init__(self, name=None, parent=None):
+    def __init__(self, name: Optional[str] = None, parent=None):
         super().__init__()
         self._unknown_is_error = True
         with document:
@@ -115,13 +117,13 @@ class IncludeTableOptions(Optionable):
 
 
 class ITColumns:
-    def __init__(self, header='', width=10):
+    def __init__(self, header='', width: int = 10):
         self.header = header  # Column header name
         self.width = width  # Relative width (default to 10)
         self.data = []  # List to hold data for the column
 
 
-def update_table_group(g, pos_x, pos_y, width, tlayer, ops, out, csv_file, out_type, slice_str=None):
+def update_table_group(g, pos_x, pos_y, width: int, tlayer, ops, out, csv_file, out_type, slice_str=None):
     """Extend the function to handle slicing of rows based on the slice_str."""
     if not os.path.isfile(csv_file):
         raise KiPlotConfigurationError(f'Missing `{csv_file}`, create it first using the `{out.name}` output')

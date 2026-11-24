@@ -44,10 +44,10 @@ class ODBOptions(VariantOptions):
     def get_targets(self, out_dir):
         return [self.fix_dir_name(self._parent.expand_filename(out_dir, self.output))]
 
-    def fix_dir_name(self, name):
+    def fix_dir_name(self, name: str):
         return name[:-1] if not self._expand_ext and self.output.endswith('.%x') else name
 
-    def run_kicli(self, name):
+    def run_kicli(self, name: str):
         board_name = self.save_tmp_board_if_variant()
         cmd = [GS.kicad_cli, 'pcb', 'export', 'odb', '-o', name, '--compression', self.compression, '--units',
                UNITS_2_KICAD[self.units], '--precision', str(int(self.precision))]
@@ -57,7 +57,7 @@ class ODBOptions(VariantOptions):
         cmd.append(board_name)
         run_command(cmd)
 
-    def run_kipy(self, name):
+    def run_kipy(self, name: str):
         self.filter_pcb_components()
 
         kicad_variant = self.kicad_variant_name()
@@ -72,7 +72,7 @@ class ODBOptions(VariantOptions):
         self.unfilter_pcb_components()
         self.check_job_ok(res)
 
-    def run(self, name):
+    def run(self, name: str):
         if not GS.ki9:
             GS.exit_with_error("`odb` needs KiCad 9+", MISSING_TOOL)
         name = self.fix_dir_name(name)
@@ -97,7 +97,7 @@ class ODB(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `odb` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.ki9:
             return None
         return BaseOutput.simple_conf_examples(name, 'PCB in ODB++ format', 'Export')  # noqa: F821

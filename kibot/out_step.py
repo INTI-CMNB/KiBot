@@ -56,7 +56,7 @@ class STEPOptions(Base3DOptions):
         if (val not in ['grid', 'drill']) and (re.match(r'[-\d\.]+\s*,\s*[-\d\.]+\s*$', val) is None):
             raise KiPlotConfigurationError('Origin must be `grid` or `drill` or `X,Y`')
 
-    def run_cli(self, name, board_name):
+    def run_cli(self, name: str, board_name: str):
         # Run the export from CLI
         cmd = [GS.kicad_cli, 'pcb', 'export', 'step', '-o', name, '-f']
         if self.no_virtual:
@@ -81,7 +81,7 @@ class STEPOptions(Base3DOptions):
         if self._files_to_remove:
             self.remove_temporals()
 
-    def run_kiauto(self, output, board_name):
+    def run_kiauto(self, output, board_name: str):
         command = self.ensure_tool('KiAuto')
         # Make units explicit
         if self.metric_units:
@@ -139,7 +139,7 @@ class STEP(Base3D):
         self._category = 'PCB/3D'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if GS.ki9:
             return None
         return Base3D.simple_conf_examples(name, '3D model in STEP format', '3D')

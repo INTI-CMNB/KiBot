@@ -32,7 +32,7 @@ CONFIG = {
 class Element(transform.FigureElement):
     """Base class for new SVG elements."""
 
-    def rotate(self, angle, x=0, y=0):
+    def rotate(self, angle: float, x=0, y=0):
         """Rotate element by given angle around given pivot.
 
         Parameters
@@ -168,7 +168,7 @@ class Image(Element):
         full path to the file
     """
 
-    def __init__(self, width, height, fname):
+    def __init__(self, width: int, height, fname):
         fname = os.path.join(CONFIG["image.file_path"], fname)
         _, fmt = os.path.splitext(fname)
         fmt = fmt.lower()[1:]
@@ -194,7 +194,7 @@ class Text(Element):
        Font family.
     """
 
-    def __init__(self, text, x=None, y=None, **kwargs):
+    def __init__(self, text: str, x=None, y=None, **kwargs):
         params = {
             "size": CONFIG["text.size"],
             "weight": CONFIG["text.weight"],
@@ -245,7 +245,7 @@ class Line(Element):
         Line color. Any of the HTML/CSS color definitions are allowed.
     """
 
-    def __init__(self, points, width=1, color="black"):
+    def __init__(self, points, width: int = 1, color="black"):
         element = transform.LineElement(points, width=width, color=color)
         Element.__init__(self, element.root)
 
@@ -268,13 +268,13 @@ class Grid(Element):
     This element is mainly useful for manual placement of the elements.
     """
 
-    def __init__(self, dx, dy, size=8):
+    def __init__(self, dx, dy, size: int = 8):
         self.size = size
         lines = self._gen_grid(dx, dy)
         element = transform.GroupElement(lines)
         Element.__init__(self, element.root)
 
-    def _gen_grid(self, dx, dy, width=0.5):
+    def _gen_grid(self, dx, dy, width: float = 0.5):
         xmax, ymax = 1000, 1000
         x, y = 0, 0
         lines = []
@@ -301,7 +301,7 @@ class Figure(Panel):
         Figure size. If unit is not given, user units (px) are assumed.
     """
 
-    def __init__(self, width, height, *svgelements):
+    def __init__(self, width: int, height, *svgelements):
         Panel.__init__(self, *svgelements)
         self.width = Unit(width)
         self.height = Unit(height)
@@ -398,20 +398,20 @@ class Unit:
         u.unit = unit
         return u
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "{}{}".format(self.value, self.unit)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Unit({})".format(str(self))
 
-    def __mul__(self, number):
+    def __mul__(self, number: int):
         u = Unit("0cm")
         u.value = self.value * number
         u.unit = self.unit
         return u
 
-    def __truediv__(self, number):
+    def __truediv__(self, number: int):
         return self * (1.0 / number)
 
-    def __div__(self, number):
+    def __div__(self, number: int):
         return self * (1.0 / number)

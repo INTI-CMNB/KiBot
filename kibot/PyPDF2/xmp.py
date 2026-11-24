@@ -65,7 +65,7 @@ class XmpInformation(PdfObject):
     def writeToStream(self, stream, encryption_key):
         self.stream.writeToStream(stream, encryption_key)
 
-    def getElement(self, aboutUri, namespace, name):
+    def getElement(self, aboutUri, namespace, name: str):
         for desc in self.rdfRoot.getElementsByTagNameNS(RDF_NAMESPACE, "Description"):
             if desc.getAttributeNS(RDF_NAMESPACE, "about") == aboutUri:
                 attr = desc.getAttributeNodeNS(namespace, name)
@@ -116,7 +116,7 @@ class XmpInformation(PdfObject):
         return dt
     _test_converter_date = staticmethod(_converter_date)
 
-    def _getter_bag(namespace, name, converter):
+    def _getter_bag(namespace, name: str, converter):
         def get(self):
             cached = self.cache.get(namespace, {}).get(name)
             if cached:
@@ -135,7 +135,7 @@ class XmpInformation(PdfObject):
             return retval
         return get
 
-    def _getter_seq(namespace, name, converter):
+    def _getter_seq(namespace, name: str, converter):
         def get(self):
             cached = self.cache.get(namespace, {}).get(name)
             if cached:
@@ -157,7 +157,7 @@ class XmpInformation(PdfObject):
             return retval
         return get
 
-    def _getter_langalt(namespace, name, converter):
+    def _getter_langalt(namespace, name: str, converter):
         def get(self):
             cached = self.cache.get(namespace, {}).get(name)
             if cached:
@@ -178,7 +178,7 @@ class XmpInformation(PdfObject):
             return retval
         return get
 
-    def _getter_single(namespace, name, converter):
+    def _getter_single(namespace, name: str, converter):
         def get(self):
             cached = self.cache.get(namespace, {}).get(name)
             if cached:

@@ -1,5 +1,6 @@
 # -*- coding: utf-8; -*-
 """General utilities. Can be useful for writing both macros as well as macro expanders."""
+from typing import Optional
 
 __all__ = ["gensym", "scrub_uuid", "flatten", "rename", "extract_bindings", "getdocstring",
            "get_lineno", "format_location", "format_macrofunction", "format_context",
@@ -16,7 +17,7 @@ from . import walkers
 
 
 _previous_gensyms = set()
-def gensym(basename=None):
+def gensym(basename: Optional[str]=None):
     """Create a name for a new, unused lexical identifier, and return the name as an `str`.
 
     We include an uuid in the name to avoid the need for any lexical scanning.
@@ -39,7 +40,7 @@ def gensym(basename=None):
         basename = basename + "_"
     # else basename = ""
 
-    def generate():
+    def generate() -> str:
         unique = str(uuid.uuid4()).replace("-", "")
         return f"{basename}{unique}"
     sym = generate()
@@ -50,7 +51,7 @@ def gensym(basename=None):
     return sym
 
 
-def scrub_uuid(string):
+def scrub_uuid(string: str):
     """Scrub any existing `"_uuid"` suffix from `string`."""
     idx = string.rfind("_")
     if idx != -1:
@@ -65,7 +66,7 @@ def scrub_uuid(string):
     return string
 
 
-def flatten(lst, *, recursive=True):
+def flatten(lst, *, recursive: bool=True):
     """Flatten a nested list.
 
     Useful for splicing in transformations of statement suites.
@@ -80,7 +81,7 @@ def flatten(lst, *, recursive=True):
     return out
 
 
-def rename(oldname, newname, tree):
+def rename(oldname: str, newname: str, tree):
     """Rename all occurrences of a name in `tree`.
 
     We look in all places in the AST that hold name-like things.
@@ -213,7 +214,7 @@ def get_lineno(tree):
     return None
 
 
-def format_location(filename, tree, sourcecode):
+def format_location(filename, tree, sourcecode) -> str:
     """Format a source code location in a standard way, for error messages.
 
     `filename`: full path to `.py` file.

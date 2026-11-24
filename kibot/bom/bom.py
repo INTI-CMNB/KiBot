@@ -26,7 +26,7 @@ logger = log.get_logger()
 RLC_PREFIX = {'R', 'L', 'C', 'RV', 'RN', 'RT'}
 
 
-def compare_value(c1, c2, cfg):
+def compare_value(c1, c2, cfg) -> bool:
     """ Compare the value of two components """
     c1_value = c1.value.strip().lower()
     c2_value = c2.value.strip().lower()
@@ -51,7 +51,7 @@ def compare_value(c1, c2, cfg):
     return False
 
 
-def compare_part_name(c1, c2, cfg):
+def compare_part_name(c1, c2, cfg) -> bool:
     """ Determine if two parts have the same name, compute aliases """
     pn1 = c1.name.lower()
     pn2 = c2.name.lower()
@@ -132,7 +132,7 @@ class Joiner:
         else:
             stack.append(((P, N), (P, N)))
 
-    def flush(self, sep, dash='-'):
+    def flush(self, sep: str, dash='-'):
         refstr = u''
         c = 0
         for pref in sorted(self.stack.keys()):
@@ -156,7 +156,7 @@ class Joiner:
         return refstr
 
 
-def _suffix_to_num(suffix):
+def _suffix_to_num(suffix: str):
     return 0 if suffix == '?' else int(suffix)
 
 
@@ -177,7 +177,7 @@ class ComponentGroup(object):
         """ Test if a given component fits in this group """
         return compare_components(c, self.components[0], self.cfg)
 
-    def contains_component(self, c):
+    def contains_component(self, c) -> bool:
         """ Test if a given component is already contained in this group """
         return c.ref+c.project in self.refs
 
@@ -395,7 +395,7 @@ class ComponentGroup(object):
         self.fields[ColumnList.COL_EXCLUDE_FROM_SIM_L] = self.solve_multiple_attributes('exclude_from_sim',
                                                                                         'Excluded from simulation',)
 
-    def solve_multiple_attributes(self, attr, label, invert=False):
+    def solve_multiple_attributes(self, attr, label: str, invert=False):
         positive = 0
         found = 0
         for c in self.components:

@@ -11,6 +11,7 @@ from .error import KiPlotConfigurationError
 from .bom.columnlist import ColumnList
 from .macros import macros, document  # noqa: F401
 from . import log
+from typing import Sequence
 
 logger = log.get_logger()
 DEFAULT_EXCLUDE = [{'column': ColumnList.COL_REFERENCE, 'regex': '^TP[0-9]*'},
@@ -96,7 +97,7 @@ SIMP_FIL = {'_only_smd': {'comment': 'Internal filter for only SMD parts',
 
 class DummyFilter(Registrable):
     """ A filter that allows all """
-    def __init__(self, is_transform=False):
+    def __init__(self, is_transform: bool = False):
         super().__init__()
         self.name = 'Dummy'
         self.type = 'dummy'
@@ -110,7 +111,7 @@ class DummyFilter(Registrable):
 class MultiFilter(Registrable):
     """ A filter containing a list of filters.
         They are applied in sequence. """
-    def __init__(self, filters, is_transform):
+    def __init__(self, filters, is_transform: bool):
         super().__init__()
         self.name = ','.join([f.name for f in filters])
         self.type = ','.join([f.type for f in filters])
@@ -164,7 +165,7 @@ class NotFilter(Registrable):
         self._filter = filter
         self._is_transform = False
 
-    def filter(self, comp):
+    def filter(self, comp) -> bool:
         return not self._filter.filter(comp)
 
 
@@ -254,7 +255,7 @@ class BaseFilter(RegFilter):
             raise KiPlotConfigurationError('Filter names starting with `_` are reserved ({})'.format(self.name))
 
     @staticmethod
-    def _create_mechanical(name):
+    def _create_mechanical(name: str):
         o_tree = {'name': name}
         o_tree['type'] = 'generic'
         o_tree['comment'] = 'Internal default mechanical filter'
@@ -265,7 +266,7 @@ class BaseFilter(RegFilter):
         return o_tree
 
     @staticmethod
-    def _create_kibom_dnx(name):
+    def _create_kibom_dnx(name: str):
         type = name[7:10]
         if len(name) > 11:
             subtype = name[11:]
@@ -284,7 +285,7 @@ class BaseFilter(RegFilter):
         return o_tree
 
     @staticmethod
-    def _create_kicost_rename(name):
+    def _create_kicost_rename(name: str):
         o_tree = {'name': name}
         o_tree['type'] = 'field_rename'
         o_tree['comment'] = 'Internal filter to emulate KiCost field aliases'
@@ -304,7 +305,7 @@ class BaseFilter(RegFilter):
         return o_tree
 
     @staticmethod
-    def _create_kicost_dnp(name):
+    def _create_kicost_dnp(name: str):
         o_tree = {'name': name}
         o_tree['type'] = 'generic'
         o_tree['comment'] = 'Internal filter for KiCost `dnp` field'
@@ -314,7 +315,7 @@ class BaseFilter(RegFilter):
         return o_tree
 
     @staticmethod
-    def _create_internal_filter(name, is_transform):
+    def _create_internal_filter(name: str, is_transform: bool):
         if name == '_null':
             raise KiPlotConfigurationError("The `_null` filter can't be used in a filter chain")
         if name == '_none':
@@ -341,7 +342,7 @@ class BaseFilter(RegFilter):
         return filter
 
     @staticmethod
-    def solve_filter(names, target_name, default=None, is_transform=False):
+    def solve_filter(names: Sequence[str], target_name: str, default=None, is_transform: bool = False):
         """ Name can be:
             - A class, meaning we have to use a default.
             - A string, the name of a filter.
@@ -425,5 +426,5 @@ class FieldRename(Optionable):
             raise KiPlotConfigurationError("Missing or empty `name` in rename list ({})".format(str(self._tree)))
         self.field = self.field.lower()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.field} -> {self.name}'

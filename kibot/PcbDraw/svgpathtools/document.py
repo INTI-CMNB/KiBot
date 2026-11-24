@@ -51,6 +51,7 @@ from .svg_to_paths import (path2pathd, ellipse2pathd, line2pathd,
                            polyline2pathd, polygon2pathd, rect2pathd)
 from .misctools import open_in_browser
 from .path import *
+from typing import Sequence
 
 # To maintain forward/backward compatibility
 try:
@@ -150,7 +151,7 @@ def flattened_paths(group, group_filter=lambda x: True,
     return paths
 
 
-def flattened_paths_from_group(group_to_flatten, root, recursive=True,
+def flattened_paths_from_group(group_to_flatten, root, recursive: bool=True,
                                group_filter=lambda x: True,
                                path_filter=lambda x: True,
                                path_conversions=CONVERSIONS,
@@ -261,7 +262,7 @@ class Document:
         return flattened_paths(self.tree.getroot(), group_filter,
                                path_filter, path_conversions)
 
-    def paths_from_group(self, group, recursive=True, group_filter=lambda x: True,
+    def paths_from_group(self, group, recursive: bool=True, group_filter=lambda x: True,
                          path_filter=lambda x: True, path_conversions=CONVERSIONS):
         if all(isinstance(s, str) for s in group):
             # If we're given a list of strings, assume it represents a
@@ -329,7 +330,7 @@ class Document:
     def contains_group(self, group):
         return any(group is owned for owned in self.tree.iter())
 
-    def get_group(self, nested_names, name_attr='id'):
+    def get_group(self, nested_names: Sequence[str], name_attr='id'):
         """Get a group from the tree, or None if the requested group
         does not exist. Use get_or_add_group(~) if you want a new group
         to be created if it did not already exist.
@@ -360,7 +361,7 @@ class Document:
 
         return group
 
-    def get_or_add_group(self, nested_names, name_attr='id'):
+    def get_or_add_group(self, nested_names: Sequence[str], name_attr='id'):
         """Get a group from the tree, or add a new one with the given
         name structure.
 

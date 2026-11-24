@@ -128,7 +128,7 @@ class BlenderObjOptions(Optionable):
         self._pos_y = self.solve('pos_y')
         self._pos_z = self.solve('pos_z')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} ({self.pos_x},{self.pos_y},{self.pos_z})'
 
 
@@ -296,7 +296,7 @@ class PCB3DExportOptions(Base3DOptionsWithHL):
         p._expand_ext = cur_ext
         return out_name
 
-    def setup_renderer(self, components, active_components, bottom, name):
+    def setup_renderer(self, components, active_components, bottom, name: str):
         super().setup_renderer(components, active_components)
         self._pov.view = 'Z' if bottom else 'z'
         # Expand the name using .PNG
@@ -708,12 +708,12 @@ class Blender_Export(Base3D):
                 res._out = out
         return res if out is not None else None
 
-    def get_extension(self):
+    def get_extension(self) -> str:
         # Used when we are a renderer
         return 'png'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.check_tool(name, 'Blender') or GS.ki5:
             return None
         has_top = False

@@ -7,6 +7,8 @@ from __future__ import division, absolute_import, print_function
 from math import sqrt, cos, sin, acos, asin, degrees, radians, log, pi, ceil
 from cmath import exp, sqrt as csqrt, phase
 import re
+from typing import Optional
+
 try:
     from collections.abc import MutableSequence  # noqa
 except ImportError:
@@ -381,7 +383,7 @@ def bezier_radialrange(seg, origin, return_all_global_extrema=False):
     By default, this will only return one. Set return_all_global_extrema=True
     to return all such global extrema."""
 
-    def _radius(tau):
+    def _radius(tau: float):
         return abs(seg.point(tau) - origin)
 
     shifted_seg_poly = seg.poly() - origin
@@ -419,7 +421,7 @@ def farthest_point_in_path(pt, path):
     return path.radialrange(pt)[1]
 
 
-def path_encloses_pt(pt, opt, path):
+def path_encloses_pt(pt, opt, path) -> bool:
     """returns true if pt is a point enclosed by path (which must be a Path
     object satisfying path.isclosed==True).  opt is a point you know is
     NOT enclosed by path."""
@@ -432,7 +434,7 @@ def path_encloses_pt(pt, opt, path):
 
 
 def segment_length(curve, start, end, start_point, end_point,
-                   error=LENGTH_ERROR, min_depth=LENGTH_MIN_DEPTH, depth=0):
+                   error=LENGTH_ERROR, min_depth=LENGTH_MIN_DEPTH, depth: int=0):
     """Recursively approximates the length by straight lines"""
     mid = (start + end)/2
     mid_point = curve.point(mid)
@@ -551,7 +553,7 @@ class Line(object):
         self.start = start
         self.end = end
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'Line(start=%s, end=%s)' % (self.start, self.end)
 
     def __eq__(self, other):
@@ -567,7 +569,7 @@ class Line(object):
     def __getitem__(self, item):
         return self.bpoints()[item]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return 2
 
     def joins_smoothly_with(self, previous, wrt_parameterization=False):
@@ -636,7 +638,7 @@ class Line(object):
         """returns the (right hand rule) unit normal vector to self at t."""
         return -1j*self.unit_tangent(t)
 
-    def curvature(self, t):
+    def curvature(self, t) -> int:
         """returns the curvature of the line, which is always zero."""
         return 0
 
@@ -654,7 +656,7 @@ class Line(object):
         """returns a copy of the Line object with its orientation reversed."""
         return Line(self.end, self.start)
 
-    def intersect(self, other_seg, tol=None):
+    def intersect(self, other_seg, tol: Optional[float]=None):
         """Finds the intersections of two segments.
         returns a list of tuples (t1, t2) such that
         self.point(t1) == other_seg.point(t2).
@@ -807,7 +809,7 @@ class QuadraticBezier(object):
         # used to know if self._length needs to be updated
         self._length_info = {'length': None, 'bpoints': None}
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'QuadraticBezier(start=%s, control=%s, end=%s)' % (
             self.start, self.control, self.end)
 
@@ -825,7 +827,7 @@ class QuadraticBezier(object):
     def __getitem__(self, item):
         return self.bpoints()[item]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return 3
 
     def is_smooth_from(self, previous, warning_on=True):
@@ -979,7 +981,7 @@ class QuadraticBezier(object):
                 self.end, self.control, self.start)
         return new_quad
 
-    def intersect(self, other_seg, tol=1e-12):
+    def intersect(self, other_seg, tol: float=1e-12):
         """Finds the intersections of two segments.
         returns a list of tuples (t1, t2) such that
         self.point(t1) == other_seg.point(t2).
@@ -1062,7 +1064,7 @@ class CubicBezier(object):
         self._length_info = {'length': None, 'bpoints': None, 'error': None,
                              'min_depth': None}
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'CubicBezier(start=%s, control1=%s, control2=%s, end=%s)' % (
             self.start, self.control1, self.control2, self.end)
 
@@ -1081,7 +1083,7 @@ class CubicBezier(object):
     def __getitem__(self, item):
         return self.bpoints()[item]
 
-    def __len__(self):
+    def __len__(self) -> int:
         return 4
 
     def is_smooth_from(self, previous, warning_on=True):
@@ -1231,7 +1233,7 @@ class CubicBezier(object):
                 self.end, self.control2, self.control1, self.start)
         return new_cub
 
-    def intersect(self, other_seg, tol=1e-12):
+    def intersect(self, other_seg, tol: float=1e-12):
         """Finds the intersections of two segments.
         returns a list of tuples (t1, t2) such that
         self.point(t1) == other_seg.point(t2).
@@ -1296,7 +1298,7 @@ class CubicBezier(object):
 
 
 class Arc(object):
-    def __init__(self, start, radius, rotation, large_arc, sweep, end,
+    def __init__(self, start, radius: float, rotation, large_arc, sweep, end,
                  autoscale_radius=True):
         """
         This should be thought of as a part of an ellipse connecting two
@@ -1396,7 +1398,7 @@ class Arc(object):
     def __hash__(self):
         return hash((self.start, self.radius, self.rotation, self.large_arc, self.sweep, self.end))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         params = (self.start, self.radius, self.rotation,
                   self.large_arc, self.sweep, self.end)
         return ("Arc(start={}, radius={}, rotation={}, "
@@ -1831,7 +1833,7 @@ class Arc(object):
         return (degs - self.theta)/self.delta
 
 
-    def intersect(self, other_seg, tol=1e-12):
+    def intersect(self, other_seg, tol: float=1e-12):
         """NOT FULLY IMPLEMENTED.  Finds the intersections of two segments.
         returns a list of tuples (t1, t2) such that
         self.point(t1) == other_seg.point(t2).
@@ -1999,7 +2001,7 @@ class Arc(object):
                     # The Arcs lie on the same circle: they have the
                     # same center and are of equal radius.
 
-                    def point_in_seg_interior(point, seg):
+                    def point_in_seg_interior(point, seg) -> bool:
                         t = seg.point_to_t(point)
                         if t is None: return False
                         if np.isclose(t, 0.0, rtol=0.0, atol=1e-6): return False
@@ -2322,7 +2324,7 @@ class Path(MutableSequence):
     def __len__(self):
         return len(self._segments)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Path({})".format(
             ",\n     ".join(repr(x) for x in self._segments))
 
@@ -2424,7 +2426,7 @@ class Path(MutableSequence):
         assert len(self) != 0
         return self.start == self.end
 
-    def _is_closable(self):
+    def _is_closable(self) -> bool:
         end = self[-1].end
         for segment in self:
             if segment.start == end:
@@ -2737,7 +2739,7 @@ class Path(MutableSequence):
                 bezier_path_approximation.append(seg)
         return area_without_arcs(Path(*bezier_path_approximation))
 
-    def intersect(self, other_curve, justonemode=False, tol=1e-12):
+    def intersect(self, other_curve, justonemode=False, tol: float=1e-12):
         """returns list of pairs of pairs ((T1, seg1, t1), (T2, seg2, t2))
         giving the intersection points.
         If justonemode==True, then returns just the first

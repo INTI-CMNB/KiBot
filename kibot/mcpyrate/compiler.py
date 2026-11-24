@@ -9,6 +9,7 @@ a module is imported.
 
 We also provide a public API to compile and run macro-enabled code at run time.
 """
+from typing import Optional
 
 __all__ = ["expand", "compile",
            "singlephase_expand",
@@ -438,7 +439,7 @@ def run(source, module=None, optimize=-1):
     return module
 
 
-def create_module(dotted_name=None, filename=None, *, update_parent=True):
+def create_module(dotted_name: Optional[str]=None, filename=None, *, update_parent=True):
     """Create a new blank module at run time, insert it into `sys.modules`, and return it.
 
     This is a utility function that closely emulates what Python's standard
@@ -548,7 +549,7 @@ def create_module(dotted_name=None, filename=None, *, update_parent=True):
 
 
 @contextmanager
-def temporary_module(dotted_name=None, filename=None, *, update_parent=True):
+def temporary_module(dotted_name: Optional[str]=None, filename=None, *, update_parent=True):
     """Context manager. Create and destroy a temporary module.
 
     Usage::

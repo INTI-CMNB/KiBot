@@ -176,7 +176,7 @@ class IndirectObject(PdfObject):
     def getObject(self):
         return self.pdf.getObject(self).getObject()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "IndirectObject(%r, %r)" % (self.idnum, self.generation)
 
     def __eq__(self, other):
@@ -188,7 +188,7 @@ class IndirectObject(PdfObject):
             self.pdf is other.pdf
             )
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
     def writeToStream(self, stream, encryption_key):
@@ -276,7 +276,7 @@ class NumberObject(int, PdfObject):
 ##
 # Given a string (either a "str" or "unicode"), create a ByteStringObject or a
 # TextStringObject to represent the string.
-def createStringObject(string):
+def createStringObject(string: str):
     if isinstance(string, utils.string_type):
         return TextStringObject(string)
     elif isinstance(string, utils.bytes_type):
@@ -645,7 +645,7 @@ class TreeObject(DictionaryObject):
     def __init__(self):
         DictionaryObject.__init__(self)
 
-    def hasChildren(self):
+    def hasChildren(self) -> bool:
         return '/First' in self
 
     def __iter__(self):
@@ -870,7 +870,7 @@ class RectangleObject(ArrayObject):
             value = FloatObject(value)
         return value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "RectangleObject(%s)" % repr(list(self))
 
     def getLowerLeft_x(self):
@@ -1159,7 +1159,7 @@ class Bookmark(Destination):
         stream.write(b_(">>"))
 
 
-def encode_pdfdocencoding(unicode_string):
+def encode_pdfdocencoding(unicode_string: str):
     retval = b_('')
     for c in unicode_string:
         try:

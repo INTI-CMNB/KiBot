@@ -108,7 +108,7 @@ class Capture(QuasiquoteMarker):  # like `macropy`'s `Captured`
     to support bytecode caching for source files that invoke a macro that uses
     `h[]` in its output.)
     """
-    def __init__(self, body, name):
+    def __init__(self, body, name: str):
         super().__init__(body)
         self.name = name
         self._fields += ["name"]
@@ -139,7 +139,7 @@ def lift_sourcecode(value, filename="<unknown>"):
     return ast.parse(value, filename=f"<invocation of n[] in '{filename}'>", mode="eval").body
 
 
-def _typecheck(node, cls, macroname):
+def _typecheck(node, cls, macroname: str):
     if isinstance(node, ASTMarker):
         if isinstance(node.body, list):  # statement suite inside a marker
             for child in node.body:
@@ -151,7 +151,7 @@ def _typecheck(node, cls, macroname):
     if not isinstance(node, cls):
         raise TypeError(f"{macroname}: expected {cls}, got {type(node)} with value {repr(node)}")
 
-def _flatten_and_typecheck_iterable(nodes, cls, macroname):
+def _flatten_and_typecheck_iterable(nodes, cls, macroname: str):
     try:
         lst = list(nodes)
     except TypeError:
@@ -253,7 +253,7 @@ def ast_tuple(nodes):
     return ast.Tuple(elts=lst)
 
 
-def capture_value(value, name):
+def capture_value(value, name: str):
     """Hygienically capture a run-time value. Used by `h[]`.
 
     `value`: A run-time value. Must be picklable.
@@ -333,7 +333,7 @@ def lookup_value(key):
     return _lookup_cache[cachekey]
 
 
-def capture_macro(macro, name):
+def capture_macro(macro, name: str):
     """Hygienically capture a macro. Used by `h[]`.
 
     `macro`: A macro function. Must be picklable.
@@ -801,7 +801,7 @@ def unastify(tree):
     """
     # CAUTION: in `unastify`, we implement only what we minimally need.
     our_module_globals = globals()
-    def lookup_thing(dotted_name):
+    def lookup_thing(dotted_name: str):
         if not dotted_name.startswith("mcpyrate.quotes"):
             raise NotImplementedError(f"Don't know how to look up {repr(dotted_name)}")
         path = dotted_name.split(".")

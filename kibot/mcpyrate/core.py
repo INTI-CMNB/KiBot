@@ -184,7 +184,7 @@ class BaseMacroExpander(NodeTransformer):
                 self._debughook = oldhook
         return debughook_context()
 
-    def expand(self, syntax, target, macroname, tree, sourcecode, kw=None):
+    def expand(self, syntax, target, macroname: str, tree, sourcecode, kw=None):
         """Expand a macro invocation.
 
         This is a hook for actual macro expanders. Macro libraries typically
@@ -303,7 +303,7 @@ class BaseMacroExpander(NodeTransformer):
 
         return self._visit_expansion(expansion, target)
 
-    def _apply_macro(self, macro, tree, kw, macroname, target):
+    def _apply_macro(self, macro, tree, kw, macroname: str, target):
         """Execute `macro` on `tree`, with the dictionary `kw` unpacked into macro's named arguments.
 
         `macro` is the macro function.
@@ -346,7 +346,7 @@ class BaseMacroExpander(NodeTransformer):
 
         return expansion
 
-    def isbound(self, name, *, global_only=False):
+    def isbound(self, name: str, *, global_only=False):
         """Return the macro function the string `name` is bound to, or `False`."""
         bindings = self.bindings if not global_only else global_bindings
         if name in bindings:

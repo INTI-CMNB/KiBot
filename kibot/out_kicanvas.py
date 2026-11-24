@@ -235,7 +235,7 @@ class KiCanvas(BaseOutput):  # noqa: F821
         self.category = list(cat)
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = BaseOutput.simple_conf_examples(name, 'Web page to browse the schematic and/or PCB', 'Browse')  # noqa: F821
         sources = []
         if GS.sch_file:

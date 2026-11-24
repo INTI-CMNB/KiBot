@@ -122,7 +122,7 @@ def _run_command(cmd, fname=None):
     return True
 
 
-def ps_needs_rotation(file):
+def ps_needs_rotation(file) -> bool:
     try:
         with open(file, 'rb') as f:
             data = f.read(1000).decode('ascii')
@@ -226,11 +226,11 @@ class Any_Navigate_ResultsOptions(BaseOptions):
                 node = node[c]
             node[out.name] = out
 
-    def svg_to_png(self, svg_file, png_file, width):
+    def svg_to_png(self, svg_file, png_file, width: int):
         cmd = [self.rsvg_command, '-w', str(width), '-f', 'png', '--unlimited', '-o', png_file, svg_file]
         return _run_command(cmd, svg_file)
 
-    def copy(self, img, width):
+    def copy(self, img, width: int):
         """ Copy an SVG icon to the images/ dir.
             Tries to convert it to PNG. """
         img_w = "{}_{}".format(os.path.basename(img), width)
@@ -249,7 +249,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
         self.copied_images[id] = name
         return name
 
-    def can_be_converted(self, ext):
+    def can_be_converted(self, ext) -> bool:
         if ext in IMAGEABLES_SVG and self.rsvg_command is None:
             logger.warning(W_MISSTOOL+"Missing SVG to PNG converter")
             return False
@@ -261,7 +261,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             return False
         return ext in IMAGEABLES_SVG or ext in IMAGEABLES_GS or ext in IMAGEABLES_SIMPLE
 
-    def compose_image(self, file, ext, img, out_name, no_icon=False):
+    def compose_image(self, file, ext, img, out_name: str, no_icon=False):
         if not os.path.isfile(file):
             logger.warning(W_NOTYET+"{} not yet generated, using an icon".format(os.path.relpath(file)))
             return False, None, None
@@ -328,7 +328,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
         f.write(self.top_menu)
         f.write('<div id="main">\n')
 
-    def generate_cat_page_for(self, name, node, prev, category):
+    def generate_cat_page_for(self, name: str, node, prev, category):
         raise NotImplementedError
 
     def adjust_image_paths(self, md_content, current_dir, html_output_dir):
@@ -361,10 +361,10 @@ class Any_Navigate_ResultsOptions(BaseOptions):
     def generate_outputs(self, f, node):
         raise NotImplementedError
 
-    def generate_end_page_for(self, name, node, prev, category):
+    def generate_end_page_for(self, name: str, node, prev, category):
         raise NotImplementedError
 
-    def generate_page_for(self, node, name, prev=None, category=''):
+    def generate_page_for(self, node, name: str, prev=None, category=''):
         raise NotImplementedError
 
     def get_targets(self, out_dir):
@@ -382,7 +382,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
         self.get_html_names(self.create_tree(), name, files)
         return files
 
-    def get_html_names_cat(self, name, node, prev, category, files):
+    def get_html_names_cat(self, name: str, node, prev, category, files):
         files.append(os.path.join(self.out_dir, name))
         name, ext = os.path.splitext(name)
         for cat, content in node.items():
@@ -391,13 +391,13 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             pname = name+'_'+cat+ext
             self.get_html_names(content, pname, files, name, category+'/'+cat)
 
-    def get_html_names(self, node, name, files, prev=None, category=''):
+    def get_html_names(self, node, name: str, files, prev=None, category=''):
         if isinstance(list(node.values())[0], dict):
             self.get_html_names_cat(name, node, prev, category, files)
         else:
             files.append(os.path.join(self.out_dir, name))
 
-    def get_html_names_for_path(self, category_path, name, ext):
+    def get_html_names_for_path(self, category_path, name: str, ext):
         files = []
         node = self.create_tree()
         self.get_html_names_cat(name, node, None, category_path, files)
@@ -428,10 +428,10 @@ class Any_Navigate_ResultsOptions(BaseOptions):
                 self.add_to_tree(c, o, o_tree)
         return o_tree
 
-    def generate_navbar_one(self, node, lvl, name, ext):
+    def generate_navbar_one(self, node, lvl, name: str, ext):
         raise NotImplementedError
 
-    def generate_navbar(self, node, name):
+    def generate_navbar(self, node, name: str):
         raise NotImplementedError
 
     def generate_top_menu(self, category=''):
@@ -491,7 +491,7 @@ class Any_Navigate_ResultsOptions(BaseOptions):
             base_comp = 'Unknown'
         self._solved_company = base_comp
 
-    def run(self, name):
+    def run(self, name: str):
         self.out_dir = os.path.dirname(name)
         self.img_src_dir = GS.get_resource_path('images')
         self.js_src_dir = GS.get_resource_path('navigate_results')

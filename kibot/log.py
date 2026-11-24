@@ -16,6 +16,8 @@ import sys
 import traceback
 import logging
 from .misc import WARN_AS_ERROR, W_SILLY
+from typing import Optional
+
 no_colorama = False
 try:
     from colorama import init as colorama_init, Fore, Back, Style
@@ -42,7 +44,7 @@ re_dk_client_secret = re.compile("DIGIKEY_CLIENT_SECRET=([^']+)")
 warn_all = False
 
 
-def get_logger(name=None, indent=None):
+def get_logger(name: Optional[str] = None, indent=None):
     """Get a module for a submodule or the root logger if no name is
        provided"""
     # print('get_logger '+str(name))
@@ -60,7 +62,7 @@ def get_logger(name=None, indent=None):
     return lg
 
 
-def set_domain(name):
+def set_domain(name: str):
     """Set the base name for the tool"""
     global domain
     domain = name
@@ -256,7 +258,7 @@ class MyLogger(logging.Logger):
         return os.path.normcase(f.f_code.co_filename), f.f_lineno, f.f_code.co_name, sinfo
 
 
-def set_verbosity(logger, verbose, quiet):
+def set_verbosity(logger, verbose: bool, quiet: bool):
     # Choose the log level
     log_level = logging.INFO
     if verbose:

@@ -17,7 +17,7 @@ SVG_VIEW_BOX_REGEX2 = r'width="(.*)" height="(.*)" viewBox="(\S+) (\S+) (\S+) (\
 SVG_VIEW_BOX_SUB_PAT = r'width="{}cm" height="{}cm" viewBox="{} {} {} {}"'
 
 
-def patch_svg_file(file, remove_bkg=False, is_portrait=False):
+def patch_svg_file(file, remove_bkg=False, is_portrait: bool = False):
     """ KiCad always prints in portrait """
     if is_portrait and not remove_bkg:
         # Nothing to do

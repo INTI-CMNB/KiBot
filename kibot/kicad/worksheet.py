@@ -56,18 +56,18 @@ class WksError(Exception):
     pass
 
 
-def text_from_ki5(text):
+def text_from_ki5(text: str):
     for k, v in KI5_2_KI6.items():
         text = text.replace('%'+k, '${'+v+'}')
     text = text.replace('%%', '%')
     return text
 
 
-def _check_mm(items, pos, name):
+def _check_mm(items, pos, name: str):
     return FromMM(_check_float(items, pos, name))
 
 
-def _get_point(items, pos, sname, name):
+def _get_point(items, pos, sname: str, name: str):
     value = _check_symbol_value(items, pos, name, sname)
     ref = 'rbcorner'
     if len(value) > 3:
@@ -75,7 +75,7 @@ def _get_point(items, pos, sname, name):
     return wxPoint(_check_mm(value, 1, sname+' x'), _check_mm(value, 2, sname+' y')), ref
 
 
-def _get_size(items, pos, sname, name):
+def _get_size(items, pos, sname: str, name: str):
     value = _check_symbol_value(items, pos, name, sname)
     return wxSize(_check_mm(value, 1, sname+' x'), _check_mm(value, 2, sname+' y'))
 
@@ -117,12 +117,12 @@ class WksDrawing(object):
         self.name = ''
         self.option = ''
 
-    def parse_fixed_args(self, items):
+    def parse_fixed_args(self, items) -> int:
         """ Default parser for fixed arguments.
             Used when no fixed args are used. """
         return 1
 
-    def parse_specific_args(self, i_type, i, items, offset):
+    def parse_specific_args(self, i_type, i, items, offset: int):
         """ Default parser for arguments specific for the class. """
         raise WksError('Unknown {} attribute `{}`'.format(self.c_name, i))
 
@@ -187,7 +187,7 @@ class WksLine(WksDrawing):
             if p.out_of_margin(st):
                 break
 
-    def parse_specific_args(self, i_type, i, items, offset):
+    def parse_specific_args(self, i_type, i, items, offset: int):
         if i_type == 'linewidth':
             self.line_width = _check_mm(i, 1, i_type)
         elif i_type == 'start':
@@ -258,11 +258,11 @@ class WksText(WksDrawing):
         self.max_height = 0
         self.incr_label = 1
 
-    def parse_fixed_args(self, items):
+    def parse_fixed_args(self, items) -> int:
         self.text = _check_relaxed(items, 1, self.c_name+' text')
         return 2
 
-    def parse_specific_args(self, i_type, i, items, offset):
+    def parse_specific_args(self, i_type, i, items, offset: int):
         if i_type == 'rotate':
             self.rotate = _check_float(i, 1, i_type)
         elif i_type == 'pos':
@@ -361,7 +361,7 @@ class WksPolygon(WksDrawing):
         self.line_width = setup.line_width
         self.pts = []
 
-    def parse_specific_args(self, i_type, i, items, offset):
+    def parse_specific_args(self, i_type, i, items, offset: int):
         if i_type == 'rotate':
             self.rotate = _check_float(i, 1, i_type)
         elif i_type == 'pos':
@@ -403,7 +403,7 @@ class WksBitmap(WksDrawing):
         self.scale = 1.0
         self.data = b''
 
-    def parse_specific_args(self, i_type, i, items, offset):
+    def parse_specific_args(self, i_type, i, items, offset: int):
         if i_type == 'pos':
             self.pos, self.pos_ref = _get_point(items, offset, i_type, self.c_name)
         elif i_type == 'scale':

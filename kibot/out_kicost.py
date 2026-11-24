@@ -138,16 +138,16 @@ class KiCostOptions(VariantOptions):
         return [self.expand_filename(out_dir, self.output, self._expand_id, self._expand_ext)]
 
     @staticmethod
-    def add_list_opt(cmd, name, val):
+    def add_list_opt(cmd, name: str, val):
         if val:
             cmd.extend(['--'+name] + val)
 
     @staticmethod
-    def add_bool_opt(cmd, name, val):
+    def add_bool_opt(cmd, name: str, val):
         if val:
             cmd.append('--'+name)
 
-    def run(self, name):
+    def run(self, name: str):
         super().run(name)
         net_dir = None
         if self._comps:

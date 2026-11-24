@@ -72,7 +72,7 @@ class Pattern(object):
         return self
 
 
-def transform(pattern):
+def transform(pattern: str):
     """Expand pattern into an (almost) equivalent one, but with single Either.
 
     Example: ((-a | -b) (-c | -d)) => (-a -c | -a -d | -b -c | -b -d)
@@ -103,10 +103,10 @@ class LeafPattern(Pattern):
 
     """Leaf/terminal node of a pattern tree."""
 
-    def __init__(self, name, value=None):
+    def __init__(self, name: str, value=None):
         self.name, self.value = name, value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(%r, %r)' % (self.__class__.__name__, self.name, self.value)
 
     def flat(self, *types):
@@ -140,7 +140,7 @@ class BranchPattern(Pattern):
     def __init__(self, *children):
         self.children = list(children)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(%s)' % (self.__class__.__name__,
                            ', '.join(repr(a) for a in self.children))
 
@@ -167,7 +167,7 @@ class Argument(LeafPattern):
 
 class Command(Argument):
 
-    def __init__(self, name, value=False):
+    def __init__(self, name: str, value=False):
         self.name, self.value = name, value
 
     def single_match(self, left):
@@ -214,7 +214,7 @@ class Option(LeafPattern):
     def name(self):
         return self.long or self.short
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return 'Option(%r, %r, %r, %r)' % (self.short, self.long,
                                            self.argcount, self.value)
 
@@ -470,7 +470,7 @@ def parse_defaults(doc):
     return defaults
 
 
-def parse_section(name, source):
+def parse_section(name: str, source):
     pattern = re.compile('^([^\n]*' + name + '[^\n]*\n?(?:[ \t].*?(?:\n|$))*)',
                          re.IGNORECASE | re.MULTILINE)
     return [s.strip() for s in pattern.findall(source)]
@@ -492,11 +492,11 @@ def extras(help, version, options, doc):
 
 
 class Dict(dict):
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '{%s}' % ',\n '.join('%r: %r' % i for i in sorted(self.items()))
 
 
-def clean_name(name):
+def clean_name(name: str):
     """ Make name suitable for a class attribute """
     # Remove starting -/--
     if name[1] == '-':

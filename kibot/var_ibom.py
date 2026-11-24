@@ -42,7 +42,7 @@ class IBoM(BaseVariant):  # noqa: F821
         self.dnf_filter = BaseFilter.solve_filter(self.dnf_filter, 'dnf_filter')
         self.dnc_filter = BaseFilter.solve_filter(self.dnc_filter, 'dnc_filter')
 
-    def skip_component(self, c):
+    def skip_component(self, c) -> bool:
         """ Skip components that doesn't belong to this variant. """
         # Apply variants white/black lists
         if self.variant_field:

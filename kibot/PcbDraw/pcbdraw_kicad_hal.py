@@ -55,7 +55,7 @@ class Component:
     side: BoardSide
     properties: Mapping[str, str] = field(default_factory=dict)    # Fields excluding "reference", "value", "footprint"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.reference} {self.value} [{self.library}:{self.footprint}] @ {self.position} on {self.side}"
 
 

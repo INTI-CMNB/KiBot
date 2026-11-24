@@ -29,6 +29,7 @@ from .gui_inject import create_id, InjectDialog
 from . import gui_setups
 from . import gui_helpers as gh
 from .gui_log import start_gui_log, stop_gui_log, EVT_WX_LOG_EVENT
+from typing import Optional, Sequence
 
 logger = log.get_logger()
 
@@ -211,7 +212,7 @@ class MainDialog(InjectDialog):
 
         self.flag = False
 
-    def ask_save(self):
+    def ask_save(self) -> bool:
         res = pop_confirm(_('The configuration is changed, save?'))
         if res == wx.CANCEL:
             return False
@@ -431,7 +432,7 @@ class DictPanel(wx.Panel):
     def mark_edited(self):
         self.Parent.Parent.mark_edited()
 
-    def OnItemDClick(self, event):
+    def OnItemDClick(self, event) -> bool:
         index, string, obj = get_selection(self.lbox)
         if obj is None:
             return False
@@ -448,7 +449,7 @@ class DictPanel(wx.Panel):
     def pre_edit(self, obj):
         pass
 
-    def validate(self, obj):
+    def validate(self, obj) -> bool:
         if not obj.name:
             pop_error(_('You must provide a name for the ')+self.dict_type)
             return False
@@ -595,7 +596,7 @@ class MainPanel(wx.Panel):
             reset_config()
             load_config(self.old_cfg)
 
-    def apply_changed_config(self, new_cfg):
+    def apply_changed_config(self, new_cfg) -> bool:
         try:
             log.start_recording_error_msgs()
             reset_config()
@@ -640,7 +641,7 @@ class MainPanel(wx.Panel):
         if reload:
             load_board(forced=True)
 
-    def apply_changed_pcb(self, new_pcb):
+    def apply_changed_pcb(self, new_pcb) -> bool:
         try:
             log.start_recording_error_msgs()
             load_board(new_pcb, forced=True)
@@ -654,7 +655,7 @@ class MainPanel(wx.Panel):
                 pop_error(msgs)
         return True
 
-    def check_changed_filename(self, name, kind):
+    def check_changed_filename(self, name: str, kind) -> bool:
         if not os.path.isfile(name):
             pop_error(_("The selected {} is not a file!\n{}").format(kind, name))
             return False
@@ -663,7 +664,7 @@ class MainPanel(wx.Panel):
             return False
         return True
 
-    def check_changed_dirname(self, name, kind):
+    def check_changed_dirname(self, name: str, kind) -> bool:
         if not os.path.isdir(name):
             pop_error(_("The selected {} is not a directory!\n{}").format(kind, name))
             return False
@@ -703,7 +704,7 @@ class MainPanel(wx.Panel):
         if reload:
             load_sch(forced=True)
 
-    def apply_changed_sch(self, new_sch):
+    def apply_changed_sch(self, new_sch) -> bool:
         try:
             log.start_recording_error_msgs()
             load_sch(new_sch, forced=True)
@@ -717,7 +718,7 @@ class MainPanel(wx.Panel):
                 pop_error(msgs)
         return True
 
-    def check_changed_sch(self, new_sch):
+    def check_changed_sch(self, new_sch) -> bool:
         if not os.path.isfile(new_sch):
             pop_error(_("The selected schematic is not a file!"))
             return False
@@ -747,7 +748,7 @@ class MainPanel(wx.Panel):
                 except SystemExit:
                     GS.board = None
 
-    def check_changed_outdir(self, name):
+    def check_changed_outdir(self, name: str) -> bool:
         if not os.path.isdir(name):
             # Doesn't exist, try to create it
             try:
@@ -962,7 +963,7 @@ class MainPanel(wx.Panel):
         self.update_targets_hint()
         self.update_sort_hint()
 
-    def add_path(self, sizer, label, value, id, ttip, on_change=None, is_dir=False, rename=None):
+    def add_path(self, sizer, label: str, value, id, ttip, on_change=None, is_dir: bool = False, rename: Optional[str] = None):
         window = self.path_w
         li_sizer = wx.BoxSizer(wx.HORIZONTAL)
         new_label = wx.StaticText(window, label=label, size=wx.Size(max_label, -1), style=wx.ALIGN_RIGHT)
@@ -1001,7 +1002,7 @@ class MainPanel(wx.Panel):
         sizer.Add(li_sizer, gh.SIZER_FLAGS_1_NO_BORDER)
         return li_sizer, new_input, but_rename
 
-    def apply_setup(self, s):
+    def apply_setup(self, s) -> bool:
         # Check we got usable file names
         if not (self.check_changed_filename(s.pcb, _('PCB')) and self.check_changed_filename(s.schematic, _('schematic')) and
                 self.check_changed_filename(s.config, _('config')) and self.check_changed_dirname(s.cwd, _('working dir')) and
@@ -1152,7 +1153,7 @@ class GroupsPanel(wx.Panel):
     def mark_edited(self):
         self.Parent.Parent.mark_edited()
 
-    def edit_group(self, group, is_new=False):
+    def edit_group(self, group, is_new: bool = False):
         group_names = [g.name for g in get_client_data(self.lbox)]
         used_names = set(group_names+[o.name for o in RegOutput.get_outputs()])
         position = self.lbox.Selection
@@ -1202,7 +1203,7 @@ class GroupsPanel(wx.Panel):
 
 class EditGroupDialog(InjectDialog):
     """ Edit a group, can be a new one """
-    def __init__(self, parent, group, used_names, group_names, is_new):
+    def __init__(self, parent, group, used_names: Sequence[str], group_names: Sequence[str], is_new: bool):
         self.initialized = False
         base_id = 'edit_group'
         InjectDialog.__init__(self, parent, title=_("Add/Edit group"), name=base_id,
@@ -1302,7 +1303,7 @@ class EditGroupDialog(InjectDialog):
         else:
             self.set_status(True)
 
-    def is_valid_name(self, name):
+    def is_valid_name(self, name: str):
         if not name:
             return False, _("is empty")
         if name[0] == '_':

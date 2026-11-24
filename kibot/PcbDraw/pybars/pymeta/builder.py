@@ -9,14 +9,14 @@ class TreeBuilder(object):
     Produce an abstract syntax tree of OMeta operations.
     """
 
-    def __init__(self, name, grammar=None, *args):
+    def __init__(self, name: str, grammar=None, *args):
         self.name = name
 
 
     def makeGrammar(self, rules):
         return ["Grammar", self.name, rules]
 
-    def rule(self, name, expr):
+    def rule(self, name: str, expr):
         return ["Rule", name, expr]
 
     def apply(self, ruleName, codeName, *exprs):
@@ -46,7 +46,7 @@ class TreeBuilder(object):
     def sequence(self, exprs):
         return ["And", exprs]
 
-    def bind(self, expr, name):
+    def bind(self, expr, name: str):
         return ["Bind", name, expr]
 
     def pred(self, expr):
@@ -92,7 +92,7 @@ class PythonWriter(object):
         return getattr(self, "generate_"+name)(*args)
 
 
-    def _gensym(self, name):
+    def _gensym(self, name: str) -> str:
         """
         Produce a unique name for a variable in generated code.
         """
@@ -100,7 +100,7 @@ class PythonWriter(object):
         return "_G_%s_%s" % (name, self.gensymCounter)
 
 
-    def _newThunkFor(self, name, expr):
+    def _newThunkFor(self, name: str, expr):
         """
         Define a new function of no arguments.
         @param name: The name of the rule generating this thunk.
@@ -229,7 +229,7 @@ class PythonWriter(object):
         return v
 
 
-    def generate_Bind(self, name, expr):
+    def generate_Bind(self, name: str, expr):
         """
         Bind the value of 'expr' to a name in the _locals dict.
         """
@@ -270,7 +270,7 @@ class PythonWriter(object):
         return  self._expr("listpattern", "self.listpattern(%s)" %(fname,))
 
 
-    def generate_Rule(self, name, expr):
+    def generate_Rule(self, name: str, expr):
         rulelines = ["_locals = {'self': self}",
                      "self.locals[%r] = _locals" % (name,)]
         subwriter = self.__class__(expr)
@@ -279,7 +279,7 @@ class PythonWriter(object):
         self._writeFunction("rule_" + name, ("self",), rulelines)
 
 
-    def generate_Grammar(self, name, rules):
+    def generate_Grammar(self, name: str, rules):
         self.lines.append("class %s(GrammarBase):" % (name,))
         for rule in rules:
             self._generateNode(rule)
@@ -301,7 +301,7 @@ class GeneratedCodeLoader(object):
     """
     def __init__(self, source):
         self.source = source
-    def get_source(self, name):
+    def get_source(self, name: str):
         return self.source
 
 

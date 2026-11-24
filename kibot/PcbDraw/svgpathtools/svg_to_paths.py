@@ -47,7 +47,7 @@ def ellipse2pathd(ellipse):
     return d
 
 
-def polyline2pathd(polyline, is_polygon=False):
+def polyline2pathd(polyline, is_polygon: bool=False):
     """converts the string from a polyline points-attribute to a string for a
     Path object d-attribute"""
     if isinstance(polyline, str):

@@ -24,12 +24,12 @@ def int0(val):
         return 0
 
 
-def get_base(name):
+def get_base(name: str):
     return os.path.splitext(os.path.basename(name))[0]
 
 
 # Validator created using Gemini 3.1 Pro
-def parse_and_validate_pages(input_string, valid_pages):
+def parse_and_validate_pages(input_string: str, valid_pages):
     """
     Parses a comma-separated string of numbers and ranges, validates them against
     a set of valid pages, and returns a sorted, comma-separated string of pages.
@@ -164,7 +164,7 @@ class Any_SCH_PrintOptions(VariantOptions):
 
         return used
 
-    def desc_box(self, box):
+    def desc_box(self, box) -> str:
         return f"SCH text box @{box.pos_x},{box.pos_y}"
 
     def config(self, parent):
@@ -174,7 +174,7 @@ class Any_SCH_PrintOptions(VariantOptions):
         except ValueError as e:
             raise KiPlotConfigurationError('Error parsing list of pages: '+str(e))
 
-    def run_kiauto(self, command, fmt, sch_file, name):
+    def run_kiauto(self, command, fmt, sch_file, name: str):
         cmd = [command, 'export', '--file_format', fmt, '-o', name]
         if self.monochrome:
             cmd.append('--monochrome')
@@ -198,7 +198,7 @@ class Any_SCH_PrintOptions(VariantOptions):
         cmd.extend([sch_file, os.path.dirname(name)])
         self.exec_with_retry(self.add_extra_options(cmd), self._exit_error)
 
-    def run_kicad_cli(self, command, fmt, sch_file, name):
+    def run_kicad_cli(self, command, fmt, sch_file, name: str):
         cmd = [command, 'sch', 'export', fmt, '-o', name if fmt == 'pdf' else os.path.dirname(name)]
         if self.monochrome:
             cmd.append('--black-and-white')
@@ -263,7 +263,7 @@ class Any_SCH_PrintOptions(VariantOptions):
                     move(f, target)
                 GS.set_sch(sch_file)
 
-    def run(self, name):
+    def run(self, name: str):
         if not self.output:
             name = os.path.join(name, GS.sch_basename+'.'+self._expand_ext)
         super().run(name)

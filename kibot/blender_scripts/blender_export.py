@@ -60,40 +60,40 @@ def enable_addon():
     sys.exit(2)
 
 
-def fbx_export(name):
+def fbx_export(name: str):
     bpy.ops.export_scene.fbx(filepath=name)
 
 
-def obj_export(name):
+def obj_export(name: str):
     try:
         bpy.ops.wm.obj_export(filepath=name)
     except AttributeError:
         bpy.ops.export_scene.obj(filepath=name)
 
 
-def x3d_export(name):
+def x3d_export(name: str):
     bpy.ops.export_scene.x3d(filepath=name)
 
 
-def stl_export(name):
+def stl_export(name: str):
     try:
         bpy.ops.wm.stl_export(filepath=name)
     except AttributeError:
         bpy.ops.export_mesh.stl(filepath=name)
 
 
-def ply_export(name):
+def ply_export(name: str):
     try:
         bpy.ops.wm.ply_export(filepath=name)
     except AttributeError:
         bpy.ops.export_mesh.ply(filepath=name)
 
 
-def blender_export(name):
+def blender_export(name: str):
     bpy.ops.wm.save_as_mainfile(filepath=name)
 
 
-def gltf_export(name):
+def gltf_export(name: str):
     # export_colors=False,
     bpy.ops.export_scene.gltf(filepath=name, export_copyright="KiBot", export_draco_mesh_compression_enable=True,
                               export_draco_mesh_compression_level=6, export_yup=True)
@@ -113,7 +113,7 @@ def do_rotate(rots):
     bpy.ops.transform.rotate(value=math.radians(-rots[2]), orient_axis='Z', center_override=(0, 0, 0))
 
 
-def do_point_of_view(scene, name):
+def do_point_of_view(scene, name: str):
     view = scene.get(name)
     if view is None or view == 'z' or view == 'top':
         return (0, 0, 0)

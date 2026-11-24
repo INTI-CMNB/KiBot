@@ -74,7 +74,7 @@ class Base_ReplaceOptions(Optionable):
 
 class Base_Replace(BasePreFlight):  # noqa: F821
     @classmethod
-    def get_example(cls):
+    def get_example(cls) -> str:
         """ Returns a YAML value for the example config """
         return ("\n    date_command: 'git log -1 --format=\"%as\" -- \"$KIBOT_{}_NAME\"'"
                 "\n    replace_tags:"

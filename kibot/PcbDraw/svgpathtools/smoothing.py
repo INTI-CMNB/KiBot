@@ -10,7 +10,7 @@ from .misctools import isclose
 from .paths2svg import disvg
 
 
-def is_differentiable(path, tol=1e-8):
+def is_differentiable(path, tol: float=1e-8) -> bool:
     for idx in range(len(path)):
         u = path[(idx-1) % len(path)].unit_tangent(1)
         v = path[idx].unit_tangent(0)
@@ -20,7 +20,7 @@ def is_differentiable(path, tol=1e-8):
     return True
 
 
-def kinks(path, tol=1e-8):
+def kinks(path, tol: float=1e-8):
     """returns indices of segments that start on a non-differentiable joint."""
     kink_list = []
     for idx in range(len(path)):
@@ -49,7 +49,7 @@ def _report_unfixable_kinks(_path, _kink_list):
     raise Exception(mes)
 
 
-def smoothed_joint(seg0, seg1, maxjointsize=3, tightness=1.99):
+def smoothed_joint(seg0, seg1, maxjointsize: int=3, tightness=1.99):
     """ See Andy's notes on
     Smoothing Bezier Paths for an explanation of the method.
     Input: two segments seg0, seg1 such that seg0.end==seg1.start, and
@@ -148,7 +148,7 @@ def smoothed_joint(seg0, seg1, maxjointsize=3, tightness=1.99):
         return seg0_trimmed, elbow, seg1_trimmed
 
 
-def smoothed_path(path, maxjointsize=3, tightness=1.99, ignore_unfixable_kinks=False):
+def smoothed_path(path, maxjointsize: int=3, tightness=1.99, ignore_unfixable_kinks=False):
     """returns a path with no non-differentiable joints."""
     if len(path) == 1:
         return path

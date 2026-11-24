@@ -107,7 +107,7 @@ class XRC(BasePreFlight):
         self._opts_cls = cls
         self._files_to_remove = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.type}: {self._enabled} ({self._format})'
 
     def config(self, parent):
@@ -172,12 +172,12 @@ class XRC(BasePreFlight):
         return self.get_targets(), icons
 
     @staticmethod
-    def get_conf_examples(name):
+    def get_conf_examples(name: str):
         if not GS.ki8:
             return None
         return {name: {'dont_stop': True, 'format': 'HTML,RPT,JSON,CSV'}}
 
-    def get_item_txt(self, item, indent=4, sep='\n'):
+    def get_item_txt(self, item, indent=4, sep: str = '\n'):
         desc = item.get('description', '')
         pos = item.get('pos', None)
         if pos:
@@ -311,7 +311,7 @@ class XRC(BasePreFlight):
         html += '</table>\n'
         return html
 
-    def create_html_ok(self):
+    def create_html_ok(self) -> str:
         """ Put a big checkmark to indicate all went ok """
         return '<div class="centered-checkmark">&#x2714;</div>\n'
 

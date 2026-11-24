@@ -122,7 +122,7 @@ class PadFabType(Enum):
         return cls.UNKNOWN
 
 
-def sanitized(name):
+def sanitized(name: str):
     """ Replace character that aren't alphabetic by _ """
     return re.sub(r"[\W]+", "_", name)
 
@@ -185,7 +185,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
         else:  # a list
             self.show_components = self.solve_kf_filters(self.show_components)
 
-    def write_bounds(self, name, format, bounds):
+    def write_bounds(self, name: str, format, bounds):
         if format == 'TOML':
             with open(name, 'wt') as f:
                 if len(bounds) == 3:
@@ -198,7 +198,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
                 # Four/Three big endian float numbers
                 f.write(struct.pack("!fff" if len(bounds) == 3 else "!ffff", *bounds))
 
-    def do_board_bounds(self, dir_name):
+    def do_board_bounds(self, dir_name: str):
         if not self.board_bounds_create:
             return
         dir_name = os.path.join(dir_name, self.board_bounds_dir)
@@ -210,7 +210,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
         bounds = (bounds[0]-1, bounds[1]-1, bounds[2]+2, bounds[3]+2)
         self.write_bounds(fname, self.board_bounds_format, bounds)
 
-    def do_pads_info(self, dir_name):
+    def do_pads_info(self, dir_name: str):
         if not self.pads_info_create:
             return
         dir_name = os.path.join(dir_name, self.pads_info_dir)
@@ -259,13 +259,13 @@ class PCB2Blender_ToolsOptions(VariantOptions):
                                             pad.GetDrillShape(),
                                             *map(GS.to_mm, pad.GetDrillSize())))
 
-    def parse_kicad_color(self, string):
+    def parse_kicad_color(self, string: str):
         if string[0] == "#":
             return KiCadColor.CUSTOM, self.parse_one_color(string, scale=1)[:3]
         else:
             return KiCadColor[string.upper()], (0, 0, 0)
 
-    def do_stackup(self, dir_name):
+    def do_stackup(self, dir_name: str):
         if not self.stackup_create or (not GS.global_pcb_finish and not GS.stackup):
             return
         dir_name = os.path.join(dir_name, self.stackup_dir)
@@ -389,7 +389,7 @@ class PCB2Blender_ToolsOptions(VariantOptions):
             boarddefs[target_name].stacked_boards.append(stacked)
         return boarddefs
 
-    def do_sub_boards(self, dir_name):
+    def do_sub_boards(self, dir_name: str):
         if not self.sub_boards_create:
             return
         dir_name = os.path.join(dir_name, self.sub_boards_dir)

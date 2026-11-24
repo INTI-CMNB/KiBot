@@ -18,10 +18,10 @@ class GenericValidator(wx.Validator):
         self.restriction = restriction
         self.default = default
 
-    def TransferFromWindow(self):
+    def TransferFromWindow(self) -> bool:
         return True
 
-    def TransferToWindow(self):
+    def TransferToWindow(self) -> bool:
         return True
 
 
@@ -35,7 +35,7 @@ class NumberValidator(GenericValidator):
     def Clone(self):
         return NumberValidator(self.parent, self.restriction, self.default, self.on_text)
 
-    def Validate(self, win):
+    def Validate(self, win) -> bool:
         """ Check if the new value is usable """
         new_value = self.parent.Value
         if new_value == '':

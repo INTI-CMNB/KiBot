@@ -47,6 +47,8 @@ import sys
 from .error import KiPlotConfigurationError
 from .fil_base import BaseFilter, apply_exclude_filter
 from .gs import GS
+from typing import Sequence
+
 if not GS.ki5:
     from pcbnew import PCB_GROUP, PCB_SHAPE
 from .optionable import Optionable
@@ -199,7 +201,7 @@ class LayerOptions(Layer):
         return layers
 
     @classmethod
-    def create_layer(cls, name):
+    def create_layer(cls, name: str):
         la = super().create_layer(name)
         la.exclude_filter = None
         return la
@@ -696,7 +698,7 @@ class PCB_PrintOptions(VariantOptions):
         # We need to plot the images in a separated pass
         self.last_worksheet = ws
 
-    def plot_frame_gui(self, dir_name, layer='Edge.Cuts'):
+    def plot_frame_gui(self, dir_name: str, layer='Edge.Cuts'):
         """ KiCad 5 crashes if we try to print the frame.
             So we print a frame using pcbnew_do export.
             We use SVG output to then generate a vectorized PDF. """
@@ -726,7 +728,7 @@ class PCB_PrintOptions(VariantOptions):
         patch_svg_file(output, remove_bkg=True, is_portrait=self.pcb.paper_portrait)
         self._files_to_remove = cur_files_to_remove
 
-    def plot_frame_ki8_external(self, dir_name, p, page, pages, color):
+    def plot_frame_ki8_external(self, dir_name: str, p, page, pages, color):
         logger.debug('- Plotting the frame using an external script')
         # Create a bogus PCB with the same paper size
         pcb_dir = GS.mkdtemp('pcb_print_tmp_pcb_for_frame')
@@ -994,7 +996,7 @@ class PCB_PrintOptions(VariantOptions):
                             cnt = cnt+1
         logger.debug('- Filled {} polygons'.format(cnt))
 
-    def process_background(self, svg_out, width, height):
+    def process_background(self, svg_out, width: int, height):
         """ Applies the background options """
         if not self.add_background:
             return
@@ -1007,7 +1009,7 @@ class PCB_PrintOptions(VariantOptions):
             svg_out.insert([root])
         svg_out.insert(svgutils.RectElement(0, 0, width, height, color=self.background_color))
 
-    def search_text_for_g(self, e, texts):
+    def search_text_for_g(self, e, texts: Sequence[str]):
         transform = e.get('transform')
         for c in e:
             # Adjust the text opacity
@@ -1027,7 +1029,7 @@ class PCB_PrintOptions(VariantOptions):
                 # Process all text inside
                 self.search_text_for_g(c, texts)
 
-    def search_text(self, svg, texts):
+    def search_text(self, svg, texts: Sequence[str]):
         """ Transparent text is discarded by rsvg-convert """
         logger.debug(' - Looking for text tags')
         # Scan the SVG
@@ -1418,7 +1420,7 @@ class PCB_PrintOptions(VariantOptions):
             # Revert the output, GS workaround
             self.output = real_output
 
-    def check_ki7_scale_issue(self):
+    def check_ki7_scale_issue(self) -> bool:
         """ Check if all visible layers has scaling problems """
         if not GS.ki7:
             return False
@@ -1785,7 +1787,7 @@ class PCB_Print(BaseOutput):  # noqa: F821
         self._category = 'PCB/docs'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         if len(DRAWING_LAYERS) < 10 and GS.ki6:
             DRAWING_LAYERS.extend(['User.'+str(c+1) for c in range(9)])

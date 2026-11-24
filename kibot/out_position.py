@@ -16,6 +16,7 @@ from .out_base import VariantOptions
 from .error import KiPlotConfigurationError
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
+from typing import Optional
 
 logger = log.get_logger()
 ref_re = compile(r'([^\d]+)([\?\d]+)')
@@ -42,7 +43,7 @@ class PosColumns(Optionable):
     """ Which columns we want and its names """
     _default = DEFAULT_COLUMNS
 
-    def __init__(self, id=None, name=None):
+    def __init__(self, id=None, name: Optional[str] = None):
         super().__init__()
         self._unknown_is_error = True
         with document:
@@ -61,7 +62,7 @@ class PosColumns(Optionable):
         if not self.id:
             raise KiPlotConfigurationError("Missing or empty `id` in columns list ({})".format(str(self._tree)))
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.id} -> {self.name}'
 
 
@@ -219,7 +220,7 @@ class PositionOptions(VariantOptions):
         return is_smd and not (is_tht or no_pos)
 
     @staticmethod
-    def is_not_virtual(m):
+    def is_not_virtual(m) -> bool:
         _, _, _, _, no_pos, _ = GS.fp_get_attributes(m)
         return not no_pos
 
@@ -376,7 +377,7 @@ class Position(BaseOutput):  # noqa: F821
         return self.options.separator
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         has_top = False
         has_bottom = False

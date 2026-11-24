@@ -32,7 +32,7 @@ def dump(tree, *, include_attributes=False, multiline=True, color=False):
     `ast.AST.__repr__` itself can't be monkey-patched, because `ast.AST`
     is a built-in/extension type.
     """
-    def maybe_colorize(text, *colors):
+    def maybe_colorize(text: str, *colors):
         if not color:
             return text
         return colorize(text, *colors)
@@ -46,7 +46,7 @@ def dump(tree, *, include_attributes=False, multiline=True, color=False):
         return str(value)
 
     def recurse(tree, previndent=0):
-        def separator():
+        def separator() -> str:
             if multiline:
                 return f",\n{(previndent + moreindent) * ' '}"
             return ", "

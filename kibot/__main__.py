@@ -130,6 +130,8 @@ Help options:
 """
 # Avoid passing KiCad faults to the user
 import wx
+from typing import Sequence
+
 if hasattr(wx, "DisableAsserts"):
     wx.DisableAsserts()
 
@@ -205,7 +207,7 @@ def list_pre_and_outs_names(logger, outputs, do_config, only_pre, only_groups):
             logger.info(o.name)
 
 
-def list_pre_and_outs(logger, outputs, do_config, only_names, only_pre, only_groups, output_name_first):
+def list_pre_and_outs(logger, outputs, do_config, only_names: Sequence[str], only_pre, only_groups, output_name_first):
     if only_names:
         return list_pre_and_outs_names(logger, outputs, do_config, only_pre, only_groups)
     pf = BasePreFlight.get_in_use_objs()
@@ -247,7 +249,7 @@ def list_pre_and_outs(logger, outputs, do_config, only_names, only_pre, only_gro
         logger.info("")
 
 
-def list_variants(logger, only_names, sub_pcbs):
+def list_variants(logger, only_names: Sequence[str], sub_pcbs):
     variants = RegOutput.get_variants()
     if not variants:
         if not only_names:
@@ -271,7 +273,7 @@ def list_variants(logger, only_names, sub_pcbs):
                 logger.info(f'  - {s.name}')
 
 
-def solve_config(a_plot_config, quiet, gui):
+def solve_config(a_plot_config, quiet: bool, gui):
     plot_config = a_plot_config
     if not plot_config:
         plot_configs = glob('*.kibot.yaml')+glob('*.kiplot.yaml')+glob('*.kibot.yaml.gz')+glob('*.kibot.yml')
@@ -736,7 +738,7 @@ def parse_global_redef(args):
 
 
 class SimpleFilter(object):
-    def __init__(self, num, regex=''):
+    def __init__(self, num: int, regex=''):
         self.number = num
         self._regex = re.compile(regex)
         self.regex = regex
@@ -782,7 +784,7 @@ def detect_macos():  # pragma: no cover (Darwin)
     logger.warning(W_ONMAC+'Running on macOS, this is experimental, please report any problem')
 
 
-def check_needs_convert():
+def check_needs_convert() -> bool:
     """ Try to convert Altium PCBs to KiCad.
         If successful just use the converted file. """
     if GS.pcb_file is None:

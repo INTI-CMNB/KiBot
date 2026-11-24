@@ -21,7 +21,7 @@ class MdRenderer(BaseRenderer):
     def __init__(self, **kwargs):
         super(MdRenderer, self).__init__()
 
-    def get_block(text):
+    def get_block(text: str):
         type = text[0]
         p = text.find(':')
         if p <= 0:
@@ -30,28 +30,28 @@ class MdRenderer(BaseRenderer):
         t = text[p+1:p+1+l]
         return (text[p+1+l:], type, t)
 
-    def newline(self):
+    def newline(self) -> str:
         return '\n'
 
-    def text(self, text):
+    def text(self, text: str):
         return text
 
-    def linebreak(self):
+    def linebreak(self) -> str:
         return '\n'
 
-    def hrule(self):
+    def hrule(self) -> str:
         return '---\n'
 
-    def heading(self, text, level, raw=None):
+    def heading(self, text: str, level, raw=None):
         return '#'*level + " " + text + '\n\n'
 
     # Mistune 0.8.4 calls it header, not heading
     header = heading
 
-    def paragraph(self, text):
+    def paragraph(self, text: str):
         return text + '\n\n'
 
-    def list(self, text, ordered=True, level=None, start=None):
+    def list(self, text: str, ordered=True, level=None, start=None):
         r = '\n'
         indent = ' ' * ((level-1) * 2)
         while text:
@@ -60,40 +60,40 @@ class MdRenderer(BaseRenderer):
                 r += indent + (ordered and ('# ' + t) or ('* ' + t)) + '\n'
         return r
 
-    def list_item(self, text, level=None):
+    def list_item(self, text: str, level=None):
         return 'l' + str(len(text)) + ':' + text
 
-    def block_text(self, text):
+    def block_text(self, text: str):
         return text
 
     def block_code(self, code, lang=None):
         return '```\n' + code + '\n```\n'
 
-    def block_quote(self, text):
+    def block_quote(self, text: str):
         r = ''
         for line in text.splitlines():
             r += (line and '> ' or '') + line + '\n'
         return r
 
-    def _emphasis(self, text, pref):
+    def _emphasis(self, text: str, pref):
         return pref + text + pref + ' '
 
-    def emphasis(self, text):
+    def emphasis(self, text: str):
         return self._emphasis(text, '_')
 
-    def double_emphasis(self, text):
+    def double_emphasis(self, text: str):
         return self._emphasis(text, '__')
 
-    def strikethrough(self, text):
+    def strikethrough(self, text: str):
         return self._emphasis(text, '~~')
 
-    def codespan(self, text):
+    def codespan(self, text: str):
         return '`' + text + '`'
 
-    def autolink(self, link, is_email=False):
+    def autolink(self, link, is_email: bool=False):
         return '<' + link + '>'
 
-    def link(self, link, title, text, image=False):
+    def link(self, link, title, text: str, image=False):
         if text is None:
             text = title
             title = None
@@ -102,7 +102,7 @@ class MdRenderer(BaseRenderer):
             r += '"' + title + '"'
         return r
 
-    def image(self, src, title, text):
+    def image(self, src, title, text: str):
         self.link(src, title, text, image=True)
 
     def table(self, header, body):
@@ -195,13 +195,13 @@ class MdRenderer(BaseRenderer):
     def footnote_ref(self, key, index):
         return '[^' + str(index) + ']'
 
-    def footnote_item(self, key, text):
+    def footnote_item(self, key, text: str):
         r = '[^' + str(index) + ']:\n'
         for l in text.split('\n'):
             r += '  ' + l.lstrip().rstrip() + '\n'
         return r
 
-    def footnotes(self, text):
+    def footnotes(self, text: str):
         return text
 
     def finalize(self, data):

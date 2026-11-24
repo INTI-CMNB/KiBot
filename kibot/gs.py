@@ -13,7 +13,7 @@ from shutil import copy2
 from sys import exit, exc_info
 import tempfile
 from traceback import extract_stack, format_list, print_tb
-from typing import NoReturn, TYPE_CHECKING
+from typing import Optional, NoReturn, TYPE_CHECKING
 from .misc import (EXIT_BAD_ARGS, W_DATEFORMAT, W_UNKVAR, WRONG_INSTALL, CORRUPTED_PRO, hide_stderr, KICAD_VERSION_9_0_5,
                    MOD_EXCLUDE_FROM_POS_FILES, MOD_EXCLUDE_FROM_BOM, MOD_BOARD_ONLY, MOD_SMD, MOD_THROUGH_HOLE, MOD_VIRTUAL,
                    MOD_ALLOW_MISSING_COURTYARD)
@@ -324,7 +324,7 @@ class GS(object):
     pasteable_cmd = shlex.join if hasattr(shlex, 'join') else lambda x: str(x)   # novermin
 
     @staticmethod
-    def set_sch(name):
+    def set_sch(name: str):
         if name:
             name = os.path.abspath(name)
             GS.sch_file = name
@@ -335,7 +335,7 @@ class GS(object):
             GS.sch_last_dir = os.path.basename(GS.sch_dir)
 
     @staticmethod
-    def set_pcb(name):
+    def set_pcb(name: str):
         if name:
             name = os.path.abspath(name)
             GS.pcb_file = name
@@ -346,7 +346,7 @@ class GS(object):
             GS.pcb_last_dir = os.path.basename(GS.pcb_dir)
 
     @staticmethod
-    def set_pro(name):
+    def set_pro(name: str):
         if name:
             name = os.path.abspath(name)
             GS.pro_file = name
@@ -580,13 +580,13 @@ class GS(object):
 #         return str(val*scale)+' '+GS.unit_name_to_abrev(GS.global_units)
 
     @staticmethod
-    def make_bkp(fname, suffix='-bak'):
+    def make_bkp(fname, suffix: str = '-bak'):
         bkp = fname+suffix
         if os.path.isfile(fname):
             os.replace(fname, bkp)
 
     @staticmethod
-    def restore_bkp(fname, suffix='-bak'):
+    def restore_bkp(fname, suffix: str = '-bak'):
         bkp = fname+suffix
         if os.path.isfile(bkp):
             os.replace(bkp, fname)
@@ -614,7 +614,7 @@ class GS(object):
         """ KiCad 8 doesn't need footprint_update_local_coords """
 
     @staticmethod
-    def expand_text_variables(text, extra_vars=None):
+    def expand_text_variables(text: str, extra_vars=None):
         vars = GS.load_pro_variables()
         new_text = ''
         last = 0
@@ -646,7 +646,7 @@ class GS(object):
         return GS.board.IsLayerEnabled(id)
 
     @staticmethod
-    def is_layer_enabled_kp(id):
+    def is_layer_enabled_kp(id) -> bool:
         return id in GS.enabled_layers
 
     @staticmethod
@@ -704,7 +704,7 @@ class GS(object):
             GS.exit_with_error('No project file found (*.kicad_pro/*.pro).', EXIT_BAD_ARGS)
 
     @staticmethod
-    def copy_project(new_pcb_name, dry=False):
+    def copy_project(new_pcb_name: str, dry=False):
         pro_name = GS.pro_file
         if pro_name is None or not os.path.isfile(pro_name):
             return None, None, None
@@ -731,7 +731,7 @@ class GS(object):
         return pro_copy, prl_copy, dru_copy
 
     @staticmethod
-    def copy_project_names(pcb_name, ref_dir):
+    def copy_project_names(pcb_name: str, ref_dir):
         pro_copy, prl_copy, dru_copy = GS.copy_project(pcb_name, dry=True)
         files = []
         if pro_copy:
@@ -759,7 +759,7 @@ class GS(object):
             f.close()
 
     @staticmethod
-    def get_pcb_and_pro_names(name):
+    def get_pcb_and_pro_names(name: str):
         n = os.path.splitext(name)[0]
         if GS.ki5:
             return [name, n+'.pro']
@@ -769,7 +769,7 @@ class GS(object):
                 n+'.kicad_dru-bak']
 
     @staticmethod
-    def remove_pcb_and_pro(name):
+    def remove_pcb_and_pro(name: str):
         """ Used to remove temporal PCB and project files """
         for fn in GS.get_pcb_and_pro_names(name):
             if os.path.isfile(fn):
@@ -810,17 +810,17 @@ class GS(object):
         return [la for la in Layer.solve(useful) if la._id in use]
 
     @staticmethod
-    def ensure_tool(context, name):
+    def ensure_tool(context, name: str):
         """ Looks for a mandatory dependency """
         return GS.check_tool_dep(context, name, fatal=True)
 
     @staticmethod
-    def check_tool(context, name):
+    def check_tool(context, name: str):
         """ Looks for a dependency """
         return GS.check_tool_dep(context, name, fatal=False)
 
     @staticmethod
-    def reload_project(pro_name):
+    def reload_project(pro_name: str):
         if pro_name is None:
             return
         sm = GS.pn.GetSettingsManager()
@@ -830,7 +830,7 @@ class GS(object):
         GS.board = None
 
     @staticmethod
-    def get_resource_path(name):
+    def get_resource_path(name: str):
         # Try relative to the script
         dir_name = os.path.join(os.path.dirname(__file__), 'resources', name)
         if os.path.isdir(dir_name):
@@ -1141,7 +1141,7 @@ class GS(object):
         GS.errors_ignored = True
 
     @staticmethod
-    def create_fp_lib(lib_name):
+    def create_fp_lib(lib_name: str):
         """ Create a new footprints lib. You must provide a path.
             Doesn't fail if the lib is there.
             .pretty extension is forced. """
@@ -1155,13 +1155,13 @@ class GS(object):
 
     @staticmethod
     @contextmanager
-    def create_file(name, bin=False):
+    def create_file(name: str, bin=False):
         os.makedirs(os.path.dirname(name), exist_ok=True)
         with open(name, 'wb' if bin else 'w') as f:
             yield f
 
     @staticmethod
-    def write_to_file(content, name):
+    def write_to_file(content, name: str):
         with GS.create_file(name, bin=isinstance(content, bytes)) as f:
             f.write(content)
 
@@ -1219,7 +1219,7 @@ class GS(object):
             footprint.GetField(fld).SetVisible(False)
 
     @staticmethod
-    def _set_internal_field_kp(field, flds, clear_missing):
+    def _set_internal_field_kp(field, flds, clear_missing) -> bool:
         name = field.name
         if name not in flds:
             # Undefined (not specified)
@@ -1392,7 +1392,7 @@ class GS(object):
         return GS._compute_boundary_k6(board, {GS.Edge_Cuts}, {'PCB_SHAPE', 'MGRAPHIC'}, exact=exact)
 
     @staticmethod
-    def item_in_layers(item, layers):
+    def item_in_layers(item, layers) -> bool:
         if layers is None:  # Means any layer
             return True
         if hasattr(item, 'layer'):
@@ -1538,7 +1538,8 @@ class GS(object):
         return GS.to_mm(center.x), GS.to_mm(center.y)
 
     @staticmethod
-    def tmp_file(content=None, prefix=None, suffix=None, dir=None, what=None, a_logger=None, binary=False, indent=False):
+    def tmp_file(content=None, prefix: Optional[str] = None, suffix: Optional[str] = None, dir=None, what=None, a_logger=None,
+                 binary=False, indent=False):
         mode = 'wb' if binary else 'wt'
         prefix = 'kibot_'+(prefix if prefix is not None else '')
         with tempfile.NamedTemporaryFile(mode=mode, delete=False, suffix=suffix, prefix=prefix, dir=dir) as f:
@@ -1613,7 +1614,7 @@ class GS(object):
         GS.board.update_items(all)
 
     @staticmethod
-    def sanitize_file_name(name):
+    def sanitize_file_name(name: str):
         # sanitize the name to avoid characters illegal in file systems
         if GS.on_windows:
             # Here \ *is* valid
@@ -1628,7 +1629,7 @@ class GS(object):
         return name
 
     @staticmethod
-    def module_position(m):
+    def module_position(m) -> str:
         pos = GS.fp_get_position(m)
         return f'({GS.to_mm(pos.x)}, {GS.to_mm(pos.y)}) mm'
 
@@ -1785,7 +1786,7 @@ class GS(object):
         return old_dnp
 
     @staticmethod
-    def fp_set_dnp_k5(footprint, value):
+    def fp_set_dnp_k5(footprint, value) -> bool:
         return False
 
     @staticmethod

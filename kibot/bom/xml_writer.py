@@ -11,9 +11,10 @@ XML Writer: Generates an XML BoM file.
 """
 from xml.etree import ElementTree
 from xml.dom import minidom
+from typing import Sequence
 
 
-def write_xml(filename, groups, headings, head_names, cfg):
+def write_xml(filename, groups, headings, head_names: Sequence[str], cfg) -> bool:
     """
     Write BoM out to an XML file
     filename = path to output file (must be a .csv, .txt or .tsv file)

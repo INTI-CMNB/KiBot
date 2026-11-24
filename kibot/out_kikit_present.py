@@ -120,7 +120,7 @@ class PresentBoards(Optionable):
     def solve_file(self):
         return self.name, self.comment, self.pcb_file, self.front_image, self.back_image, self.gerbers
 
-    def generate_image(self, back, tmp_name):
+    def generate_image(self, back, tmp_name: str):
         options = self._renderer.get_renderer_options()
         if options is None:
             raise KiPlotConfigurationError('No suitable renderer ({})'.format(self._renderer))
@@ -135,14 +135,14 @@ class PresentBoards(Optionable):
         # Restore the options
         options.restore_renderer_options()
 
-    def do_compress(self, tmp_name, out):
+    def do_compress(self, tmp_name: str, out):
         tree = {'name': '_temporal_compress_gerbers',
                 'type': 'compress',
                 'comment': 'Internally created to compress gerbers',
                 'options': {'output': tmp_name, 'files': [{'from_output': out.name, 'dest': '/'}]}}
         configure_and_run(tree, os.path.dirname(tmp_name), 'Creating gerbers archive ...')
 
-    def generate_archive(self, out, tmp_name):
+    def generate_archive(self, out, tmp_name: str):
         out.options
         logger.debug('Starting gerber name: {}'.format(out.name))
         # Save options
@@ -162,7 +162,7 @@ class PresentBoards(Optionable):
         out._done = old_done
         out.options.variant = old_variant
 
-    def solve_pcb(self, load_it=True):
+    def solve_pcb(self, load_it=True) -> bool:
         if not self.pcb_from_output:
             return False
         out_name = self.pcb_from_output
@@ -183,7 +183,7 @@ class PresentBoards(Optionable):
         self.new_pcb = new_pcb
         return True
 
-    def solve_local_image(self, out_name, back=False):
+    def solve_local_image(self, out_name: str, back=False):
         if not out_name:
             out = next(filter(lambda x: x.type in RENDERERS, RegOutput.get_outputs()), None)
             if not out:
@@ -202,7 +202,7 @@ class PresentBoards(Optionable):
         self.generate_image(back, tmp_name)
         return tmp_name
 
-    def solve_local_gerbers(self, out_name):
+    def solve_local_gerbers(self, out_name: str):
         if not out_name:
             out = next(filter(lambda x: x.type == 'gerber', RegOutput.get_outputs()), None)
             if not out:
@@ -267,7 +267,7 @@ class PresentBoards(Optionable):
         # external
         return self.solve_external()
 
-    def __str__(self):
+    def __str__(self) -> str:
         desc = self.comment if self.comment else 'No comment'
         name = self.name if self.name else 'No name'
         return f'`{desc}` ({name}) [{self.mode}]'
@@ -360,7 +360,7 @@ class KiKit_PresentOptions(BaseOptions):
     def get_navigate_targets(self, out_dir):
         return self._get_targets(out_dir, True)
 
-    def run(self, dir_name):
+    def run(self, dir_name: str):
         self.ensure_tool('markdown2')
         from .PcbDraw.present import boardpage
         if self._silly_desc:
@@ -409,7 +409,7 @@ class KiKit_Present(BaseOutput):
         return self.options.get_navigate_targets(out_dir), None
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.check_tool(name, 'markdown2'):
             return None
         outs = BaseOutput.simple_conf_examples(name, 'Simple project presentation', 'Presentation')

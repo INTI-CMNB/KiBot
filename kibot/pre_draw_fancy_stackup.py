@@ -45,7 +45,7 @@ class SUColumnsFancy(Optionable):
             self.width = 30
             """ *Relative width. Is computed automatically according to the defined group width """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.type} {self.width}'
 
 
@@ -143,11 +143,11 @@ class SULayer:
         self.layer_type = ''
         self.gerber = ''
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.layer} mat: {self.material} thick: {self.thickness} use: {self.layer_type} type: {self.type}"
 
 
-def draw_core(g, x, y, w, h, layer, offset, border_w=10000):
+def draw_core(g, x, y, w, h, layer, offset: int, border_w=10000):
     y = y-int(h*0.5)+offset
     h = int(h)
     draw_rect(g, x, y, w, h, layer, line_w=border_w)
@@ -163,7 +163,7 @@ def draw_core(g, x, y, w, h, layer, offset, border_w=10000):
         x += h
 
 
-def draw_prepreg(g, x, y, w, h, layer, offset, border_w=10000):
+def draw_prepreg(g, x, y, w, h, layer, offset: int, border_w=10000):
     y = y-int(h*0.5)+offset
     h = int(h)
     draw_rect(g, x, y, w, h, layer, line_w=border_w)
@@ -180,24 +180,24 @@ def draw_prepreg(g, x, y, w, h, layer, offset, border_w=10000):
         x -= h
 
 
-def draw_copper(g, x, y, w, h, layer, offset):
+def draw_copper(g, x, y, w, h, layer, offset: int):
     y = y-int(h*0.5)+offset
     h = int(h)
     draw_rect(g, x, y, w, h, layer, filled=True)
 
 
-def draw_mask_paste_silk(g, x, y, w, h, layer, offset, border_w=10000):
+def draw_mask_paste_silk(g, x, y, w, h, layer, offset: int, border_w=10000):
     y = y-int(h*0.5)+offset
     h = int(h)
     draw_rect(g, x, y, w, h, layer, filled=False, line_w=border_w)
 
 
-def draw_normal_buried_via(g, x, y, w, h, tlayer, clearance, hole_size):
+def draw_normal_buried_via(g, x, y, w, h, tlayer, clearance, hole_size: int):
     draw_rect(g, int(x+clearance), y, int(w/2-clearance-hole_size/2), h, tlayer, filled=True)
     draw_rect(g, int(x+w/2+hole_size/2), y, int(w/2-clearance-hole_size/2), h, tlayer, filled=True)
 
 
-def draw_microvia(g, x, y, w, h, tlayer, clearance, via_w, hole_size, via_annular_w, copper_cnt, type):
+def draw_microvia(g, x, y, w, h, tlayer, clearance, via_w, hole_size: int, via_annular_w, copper_cnt, type):
     GS.board.GetCopperLayerCount()
     if type == 'MT':
         left_points = []
@@ -249,7 +249,7 @@ def draw_microvia(g, x, y, w, h, tlayer, clearance, via_w, hole_size, via_annula
         draw_rect(g, int(x+clearance), y, int(w-2*clearance), h, tlayer, filled=True)
 
 
-def draw_via_column(g, x, y, w, h, tlayer, clearance, hole_size, hoffset):
+def draw_via_column(g, x, y, w, h, tlayer, clearance, hole_size: int, hoffset):
     draw_rect(g, int(x+clearance), int(y-h/2+hoffset/2), int(w/2-clearance-hole_size/2), h, tlayer, filled=True)
     draw_rect(g, int(x+w/2+hole_size/2), int(y-h/2+hoffset/2), int(w/2-clearance-hole_size/2), h, tlayer, filled=True)
 
@@ -263,13 +263,13 @@ def get_material(la, la_type=''):
     return ''
 
 
-def get_dielectric(la):
+def get_dielectric(la) -> str:
     if la.material:
         return f"{la.material}"
     return ''
 
 
-def get_type(la, la_type):
+def get_type(la, la_type) -> str:
     if la_type == "mask":
         return "Solder Mask"
     elif la_type == "silk":
@@ -433,7 +433,7 @@ def measure_table(ops, gerber, via_layer_pairs, stackup, font=None):
         c.width = c.max_len/tot_len
 
 
-def update_drawing_group(g, pos_x, pos_y, width, tlayer, ops, gerber, via_layer_pairs):
+def update_drawing_group(g, pos_x, pos_y, width: int, tlayer, ops, gerber, via_layer_pairs) -> bool:
 
     font = None
 
@@ -651,7 +651,7 @@ def create_stackup_matrix(stackup, via_layer_pairs, draw_vias):
     return mat  # Return the populated matrix
 
 
-def get_layer_number(stackup, number):
+def get_layer_number(stackup, number: int):
     copper_num = GS.copper_layer_to_ordinal(number)
 
     i = 0

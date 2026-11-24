@@ -12,6 +12,7 @@ from .error import KiPlotConfigurationError, PlotError
 from .gs import GS
 from .misc import W_UNKOPS, DISTRIBUTORS_STUBS, DISTRIBUTORS_STUBS_SEPS, typeof, RE_LEN
 from . import log
+from typing import Sequence
 
 logger = log.get_logger()
 HEX_DIGIT = '[A-Fa-f0-9]{2}'
@@ -20,7 +21,7 @@ for n in range(1, 10):
     PATTERNS_DEP.append('%C'+str(n))
 
 
-def _cl(text):
+def _cl(text: str):
     """ Eliminates dangerous characters from the text """
     return re.sub(r'[\\\/\?%\*:|"<>]', '_', text)
 
@@ -130,10 +131,10 @@ class Optionable(object):
             if len(v) != items:
                 raise KiPlotConfigurationError(f"The `{k}` must contain {items} values ({v})")
 
-    def get_doc_simple(self, name):
+    def get_doc_simple(self, name: str):
         return getattr(self, '_help_'+name)
 
-    def get_doc(self, name, no_basic=False):
+    def get_doc(self, name: str, no_basic=False):
         try:
             doc = getattr(self, '_help_'+name).strip()
         except AttributeError:
@@ -149,15 +150,15 @@ class Optionable(object):
             doc = doc[1:]
         return doc, name, is_alias
 
-    def is_basic_option(self, name):
+    def is_basic_option(self, name: str):
         help, _, _ = self.get_doc(name)
         return help and help[0] == '*'
 
-    def add_to_doc(self, name, text, with_nl=True):
+    def add_to_doc(self, name: str, text: str, with_nl=True):
         doc = getattr(self, '_help_'+name).strip()
         setattr(self, '_help_'+name, doc+('.\n' if with_nl else '')+text)
 
-    def set_doc(self, name, text):
+    def set_doc(self, name: str, text: str):
         setattr(self, '_help_'+name, text)
 
     def get_valid_types(self, doc, skip_extra=False):
@@ -198,7 +199,7 @@ class Optionable(object):
                 validation.append(None)
         return valid, validation, def_val, real_help
 
-    def check_string_dict(self, v_type, valid, k, v):
+    def check_string_dict(self, v_type, valid, k, v) -> bool:
         if v_type != 'dict' or 'string_dict' not in valid:
             return False
         # A particular case for dict
@@ -208,7 +209,7 @@ class Optionable(object):
                                                f" `{typeof(value, Optionable)}`")
         return True
 
-    def check_list_string_dict(self, v_type, valid, k, v):
+    def check_list_string_dict(self, v_type, valid, k, v) -> bool:
         if v_type != 'list(dict)' or 'list(string_dict)' not in valid:
             return False
         # A particular case for list(dict)
@@ -313,10 +314,10 @@ class Optionable(object):
             setattr(self, dest_name, v)
             self.set_user_defined(dest_name)
 
-    def set_user_defined(self, name):
+    def set_user_defined(self, name: str):
         setattr(self, '_{}_user_defined'.format(name), True)
 
-    def get_user_defined(self, name):
+    def get_user_defined(self, name: str):
         name = '_{}_user_defined'.format(name)
         if hasattr(self, name):
             return getattr(self, name)
@@ -459,7 +460,7 @@ class Optionable(object):
                 return self.variant._sub_pcb.name
         return Optionable._find_global_subpcb()
 
-    def expand_filename_common(self, name, parent):
+    def expand_filename_common(self, name: str, parent):
         """ Expansions common to the PCB and Schematic """
         # PCB expansions, explicit
         if GS.board and '%b' in name:
@@ -501,7 +502,7 @@ class Optionable(object):
             name = name.replace('%V', _cl(Optionable._find_global_variant_name()))
         return name
 
-    def expand_filename_both(self, name, is_sch=True, make_safe=True):
+    def expand_filename_both(self, name: str, is_sch: bool = True, make_safe=True):
         """ Expands %* values in filenames.
             Uses data from the PCB. """
         parent = None
@@ -557,13 +558,13 @@ class Optionable(object):
             logger.debug('Expanded `{}`'.format(name))
         return name
 
-    def expand_filename_pcb(self, name, make_safe=True):
+    def expand_filename_pcb(self, name: str, make_safe=True):
         """ Expands %* values in filenames.
             Uses data from the PCB. """
         # This member can be called with a preflight object
         return Optionable.expand_filename_both(self, name, is_sch=False, make_safe=make_safe)
 
-    def expand_filename_sch(self, name):
+    def expand_filename_sch(self, name: str):
         """ Expands %* values in filenames.
             Uses data from the SCH. """
         # This member can be called with a preflight object
@@ -619,11 +620,11 @@ class Optionable(object):
     def validate_color_str(self, color):
         return self._color_re.match(color) or self._color_re_a.match(color)
 
-    def validate_color(self, name):
+    def validate_color(self, name: str):
         if not self.validate_color_str(getattr(self, name)):
             raise KiPlotConfigurationError('Invalid color for `{}` use `#rrggbb` or `#rrggbbaa` with hex digits'.format(name))
 
-    def validate_colors(self, names):
+    def validate_colors(self, names: Sequence[str]):
         for color in names:
             self.validate_color(color)
 
@@ -634,7 +635,7 @@ class Optionable(object):
             alpha = int(res[3], 16)*scale
         return (int(res[0], 16)*scale, int(res[1], 16)*scale, int(res[2], 16)*scale, alpha)
 
-    def color_to_rgb(self, color):
+    def color_to_rgb(self, color) -> str:
         index = 4 if len(color) > 4 else 0
         alpha = color[index+3]
         if alpha == 1.0:
@@ -786,19 +787,19 @@ class BaseOptions(Optionable):
         """ Set attributes from a PCB_PLOT_PARAMS (plot options) """
         return
 
-    def ensure_tool(self, name):
+    def ensure_tool(self, name: str):
         """ Looks for a mandatory dependency """
         return GS.check_tool_dep(self._parent.type, name, fatal=True)
 
-    def ensure_tool_get_ver(self, name):
+    def ensure_tool_get_ver(self, name: str):
         """ Looks for a mandatory dependency, also returns its version """
         return GS.check_tool_dep_get_ver(self._parent.type, name, fatal=True)
 
-    def check_tool(self, name):
+    def check_tool(self, name: str):
         """ Looks for a dependency """
         return GS.check_tool_dep(self._parent.type, name, fatal=False)
 
-    def expand_filename(self, dir, name, id, ext, make_safe=True):
+    def expand_filename(self, dir, name: str, id, ext, make_safe=True):
         cur_id = self._expand_id
         cur_ext = self._expand_ext
         self._expand_id = id

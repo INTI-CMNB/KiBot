@@ -141,7 +141,7 @@ class PcbDrawResistorRemap(Optionable):
         if not self.ref or not self.val:
             raise KiPlotConfigurationError("The resistors remapping must specify a `ref` and a `val`")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.ref} -> {self.val}'
 
 
@@ -171,7 +171,7 @@ class PcbDrawRemapComponents(Optionable):
         if not self.ref or not self.lib or not self.comp:
             raise KiPlotConfigurationError("The component remapping must specify a `ref`, a `lib` and a `comp`")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.ref} -> {self.lib}:{self.comp}'
 
 
@@ -305,7 +305,7 @@ class PcbDrawOptions(VariantOptions):
         self._expand_id = 'bottom' if self.bottom else 'top'
         self._expand_ext = self.format
 
-    def setup_renderer(self, components, active_components, bottom, name):
+    def setup_renderer(self, components, active_components, bottom, name: str):
         super().setup_renderer(components, active_components)
         self.add_to_variant = False
         self.bottom = bottom
@@ -357,7 +357,7 @@ class PcbDrawOptions(VariantOptions):
         from .PcbDraw.plot import PlotComponents, ResistorValue
         remapping = self._remap
 
-        def remapping_fun(ref, lib, name):
+        def remapping_fun(ref, lib, name: str):
             if ref in remapping:
                 remapped_lib, remapped_name = remapping[ref]
                 if name.endswith('.back'):
@@ -413,7 +413,7 @@ class PcbDrawOptions(VariantOptions):
             plot_components.highlight = lambda ref: ref in highlight_set
         return plot_components
 
-    def create_image(self, name, board):
+    def create_image(self, name: str, board):
         self.ensure_tool('LXML')
         from .PcbDraw.plot import PcbPlotter, PlotPaste, PlotPlaceholders, PlotSubstrate, PlotVCuts
         # Select a name and format that PcbDraw can handle
@@ -509,7 +509,7 @@ class PcbDrawOptions(VariantOptions):
             _run_command(cmd)
             os.remove(save_output_name)
 
-    def run(self, name):
+    def run(self, name: str):
         super().run(name)
         # Apply any variant
         self.filter_pcb_components(do_3D=True)
@@ -549,7 +549,7 @@ class PcbDraw(BaseOutput):  # noqa: F821
         return self.options
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         for la in layers:
             is_top = la.is_top()

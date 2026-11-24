@@ -249,7 +249,7 @@ class Navigate_ResultsOptions(Any_Navigate_ResultsOptions):
                 cat = ('<table class="cat-img"><tr><td>{}<br>{}</td></tr></table>'.format(cat_img, cat))
         return cat
 
-    def get_image_for_file(self, file, out_name, no_icon=False, image=None):
+    def get_image_for_file(self, file, out_name: str, no_icon=False, image=None):
         ext = os.path.splitext(file)[1][1:].lower()
         wide = False
         # Copy the icon for this file extension
@@ -297,7 +297,7 @@ class Navigate_ResultsOptions(Any_Navigate_ResultsOptions):
         if self.nav_bar:
             f.write(SCRIPT)
 
-    def generate_cat_page_for(self, name, node, prev, category):
+    def generate_cat_page_for(self, name: str, node, prev, category):
         logger.debug('- Categories: '+str(node.keys()))
         with open(os.path.join(self.out_dir, name), 'wt') as f:
             self.write_head(f, category)
@@ -407,7 +407,7 @@ class Navigate_ResultsOptions(Any_Navigate_ResultsOptions):
                 f.write('<td></td>\n')
             f.write('</tr>\n</tbody>\n</table>\n')
 
-    def generate_end_page_for(self, name, node, prev, category):
+    def generate_end_page_for(self, name: str, node, prev, category):
         logger.debug('- Outputs: '+str(node.keys()))
         with open(os.path.join(self.out_dir, name), 'wt') as f:
             self.write_head(f, category)
@@ -418,14 +418,14 @@ class Navigate_ResultsOptions(Any_Navigate_ResultsOptions):
                 f.write(SCRIPT_MARKDOWN)
             f.write('</body>\n</html>\n')
 
-    def generate_page_for(self, node, name, prev=None, category=''):
+    def generate_page_for(self, node, name: str, prev=None, category=''):
         logger.debug('Generating page for '+name)
         if isinstance(list(node.values())[0], dict):
             self.generate_cat_page_for(name, node, prev, category)
         else:
             self.generate_end_page_for(name, node, prev, category)
 
-    def generate_navbar_one(self, node, lvl, name, ext):
+    def generate_navbar_one(self, node, lvl, name: str, ext):
         """ Recursively create a menu containing all outputs.
             Using ul and li items """
         indent = ' '+' '*lvl
@@ -441,7 +441,7 @@ class Navigate_ResultsOptions(Any_Navigate_ResultsOptions):
         code += indent[:-1]+'</ul>\n'
         return code
 
-    def generate_navbar(self, node, name):
+    def generate_navbar(self, node, name: str):
         name, ext = os.path.splitext(name)
         code = '<div id="theSideNav" class="sidenav">\n'
         code += '<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>\n'

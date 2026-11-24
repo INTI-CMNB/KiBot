@@ -91,7 +91,7 @@ class Stencil_3D_Options(Stencil_Options):
             cmd.extend(['--enlargeholes', str(self.enlargeholes)])
         return cmd
 
-    def move_outputs(self, tmp, prj_name, do_top, do_bottom):
+    def move_outputs(self, tmp, prj_name: str, do_top, do_bottom):
         replacements = {}
         # Create the preview before we touch anything
         if self.create_preview:
@@ -134,7 +134,7 @@ class Stencil_3D(BaseOutput):  # noqa: F821
         self._category = 'PCB/fabrication/assembly'
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.check_tool(name, 'KiKit') or not GS.check_tool(name, 'OpenSCAD'):
             return None
         return BaseOutput.simple_conf_examples(name, '3D self-registering stencil', 'Assembly')  # noqa: F821

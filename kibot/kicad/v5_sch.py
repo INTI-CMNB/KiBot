@@ -23,6 +23,7 @@ from ..misc import (W_BADPOLI, W_POLICOORDS, W_BADSQUARE, W_BADCIRCLE, W_BADARC,
                     W_UNKDCM, W_UNKAR, W_ARNOPATH, W_ARNOREF, W_MISCFLD, W_EXTRASPC, W_NOLIB, W_INCPOS, W_NOANNO, W_MISSLIB,
                     W_MISSDCM, W_MISSCMP, W_MISFLDNAME, W_NOENDLIB, W_VALMISMATCH, W_MULTIREF, try_decode_utf8)
 from .. import log
+from typing import Optional, Sequence
 
 logger = log.get_logger()
 
@@ -121,7 +122,7 @@ class LibComponentField(object):
         super().__init__()
 
     @staticmethod
-    def parse(line, lib_name, f):
+    def parse(line, lib_name: str, f):
         m = LibComponentField.field_re.match(line)
         if not m:
             m = LibComponentField.fiel2_re.match(line)
@@ -482,7 +483,7 @@ class LibComponent(object):
                         r'([LF])\s+'    # 7 Unit is locked
                         r'([NP])')      # 8 Power/Normal
 
-    def __init__(self, line, f, lib_name):
+    def __init__(self, line, f, lib_name: str):
         super().__init__()
         self.dcm = None  # Extra info from the Doc-Lib (DCM) file
         m = self.def_re.match(line)
@@ -633,7 +634,7 @@ class SymLib(object):
         self.alias = {}
 
     @staticmethod
-    def _check_add(o, id, lib, needed, translate):
+    def _check_add(o, id, lib, needed, translate) -> bool:
         if lib is None:
             # From a cache
             if id in translate:
@@ -684,7 +685,7 @@ class SymLib(object):
 
 
 class DocLibEntry(object):
-    def __init__(self, name, f):
+    def __init__(self, name: str, f):
         super().__init__()
         self.name = name
         self.desc = None
@@ -757,7 +758,7 @@ class SchematicField(object):
         v = 0 if v else 1
         self.flags = "%04x" % ((int(self.flags) & 0xFFFE) | v)
 
-    def is_visible(self):
+    def is_visible(self) -> bool:
         return not (int(self.flags, 16) and 1)
 
     def get_height(self):
@@ -936,10 +937,10 @@ class SchematicComponent(object):
             return val.lower() if lower else val
         return ''
 
-    def is_field(self, field):
+    def is_field(self, field) -> bool:
         return field in self.dfields
 
-    def compute_dnp(self, variant=None):
+    def compute_dnp(self, variant=None) -> bool:
         return False
 
     def get_free_field_number(self):
@@ -981,7 +982,7 @@ class SchematicComponent(object):
         """ List of all the available field names for this component """
         return self.dfields.keys()
 
-    def get_real_field_names(self, names):
+    def get_real_field_names(self, names: Sequence[str]):
         """ Returns the real names, using the lowercase ones """
         return [self.dfields[n].name for n in names]
 
@@ -993,7 +994,7 @@ class SchematicComponent(object):
         self.fields.append(field)
         self.dfields[field.name.lower()] = field
 
-    def rename_field(self, old_name, new_name):
+    def rename_field(self, old_name: str, new_name: str):
         old_name = old_name.lower()
         field = self.dfields[old_name]
         field.name = new_name
@@ -1089,7 +1090,7 @@ class SchematicComponent(object):
                                format(field.name, self, field.value))
                 field.value = stripped_val
 
-    def __str__(self):
+    def __str__(self) -> str:
         ref = self.ref if self.ref is not None else '??'
         # Add the sub-part id
         # How to know if unit 1 is A?
@@ -1314,7 +1315,7 @@ class SchematicWire(object):
     ENTRIES = {'Wire': ENTRY_WIRE, 'Bus': ENTRY_BUS}
     NAMES = ['Wire Wire Line', 'Wire Bus Line', 'Wire Notes Line', 'Entry Wire Line', 'Entry Bus Bus']
 
-    def __init__(self, width=None, style=None, rgb=None):
+    def __init__(self, width: Optional[int] = None, style=None, rgb=None):
         super().__init__()
         self.width = width
         self.rgb = rgb
@@ -1868,7 +1869,7 @@ class Schematic(object):
         # Transfer the descriptions to the instances of the components
         self.walk_components(self.apply_dcm, self)
 
-    def gen_lib(self, name, cross=False):
+    def gen_lib(self, name: str, cross=False):
         """ Dumps all the used components to one library.
             This is like the KiCad cache. """
         with open(name, 'wt') as f:

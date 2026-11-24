@@ -16,6 +16,8 @@ from .columnlist import ColumnList
 from .html_writer import cell_class
 from .kibot_logo import KIBOT_LOGO
 from .. import log
+from typing import Sequence
+
 logger = log.get_logger()
 
 
@@ -50,7 +52,7 @@ def write_stats(data, cfg):
     data['stats'] = stats
 
 
-def write_json(filename, groups, headings, head_names, cfg):
+def write_json(filename, groups, headings, head_names: Sequence[str], cfg) -> bool:
     """
     Write BoM out to a JSON file
     filename = path to output file (should be a .json)

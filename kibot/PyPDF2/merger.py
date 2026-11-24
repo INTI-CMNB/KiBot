@@ -67,7 +67,7 @@ class PdfFileMerger(object):
             Defaults to ``True``.
     """
 
-    def __init__(self, strict=True):
+    def __init__(self, strict: bool=True):
         self.inputs = []
         self.pages = []
         self.output = PdfFileWriter()

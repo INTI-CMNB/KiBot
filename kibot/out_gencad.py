@@ -44,7 +44,7 @@ class GenCADOptions(VariantOptions):
         self.help_only_sub_pcbs()
         self.get_targets = self._get_targets
 
-    def run_kiauto(self, name):
+    def run_kiauto(self, name: str):
         command = self.ensure_tool('KiAuto')
         board_name = self.save_tmp_board_if_variant()
         # Create the command line
@@ -64,7 +64,7 @@ class GenCADOptions(VariantOptions):
         # Execute it
         self.exec_with_retry(cmd, FAILED_EXECUTE)
 
-    def run_kipy(self, name):
+    def run_kipy(self, name: str):
         self.filter_pcb_components()
         res = GS.board.export_gencad(
             name,
@@ -76,7 +76,7 @@ class GenCADOptions(VariantOptions):
         self.unfilter_pcb_components()
         self.check_job_ok(res)
 
-    def run(self, name):
+    def run(self, name: str):
         super().run(name)
         if GS.kp is not None:
             self.run_kipy(name)
@@ -98,5 +98,5 @@ class GenCAD(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `gencad` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         return BaseOutput.simple_conf_examples(name, 'PCB in GenCAD format', 'Export')  # noqa: F821

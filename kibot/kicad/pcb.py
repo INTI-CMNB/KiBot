@@ -15,6 +15,8 @@ from ..gs import GS
 from .sexpdata import load, dumps, SExpData, sexp_iter, Symbol
 from .sexp_helpers import _check_relaxed, _get_symbol_name, make_separated, load_sexp_file, _symbol
 from .v6_sch import _check_str, _check_symbol, _check_is_symbol_list, _check_float, _check_integer
+from typing import Sequence
+
 PAGE_SIZE = {'A0': (841, 1189),
              'A1': (594, 841),
              'A2': (420, 594),
@@ -120,7 +122,7 @@ def save_pcb_from_sexp(pcb, logger, replace_pcb=True):
     GS.board.SetFileName(GS.pcb_file)
 
 
-def keep_attr(names, sexp):
+def keep_attr(names: Sequence[str], sexp):
     return not isinstance(sexp, list) or len(sexp) < 2 or not isinstance(sexp[0], Symbol) or sexp[0].value() in names
 
 
@@ -137,7 +139,7 @@ def flip_sexp(sexp):
             flip_sexp(s)
 
 
-def update_footprint(ref, name, s, aliases, logger):
+def update_footprint(ref, name: str, s, aliases, logger) -> bool:
     """ Change footprint 'ref' using 'name' lib footprint """
     logger.debug(f'Replacing {ref} using {name}')
     # Get the footprint from the lib

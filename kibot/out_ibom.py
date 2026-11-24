@@ -172,7 +172,7 @@ class IBoMOptions(VariantOptions):
             files.append(self.extra_data_file)
         return files
 
-    def run(self, name):
+    def run(self, name: str):
         super().run(name)
         tool, version = self.ensure_tool_get_ver('ibom')
         logger.debug('Doing Interactive BoM')
@@ -289,7 +289,7 @@ class IBoM(BaseOutput):  # noqa: F821
         return self.options.get_dependencies()
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         tool = GS.check_tool(name, 'ibom')
         if tool is None:
             return None

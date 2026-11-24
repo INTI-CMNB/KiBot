@@ -17,6 +17,8 @@ from .kicad.v6_sch import SchematicBitmapV6, Stroke, Color
 from .kiplot import get_all_components, look_for_output, get_output_targets, run_output
 from .misc import (Rect, W_WRONGPASTE, DISABLE_3D_MODEL_TEXT, W_NOCRTYD, W_MISSDIR, W_KEEPTMP, RENDERERS,
                    read_png, SUBIMAGE_REGEX)
+from typing import Optional
+
 if not GS.kicad_version_n:
     # When running the regression tests we need it
     from kibot.__main__ import detect_kicad
@@ -185,16 +187,16 @@ class BaseOutput(RegOutput):
     def expand_dirname(self, out_dir):
         return self.options.expand_filename_both(out_dir, is_sch=self._sch_related)
 
-    def expand_filename(self, out_dir, name):
+    def expand_filename(self, out_dir, name: str):
         name = self.options.expand_filename_both(name, is_sch=self._sch_related)
         return os.path.abspath(os.path.join(out_dir, name))
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         return None
 
     @staticmethod
-    def simple_conf_examples(name, comment, dir):
+    def simple_conf_examples(name: str, comment: str, dir):
         gb = {}
         outs = [gb]
         gb['name'] = 'basic_'+name
@@ -206,7 +208,7 @@ class BaseOutput(RegOutput):
     def fix_priority_help(self):
         self._help_priority = self._help_priority.replace('[number=50]', '[number={}]'.format(self.priority))
 
-    def get_csv_separator(self):
+    def get_csv_separator(self) -> str:
         """ Default separator for CSV files """
         return ','
 
@@ -253,7 +255,7 @@ class BoMRegex(Optionable):
         if not self.column:
             raise KiPlotConfigurationError("Missing or empty `column` in field regex ({})".format(str(self._tree)))
 
-    def __str__(self):
+    def __str__(self) -> str:
         invert = '!' if self.invert else ''
         return f'{self.column} {invert}`{self.regex}`'
 
@@ -331,7 +333,7 @@ class VariantOptions(BaseOptions):
             return []
         return [c.ref for c in self._comps if c.fitted and c.included]
 
-    def get_not_fitted_refs(self, parent=False, is_bom=False):
+    def get_not_fitted_refs(self, parent=False, is_bom: bool = False):
         """ List of 'not fitted' components, also includes 'not included' """
         if not self._comps:
             return []
@@ -355,7 +357,7 @@ class VariantOptions(BaseOptions):
         return GS.pn.ToMM(val) if GS.pn is not None else GS.kp.util.units.to_mm(val)
 
     @staticmethod
-    def cross_module_pn(m, rect, layer, angle):
+    def cross_module_pn(m, rect, layer, angle: float):
         """ Draw a cross over a module.
             The rect is a Rect object with the size.
             The layer is which layer id will be used.
@@ -653,7 +655,7 @@ class VariantOptions(BaseOptions):
             for gi in self._old_bmask:
                 gi.SetLayer(self._bmask)
 
-    def remove_graphics_from_layer(self, board, comps_hash, layer_name):
+    def remove_graphics_from_layer(self, board, comps_hash, layer_name: str):
         """ Remove from layer_name the excluded components. """
         if comps_hash is None:
             return None, None
@@ -811,7 +813,7 @@ class VariantOptions(BaseOptions):
                 for model in reversed(restore):
                     models.append(model)
 
-    def apply_list_of_3D_models(self, enable, slots, m, var):
+    def apply_list_of_3D_models(self, enable: bool, slots, m, var):
         if self.extra_debug:
             logger.debug(f"  - Applying {enable} to {slots} for {var}")
         # Disable the unused models adding bogus text to the end
@@ -834,7 +836,7 @@ class VariantOptions(BaseOptions):
             # Push it back to the module
             models.push_back(m3d)
 
-    def look_for_text_defs(self, m, field_regex, field_regex_sp, variant_name):
+    def look_for_text_defs(self, m, field_regex, field_regex_sp, variant_name: str):
         found_slots = found_var = None
         # Look for text objects
         for gi in m.GraphicalItems():
@@ -869,7 +871,7 @@ class VariantOptions(BaseOptions):
                             return slots, var
         return found_slots, found_var
 
-    def apply_3D_variant_aspect(self, board, enable=False):
+    def apply_3D_variant_aspect(self, board, enable: bool = False):
         """ Disable/Enable the 3D models that aren't for this variant.
             This mechanism uses the MTEXT or PCB_TEXT attributes. """
         # The magic text is %variant:slot1,slot2...%
@@ -1011,7 +1013,7 @@ class VariantOptions(BaseOptions):
                 self.add_parent_comps(c, new_comps)
         return new_comps
 
-    def filter_pcb_components(self, do_3D=False, do_2D=True, highlight=None):
+    def filter_pcb_components(self, do_3D=False, do_2D=True, highlight=None) -> bool:
         if not self.will_filter_pcb_components():
             return False
         self._comps_hash = self.get_refs_hash()
@@ -1175,7 +1177,7 @@ class VariantOptions(BaseOptions):
         logger.debug('- Modified PCB: '+fname)
         return fname
 
-    def save_tmp_sch_if_variant(self, force=False):
+    def save_tmp_sch_if_variant(self, force: bool = False):
         if self._comps or force:
             # Save it to a temporal dir
             sch_dir = GS.mkdtemp(self._expand_ext+'_sch_print')
@@ -1188,7 +1190,7 @@ class VariantOptions(BaseOptions):
         return sch_file
 
     @staticmethod
-    def save_tmp_dir_board(id, force_dir=None, forced_name=None):
+    def save_tmp_dir_board(id, force_dir=None, forced_name: Optional[str] = None):
         """ Save the PCB to a temporal dir.
             Disadvantage: all relative paths inside the file becomes useless
             Advantage: the name of the file remains the same """
@@ -1391,7 +1393,7 @@ class VariantOptions(BaseOptions):
             if c.ref in self.undo_show:
                 c.set_fitted(True)
 
-    def sch_replace_one_image(self, sheet, box, output_name, image_index, box_index):
+    def sch_replace_one_image(self, sheet, box, output_name: str, image_index, box_index) -> bool:
         """ Replace one image in the schematic, see sch_replace_images """
         # Get the image file name
         logger.debugl(2, f"- Looking for output {output_name} images")
@@ -1485,7 +1487,7 @@ class VariantOptions(BaseOptions):
                     res |= self.sch_replace_one_image(s, b, match.group(1), image_index, index)
         return res
 
-    def sch_restore_images(self, sch):
+    def sch_restore_images(self, sch) -> bool:
         """ Used to undo sch_replace_images """
         if not GS.global_sch_image_prefix or GS.ki5:
             return False

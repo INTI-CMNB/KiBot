@@ -21,6 +21,7 @@ import re
 import sys
 from types import ModuleType
 import linecache
+from typing import Optional
 
 # The following code allows importing pybars from the current dir
 prev_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -208,7 +209,7 @@ def escape(something, _escape_re=_escape_re, substitute=substitute):
     return _escape_re.sub(substitute, something)
 
 
-def pick(context, name, default=None):
+def pick(context, name: str, default=None):
     try:
         return context[name]
     except (KeyError, TypeError, AttributeError):
@@ -235,7 +236,7 @@ class Scope:
         self.first = first
         self.last = last
 
-    def get(self, name, default=None):
+    def get(self, name: str, default=None):
         if name == '@root':
             return self.root
         if name == '@_parent':
@@ -295,7 +296,7 @@ def resolve(context, *segments):
     return context
 
 
-def resolve_subexpr(helpers, name, context, *args, **kwargs):
+def resolve_subexpr(helpers, name: str, context, *args, **kwargs):
     if name not in helpers:
         raise PybarsError(u"Could not find property %s" % (name,))
     return helpers[name](context, *args, **kwargs)
@@ -414,7 +415,7 @@ def _blockHelperMissing(this, options, context):
     return options['fn'](callwith)
 
 
-def _helperMissing(scope, name, *args):
+def _helperMissing(scope, name: str, *args):
     if not args:
         return None
     raise PybarsError(u"Could not find property %s" % (name,))
@@ -445,7 +446,7 @@ class FunctionContainer:
     Used as a container for functions by the CodeBuidler
     """
 
-    def __init__(self, name, code):
+    def __init__(self, name: str, code):
         self.name = name
         self.code = code
 
@@ -540,7 +541,7 @@ class CodeBuilder:
 
         return result
 
-    def _wrap_nested(self, name):
+    def _wrap_nested(self, name: str) -> str:
         return u"partial(%s, helpers=helpers, partials=partials, root=root)" % name
 
     def add_block(self, symbol, arguments, nested, alt_nested):
@@ -690,7 +691,7 @@ class CodeBuilder:
             u"    result.grow(value or '')\n"
             ])
 
-    def _invoke_template(self, fn_name, this_name):
+    def _invoke_template(self, fn_name: str, this_name: str):
         self._result.grow([
             u"    result.grow(",
             fn_name,
@@ -863,7 +864,7 @@ class Compiler:
 
         container = self._generate_code(source)
 
-        def make_module_name(name, suffix=None):
+        def make_module_name(name: str, suffix: Optional[str]=None):
             output = 'pybars._templates.%s' % name
             if suffix:
                 output += '_%s' % suffix

@@ -852,7 +852,7 @@ class Rect(object):
             self.y2 = max(self.y2, wxRect.y+wxRect.height)
 
 
-def name2make(name):
+def name2make(name: str):
     return re.sub(r'[ \$\.\\\/]', '_', name)
 
 
@@ -873,7 +873,7 @@ def version_str2tuple(ver):
     return tuple(map(int, ver.split('.')))
 
 
-def read_png(file, logger, only_size=True):
+def read_png(file, logger, only_size: bool = True):
     if isinstance(file, str):
         with open(file, 'rb') as f:
             s = f.read()
@@ -971,7 +971,7 @@ def try_decode_utf8(data, where, logger, cp):
 
 
 # Adapted from "Gemini 2.5 Pro Preview O5-O6" example
-def get_file_hash(filepath, algorithm="sha256", buffer_size=65536):
+def get_file_hash(filepath, algorithm="sha256", buffer_size: int = 65536):
     """
     Calculates the hash of a file using the specified algorithm.
 

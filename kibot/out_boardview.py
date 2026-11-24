@@ -16,7 +16,7 @@ from . import log
 logger = log.get_logger()
 
 
-def skip_module(module, tp=False):
+def skip_module(module, tp=False) -> bool:
     if module.GetPadCount() == 0:
         return True
     refdes = module.Reference().GetText()
@@ -338,5 +338,5 @@ class BoardView(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `boardview` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         return BaseOutput.simple_conf_examples(name, 'Board View export', 'Assembly')  # noqa: F821

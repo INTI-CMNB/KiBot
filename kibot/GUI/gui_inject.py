@@ -11,6 +11,7 @@ import signal
 import wx
 from ..gs import GS
 from .. import log
+from typing import Optional
 
 logger = log.get_logger()
 TIME_OUT = 10
@@ -90,7 +91,7 @@ class InjectDialog(wx.Dialog):
         logger.debug(f'* Dialog removed {InjectDialog.dialog_stack}')
         return super().Destroy()
 
-    def get_id(self, name):
+    def get_id(self, name: str):
         try:
             return ids[name]
         except KeyError:
@@ -155,7 +156,7 @@ class InjectDialog(wx.Dialog):
     # Implementation for the commands in the CSV #
     # ########################################## #
 
-    def SendEvent(self, id, data):
+    def SendEvent(self, id, data) -> bool:
         ev_n = data
         ev_o = getattr(wx, ev_n)
         id_ori = id
@@ -172,7 +173,7 @@ class InjectDialog(wx.Dialog):
         logger.debug(f'* Injecting event {ev_o}({ev_o.typeId}) to {id_ori} [{o}]')
         return True
 
-    def SendText(self, id, data):
+    def SendText(self, id, data) -> bool:
         # We must avoid processing events during the simulation
         InjectDialog.lock = True
         sim = wx.UIActionSimulator()
@@ -182,13 +183,13 @@ class InjectDialog(wx.Dialog):
         InjectDialog.lock = False
         return True
 
-    def SendKey(self, id, data):
+    def SendKey(self, id, data) -> bool:
         sim = wx.UIActionSimulator()
         sim.Char(data)
         logger.debug(f'* Injecting key: {data}')
         return True
 
-    def WaitDialog(self, id, data):
+    def WaitDialog(self, id, data) -> bool:
         dlg = data
         if self.first_call:
             if self.new_dialog != dlg:
@@ -213,7 +214,7 @@ class InjectDialog(wx.Dialog):
         logger.debug(f'* Toggle {id} ({cur_val} -> {not cur_val})')
 
 
-def create_id(name, sub_name=None):
+def create_id(name: str, sub_name: Optional[str] = None):
     # We must ask for free IDs, the docs suggest something about negative numbers, but is wrong
     global ids
     if name is None:

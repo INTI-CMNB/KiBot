@@ -39,6 +39,8 @@ from .fil_base import (BaseFilter, apply_exclude_filter, apply_fitted_filter, ap
                        KICOST_NAME_TRANSLATIONS, apply_pre_transform)
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
+from typing import Sequence
+
 # To debug the `with document` we can use:
 # from .mcpyrate.debug import macros, step_expansion
 # with step_expansion:
@@ -98,7 +100,7 @@ class BoMJoinField(Optionable):
         self._nl = re.compile(r'([^\\]|^)\\n')
         self._tab = re.compile(r'([^\\]|^)\\t')
 
-    def unescape(self, text):
+    def unescape(self, text: str):
         text = self._nl.sub(r'\1\n', text)
         text = self._tab.sub(r'\1\t', text)
         return text
@@ -127,7 +129,7 @@ class BoMJoinField(Optionable):
         separator = '' if self._text_before else ' '
         return separator + self._text_before + value + self._text_after
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.text:
             return '`{}`'.format(self.text)
         return '`{}`+{}+`{}`'.format(self.text_before, self.field, self.text_after)
@@ -201,7 +203,7 @@ class RowColors(Optionable):
             raise KiPlotConfigurationError('You must add a description for a colored row')
         self.filter = BaseFilter.solve_filter(self.filter, 'colored rows')
 
-    def __str__(self):
+    def __str__(self) -> str:
         desc = self.description if self.description else 'No description'
         return f'`{desc}` ({self.color}) {self.filter}'
 
@@ -469,7 +471,7 @@ class Aggregate(Optionable):
         if not self.name:
             self.name = os.path.splitext(os.path.basename(self.file))[0]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name} ({self.file})'
 
 
@@ -1187,7 +1189,7 @@ class BoM(BaseOutput):  # noqa: F821
         return self.options.csv.separator
 
     @staticmethod
-    def create_bom(fmt, subd, group_fields, join_fields, fld_names, cols=None):
+    def create_bom(fmt, subd, group_fields, join_fields, fld_names: Sequence[str], cols=None):
         gb = {}
         gb['name'] = subd.lower()+'_bom_'+fmt.lower()
         gb['comment'] = '{} Bill of Materials in {} format'.format(subd, fmt)
@@ -1225,7 +1227,7 @@ class BoM(BaseOutput):  # noqa: F821
         register_xmp_import('MacroFab_XYRS', defs)
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         outs = []
         # Make a list of available fields
         fld_names, extra_names = get_columns()

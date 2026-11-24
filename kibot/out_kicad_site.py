@@ -15,6 +15,7 @@ from .out_base import BaseOutput
 from .registrable import RegOutput
 from .macros import macros, document, output_class  # noqa: F401
 from . import log
+from typing import Optional
 
 
 logger = log.get_logger()
@@ -48,13 +49,13 @@ class KiCad_SiteAssembly(Optionable):
         if not hasattr(self, 'dir'):
             self.dir = ''  # 'assembly'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} [{self.output}] -> {self.dir}"
 
 
 class KiCad_SiteDownload(KiCad_SiteAssembly):
     """ An item to download """
-    def __init__(self, name=None, output=None, dir=None):
+    def __init__(self, name: Optional[str] = None, output=None, dir=None):
         super().__init__()
         with document:
             self.dir = ''
@@ -171,7 +172,7 @@ class KiCad_SiteOptions(BaseOptions):
     def get_navigate_targets(self, out_dir):
         return self._get_targets(out_dir, True)
 
-    def get_simple(self, user_value, check, name, fail=False):
+    def get_simple(self, user_value, check, name: str, fail=False):
         if user_value:
             return user_value
         out = next(filter(check, RegOutput.get_outputs()), None)
@@ -180,7 +181,7 @@ class KiCad_SiteOptions(BaseOptions):
         if fail:
             raise KiPlotConfigurationError(f"No {name} output specified and I can't find it, use `None`")
 
-    def add_simple_dep(self, deps, user_value, check, name):
+    def add_simple_dep(self, deps, user_value, check, name: str):
         if user_value == 'None':
             return
         out_name = self.get_simple(user_value, check, name)
@@ -300,11 +301,11 @@ class KiCad_SiteOptions(BaseOptions):
             self.copy(f, os.path.join("kicad", os.path.dirname(rel_name)))
         return cfg
 
-    def add_pcb(self):
+    def add_pcb(self) -> str:
         self.copy(GS.pcb_file, "kicad")
         return f'    - "{GS.pcb_fname}"\n'
 
-    def add_simple_cfg(self, user_value, check, name, skip=False):
+    def add_simple_cfg(self, user_value, check, name: str, skip=False) -> str:
         if user_value == 'None':
             return ''
         out_name = self.get_simple(user_value, check, name, fail=not skip)
@@ -314,7 +315,7 @@ class KiCad_SiteOptions(BaseOptions):
         self.copy(file, subdir)
         return f'  {name.lower()}: "{os.path.join(subdir, os.path.basename(file))}"\n'
 
-    def run(self, dir_name):
+    def run(self, dir_name: str):
         self.dir_name = dir_name
         cfg = ''
 

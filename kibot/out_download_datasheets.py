@@ -76,7 +76,7 @@ class Download_Datasheets_Options(VariantOptions):
         logger.warning(W_FAILDL+'{} during download of `{}` [{}]'.format(msg, ds, c.ref))
         return None
 
-    def validate_downloaded(self, file):
+    def validate_downloaded(self, file) -> bool:
         if not os.path.isfile(file):
             # Not there
             logger.debug("- Download command succeed, but no downloaded file")
@@ -104,7 +104,7 @@ class Download_Datasheets_Options(VariantOptions):
             return False
         return True
 
-    def download(self, c, ds, dir, name, known):
+    def download(self, c, ds, dir, name: str, known):
         if self.classify:
             subdir = self.classify_extra.get(c.ref_prefix, SUBDIRS.get(c.ref_prefix, 'Miscellaneous'))
             os.makedirs(os.path.join(dir, subdir), exist_ok=True)
@@ -247,7 +247,7 @@ class Download_Datasheets(BaseOutput):  # noqa: F821
         self.options.run(output_dir)
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         has_urls = False
         for c in GS.sch.get_components():
             if c.datasheet and is_url(c.datasheet):

@@ -60,7 +60,7 @@ class BoMLabelsOptions(VariantOptions):
         self._bom_example = 'bom_labels'
         self.get_targets = self._get_targets
 
-    def run(self, dir_name):
+    def run(self, dir_name: str):
         if not self.bom:
             raise KiPlotConfigurationError('You must specify the name of the output that'
                                            ' generates the BoM for the labels')
@@ -173,7 +173,7 @@ class BoM_Labels(BaseOutput):  # noqa: F821
         return files
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         if not GS.sch:
             return []
         field = Optionable.solve_field_name('_field_lcsc_part', empty_when_none=True)

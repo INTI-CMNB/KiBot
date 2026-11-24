@@ -17,11 +17,13 @@ from .. import log
 from ..misc import INTERNAL_ERROR
 from ..pre_base import BasePreFlight
 from ..registrable import RegOutput, RegFilter, RegVariant
+from typing import Sequence
+
 logger = log.get_logger()
 
 
 class DTTStat(object):
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
         self.params = 0
         self.depth = 0
@@ -30,7 +32,7 @@ class DTTStat(object):
         self.names = []
         self.paths = []
 
-    def add_param(self, de, level, name):
+    def add_param(self, de, level, name: str):
         self.params += 1
         self.depth = max(self.depth, level+1)
         self.n_types.append(len(de.valids))
@@ -167,7 +169,7 @@ def report(all, kind):
         logger.info(f'- {k:>26}: {len(v):4d} {"" if len(v) > 10 else v}')
 
 
-def scan_items(category, iterable, accum, totals, config):
+def scan_items(category, iterable, accum, totals: Sequence[int], config):
     entries = {}
     for name, cls in iterable.items():
         obj = cls()

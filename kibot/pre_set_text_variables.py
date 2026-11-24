@@ -87,13 +87,13 @@ class Set_Text_Variables(BasePreFlight):  # noqa: F821
         # Do it before
         self._priority = 90
 
-    def __str__(self):
+    def __str__(self) -> str:
         if isinstance(self.set_text_variables, list):
             return f'{self.type} ({pretty_list([v.name for v in self.set_text_variables])})'
         return f'{self.type} (not configured)'
 
     @classmethod
-    def get_example(cls):
+    def get_example(cls) -> str:
         """ Returns a YAML value for the example config """
         return ("\n    - name: 'git_hash'"
                 "\n      command: 'git log -1 --format=\"%h\" \"$KIBOT_PCB_NAME\"'"

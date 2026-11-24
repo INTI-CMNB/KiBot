@@ -25,10 +25,10 @@ class Update_Footprint(BasePreFlight):  # noqa: F821
             self.update_footprint = Optionable
             """ [string|list(string)=''] {comma_sep} One or more component references """
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.type} ({pretty_list(self.update_footprint)})'
 
-    def get_example():
+    def get_example() -> str:
         """ Returns a YAML value for the example config """
         return "QR1,QR2"
 

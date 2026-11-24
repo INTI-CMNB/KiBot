@@ -146,7 +146,7 @@ class DRC(XRC):  # noqa: F821
         rpt += '** End of Report **\n'
         return rpt
 
-    def report(self, kind, count, data):
+    def report(self, kind, count: int, data):
         if not count:
             return
         logf = logger.error if kind == 'error' else lambda msg: logger.warning(W_DRC+msg)
@@ -189,5 +189,5 @@ class DRC(XRC):  # noqa: F821
         return cmd
 
     @staticmethod
-    def get_conf_examples(name, _):
+    def get_conf_examples(name: str, _):
         return XRC.get_conf_examples(name)

@@ -14,7 +14,7 @@ from . import log
 logger = log.get_logger()
 
 
-def fname(file):
+def fname(file) -> str:
     if file:
         return ", while importing from `{}`".format(file)
     return ""
@@ -37,7 +37,7 @@ class GroupEntry(object):
     def is_from_top(self):
         return self.from_top
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         origin = ''
         if self.from_out and self.from_top:
             origin = ' (from both)'
@@ -55,7 +55,7 @@ class GroupEntry(object):
 
 
 class Group(object):
-    def __init__(self, name, items):
+    def __init__(self, name: str, items):
         self.name = name
         if len(items) == 0 or isinstance(items[0], GroupEntry):
             self.items = items
@@ -85,10 +85,10 @@ class Group(object):
         for i in self.items:
             i.update_out()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.name} -> {list(self.items)}"
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name} -> {pretty_list(self.items, True)}"
 
 
@@ -98,25 +98,25 @@ class Registrable(object):
         super().__init__()
 
     @classmethod
-    def register(cl, name, aclass):
+    def register(cl, name: str, aclass):
         cl._registered[name] = aclass
 
     @classmethod
-    def is_registered(cl, name):
+    def is_registered(cl, name: str) -> bool:
         return name in cl._registered
 
     @classmethod
-    def get_class_for(cl, name):
+    def get_class_for(cl, name: str):
         return cl._registered[name]
 
     @classmethod
     def get_registered(cl):
         return cl._registered
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "'{}' ({}) [{}]".format(self.comment, self.name, self.type)
 
-    def short_str(self):
+    def short_str(self) -> str:
         return "{} [{}]".format(self.name, self.type)
 
 
@@ -170,11 +170,11 @@ class RegOutput(Optionable, Registrable):
         return RegOutput._def_outputs.values()
 
     @staticmethod
-    def get_output(name):
+    def get_output(name: str):
         return RegOutput._def_outputs.get(name, None)
 
     @staticmethod
-    def is_output_or_group(name):
+    def is_output_or_group(name: str) -> bool:
         return name in RegOutput._def_outputs or name in RegOutput._def_groups
 
     @staticmethod
@@ -199,7 +199,7 @@ class RegOutput(Optionable, Registrable):
         del RegOutput._def_variants[variant.name]
 
     @staticmethod
-    def separate_variant_and_subpcb(name):
+    def separate_variant_and_subpcb(name: str):
         """ Separate VARIANT[SUBPCB] into VARIANT, SUBPCB """
         subpcb = None
         if '[' in name:
@@ -212,7 +212,7 @@ class RegOutput(Optionable, Registrable):
         return name, subpcb
 
     @staticmethod
-    def is_variant(name):
+    def is_variant(name: str):
         name, subpcb = RegOutput.separate_variant_and_subpcb(name)
         variant = RegOutput._def_variants.get(name)
         if variant is None:
@@ -222,7 +222,7 @@ class RegOutput(Optionable, Registrable):
         return any((sp.name == subpcb for sp in variant.sub_pcbs))
 
     @staticmethod
-    def get_variant(name):
+    def get_variant(name: str):
         name, subpcb = RegOutput.separate_variant_and_subpcb(name)
         variant = RegOutput._def_variants[name]
         if variant and subpcb:
@@ -254,7 +254,7 @@ class RegOutput(Optionable, Registrable):
     # ###################################
 
     @staticmethod
-    def add_group(name, lst, file=None):
+    def add_group(name: str, lst, file=None):
         if name in RegOutput._def_groups:
             raise KiPlotConfigurationError("Group name `{}` already defined".format(name)+fname(file))
         if name in RegOutput._def_outputs:
@@ -270,7 +270,7 @@ class RegOutput(Optionable, Registrable):
             RegOutput.add_group(n, lst, file)
 
     @staticmethod
-    def replace_group(old_name, name, lst):
+    def replace_group(old_name: str, name: str, lst):
         new_group = Group(name, lst)
         RegOutput._def_groups[name] = new_group
         return new_group
@@ -348,11 +348,11 @@ class RegOutput(Optionable, Registrable):
         del RegOutput._def_filters[obj.name]
 
     @staticmethod
-    def is_filter(name):
+    def is_filter(name: str) -> bool:
         return name in RegOutput._def_filters
 
     @staticmethod
-    def get_filter(name):
+    def get_filter(name: str):
         return RegOutput._def_filters[name]
 
     @staticmethod

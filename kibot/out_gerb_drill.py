@@ -76,7 +76,7 @@ class Gerb_Drill(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `gerb_drill` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         gb = {}
         outs = [gb]
         name_u = name.upper()

@@ -15,6 +15,7 @@ from .error import KiPlotConfigurationError
 from .macros import macros, document, filter_class  # noqa: F401
 from .misc import W_BADANGLE, W_BADOFFSET, DEFAULT_ROTATIONS, DEFAULT_ROT_FIELDS, DEFAULT_OFFSETS, DEFAULT_OFFSET_FIELDS
 from . import log
+from typing import Optional
 
 logger = log.get_logger()
 
@@ -33,7 +34,7 @@ def get_field_value(comp, field):
 
 class Regex(Optionable):
     """ Implements the pair column/regex """
-    def __init__(self, regex=None, angle=None, offset_x=None, offset_y=None):
+    def __init__(self, regex=None, angle: Optional[float] = None, offset_x=None, offset_y=None):
         super().__init__()
         self._unknown_is_error = True
         with document:
@@ -200,7 +201,7 @@ class Rot_Footprint(BaseFilter):  # noqa: F821
             for r in self._offset:
                 logger.debug(r)
 
-    def apply_rotation_angle(self, comp, angle, bennymeg_mode=False):
+    def apply_rotation_angle(self, comp, angle: float, bennymeg_mode=False):
         old_footprint_rot = comp.footprint_rot
         if comp.bottom:
             # Apply adjusts for bottom components
@@ -228,7 +229,7 @@ class Rot_Footprint(BaseFilter):  # noqa: F821
         if GS.debug_level > 2:
             logger.debug(f'- rotating {comp.ref} from {old_footprint_rot} to {comp.footprint_rot}')
 
-    def apply_field_rotation(self, comp):
+    def apply_field_rotation(self, comp) -> bool:
         for f in self.rot_fields:
             value = get_field_value(comp, f)
             if value:
@@ -255,7 +256,7 @@ class Rot_Footprint(BaseFilter):  # noqa: F821
         # No rotation, apply 0 to apply bottom adjusts
         self.apply_rotation_angle(comp, 0)
 
-    def apply_offset_value(self, comp, angle, pos_offset_x, pos_offset_y):
+    def apply_offset_value(self, comp, angle: float, pos_offset_x, pos_offset_y):
         if comp.bottom and self.mirror_bottom:
             logger.debugl(2, '- applying mirror to the offset')
             pos_offset_x = -pos_offset_x
@@ -275,7 +276,7 @@ class Rot_Footprint(BaseFilter):  # noqa: F821
         comp.pos_offset_y = GS.from_mm(comp.pos_offset_y)
         logger.debugl(2, f'- final offset {comp.pos_offset_x}, {comp.pos_offset_y} KiCad IUs')
 
-    def apply_field_offset(self, comp):
+    def apply_field_offset(self, comp) -> bool:
         for f in self.offset_fields:
             value = get_field_value(comp, f)
             if value:

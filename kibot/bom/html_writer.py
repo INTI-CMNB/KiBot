@@ -17,6 +17,8 @@ from ..misc import (read_png, STYLE_COMMON, TABLE_MODERN, TABLE_CLASSIC, HEAD_CO
                     HEAD_COLOR_G_L, HEAD_COLOR_B, HEAD_COLOR_B_L, SEL_THEME, HEAD_COLOR_R_D, HEAD_COLOR_R_L_D, HEAD_COLOR_G_D,
                     HEAD_COLOR_G_L_D, HEAD_COLOR_B_D, HEAD_COLOR_B_L_D, THEME_BUTTON, THEME_LOGIC)
 from .. import log
+from typing import Sequence
+
 logger = log.get_logger()
 
 
@@ -140,7 +142,7 @@ SORT_CODE = ('<script>\n'
              '</script>\n')
 
 
-def cell_class(col):
+def cell_class(col) -> str:
     """ Return a background color for a given column title """
     col = col.lower()
     # Auto-generated columns
@@ -153,15 +155,15 @@ def cell_class(col):
     return 'user'  # BG_USER
 
 
-def link(text):
+def link(text: str):
     for t in ["http", "https", "ftp", "www"]:
         if text.startswith(t):
             return '<a href="{t}">{t}</a>'.format(t=text)
     return text
 
 
-def content_table(html, groups, headings, head_names, cfg, link_datasheet, link_digikey, link_mouser, link_lcsc, col_colors,
-                  row_colors, dnf=False):
+def content_table(html, groups, headings, head_names: Sequence[str], cfg, link_datasheet, link_digikey, link_mouser, link_lcsc,
+                  col_colors, row_colors, dnf=False):
     cl = ''
     # Table start
     html.write('<table class="content-table">\n')
@@ -315,7 +317,7 @@ def write_extra_info(html, cfg):
     html.write('</tr>\n')
 
 
-def write_html(filename, groups, headings, head_names, cfg):
+def write_html(filename, groups, headings, head_names: Sequence[str], cfg) -> bool:
     """
     Write BoM out to a HTML file
     filename = path to output file (must be a .csv, .txt or .tsv file)

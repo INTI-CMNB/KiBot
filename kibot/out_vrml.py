@@ -171,7 +171,7 @@ class VRMLOptions(Base3DOptionsWithHL):
             units = self.ref_units
         return x, y, units
 
-    def run_cli(self, name, board_name):
+    def run_cli(self, name: str, board_name: str):
         # Run the export from CLI
         cmd = [GS.kicad_cli, 'pcb', 'export', 'vrml', '-o', name, '-f', '--units', UNITS_2_KICAD[self.model_units]]
         # 3D models
@@ -187,7 +187,7 @@ class VRMLOptions(Base3DOptionsWithHL):
         if self._files_to_remove:
             self.remove_temporals()
 
-    def run_kiauto(self, name, board_name):
+    def run_kiauto(self, name: str, board_name: str):
         command = self.ensure_tool('KiAuto')
         cmd = [command, 'export_vrml', '--output_name', os.path.basename(name), '-U', self.model_units]
         if self.dir_models:
@@ -201,7 +201,7 @@ class VRMLOptions(Base3DOptionsWithHL):
         # Execute it
         self.exec_with_retry(self.add_extra_options(cmd), FAILED_EXECUTE)
 
-    def run(self, name):
+    def run(self, name: str):
         super().run(name)
         self.apply_show_components()
         board_name = self.filter_components(highlight=set(self.expand_kf_components(self._highlight)), force_wrl=True)
@@ -249,5 +249,5 @@ class VRML(BaseOutput):  # noqa: F821
             """ *[dict={}] Options for the `vrml` output """
 
     @staticmethod
-    def get_conf_examples(name, layers):
+    def get_conf_examples(name: str, layers):
         return Base3D.simple_conf_examples(name, 'PCB in VRML format', '3D')

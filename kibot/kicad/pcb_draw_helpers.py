@@ -72,7 +72,7 @@ def draw_line(g, x1, y1, x2, y2, layer, line_w=10000):
     GS.board.Add(nl)
 
 
-def draw_text(g, x, y, text, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY_LEFT, font=None):
+def draw_text(g, x, y, text: str, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY_LEFT, font=None):
     nt = pcbnew.PCB_TEXT(GS.board)
     nt.SetText(text)
 
@@ -97,7 +97,7 @@ def draw_text(g, x, y, text, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY
     return nt, tb.GetWidth()
 
 
-def draw_text_box(g, x, y, width, height, text, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY_LEFT, font=None,
+def draw_text_box(g, x, y, width: int, height, text: str, h, w, layer, bold=False, alignment=GR_TEXT_HJUSTIFY_LEFT, font=None,
                   v_align=GR_TEXT_VJUSTIFY_TOP, border=False, border_width_mm=0.1):
     tb = pcbnew.PCB_TEXTBOX(GS.board)
 
@@ -137,7 +137,7 @@ def draw_text_box(g, x, y, width, height, text, h, w, layer, bold=False, alignme
     return tb
 
 
-def remove_overbars(txt):
+def remove_overbars(txt: str):
     current_text = txt.GetText()
 
     if current_text:
@@ -162,7 +162,7 @@ def draw_poly(g, points, layer, filled=False, line_w=10000):
     GS.board.Add(ps)
 
 
-def get_text_width(text, w=10000, bold=False, font=None):
+def get_text_width(text: str, w=10000, bold=False, font=None):
     nt = pcbnew.PCB_TEXT(GS.board)
     nt.SetText(text)
     if font:
@@ -176,7 +176,7 @@ def get_text_width(text, w=10000, bold=False, font=None):
     return width
 
 
-def draw_arc(g, x, y, angle_start, angle, radius, layer, line_w=10000):
+def draw_arc(g, x, y, angle_start, angle: float, radius: float, layer, line_w=10000):
     # print(f"arc {x} {y}")
     arc = pcbnew.PCB_SHAPE(GS.board, pcbnew.SHAPE_T_ARC)
     arc.SetCenter(GS.p2v_k7(pcbnew.wxPoint(x, y)))
@@ -246,17 +246,17 @@ def draw_drill_map(g, layer, layer_pair_idx, merge_PTH_NPTH=True, group_slots_an
 # Draw marker functions reimplemented from
 # https://gitlab.com/kicad/code/kicad/-/blob/master/common/plotters/plotter.cpp
 
-def draw_marker_square(g, x, y, radius, layer, line_w=10000):
+def draw_marker_square(g, x, y, radius: float, layer, line_w=10000):
     r = round(radius / 1.4142)  # Calculate the side's half-length from the radius.
     w = 2 * r  # The width and height of the square.
     draw_rect(g, x - r, y - r, w, w, layer, False, line_w)
 
 
-def draw_marker_circle(g, x, y, radius, layer, line_w=10000):
+def draw_marker_circle(g, x, y, radius: float, layer, line_w=10000):
     draw_arc(g, x, y, 0, 360, radius, layer, line_w)
 
 
-def draw_marker_lozenge(g, x, y, radius, layer, line_w=10000):
+def draw_marker_lozenge(g, x, y, radius: float, layer, line_w=10000):
     points = [
         (x, y + radius),
         (x + radius, y),
@@ -266,19 +266,19 @@ def draw_marker_lozenge(g, x, y, radius, layer, line_w=10000):
     draw_poly(g, points, layer, False, line_w)
 
 
-def draw_marker_hbar(g, x, y, radius, layer, line_w=10000):
+def draw_marker_hbar(g, x, y, radius: float, layer, line_w=10000):
     draw_line(g, x - radius, y, x + radius, y, layer, line_w)
 
 
-def draw_marker_slash(g, x, y, radius, layer, line_w=10000):
+def draw_marker_slash(g, x, y, radius: float, layer, line_w=10000):
     draw_line(g, x - radius, y - radius, x + radius, y + radius, layer, line_w)
 
 
-def draw_marker_backslash(g, x, y, radius, layer, line_w=10000):
+def draw_marker_backslash(g, x, y, radius: float, layer, line_w=10000):
     draw_line(g, x + radius, y - radius, x - radius, y + radius, layer, line_w)
 
 
-def draw_marker_vbar(g, x, y, radius, layer, line_w=10000):
+def draw_marker_vbar(g, x, y, radius: float, layer, line_w=10000):
     draw_line(g, x, y - radius, x, y + radius, layer, line_w)
 
 
