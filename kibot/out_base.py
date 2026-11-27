@@ -530,6 +530,36 @@ class VariantOptions(BaseOptions):
                     return top, bottom
         return top, bottom
 
+    def remove_paste_and_glue_from_pad_pn(self, p, old_c_layers, fpaste, fmask, bmask, exclude, ref) -> None:
+        pad_layers = p.GetLayerSet()
+        is_front = (fpaste in pad_layers.Seq()) or (fmask in pad_layers.Seq())
+        old_c_layers.append(pad_layers.FmtHex())
+        pad_layers.removeLayerSet(exclude)
+        if len(pad_layers.Seq()) == 0:
+            # No layers at all. Ridiculous, but happens.
+            # At least add an F.Mask
+            pad_layers.addLayer(fmask if is_front else bmask)
+            pad_name = p.GetName()
+            # Some footprints has solder paste "pads" they don't have a name
+            if pad_name or GS.global_always_warn_about_paste_pads:
+                logger.warning(f"{W_WRONGPASTE}Pad with solder paste, but no copper or solder mask aperture "
+                               f" in {ref} ({pad_name})")
+        p.SetLayerSet(pad_layers)
+
+    def move_graphics_to_rescue(self, m, f_layer, b_layer, old_f, old_b, rescue) -> bool:
+        found = False
+        for gi in m.GraphicalItems():
+            l_gi = gi.GetLayer()
+            if l_gi == f_layer:
+                gi.SetLayer(rescue)
+                old_f.append(gi)
+                found = True
+            if l_gi == b_layer:
+                gi.SetLayer(rescue)
+                old_b.append(gi)
+                found = True
+        return found
+
     def remove_paste_and_glue(self, board, comps_hash):
         """ Remove from solder paste layers the filtered components. """
         if comps_hash is None or not (GS.global_remove_solder_paste_for_dnp or GS.global_remove_adhesive_for_dnp or
@@ -539,24 +569,18 @@ class VariantOptions(BaseOptions):
             logger.error('remove_paste_and_glue not yet implemented')
             return
         logger.debug('Removing paste, mask and/or glue')
-        exclude = GS.pn.LSET()
-        fpaste = GS.F_Paste
-        bpaste = GS.B_Paste
-        exclude.addLayer(fpaste)
-        exclude.addLayer(bpaste)
+        exclude = GS.empty_list_of_layers()
+        GS.add_layer_to_list(exclude, GS.F_Paste)
+        GS.add_layer_to_list(exclude, GS.B_Paste)
+        if GS.global_remove_solder_mask_for_dnp:
+            GS.add_layer_to_list(exclude, GS.F_Mask)
+            GS.add_layer_to_list(exclude, GS.B_Mask)
+        rescue = GS.layer_name2id(GS.global_work_layer)
         old_layers = []
-        fadhes = GS.F_Adhes
-        badhes = GS.B_Adhes
         old_fadhes = []
         old_badhes = []
         old_fmask = []
         old_bmask = []
-        rescue = GS.layer_name2id(GS.global_work_layer)
-        fmask = GS.F_Mask
-        bmask = GS.B_Mask
-        if GS.global_remove_solder_mask_for_dnp:
-            exclude.addLayer(fmask)
-            exclude.addLayer(bmask)
         for m in GS.get_modules_board(board):
             ref = GS.fp_get_reference(m)
             c = comps_hash.get(ref, None)
@@ -565,50 +589,16 @@ class VariantOptions(BaseOptions):
                 if GS.global_remove_solder_paste_for_dnp or GS.global_remove_solder_mask_for_dnp:
                     old_c_layers = []
                     for p in GS.fp_get_pads(m):
-                        pad_layers = p.GetLayerSet()
-                        is_front = (fpaste in pad_layers.Seq()) or (fmask in pad_layers.Seq())
-                        old_c_layers.append(pad_layers.FmtHex())
-                        pad_layers.removeLayerSet(exclude)
-                        if len(pad_layers.Seq()) == 0:
-                            # No layers at all. Ridiculous, but happens.
-                            # At least add an F.Mask
-                            pad_layers.addLayer(fmask if is_front else bmask)
-                            pad_name = p.GetName()
-                            # Some footprints has solder paste "pads" they don't have a name
-                            if pad_name or GS.global_always_warn_about_paste_pads:
-                                logger.warning(f"{W_WRONGPASTE}Pad with solder paste, but no copper or solder mask aperture "
-                                               f" in {ref} ({pad_name})")
-                        p.SetLayerSet(pad_layers)
+                        self.remove_paste_and_glue_from_pad_pn(p, old_c_layers, GS.F_Paste, GS.F_Mask, GS.B_Mask, exclude, ref)
                     old_layers.append(old_c_layers)
-                    logger.debugl(3, '- Removed paste/mask from '+ref)
+                    if len(old_c_layers):
+                        logger.debugl(3, '- Removed paste/mask from '+ref)
                 # Remove any graphical item in the *.Adhes layers
                 if GS.global_remove_adhesive_for_dnp:
-                    found = False
-                    for gi in m.GraphicalItems():
-                        l_gi = gi.GetLayer()
-                        if l_gi == fadhes:
-                            gi.SetLayer(rescue)
-                            old_fadhes.append(gi)
-                            found = True
-                        if l_gi == badhes:
-                            gi.SetLayer(rescue)
-                            old_badhes.append(gi)
-                            found = True
-                    if found:
+                    if self.move_graphics_to_rescue(m, GS.F_Adhes, GS.B_Adhes, old_fadhes, old_badhes, rescue):
                         logger.debugl(3, '- Removed adhesive from '+ref)
                 if GS.global_remove_solder_mask_for_dnp:
-                    found = False
-                    for gi in m.GraphicalItems():
-                        l_gi = gi.GetLayer()
-                        if l_gi == fmask:
-                            gi.SetLayer(rescue)
-                            old_fmask.append(gi)
-                            found = True
-                        if l_gi == bmask:
-                            gi.SetLayer(rescue)
-                            old_bmask.append(gi)
-                            found = True
-                    if found:
+                    if self.move_graphics_to_rescue(m, GS.F_Mask, GS.B_Mask, old_fmask, old_bmask, rescue):
                         logger.debugl(3, '- Removed mask from '+ref)
         # Store the data to undo the above actions
         self._old_layers = old_layers
@@ -616,10 +606,6 @@ class VariantOptions(BaseOptions):
         self._old_badhes = old_badhes
         self._old_fmask = old_fmask
         self._old_bmask = old_bmask
-        self._fadhes = fadhes
-        self._badhes = badhes
-        self._fmask = fmask
-        self._bmask = bmask
         return exclude
 
     def restore_paste_and_glue(self, board, comps_hash):
@@ -646,14 +632,14 @@ class VariantOptions(BaseOptions):
                         p.SetLayerSet(pad_layers)
         if GS.global_remove_adhesive_for_dnp:
             for gi in self._old_fadhes:
-                gi.SetLayer(self._fadhes)
+                gi.SetLayer(GS.F_Adhes)
             for gi in self._old_badhes:
-                gi.SetLayer(self._badhes)
+                gi.SetLayer(GS.B_Adhes)
         if GS.global_remove_solder_mask_for_dnp:
             for gi in self._old_fmask:
-                gi.SetLayer(self._fmask)
+                gi.SetLayer(GS.F_Mask)
             for gi in self._old_bmask:
-                gi.SetLayer(self._bmask)
+                gi.SetLayer(GS.B_Mask)
 
     def remove_graphics_from_layer(self, board, comps_hash, layer_name: str):
         """ Remove from layer_name the excluded components. """

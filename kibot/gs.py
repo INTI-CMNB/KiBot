@@ -1952,6 +1952,22 @@ class GS(object):
         return None
 
     @staticmethod
+    def empty_list_of_layers_pn():
+        return GS.pn.LSET()
+
+    @staticmethod
+    def empty_list_of_layers_kp() -> list:
+        return []
+
+    @staticmethod
+    def add_layer_to_list_pn(ll, layer) -> None:
+        ll.addLayer(layer)
+
+    @staticmethod
+    def add_layer_to_list_kp(ll, layer) -> None:
+        ll.append(layer)
+
+    @staticmethod
     def set_version_pointers():
         """ Used to setup function pointers according to the API and its version """
         GS.kikit_units_to_kicad = {'mm': GS.IU_PER_MM, 'cm': 10*GS.IU_PER_MM, 'dm': 100*GS.IU_PER_MM,
@@ -2036,6 +2052,8 @@ class GS(object):
             GS.bbox_get_center = GS.bbox_get_center_pn
             GS.move_board_items = GS.move_board_items_pn
             GS.angle = GS.angle_pn
+            GS.empty_list_of_layers = GS.empty_list_of_layers_pn
+            GS.add_layer_to_list = GS.add_layer_to_list_pn
         elif GS.kp is not None:
             GS.get_footprint_orientation_in_degrees = GS.get_footprint_orientation_in_degrees_kp
             GS.get_pad_orientation_in_degrees = GS.get_pad_orientation_in_degrees_kp
@@ -2090,3 +2108,5 @@ class GS(object):
             GS.bbox_get_center = GS.bbox_get_center_kp
             GS.move_board_items = GS.move_board_items_kp
             GS.angle = GS.angle_kp
+            GS.empty_list_of_layers = GS.empty_list_of_layers_kp
+            GS.add_layer_to_list = GS.add_layer_to_list_kp
